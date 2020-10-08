@@ -18,21 +18,56 @@ machines interconnected by communication links.
   processes that do not belong to another logical partition.
 \end{definition}
 
+\begin{definition}[Optimal partitioning]
+  The optimal partitioning $\mathcal{P}$ is a set of logical
+  partitions such that each process belongs to a logical partition
+  comprising its closest source process. $\forall p \in P_{s_1},
+  \nexists P_{s_2}$ such that \TODO{$distance(p, s_2) < distance(p,
+    s_1)$}.
+\end{definition}
 
-\TODO{Multiple destinations shortest path \REF}.
+When $distance$ involves monotonically increasing scalars such as
+latency or number of hops between sources and processes, the optimal
+partitioning consists in processing the multiple destinations shortest
+path~\REF at each process. \TODO{Easy to solve when all processes
+  receives all messages.}
 
-\begin{algorithm}
-  \input{input/algoadd.tex}
-  \caption{\label{algo:add}Adding partitions by Process $p$.}
-\end{algorithm}
 
 Algorithm~\ref{algo:add} shows the instructions of dynamic
 partitioning where the only operation available to processes is the
 adding of a partition.  Line~\ref{line:lowestbound} shows the lowest
 bound. Line~\ref{line:accumulator} shows the accumulator.
 
-\TODO{Removing partition is more difficult.}
+\begin{algorithm}
+  \input{input/algoadd.tex}
+  \caption{\label{algo:add}Adding partitions by Process $p$.}
+\end{algorithm}
 
+
+\begin{figure*}
+  \begin{center}
+    \subfloat[Part A]{\label{fig:addA}Meow}{input/figaddA.tex}
+    \hspace{5pt}
+    \subfloat[Part A]{\label{fig:addA}Meow}{input/figaddA.tex}
+  \end{center}
+\end{figure*}
+
+
+Transitive relationships ensure that each process gets its closest
+source while accumulators ensure that messages propagation
+terminates. The system converges towards the optimal partitioning
+despite processes not broadcasting all messages. Removals of
+partitions are more challenging. \TODO{Figure.} One could solve this
+issue by removing partitions that were not advertised for a defined
+time~\REF. However, relying on physical timeout could lead to either
+premature removals of partitions when they are still operating; or
+slow convergence where processes believe they belong to a partition
+that was removed.
+
+\TODO{Problem statement.}
+
+\TODO{Next Section presents our approach that solves this problem
+  statement by relying only on logical control information.}
 
 %%% Local Variables: 
 %%% mode: latex

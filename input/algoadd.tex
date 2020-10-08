@@ -7,8 +7,9 @@
 \LinesNumbered
 
 $O_p$ \tcp*[r]{set of neighbors and weights}
+$s$ \tcp*[r]{best source of partition}
 $d \leftarrow \infty$ \tcp*[r]{lowest distance to $q$}
-$q$ \tcp*[r]{best partition}
+
 
 \BlankLine
 
@@ -18,13 +19,13 @@ $q$ \tcp*[r]{best partition}
 
 \BlankLine
 
-\Function{\textup{receiveAdd($q'$, $d'$)}} {
+\Function{\textup{receiveAdd($s'$, $d'$)}} {
   \If { $d' < d$ } {
     $d \leftarrow d'$ \;
-    $q \leftarrow q'$ \;
+    $s \leftarrow s'$ \;
 
     \lForEach {$\langle n, w_n \rangle \in \mathcal{O}_p$} {
-      \textup{send$_n$($q', d' + w_n$)} \label{line:accumulator}
+      \textup{send$_n$($s', d' + w_n$)} \label{line:accumulator}
     }
     
   }
