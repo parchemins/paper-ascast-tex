@@ -12,7 +12,7 @@ machines interconnected by communication links.
   w_{ij}$ with $i, j \in V$.
 \end{definition}
 
-\begin{definition}[Logical partitions]
+\begin{definition}[Logical partition]
   A logical \underline{p}artition $P_s$ originated at a
   \underline{s}ource process $s \in V$ is a set of interconnected
   processes that do not belong to another logical partition.
@@ -29,18 +29,26 @@ machines interconnected by communication links.
 When $distance$ involves monotonically increasing scalars such as
 latency or number of hops between sources and processes, the optimal
 partitioning consists in processing the multiple destinations shortest
-path~\REF at each process. \TODO{Easy to solve when all processes
-  receives all messages.}
-
-
-Algorithm~\ref{algo:add} shows the instructions of dynamic
-partitioning where the only operation available to processes is the
-adding of a partition.  Line~\ref{line:lowestbound} shows the lowest
-bound. Line~\ref{line:accumulator} shows the accumulator.
+path~\REF at each process.  Algorithm~\ref{algo:add} shows the
+instructions of such dynamic partitioning where the only operation
+available to processes is the adding of a
+partition. Figure~\ref{fig:add} illustrates its behavior on a system
+comprising 4 processes $a$, $b$, $c$, and $d$. Two processes $a$ and
+$c$ concurrently create a partition. They initialize their own state
+with the lowest possible bound $0$ (see Line~\ref{line:lowestbound}),
+and send a message to each of their neighbors by accumulating the
+corresponding edge weight (see Line~\ref{line:accumulator}). In
+Figure~\ref{fig:addC}, Process $b$ receives $Add_{c, 1}$. Since it
+improves its own partition distance, it keeps it and forwards it to
+its neighbors. Process $b$ discards $Add_{b, 1.5}$, for it does not
+improve its partition distance. Processes $c$ and $d$ will never hear
+of Process $a$'s partition. In Figure~\ref{fig:addD}, processes
+discard last transiting messages. The system converged to the optimal
+partitioning. 
 
 \begin{algorithm}
   \input{input/algoadd.tex}
-  \caption{\label{algo:add}Adding partitions by Process $p$.}
+  \caption{\label{algo:add}Adding a partition by Process $p$.}
 \end{algorithm}
 
 
@@ -62,7 +70,7 @@ bound. Line~\ref{line:accumulator} shows the accumulator.
       \input{input/figaddD.tex}}
     \caption{\label{fig:add}Simple accumulation in messages makes the
       system converge to optimal partitions with contained
-      flooding.}
+      broadcast.}
   \end{center}
 \end{figure*}
 
@@ -78,6 +86,8 @@ time~\REF. However, relying on physical timeout could lead to either
 premature removals of partitions when they are still operating; or
 slow convergence where processes believe they belong to a partition
 that was removed.
+
+Order on the broadcast.
 
 \TODO{Problem statement.}
 
