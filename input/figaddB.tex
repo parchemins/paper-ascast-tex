@@ -6,10 +6,10 @@
 
   \newcommand\ADD{Add}
 
-  \draw (-\X, 0) -- (0, 0); %% a - b
-  \draw (0, 0) -- (\X, 0); %% b - c
+  \draw (-\X, 0) -- node[above, font=\tiny]{$\ADD_{a, +1.5}$} (0, 0); %% a - b
+  \draw (0, 0) -- node[above, font=\tiny]{$\ADD_{c, +1}$} (\X, 0); %% b - c
   \draw (0, 0) -- (0, \Y); %% b - d
-  \draw (\X, 0) -- (0, \Y); %% c - d
+  \draw (\X, 0) -- node[below, sloped, font=\tiny]{$\ADD_{c, +1}$} (0, \Y); %% c - d
 
   
   \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
@@ -17,8 +17,8 @@
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-  \draw (-\X+5pt, 5pt) node[above]{$\ADD_a$};
-  \draw (\X+5pt, 5pt) node[above]{$\ADD_c$};
+  \draw (-\X, 5pt) node[above]{$a: 0$};
+  \draw (\X, 5pt) node[above]{$c: 0$};
 
 
 \end{tikzpicture}

@@ -8,6 +8,8 @@
 
   \draw (-\X, 0) -- (0, 0); %% a - b
   \draw (0, 0) -- (\X, 0); %% b - c
+  \draw (0, \Y) -- (0, 0); %% b - d
+
   \draw (0, 0) -- (0, \Y); %% b - d
   \draw (\X, 0) -- (0, \Y); %% c - d
 
@@ -17,8 +19,9 @@
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-  \draw (-\X+5pt, 5pt) node[above]{$\ADD_a$};
-  \draw (\X+5pt, 5pt) node[above]{$\ADD_c$};
-
+  \draw (-\X, 5pt) node[above]{$a: 0$};
+  \draw (0, 5pt) node[above]{$c: 1$};
+  \draw (\X, 5pt) node[above]{$c: 0$};
+  \draw (-5pt, \Y) node[left]{$c: 1$};
 
 \end{tikzpicture}

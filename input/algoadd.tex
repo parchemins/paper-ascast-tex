@@ -24,8 +24,8 @@ $d \leftarrow \infty$ \tcp*[r]{lowest distance to $q$}
     $d \leftarrow d'$ \;
     $s \leftarrow s'$ \;
 
-    \lForEach {$\langle n, w_n \rangle \in \mathcal{O}_p$} {
-      \textup{send$_n$($s', d' + w_n$)} \label{line:accumulator}
+    \lForEach {$\langle n, w_{pn} \rangle \in \mathcal{O}_p$} {
+      \textup{send$_n$($s', d' + w_{pn}$)} \label{line:accumulator}
     }
     
   }
