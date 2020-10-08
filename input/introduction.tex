@@ -1,0 +1,77 @@
+
+\section{Introduction}
+
+\TODO{With the advent of Fog infrastructures, content will be increasingly
+located at the edges of the network. Either because it is where it has
+been created and it is too expensive to be transmitted to a cloud
+platform, or because it has been replicated to bring data closer to
+the end users [1]. Thanks to the locality, caching at the edge can
+benefit many diverse applications, as confirmed by recent proposals
+[2], [3], [4]. To favor this transition, the design and development of
+building blocks to manage data sets across Fog infrastructures are
+critical. One of the key challenges of such systems resides in
+locating a given content inside the network. Some systems, such as
+Cassandra [5] or CEPH [6] only rely on Hash-based functions to
+directly find an object location. A given hash is associated with a
+specific node according to a mapping that all nodes agree with,
+removing the need for any localization service. However, this implies
+moving the content to a specific node in the network according to its
+hash, thus violating the locality properties inherent to Fog
+architectures [7]. To ensure network traffic containment and avoid
+unnecessary data movements, we argue that content should be written
+locally and replicated on other nodes only if solicited (e.g.,
+according to the popularity of the object in a social media). Thereby,
+such requirements prevent relying on hash-based solutions and calls
+for a localization service [8].}
+
+\TODO{Most existing implementations of such a localization service imply
+contacting a remote node, either a centralized server [9], or a node
+of a DHT [10]: When a client wants to access a specific content, first
+it has to perform a request to a specific node to determine where to
+retrieve this content from.  Once it has retrieved the data from the
+location it selected, a local replica is created to improve the
+performance for future accesses. The node in charge of maintaining the
+index is finally updated to reflect this new location. Yet, accessing
+a remote node to find the location of an object (or one of its copies)
+has many drawbacks: (i) The lookup penalty: the network latency to
+reach this remote node incurs an additional delay to get the object,
+before being able to start its downloading, (ii) Answering external
+queries increases the load on the remote node, potentially impacting
+its performance, (iii) It prevents nodes to access objects in case of
+network partitioning: if the node in charge of maintaining the object
+locations is isolated from the rest of the infrastructure, nodes
+cannot access the object replicas even if some would be reachable.}
+
+\TODO{To tackle the aforementioned limitations of a remote service, we
+propose A3, an epidemic protocol that propagates information about
+replica localizations asynchronously. A3 leverages the underlying
+infrastructure topology to avoid flooding the network so that it only
+informs the relevant nodes, according to the existing replicas in the
+system. Upon receiving messages, nodes maintain a personalised index
+about replica localization, according to their place in the topology,
+ensuring that each request will be routed towards its closest
+replica. We implemented our protocol and deployed it on a dedicated
+testbed emulating real-world topologies from the Internet Toplogy Zoo
+[11]. Our evaluation shows that A3 is able to provide a similar
+localization service when compared to a DHT-based approach while
+removing the lookup penalty.  This directly translates into faster
+data access as shown by our measurements, with a time reduction from
+20\% to 60\%, depending on the sizes of the objects. Finally, we show
+that by slightly delaying the sending of messages, A3 can match the
+number of messages of a DHT-based approach, at the cost of a moderate
+increase in message sizes.}
+
+\TODO{The rest of this paper is organized as follows. Section II
+  introduces background, related works and details the motivation
+  behind our proposal.  Section III describes the protocol behavior,
+  as well as the formal definition of the underlying
+  algorithms. Section IV presents the evaluation of the A3
+  implementation and provides an extensive comparison with a DHT-based
+  approach. We discuss some extensions of this work and future
+  directions in Section V before concluding in Section VI.}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End: 

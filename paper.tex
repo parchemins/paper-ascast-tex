@@ -1,0 +1,75 @@
+\documentclass{class-for-drafts}
+
+%\usepackage{lmodern}
+%\usepackage[nocompress]{cite}
+\usepackage{hyperref}
+%% url
+\usepackage{url}
+%% maths
+\usepackage{amsmath,amssymb}
+%% \usepackage{amsfonts}
+%% \usepackage{amsthm}
+
+%% algorithms
+\usepackage{algorithmicx}
+\usepackage[ruled, linesnumbered, noend]{algorithm2e}
+
+%% images
+\usepackage{graphicx}
+%% inparaenum
+\usepackage{paralist}
+
+%% tables
+\usepackage{booktabs}
+\usepackage{multirow}
+%% figures
+%\usepackage{caption}
+\usepackage{subfig}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,plotmarks,shapes,matrix}
+%% transform eps in pdf crossplateform
+\usepackage{epstopdf}
+\usepackage{epsfig}
+
+\usepackage{xspace}
+
+\newcommand{\TODO}[1]{\textcolor{red}{#1}}
+\newcommand{\REF}[0]{\textcolor{purple}{REF}}
+
+
+
+\newtheorem{problem}{Problem Statement}
+\newtheorem{definition}{Definition}
+
+
+
+\title{\TODO{Dynamic partitioning}}
+
+\author{\TODO{Authors}}
+
+\begin{document}
+
+\proceedings{}
+
+%\copyright{}
+
+\maketitle
+
+\input{input/abstract.tex}
+
+\input{input/introduction.tex}
+\input{input/background.tex}
+\input{input/proposal.tex}
+\input{input/experiments.tex}
+\input{input/conclusion.tex}
+%% \input{input/acknowledgment.tex}
+
+\bibliographystyle{plainurl}
+\bibliography{bibliographie}
+  
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% ispell-local-dictionary: "english"
+%%% End:

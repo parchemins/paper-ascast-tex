@@ -1,0 +1,28 @@
+
+\begin{abstract}
+
+\TODO{Locating the closest copy of a specific content across a
+  distributed infrastructure requires to keep up-to-date an index of
+  all replicas and their respective locations. Existing methods mostly
+  rely on an external service to store this index, either on a
+  centralized server or using a Distributed Hash Table (DHT). However,
+  contacting a remote node to obtain localization information
+  contradicts with emerging Fog infrastructures in terms of locality
+  and robustness. In this paper, we present $A^3$, an epidemic
+  protocol that will efficiently inform the relevant nodes about the
+  presence of replicas in their neighborhood. Upon the exchange of
+  messages, each node maintains a personalized index that will
+  eventually contain the location of the closest copy for each object
+  according to its place in the network topology. We implemented $A^3$
+  and deployed it on a dedicated testbed with real-world
+  topologies. Experimental results show that the time to retrieve
+  objects is significantly decreased from 10\% up to 60\%, when
+  compared to a DHT-based localization service.}
+
+\end{abstract}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% End: 

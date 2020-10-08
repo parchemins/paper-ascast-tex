@@ -1,0 +1,42 @@
+
+\section{Background and motivation}
+\label{sec:background}
+
+Fog infrastructures are distributed systems comprising heterogeneous
+machines interconnected by communication links.
+
+\begin{definition}[Fog infrastructure]
+  A fog infrastructure is a \underline{g}raph $G(V, E)$ of
+  \underline{v}ertices $V$ and bidirectional \underline{e}dges $E \in
+  V \times V$. Edges have symmetric \underline{w}eights $w_{ij} =
+  w_{ij}$ with $i, j \in V$.
+\end{definition}
+
+\begin{definition}[Logical partitions]
+  A logical \underline{p}artition $P_s$ originated at a
+  \underline{s}ource process $s \in V$ is a set of interconnected
+  processes that do not belong to another logical partition.
+\end{definition}
+
+
+\TODO{Multiple destinations shortest path \REF}.
+
+\begin{algorithm}
+  \input{input/algoadd.tex}
+  \caption{\label{algo:add}Adding partitions by Process $p$.}
+\end{algorithm}
+
+Algorithm~\ref{algo:add} shows the instructions of dynamic
+partitioning where the only operation available to processes is the
+adding of a partition.  Line~\ref{line:lowestbound} shows the lowest
+bound. Line~\ref{line:accumulator} shows the accumulator.
+
+\TODO{Removing partition is more difficult.}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% ispell-local-dictionary: "english"
+%%% End: 
+

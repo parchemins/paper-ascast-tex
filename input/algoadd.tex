@@ -1,0 +1,32 @@
+
+\SetKwProg{Function}{func}{}{}
+
+\small
+
+\DontPrintSemicolon
+\LinesNumbered
+
+$O_p$ \tcp*[r]{set of neighbors and weights}
+$d \leftarrow \infty$ \tcp*[r]{lowest distance to $q$}
+$q$ \tcp*[r]{best partition}
+
+\BlankLine
+
+\Function{\textup{Add ( )}} {
+  \textup{receiveAdd($p$, $0$)} \label{line:lowestbound}
+}
+
+\BlankLine
+
+\Function{\textup{receiveAdd($q'$, $d'$)}} {
+  \If { $d' < d$ } {
+    $d \leftarrow d'$ \;
+    $q \leftarrow q'$ \;
+
+    \lForEach {$\langle n, w_n \rangle \in \mathcal{O}_p$} {
+      \textup{send$_n$($q', d' + w_n$)} \label{line:accumulator}
+    }
+    
+  }
+
+}
