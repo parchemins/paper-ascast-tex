@@ -5,17 +5,26 @@
   \newcommand\Y{-50pt}
 
   \newcommand\ADD{Add}
+  \newcommand\DEL{Del}
 
-  \draw (-\X, 0) -- node[above, font=\tiny]{$\ADD_{c, 2.5}$} (0, 0); %% a - b
-  \draw (0, 0) -- node[above, font=\tiny]{$\ADD_{c, 2}$} (\X, 0); %% b - c
+  \draw (-\X, 0) --
+  node[below,font=\tiny]{$\ADD_{a, 3}$}
+  node[above,font=\tiny]{$\DEL_{a}$}
+  (0, 0); %% a - b
+  \draw (0, 0) --
+  node[above, font=\tiny]{$\ADD_{c, 1}$}
+  node[below, font=\tiny]{$\ADD_{a, 2.5}$} (\X, 0); %% b - c
+  \draw (0, 0) --
+  node[above, font=\tiny, sloped]{$\ADD_{a, 2.5}$}
+  (0, \Y); %% b - d
   \draw (0, \Y) --
   node[above, font=\tiny, sloped]{$\ADD_{c, 2}$}
-  (0, 0); %% b - d
+  (0, 0); %% d - b
 
-  \draw (0, 0) --
+  \draw (\X, 0) --
   node[above, font=\tiny, sloped]{$\ADD_{c, 2}$}
-  (0, \Y); %% b - d
-  \draw (\X, 0) -- node[below, sloped, font=\tiny]{$\ADD_{c, 2}$} (0, \Y); %% c - d
+  node[below, font=\tiny, sloped]{$\DEL_{c}$}
+  (0, \Y); %% c - d
 
   
   \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
@@ -23,9 +32,10 @@
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-  \draw (-\X, 5pt) node[above]{$a: 0$};
-  \draw (0, 5pt) node[above]{$c: 1$};
-  \draw (\X, 5pt) node[above]{$c: 0$};
+  % \draw (-\X+5pt, 5pt) node[above left]{$\DEL_a$};
+  % \draw (\X+5pt, 5pt) node[above right]{$\DEL_c$};
+  \draw (0, 5pt) node[above]{$a: 1.5$};
   \draw (-5pt, \Y) node[left]{$c: 1$};
+
 
 \end{tikzpicture}
