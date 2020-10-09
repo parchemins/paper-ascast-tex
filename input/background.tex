@@ -26,6 +26,9 @@ machines interconnected by communication links.
     s_1)$}.
 \end{definition}
 
+When $distance$ involves latency or number of hops between sources and
+processes, the optimal partitioning consists in processing the
+multiple destinations shortest path~\REF at each process.
 
 \begin{figure*}
   \begin{center}
@@ -37,7 +40,7 @@ machines interconnected by communication links.
       links and carry increasing weights.]{\input{input/figaddB.tex}}
     \hspace{5pt}
     \subfloat[Part C][\label{fig:addC}Process $b$ receives and forwards
-      $Add_{c, 1}$ then discards $Add_{a, 1.5}$, for the latter distance
+      $\alpha_{c}^{1}$ then discards $\alpha_{a}^{1.5}$, for the latter distance
       is higher.]{\input{input/figaddC.tex}}
     \hspace{5pt}
     \subfloat[Part D][\label{fig:addD}Processes $b$, $c$, and $d$ discard
@@ -54,33 +57,33 @@ machines interconnected by communication links.
   \caption{\label{algo:add}Adding a partition by Process $p$.}
 \end{algorithm}
 
-When $distance$ involves monotonically increasing scalars such as
-latency or number of hops between sources and processes, the optimal
-partitioning consists in processing the multiple destinations shortest
-path~\REF at each process.  Algorithm~\ref{algo:add} shows the
-instructions of such dynamic partitioning where the only operation
-available to processes is the adding of a
-partition. Figure~\ref{fig:add} illustrates its behavior on a system
-comprising 4 processes $a$, $b$, $c$, and $d$. Two processes $a$ and
-$c$ concurrently create a partition. They initialize their own state
-with the lowest possible bound $0$ (see Line~\ref{line:lowestbound}),
-and send a message to each of their neighbors by accumulating the
-corresponding edge weight (see Line~\ref{line:accumulator}). In
-Figure~\ref{fig:addC}, Process $b$ receives $Add_{c, 1}$. Since it
-improves its own partition distance, it keeps it and forwards it to
-its neighbors. Process $b$ discards $Add_{b, 1.5}$, for it does not
-improve its partition distance. Processes $c$ and $d$ will never hear
-of Process $a$'s partition. \TODO{At scale.} In Figure~\ref{fig:addD},
-processes discard last transiting messages. The system converged to
-the optimal partitioning.
+
+Algorithm~\ref{algo:add} shows the instructions of optimal
+partitioning where the only operation available to processes is the
+adding of partitions. Figure~\ref{fig:add} illustrates its behavior on
+a system comprising 4 processes $a$, $b$, $c$, and $d$. Two processes
+$a$ and $c$ concurrently create a partition. They initialize their own
+state with the lowest possible bound $0$ (see
+Line~\ref{line:lowestbound}), and send a message to each of their
+neighbors by accumulating the corresponding edge weight (see
+Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, Process $b$
+receives $\alpha_{c}^{1}$. Since it improves its own partition
+distance, it keeps it and forwards it to its neighbors. Process $b$
+discards $\alpha_{b}^{1.5}$, for it does not improve its partition
+distance. Processes $c$ and $d$ will never hear of Process $a$'s
+partition. At scale, it saves bandwidth by limiting generated traffic
+to subsets of processes. In Figure~\ref{fig:addD}, processes discard
+last transiting messages. The system converged to the optimal
+partitioning. Interestingly, while the receipt order of messages does
+not impact on local control information, it impacts on control
+information broadcast in the network.
 
 Transitive relationships ensure that each process gets its closest
-source while accumulators ensure that messages propagation
-terminates. The system converges towards the optimal partitioning
-despite processes not broadcasting all messages. Removals of
-partitions are more challenging. \TODO{Figure.} \TODO{Also easy to
-  solve when all processes receive all messages}. One could solve this
-issue by removing partitions that were not advertised for a defined
+source while accumulation of weights ensures that messages propagation
+terminates.  Removals of partitions are more
+challenging. \TODO{Figure.} \TODO{Also easy to solve when all
+  processes receive all messages}. One could solve this issue by
+removing partitions that were not advertised for a defined
 time~\REF. However, relying on physical timeout could lead to either
 premature removals of partitions when they are still operating; or
 slow convergence where processes believe they belong to a partition
@@ -106,7 +109,7 @@ that was removed.
       Partition $c$ dominated it. Processes $c$ and $d$ remain in an incorrect
       partition.]{\input{input/figdelD.tex}}
   \end{center}
-  \caption{\label{algo:add}Removing partition may lead to inconsistent states.}
+  \caption{\label{algo:add}Removing partition may lead to inconsistent partitions.}
 \end{figure*}
 
 
