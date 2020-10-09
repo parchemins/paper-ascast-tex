@@ -13,21 +13,26 @@ $d \leftarrow \infty$ \tcp*[r]{lowest distance to $q$}
 
 \BlankLine
 
-\Function{\textup{Add ( )}} {
+\Function{\textup{Add ( )} \tcp*[f]{$\alpha_p^0$}} {
   \textup{receiveAdd($p$, $0$)} \label{line:lowestbound}
 }
 
 \BlankLine
 
-\Function{\textup{receiveAdd($s'$, $d'$)}} {
-  \If { $d' < d$ } {
-    $d \leftarrow d'$ \;
-    $s \leftarrow s'$ \;
-
-    \lForEach {$\langle n, w_{pn} \rangle \in \mathcal{O}_p$} {
-      \textup{send$_n$($s', d' + w_{pn}$)} \label{line:accumulator}
-    }
-    
-  }
-
+\Function{\textup{receiveAdd($s'$, $d'$)} \tcp*[f]{$r(\alpha_{s'}^{d'})$}} {
+  \lIf { $d' < d$ } {\textup{deliverAdd($s'$, $d'$)}}
 }
+
+\BlankLine
+
+\Function{\textup{deliverAdd($s'$, $d'$)} \tcp*[f]{$d(\alpha_{s'}^{d'})$}} {
+  $d \leftarrow d'$ \;
+  $s \leftarrow s'$ \;
+
+  \lForEach {$\langle n, w_{pn} \rangle \in \mathcal{O}_p$} {
+    \textup{send$_n$($s', d' + w_{pn}$)} \label{line:accumulator}
+  }
+    
+} 
+
+

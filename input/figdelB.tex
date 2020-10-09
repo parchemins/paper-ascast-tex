@@ -8,22 +8,22 @@
   \newcommand\DEL{Del}
 
   \draw (-\X, 0) --
-  node[below,font=\tiny]{$\ADD_{a, 3}$}
+  node[below,font=\tiny]{$\ADD_{a}^{3}$}
   node[above,font=\tiny]{$\DEL_{a}$}
   (0, 0); %% a - b
   \draw (0, 0) --
-  node[above, font=\tiny]{$\ADD_{c, 1} \DEL_c$}
-  node[below, font=\tiny]{$\ADD_{a, 2.5}$} (\X, 0); %% b - c
+  node[above, font=\tiny]{$\ADD_c^1 \DEL_c$}
+  node[below, font=\tiny]{$\ADD_a^{2.5}$} (\X, 0); %% b - c
   \draw (0, 0) --
-  node[above, font=\tiny, sloped]{$\ADD_{a, 2.5}$}
+  node[above, font=\tiny, sloped]{$\ADD_a^{2.5}$}
   (0, \Y); %% b - d
   \draw (0, \Y) --
-  node[above, font=\tiny, sloped]{$\ADD_{c, 2}$}
+  node[above, font=\tiny, sloped]{$\ADD_c^2$}
   (0, 0); %% d - b
 
   \draw (\X, 0) --
-  node[above, font=\tiny, sloped]{$\ADD_{c, 2}$}
-  node[below, font=\tiny, sloped]{$\DEL_{c}$}
+  node[above, font=\tiny, sloped]{$\ADD_c^2$}
+  node[below, font=\tiny, sloped]{$\DEL_c$}
   (0, \Y); %% c - d
 
   
