@@ -5,30 +5,33 @@
   \newcommand\Y{-50pt}
 
   \newcommand\ADD{\alpha}
+  \newcommand\DEL{\delta}
 
-  \draw[->] (-\X + 5pt, 0 + 2pt ) -- (0 - 5pt, 0 + 2pt); %% a - b
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+
+  \draw[->] (-\X + 5pt, 0 + 2pt ) --
+  node[above=-0.3em,font=\tiny]{$\DEL{c}\cdot\ADD_c^{4}\cdot\bm{\DEL_{a}}$}
+  (0 - 5pt, 0 + 2pt); %% a - b
   \draw[<-] (-\X + 5pt, 0 - 2pt ) --
-  node[below=-0.3em, font=\tiny]{$\ADD_{c}^{2.5}$}
   (0 - 5pt, 0 - 2pt); %% b - a 
 
   \draw[<-] (0 +5pt, 0 + 2pt) --
   (\X -5pt, 0 + 2pt); %% c - b
   \draw[->] (0 +5pt, 0 - 2pt) --
-  node[below=-0.3em, font=\tiny]{$\ADD_{c}^{2}$}  
   (\X -5pt, 0 - 2pt); %% b - c
 
   \draw[->] (0 + 2pt, 0 - 5pt) --
-  node[above=-0.3em, font=\tiny, sloped]{$\ADD_{c}^{2}$}
   (0 + 2pt, \Y + 5pt); %% b - d
   \draw[->] (0 - 2pt, \Y + 5pt) --
-  node[above=-0.3em, font=\tiny, sloped]{$\ADD_{c}^{2}$}
   (0 - 2pt, 0 - 5pt);  %% d - b
   
   \draw[<-] (\X - 3pt, 0 - 5pt) --
-  node[above=-0.3em, sloped, font=\tiny]{$\ADD_{c}^{2}$}
   (0 + 5pt, \Y + 3pt); %% d - c
   \draw[->] (\X + 3pt, 0 - 5pt) --
   (0 + 5pt, \Y - 3pt); %% c - d
+
 
 
   
@@ -37,9 +40,10 @@
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-  \draw (-\X, 5pt) node[above]{$a: 0$};
-  \draw (0, 5pt) node[above]{$\bm{c: 1}$};
-  \draw (\X, 5pt) node[above]{$c: 0$};
-  \draw (-5pt, \Y) node[left]{$\bm{c: 1}$};
+  % \draw (-\X+5pt, 5pt) node[above left]{$\DEL_a$};
+  \draw (\X+5pt, 5pt) node[above]{$\bm{a: 2.5}$}; %% c
+  % \draw (0, 5pt) node[above]{$\bm{a: 1.5}$}; %% b
+  \draw (-5pt, \Y) node[left]{$\bm{a: 2.5}$}; %% d
+
 
 \end{tikzpicture}

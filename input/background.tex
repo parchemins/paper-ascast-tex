@@ -70,9 +70,9 @@ Figure~\ref{fig:addC}, Process $b$ receives $Add_{c, 1}$. Since it
 improves its own partition distance, it keeps it and forwards it to
 its neighbors. Process $b$ discards $Add_{b, 1.5}$, for it does not
 improve its partition distance. Processes $c$ and $d$ will never hear
-of Process $a$'s partition. In Figure~\ref{fig:addD}, processes
-discard last transiting messages. The system converged to the optimal
-partitioning. 
+of Process $a$'s partition. \TODO{At scale.} In Figure~\ref{fig:addD},
+processes discard last transiting messages. The system converged to
+the optimal partitioning.
 
 Transitive relationships ensure that each process gets its closest
 source while accumulators ensure that messages propagation
@@ -93,11 +93,18 @@ that was removed.
       Process $c$ initiate then remove a partition.
       $w_{ab} = 1.5$; $w_{bc} = w_{cd} = w_{bd} = 1$.]{\input{input/figdelA.tex}}
     \hspace{5pt}
-    \subfloat[Part B][\label{fig:delB}\TODO{mew}.]{\input{input/figdelB.tex}}
+    \subfloat[Part B][\label{fig:delB}Process $b$ and Process $d$ receive and deliver
+      messages based on their weights. $a$'s partition propagates to all processes.]
+             {\input{input/figdelB.tex}}
     \hspace{5pt}
-    \subfloat[Part C][\label{fig:delC}\TODO{mew}.]{\input{input/figdelC.tex}}
+    \subfloat[Part C][\label{fig:delC}Process $c$'s partition reach $b$ and $d$.
+      Its removal shortly follows. Process $b$ does not have any control
+      information about partitions any more.]{\input{input/figdelC.tex}}
     \hspace{5pt}
-
+    \subfloat[Part D][\label{fig:delD}Processes discard remaining messages.
+      Process $b$ does not deliver $\delta_a$, for it already removed $a$ when
+      Partition $c$ dominated it. Processes $c$ and $d$ remain in an incorrect
+      partition.]{\input{input/figdelD.tex}}
   \end{center}
   \caption{\label{algo:add}Removing partition may lead to inconsistent states.}
 \end{figure*}
