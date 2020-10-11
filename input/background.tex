@@ -15,20 +15,52 @@ machines interconnected by communication links.
 \begin{definition}[Logical partition]
   A logical \underline{p}artition $P_s$ originated at a
   \underline{s}ource process $s \in V$ is a set of interconnected
-  processes that do not belong to another logical partition.
+  processes that do not belong to another logical partition. The set
+  of sources is $S$.
 \end{definition}
 
 \begin{definition}[Optimal partitioning]
   The optimal partitioning $\mathcal{P}$ is a set of logical
   partitions such that each process belongs to a logical partition
-  comprising its closest source process. $\forall p \in P_{s_1},
-  \nexists P_{s_2}$ such that \TODO{$distance(p, s_2) < distance(p,
-    s_1)$}.
+  comprising its closest source process. $\forall p \in P_{s_1\in S},
+  \nexists P_{s_2 \in S}$ such that \TODO{$distance(p, s_2) <
+    distance(p, s_1)$}.
 \end{definition}
 
 When $distance$ involves latency or number of hops between sources and
 processes, the optimal partitioning consists in processing the
 multiple destinations shortest path~\REF at each process.
+
+
+\begin{definition}[Shortest path]
+  A \underline{p}ath $\pi_{ij}$ from Process $i$ to Process $j$ is a
+  sequence of vertices $[i, k_1, k_2, \ldots k_n, j]$ with $\forall
+  0\leq m \leq n, \langle \pi_{ij}[m], \pi_{ij}[m+1] \rangle \in
+  E$. Shortest \underline{p}aths $\Pi_{ij}$ are sets of paths such
+  that there exists no lower sum of weights from $i$ to $j$.
+\end{definition}
+
+\TODO{Define operation alpha. Receipt and deliveries.}
+
+Without global knowledge, processes only rely on their own behavior to
+deduce the behavior of their neighbor processes. 
+
+\begin{definition}[\label{def:pathdelivery}\TODO{Shortest path} delivery]
+  \TODO{Shortest path} delivery ensures the system eventually converges to
+  optimal partitioning:
+  \begin{inparaenum}[(i)]
+  \item (\textbf{termination}) processes do not need to propagate
+    operations they do not deliver: $\forall \langle i, j \rangle \in
+    E, \neg d_i(\alpha_{s}^w)\implies \neg
+    d_j(\alpha_{s}^{w+w_{ij}})$;
+  \item (\textbf{propagation}) operations delivered by a process may
+    also benefit neighbor processes: $\forall \langle i, j \rangle \in
+    E, d_i(\alpha_{s}^{w_1}) \implies
+    d_j(\alpha_{s}^{w_1+w_{ij}}) \vee
+    d_j(\alpha_{*}^{w_2 < w_1 + w_{ij}})$.
+  \end{inparaenum}
+\end{definition}
+
 
 \begin{figure*}
   \begin{center}
@@ -58,10 +90,10 @@ multiple destinations shortest path~\REF at each process.
 \end{algorithm}
 
 
-Algorithm~\ref{algo:add} shows the instructions of optimal
-partitioning where the only operation available to processes is the
-adding of partitions. Figure~\ref{fig:add} illustrates its behavior on
-a system comprising 4 processes $a$, $b$, $c$, and $d$. Two processes
+Algorithm~\ref{algo:add} shows the instructions that implement the
+rules of Definition~\ref{def:pathdelivery} to converge towards optimal
+partitioning. Figure~\ref{fig:add} illustrates its behavior on a
+system comprising 4 processes $a$, $b$, $c$, and $d$. Two processes
 $a$ and $c$ concurrently create a partition. They initialize their own
 state with the lowest possible bound $0$ (see
 Line~\ref{line:lowestbound}), and send a message to each of their
@@ -76,7 +108,7 @@ to subsets of processes. In Figure~\ref{fig:addD}, processes discard
 last transiting messages. The system converged to the optimal
 partitioning. Interestingly, while the receipt order of messages does
 not impact on local control information, it impacts on control
-information broadcast in the network.
+information broadcast in the network. \TODO{explain with r() d() b().}
 
 Transitive relationships ensure that each process gets its closest
 source while accumulation of weights ensures that messages propagation
