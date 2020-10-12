@@ -126,18 +126,25 @@ b_b(\alpha_a^{1})$).
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity. 
 
-
 \begin{definition}[Dynamic optimal partitioning]
-  \TODO{add and del operations.}
+  A dynamic optimal partitioning is an optimal partitioning where the
+  set of sources $S$ does not monotonically increase. Process $i$
+  joins the set of sources by adding its partition $\alpha_i^{0}$ and
+  leaves the set of sources by removing its partition $\delta_i$.
 \end{definition}
-  
-\TODO{Figure.} \TODO{Also easy to solve when all
-  processes receive all messages}. One could solve this issue by
-removing partitions that were not advertised for a defined
-time~\REF. However, relying on physical timeout could lead to either
-premature removals of partitions when they are still operating; or
-slow convergence where processes believe they belong to a partition
-that was removed.
+
+\TODO{Figure~\ref{fig:del} shows that.}
+
+One could solve this issue by using a conflict-free replicated data
+type for set data structures, then deliver and broadcast all
+operations to all processes~\REF. However, this would be costly in
+terms of generated traffic with some processes delivering and
+broadcasting unrelated to their partitions \TODO{(include locality)}.
+One could also solve this issue by removing partitions that were not
+advertised for a defined time~\REF. However, relying on physical
+timeout could lead to either premature removals of partitions when
+they are still operating; or slow convergence where processes believe
+they belong to a partition that was removed.
 
 
 \begin{figure*}
@@ -159,15 +166,14 @@ that was removed.
       Partition $c$ dominated it. Processes $c$ and $d$ remain in an incorrect
       partition.]{\input{input/figdelD.tex}}
   \end{center}
-  \caption{\label{algo:add}Removing partition may lead to inconsistent partitions.}
+  \caption{\label{fig:del}Partition removals cannot rely only on
+    current partition, for it may lead to inconsistent partitioning.}
 \end{figure*}
 
-
-
-
-
-
-\TODO{Problem statement.}
+\begin{problem}[Consistent partitioning]
+  \TODO{How to enable \emph{consistent} dynamic optimal partitioning
+    with contained broadcast?}
+\end{problem}
 
 \TODO{Next Section presents our approach that solves this problem
   statement by relying only on logical control information.}
