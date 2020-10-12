@@ -16,21 +16,8 @@ machines interconnected by communication links.
   A logical \underline{p}artition $P_s$ originated at a
   \underline{s}ource process $s \in V$ is a set of interconnected
   processes that do not belong to another logical partition. The set
-  of sources is $S$.
+  of sources is $S \subseteq V$.
 \end{definition}
-
-\begin{definition}[Optimal partitioning]
-  The optimal partitioning $\mathcal{P}$ is a set of logical
-  partitions such that each process belongs to a logical partition
-  comprising its closest source process. $\forall p \in P_{s_1\in S},
-  \nexists P_{s_2 \in S}$ such that \TODO{$distance(p, s_2) <
-    distance(p, s_1)$}.
-\end{definition}
-
-When $distance$ involves latency or number of hops between sources and
-processes, the optimal partitioning consists in processing the
-multiple destinations shortest path~\REF at each process.
-
 
 \begin{definition}[Shortest path]
   A \underline{p}ath $\pi_{ij}$ from Process $i$ to Process $j$ is a
@@ -39,6 +26,20 @@ multiple destinations shortest path~\REF at each process.
   E$. Shortest \underline{p}aths $\Pi_{ij}$ are sets of paths such
   that there exists no lower sum of weights from $i$ to $j$.
 \end{definition}
+
+\begin{definition}[Optimal partitioning]
+  The optimal partitioning $\mathcal{P}$ is a set of logical
+  partitions such that each process belongs to a logical partition
+  comprising its closest source process. $\forall p \in P_{s_1\in S},
+  \nexists P_{s_2 \in S}$ such that \TODO{$distance(p, s_2) <
+    distance(p, s_1)$}. \TODO{modify distance with path length.}
+\end{definition}
+
+When $distance$ involves latency or number of hops between sources and
+processes, the optimal partitioning consists in processing the
+multiple destinations shortest path~\REF at each process.
+
+
 
 \TODO{Define operation alpha. Receipt and deliveries.}
 
@@ -113,7 +114,13 @@ information broadcast in the network. \TODO{explain with r() d() b().}
 Transitive relationships ensure that each process gets its closest
 source while accumulation of weights ensures that messages propagation
 terminates.  Removals of partitions are more
-challenging. \TODO{Figure.} \TODO{Also easy to solve when all
+challenging.
+
+\begin{definition}[Dynamic optimal partitioning]
+  \TODO{add and del operations.}
+\end{definition}
+  
+\TODO{Figure.} \TODO{Also easy to solve when all
   processes receive all messages}. One could solve this issue by
 removing partitions that were not advertised for a defined
 time~\REF. However, relying on physical timeout could lead to either
@@ -146,7 +153,8 @@ that was removed.
 
 
 
-Order on the broadcast.
+
+
 
 \TODO{Problem statement.}
 
