@@ -19,35 +19,39 @@ machines interconnected by communication links.
   of sources is $S \subseteq V$.
 \end{definition}
 
+Processes belong to logical partitions depending on path lengths. When
+weights are latency or hop numbers, the optimal partitioning consists
+in processing the multiple destinations shortest path at each process
+\REF.
+
 \begin{definition}[Shortest path]
   A \underline{p}ath $\pi_{ij}$ from Process $i$ to Process $j$ is a
   sequence of vertices $[i, k_1, k_2, \ldots k_n, j]$ with $\forall
   0\leq m \leq n, \langle \pi_{ij}[m], \pi_{ij}[m+1] \rangle \in
   E$. Shortest \underline{p}aths $\Pi_{ij}$ are sets of paths such
-  that there exists no lower sum of weights from $i$ to $j$.
+  that there exists no lower sum of weights $|\Pi_{ij}|$ from $i$ to
+  $j$.
 \end{definition}
 
 \begin{definition}[Optimal partitioning]
   The optimal partitioning $\mathcal{P}$ is a set of logical
   partitions such that each process belongs to a logical partition
-  comprising its closest source process. $\forall p \in P_{s_1\in S},
-  \nexists P_{s_2 \in S}$ such that \TODO{$distance(p, s_2) <
-    distance(p, s_1)$}. \TODO{modify distance with path length.}
+  comprising its closest source process.  $\forall p \in P_{s_1\in S},
+  \nexists P_{s_2 \in S}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
 \end{definition}
 
-When $distance$ involves latency or number of hops between sources and
-processes, the optimal partitioning consists in processing the
-multiple destinations shortest path~\REF at each process.
+Processes use reliable asynchronous message passing to reach optimal
+partitioning together. Process $s$ generates a message
+$\alpha_s^0$. Upon \underline{r}eceipt $r_i(\alpha_s^{w})$, Process
+$i$ knows that Process $s$ created a partition at a path length of
+$w$. Process $i$ may choose to \underline{d}eliver $d_i(\alpha_s^{w})$
+if it improves its partitioning. Process $i$ may choose to propagate
+its change through \underline{b}roadcast $b_i(\alpha_s^w)$.  Without
+global knowledge, processes only rely on their own behavior to deduce
+the behavior of their neighbor processes.
 
-
-
-\TODO{Define operation alpha. Receipt and deliveries.}
-
-Without global knowledge, processes only rely on their own behavior to
-deduce the behavior of their neighbor processes. 
-
-\begin{definition}[\label{def:pathdelivery}\TODO{Shortest path} delivery]
-  \TODO{Shortest path} delivery ensures the system eventually converges to
+\begin{definition}[\label{def:transitivedelivery}Transitive delivery]
+  Transitive delivery ensures the system eventually converges to
   optimal partitioning:
   \begin{inparaenum}[(i)]
   \item (\textbf{termination}) processes do not need to propagate
@@ -92,9 +96,9 @@ deduce the behavior of their neighbor processes.
 
 
 Algorithm~\ref{algo:add} shows the instructions that implement the
-rules of Definition~\ref{def:pathdelivery} to converge towards optimal
-partitioning. Figure~\ref{fig:add} illustrates its behavior on a
-system comprising 4 processes $a$, $b$, $c$, and $d$. Two processes
+rules of Definition~\ref{def:transitivedelivery} to converge towards
+optimal partitioning. Figure~\ref{fig:add} illustrates its behavior on
+a system comprising 4 processes $a$, $b$, $c$, and $d$. Two processes
 $a$ and $c$ concurrently create a partition. They initialize their own
 state with the lowest possible bound $0$ (see
 Line~\ref{line:lowestbound}), and send a message to each of their
@@ -107,14 +111,21 @@ distance. Processes $c$ and $d$ will never hear of Process $a$'s
 partition. At scale, it saves bandwidth by limiting generated traffic
 to subsets of processes. In Figure~\ref{fig:addD}, processes discard
 last transiting messages. The system converged to the optimal
-partitioning. Interestingly, while the receipt order of messages does
-not impact on local control information, it impacts on control
-information broadcast in the network. \TODO{explain with r() d() b().}
+partitioning.  Transitive relationships ensure that each process gets
+its closest source while accumulation of weights ensures that messages
+propagation terminates.  Interestingly, while the receipt order of
+messages does not impact on local control information
+($r_b(\alpha_a^{1.5}) \cdot r_b(\alpha_a^{1}) \Leftrightarrow
+r_b(\alpha_a^{1}) \cdot r_b(\alpha_a^{1.5}) \implies
+\TODO{d_b(\alpha_a^{1})}$), it impacts on control information
+broadcast in the network ($r_b(\alpha_a^{1.5}) \cdot r_b(\alpha_a^{1})
+\implies b_b(\alpha_{b}^{1.5}) \cdot b_b(\alpha_{b}^{1})$ while
+$r_b(\alpha_a^{1}) \cdot r_b(\alpha_a^{1.5}) \implies
+b_b(\alpha_a^{1})$).
 
-Transitive relationships ensure that each process gets its closest
-source while accumulation of weights ensures that messages propagation
-terminates.  Removals of partitions are more
-challenging.
+While only adding logical partitions to the distributed system is
+straightforward, removing them introduces additional complexity. 
+
 
 \begin{definition}[Dynamic optimal partitioning]
   \TODO{add and del operations.}
