@@ -128,9 +128,12 @@ straightforward, removing them introduces additional complexity.
 
 \begin{definition}[Dynamic optimal partitioning]
   A dynamic optimal partitioning is an optimal partitioning where the
-  set of sources $S$ does not monotonically increase. Process $i$
-  joins the set of sources by adding its partition $\alpha_i^{0}$ and
-  leaves the set of sources by removing its partition $\delta_i$.
+  set of sources $S$ does not monotonically increase. We suffix this
+  set with \underline{t}ime $t$ : $S(t)$.  Process $i$ joins the set
+  of sources by \underline{a}dding its partition with messages
+  $\alpha_i^{0}$: $Add(i \not\in S(t)) \implies i \in S(t+1)$; and
+  leaves the set of sources by \underline{d}eleting its partition with
+  messages $\delta_i$: $Del(i \in S(t)) \implies i \not\in S(t+1)$.
 \end{definition}
 
 \TODO{Figure~\ref{fig:del} shows that.}

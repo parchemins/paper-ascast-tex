@@ -2,6 +2,9 @@
 \section{Dynamic partitioning}
 \label{sec:proposal}
 
+A reactive logical partitioning the cost of which actually depends on
+its usage.
+
 
 \subsection{Complexity}
 \label{subsec:complexity}
@@ -11,8 +14,8 @@ analysis into space, time, and communication complexity.
 
 \textbf{The communication complexity} concerns the size and number of
 messages required to reach optimal partitioning. In the average-case,
-a process $i$ chosen uniformly at random among all processes creates
-a logical partition. Its messages $\alpha_i$ propagate through the
+a process $i$ chosen uniformly at random among all processes creates a
+logical partition. Its messages $\alpha_i$ propagate through the
 network until reaching processes that belong to another partition
 closer to them. This splits partitions in half in average. Overall,
 the $a^{th}$ new partition comprises
@@ -20,15 +23,17 @@ the $a^{th}$ new partition comprises
 processes. This decreases every new partition until reaching $0$
 processes per new partition: even the chosen process already belongs
 to its optimal partition. The average number of messages per process
-is \smash{$\mathcal{O}(\frac{\overline{|O|}}{|2^{\lfloor \log_2 a
-      \rfloor}})$}.  Deleting the $a^{th}$ partition generates the
-exact same number of messages than the $a^{th}$ partition
-creation. \TODO{But what about echos?} In the worst-case, every new
-partition includes all but one process belonging to the previous
-partition. The total number of messages after the $a^{th}$ new
-partition is $O(\overline{|O|}\cdot a^2)$. As for the average-case,
-the number of messages for the partition deletion is identical to the
-number of messages of the corresponding partition creation.
+is \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
+      \rfloor}})$}. \TODO{Multiple receipt and multiple delivery imply
+  more messages (receipt bounded by $|O|$ as well).} Deleting the
+$a^{th}$ partition generates the exact same number of messages than
+the $a^{th}$ partition creation. \TODO{But what about echos?} In the
+worst-case, every new partition includes all but one process belonging
+to the previous partition. The total number of messages after the
+$a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot a^2)$. As
+for the average-case, the number of messages for the partition
+deletion is identical to the number of messages of the corresponding
+partition creation.
 
 %%% Local Variables: 
 %%% mode: latex
