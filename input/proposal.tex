@@ -5,6 +5,14 @@
 A reactive logical partitioning the cost of which actually depends on
 its usage.
 
+The main idea is maintaining graphs of partitions using local
+knowledge only and use graphs as often as possible: it improves
+resilience to crashes, convergence speed etc. Unfortunately,
+maintaining graphs of partitions in dynamic networks may require the
+use of broadcast tree. The removal of a communication channel between
+2 processes may remove an advantageous path from processes downstream
+to the source of the partition they belong to.
+
 
 \subsection{Complexity}
 \label{subsec:complexity}
