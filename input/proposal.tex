@@ -78,28 +78,59 @@ finds out that the received partition is closer than its current one,
 it delivers it which in turns also triggers another competition
 amongst neighbors due to forwarding.
 
-Joining the network is equivalent to add as many communication links
-as necessary between the joining process and its new neighbors.
+\noindent Joining the network is equivalent to add as many
+communication links as necessary between the joining process and its
+new neighbors.
 
 \paragraph{Dynamic networks with dynamic partitions.}
 When removing a communication link between two processes does not
 break any active path, because neither distances of processes depend
-on the other, then nothing needs to be done. \NAME have no overhead.
+on the other, then nothing needs to be done. \NAME has no overhead.
 Unfortunately, when a process' distance depends on the other process,
 the protocol becomes much more complex. Indeed, this requires to
-\TODO{undo} all add messages originated from this process. \TODO{Why
-  distance is not sufficient ?} \TODO{Why not use this from the first
-  step then, or why other steps are still relevant?} 
+\TODO{undo} all add messages originated from this process. A message
+must convey the fact that
+\begin{inparaenum}[(i)]
+\item an edge at a particular process has been removed, and
+\item the distance that has been delivered by a process comes from
+  this particular process.
+\end{inparaenum}
+
+\noindent \NAME handles this as a particular case of partition within
+current partition: it contains to affected regions the traffic
+generated to patch affected regions. In order to know if it is
+affected by the \TODO{undo} operation, using distances already
+piggybacked in messages is not sufficient.  Each process must know the
+path taken by delivered message. Since we do not beforehand which
+communication links will crash and which messages will be affected by
+undos, each message has to carry its path along forwarding. This also
+allows processes to remove loops, for they cannot rely on version
+number (that remains unchanged) for this operation.
+
+\noindent Instead of version number, one could use such paths to remove loops
+due to \TODO{add and del}, however this may be much more costly in
+terms of generated traffic. Version numbers guarantee that only one
+delete is delivered and all prior inserts are then discarded, while
+using paths, processes may deliver multiple inserts and deletes before
+reaching termination. \TODO{maybe clearer with figures.} As
+consequence, \NAME still makes use of vector of versions.
+
+\noindent Although costly, piggybacking paths with logical partitioning synergies
+well, for the size of these paths decreases quickly as the number of
+partitions grows.
 
 \paragraph{A last optimisation}
-
 \TODO{Carry information that is useless. such as order of processes in
-  paths, and identities of processes themselves.}
+  paths, and identities of processes themselves.} \TODO{Icarus for
+  dissemination trees~\cite{whitaker2002forwarding}}. \TODO{No need to
+  know the dimension of networks and
+  partitions~\cite{almeida2007scalable}}.
 
 \subsection{Complexity}
 \label{subsec:complexity}
 
-\TODO{To rework, for there are more components now.}
+\TODO{To rework, for there are more components now. Maybe do this
+  along the description of the approach.}
 
 We focus on average-case and worst-case complexity. We divide our
 analysis into space, time, and communication complexity.
