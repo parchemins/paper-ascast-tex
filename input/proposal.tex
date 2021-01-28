@@ -2,8 +2,11 @@
 \section{Dynamic partitioning}
 \label{sec:proposal}
 
-A reactive logical partitioning the cost of which actually depends on
-its usage.
+In this section, we introduce \NAME, (\TODO{stands for}) a reactive
+protocol for logical partitioning the cost of which actually depends
+on its usage: when the system becomes quiescent, processes eventually
+converge to their respective partition and do not require further
+communication afterwards.
 
 The main idea is maintaining graphs of partitions using local
 knowledge only and use graphs as often as possible: it improves
@@ -13,9 +16,90 @@ use of broadcast tree. The removal of a communication channel between
 2 processes may remove an advantageous path from processes downstream
 to the source of the partition they belong to.
 
+This section describes \NAME's components by starting from the
+simplest case of add-only partition, to the most complex case of
+dynamic partitions in dynamic networks. 
+
+\TODO{Probably better to pair operation as ``ins, del'' and ``add, rem''?}
+
+\paragraph{Static network with add-only.}
+At any time, a process can become a source, hence \TODO{creating} a
+new partition in the system. This partition eventually includes all
+processes that are closer from this new source than any other else. We
+described such protocol in Section~\ref{sec:background}. Processes
+naturally converge towards their respective best partition by only
+piggybacking a monotonically increasing distance in forwarded
+messages.  \TODO{Traffic of each partition is contained to the
+  partition.}
+
+\paragraph{Static network with dynamic partitions.}
+At any time, a source can revoke its self-appointed status of source,
+hence \TODO{removing} its partition of the system. All processes that
+belong to this partition must choose another partition to belong to.
+To handle dynamic partitions, processes require two additional
+components.
+
+\noindent \textbf{First,} since the number of partitions does not
+monotonically increase in the system any longer, they require a vector
+of versions that monotonically increases over \TODO{add and del}
+operations. This allows processes to quickly discard stale messages
+saving bandwidth. For instance, a process that received a message
+originated at Process $a$ with a version $2$ knows that any message
+originated at Process $a$ with a version $1$ are stale system-wide; it
+must not forward it. As consequence, vectors of versions also ensure
+termination, for messages \TODO{add and del} cannot follow each other
+in an infinite loop. In terms of traffic, this only requires each
+\TODO{delete} message to piggyback a source identifier and version
+number.
+
+\noindent \textbf{Second,} processes need to maintain a local view of
+their neighbors' partition.  Figure~\ref{fig:del} shows that
+\TODO{deletes} may not propagate properly to all processes in
+need. The path leading to processes delivering $add$ may be broken due
+to concurrent deliveries.  To solve this issue, each process is able
+to know with certainty that each of its neighbor does not need a
+delete (either because it is in another partition, or because another
+path exists from the source to this neighbor). \TODO{More, figures
+  etc.} In terms of traffic, this requires to acknowledge each message
+in a way or another (acknowledgement messages or included in each
+add-del message) using FIFO communication channels. The propagation of
+delete messages is limited to the partition it targets plus uncertain
+processes.
+
+\noindent \textbf{Finally,} the delete must trigger another
+competition amongst neighboring partitions. These \TODO{add}
+messages operate normally and fill gaps left open by deletes.
+
+\paragraph{Networks with new communication links.}
+Adding new communication links to the network may create shortcuts
+between processes. Both processes must send their current best
+partition to each other. Upon receipt, they act normally: if a process
+finds out that the received partition is closer than its current one,
+it delivers it which in turns also triggers another competition
+amongst neighbors due to forwarding.
+
+Joining the network is equivalent to add as many communication links
+as necessary between the joining process and its new neighbors.
+
+\paragraph{Dynamic networks with dynamic partitions.}
+When removing a communication link between two processes does not
+break any active path, because neither distances of processes depend
+on the other, then nothing needs to be done. \NAME have no overhead.
+Unfortunately, when a process' distance depends on the other process,
+the protocol becomes much more complex. Indeed, this requires to
+\TODO{undo} all add messages originated from this process. \TODO{Why
+  distance is not sufficient ?} \TODO{Why not use this from the first
+  step then, or why other steps are still relevant?} 
+
+\paragraph{A last optimisation}
+
+\TODO{Carry information that is useless. such as order of processes in
+  paths, and identities of processes themselves.}
 
 \subsection{Complexity}
 \label{subsec:complexity}
+
+\TODO{To rework, for there are more components now.}
 
 We focus on average-case and worst-case complexity. We divide our
 analysis into space, time, and communication complexity.
