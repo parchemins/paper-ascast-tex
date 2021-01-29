@@ -19,10 +19,10 @@
   (0 - 5pt, 0 - 2pt); %% b - a 
 
   \draw[<-] (0 +5pt, 0 + 2pt) --
-  node[above=-0.3em, font=\tiny]{$\ADD_{c}^{1}\cdot\DEL{c}$}
+  node[above=-0.3em, font=\tiny]{\textcolor{\PC}{$\ADD_{c}^{1}$}$\cdot\DEL{c}$}
   (\X -5pt, 0 + 2pt); %% c - b
   \draw[->] (0 +5pt, 0 - 2pt) --
-  node[below=-0.3em, font=\tiny]{$\ADD_a^{2.5}$}
+  node[below=-0.3em, font=\tiny, color=\PA]{$\ADD_a^{2.5}$}
   (\X -5pt, 0 - 2pt); %% b - c
 
   \draw[->] (0 + 2pt, 0 - 5pt) --
@@ -43,14 +43,14 @@
 
   
   \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
-  \draw[fill=white] (0, 0) node{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0, 0) node[color=\PA]{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0, \Y) node[color=\PC]{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
   % \draw (-\X+5pt, 5pt) node[above left]{$\DEL_a$};
   % \draw (\X+5pt, 5pt) node[above right]{$\DEL_c$};
-  \draw (0, 5pt) node[above]{$\bm{a: 1.5}$};
-  \draw (-5pt, \Y) node[left]{$\bm{c: 1}$};
+  \draw (0, 5pt) node[above, color=\PA]{$\bm{a: 1.5}$};
+  \draw (-5pt, \Y) node[left, color=\PC]{$\bm{c: 1}$};
 
 
 \end{tikzpicture}

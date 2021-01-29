@@ -11,7 +11,7 @@
 \RequirePackage[a4paper,total={6.7in, 9in}]{geometry}
 \RequirePackage[numbers]{natbib}
 \bibliographystyle{plain}
-\RequirePackage{xcolor}
+\RequirePackage[dvipsnames]{xcolor}
 \definecolor{@ink}{RGB}{6, 47, 79}
 \definecolor{@posy}{RGB}{129, 55, 114}
 \definecolor{@embers}{RGB}{184, 38, 1}

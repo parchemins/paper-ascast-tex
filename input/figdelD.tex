@@ -12,7 +12,7 @@
   \thinmuskip=0mu
 
   \draw[->] (-\X + 5pt, 0 + 2pt ) --
-  node[above=-0.3em,font=\tiny]{$\DEL{c}\cdot\ADD_c^{4}\cdot\bm{\DEL_{a}}$}
+  node[above=-0.3em,font=\tiny]{$\DEL{c}\cdot\ADD_c^{4}\cdot$\textcolor{\WRONG}{$\bm{\DEL_{a}}$}}
   (0 - 5pt, 0 + 2pt); %% a - b
   \draw[<-] (-\X + 5pt, 0 - 2pt ) --
   (0 - 5pt, 0 - 2pt); %% b - a 
@@ -41,9 +41,9 @@
   \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
   % \draw (-\X+5pt, 5pt) node[above left]{$\DEL_a$};
-  \draw (\X+5pt, 5pt) node[above]{$\bm{a: 2.5}$}; %% c
+  \draw (\X+5pt, 5pt) node[above, color=\WRONG]{$\bm{a: 2.5}$}; %% c
   % \draw (0, 5pt) node[above]{$\bm{a: 1.5}$}; %% b
-  \draw (-5pt, \Y) node[left]{$\bm{a: 2.5}$}; %% d
+  \draw (-5pt, \Y) node[left, color=\WRONG]{$\bm{a: 2.5}$}; %% d
 
 
 \end{tikzpicture}

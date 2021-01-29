@@ -44,13 +44,17 @@
   
   \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
   \draw[fill=white] (0, 0) node{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (\X, 0)
+  node[color=\PA]{$\bm{c}$}
+  +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0, \Y)
+  node[color=\PA]{$\bm{d}$} +(-5pt, -5pt)
+  rectangle +(5pt, 5pt);
   
   % \draw (-\X+5pt, 5pt) node[above left]{$\DEL_a$};
-  \draw (\X+5pt, 5pt) node[above]{$\bm{a: 2.5}$}; %% c
+  \draw (\X+5pt, 5pt) node[above, color=\PA]{$\bm{a: 2.5}$}; %% c
   % \draw (0, 5pt) node[above]{$\bm{a: 1.5}$}; %% b
-  \draw (-5pt, \Y) node[left]{$\bm{a: 2.5}$}; %% d
+  \draw (-5pt, \Y) node[left, color=\PA]{$\bm{a: 2.5}$}; %% d
 
 
 \end{tikzpicture}
