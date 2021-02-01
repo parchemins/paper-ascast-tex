@@ -1,11 +1,17 @@
 
 \begin{tikzpicture}[scale=0.87]
 
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+  
   \newcommand\X{50pt}
   \newcommand\Y{-50pt}
 
   \newcommand\ADD{\alpha}
 
+
+  
   \draw[->] (-\X + 5pt, 0 + 2pt ) -- (0 - 5pt, 0 + 2pt); %% a - b
   \draw[<-] (-\X + 5pt, 0 - 2pt ) --
   node[below=-0.3em, font=\tiny]{$\ADD_{c}^{2.5}$}
@@ -32,10 +38,18 @@
 
 
   
-  \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
-  \draw[fill=white] (0, 0) node{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (-\X, 0)
+  node[color=\PA]{$\bm{a}$}
+  +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+  \draw[fill=white] (0, 0)
+  node[color=\PC]{$\bm{b}$}
+  +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (\X, 0)
+  node[color=\PC]{$\bm{c}$}
+  +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0, \Y)
+  node[color=\PC]{$\bm{d}$}
+  +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
   \draw (-\X, 5pt) node[above]{$a: 0$};
   \draw (0, 5pt) node[above]{$\bm{c: 1}$};

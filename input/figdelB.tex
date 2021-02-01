@@ -1,15 +1,17 @@
 
 \begin{tikzpicture}[scale=0.87]
 
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+  
   \newcommand\X{50pt}
   \newcommand\Y{-50pt}
 
   \newcommand\ADD{\alpha}
   \newcommand\DEL{\delta}
 
-  \thickmuskip=0mu
-  \medmuskip=0mu
-  \thinmuskip=0mu
+
 
   \draw[->] (-\X + 5pt, 0 + 2pt ) --
   node[above=-0.3em,font=\tiny]{$\DEL_{a}$}
@@ -49,8 +51,8 @@
   
   % \draw (-\X+5pt, 5pt) node[above left]{$\DEL_a$};
   % \draw (\X+5pt, 5pt) node[above right]{$\DEL_c$};
-  \draw (0, 5pt) node[above, color=\PA]{$\bm{a: 1.5}$};
-  \draw (-5pt, \Y) node[left, color=\PC]{$\bm{c: 1}$};
+  \draw (0, 5pt) node[above]{$\bm{a: 1.5}$};
+  \draw (-5pt, \Y) node[left]{$\bm{c: 1}$};
 
 
 \end{tikzpicture}

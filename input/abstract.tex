@@ -1,23 +1,19 @@
 
 \begin{abstract}
 
-\TODO{Locating the closest copy of a specific content across a
-  distributed infrastructure requires to keep up-to-date an index of
-  all replicas and their respective locations. Existing methods mostly
-  rely on an external service to store this index, either on a
-  centralized server or using a Distributed Hash Table (DHT). However,
-  contacting a remote node to obtain localization information
-  contradicts with emerging Fog infrastructures in terms of locality
-  and robustness. In this paper, we present $A^3$, an epidemic
-  protocol that will efficiently inform the relevant nodes about the
-  presence of replicas in their neighborhood. Upon the exchange of
-  messages, each node maintains a personalized index that will
-  eventually contain the location of the closest copy for each object
-  according to its place in the network topology. We implemented $A^3$
-  and deployed it on a dedicated testbed with real-world
-  topologies. Experimental results show that the time to retrieve
-  objects is significantly decreased from 10\% up to 60\%, when
-  compared to a DHT-based localization service.}
+  Fog infrastructures allows content providers to better distribute
+  data over autonomous systems, hence improving on quality of user
+  experience by reducing latency. However, locating the closest data
+  sources can prove challenging in dynamic networks with dynamic
+  sources. Locating sources may effectively take more time than
+  actually downloading contents. \TODO{Related work ?} In this paper,
+  we introduce \NAME, a reactive protocol for dynamic logical
+  partitioning in dynamic networks. \TODO{source automatically create
+    partitions.} \NAME uses epidemic dissemination (\TODO{scoped
+    flooding}). \TODO{costs of operations.} When the system becomes
+  quiescent, every process eventually converges to its closest
+  partition, then \NAME incurs no overhead. \TODO{Proof, simulation,
+    testbed?}
 
 \end{abstract}
 
@@ -25,4 +21,5 @@
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "../paper"
+%%% ispell-local-dictionary: "english"
 %%% End: 

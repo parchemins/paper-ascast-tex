@@ -84,8 +84,7 @@ the behavior of their neighbor processes.
       incoming messages. The system converged to optimal partitions.]{
       \input{input/figaddD.tex}}
     \caption{\label{fig:add}Simple accumulation in messages makes the
-      system converge to optimal partitions with contained
-      broadcast.}
+      system converge to optimal partitions with scoped flooding.}
   \end{center}
 \end{figure*}
 
@@ -108,13 +107,14 @@ receives $\alpha_{c}^{1}$. Since it improves its own partition
 distance, it keeps it and forwards it to its neighbors. Process $b$
 discards $\alpha_{b}^{1.5}$, for it does not improve its partition
 distance. Processes $c$ and $d$ will never hear of Process $a$'s
-partition. At scale, it saves bandwidth by limiting generated traffic
-to subsets of processes. In Figure~\ref{fig:addD}, processes discard
-last transiting messages. The system converged to the optimal
-partitioning.  Transitive relationships ensure that each process gets
-its closest source while accumulation of weights ensures that messages
-propagation terminates.  Interestingly, while the receipt order of
-messages does not impact on local control information
+partition. At scale, such \emph{scoped flooding} saves bandwidth by
+limiting generated traffic to subsets of
+processes~\cite{wang2015prodiluvian}. In Figure~\ref{fig:addD},
+processes discard last transiting messages. The system converged to
+the optimal partitioning.  Transitive relationships ensure that each
+process gets its closest source while accumulation of weights ensures
+that messages propagation terminates.  Interestingly, while the
+receipt order of messages does not impact on local control information
 ($r_b(\alpha_a^{1.5}) \cdot r_b(\alpha_a^{1}) \Leftrightarrow
 r_b(\alpha_a^{1}) \cdot r_b(\alpha_a^{1.5}) \implies
 \TODO{d_b(\alpha_a^{1})}$), it impacts on control information
@@ -139,15 +139,20 @@ straightforward, removing them introduces additional complexity.
 \TODO{Figure~\ref{fig:del} shows that.}
 
 One could solve this issue by using a conflict-free replicated data
-type for set data structures, then deliver and broadcast all
-operations to all processes~\REF. However, this would be costly in
-terms of generated traffic with some processes delivering and
-broadcasting unrelated to their partitions \TODO{(include locality)}.
-One could also solve this issue by removing partitions that were not
-advertised for a defined time~\REF. However, relying on physical
-timeout could lead to either premature removals of partitions when
-they are still operating; or slow convergence where processes believe
-they belong to a partition that was removed.
+type (CRDT) for set data structures~\cite{shapiro2011crdts}. CRDTs
+require eventual delivery of messages to ensure convergence. All
+processes need to receive, deliver, hence broadcast all
+operations. Some processes may receive operations unnecessary to their
+correct functioning, for these operations did not happen in their
+locality.  One could also solve this issue by removing partitions that
+were not advertised for a defined
+time~\cite{hemmati2015namebased}. However, relying on physical timeout
+could lead to either premature removals of partitions when they are
+still operating; or slow convergence where processes believe they
+belong to a partition that was removed (\TODO{plot ?}). In addition,
+since timeouts imply a continuous maintenance of partitions, such
+partitioning protocol incurs an overhead even in quiet contexts
+without dynamic partitions.
 
 
 \begin{figure*}
@@ -170,12 +175,13 @@ they belong to a partition that was removed.
       partition.]{\input{input/figdelD.tex}}
   \end{center}
   \caption{\label{fig:del}Partition removals cannot rely only on
-    current partition, for it may lead to inconsistent partitioning.}
+    current partition, for it may lead to either inconsistent
+    partitioning, or every process receiving every broadcast.}
 \end{figure*}
 
 \begin{problem}[Consistent partitioning]
-  \TODO{How to enable \emph{consistent} dynamic optimal partitioning
-    in dynamic network with contained broadcast?}
+  How to enable \emph{consistent} dynamic optimal partitioning in
+  dynamic network using scoped flooding?
 \end{problem}
 
 \TODO{Dynamic Multiple-sources All-destinations shortest path on
