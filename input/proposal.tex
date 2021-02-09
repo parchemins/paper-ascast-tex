@@ -2,6 +2,8 @@
 \section{Dynamic partitioning}
 \label{sec:proposal}
 
+\TODO{Remember to say stateless, asynchronous system.}
+
 In this section, we introduce \NAME, (\TODO{stands for}) a reactive
 protocol for logical partitioning the cost of which actually depends
 on its usage: when the system becomes quiescent, processes eventually
@@ -21,6 +23,12 @@ simplest case of add-only partition, to the most complex case of
 dynamic partitions in dynamic networks. 
 
 \TODO{Probably better to pair operation as ``ins, del'' and ``add, rem''?}
+
+\begin{algorithm}
+  \input{input/algoadddelundo.tex}
+  \caption{\label{algo:adddelundo}Dynamic partitioning by Process $p$.}
+\end{algorithm}
+
 
 \paragraph{Static network with add-only.}
 At any time, a process can become a source, hence \TODO{creating} a

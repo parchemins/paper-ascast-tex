@@ -1,0 +1,56 @@
+
+\SetKwProg{Function}{func}{}{}
+
+\small
+
+\DontPrintSemicolon
+\LinesNumbered
+
+$\mathcal{O}_p$ \tcp*[r]{set of neighbors and weights}
+$\mathcal{D}$ \tcp*[r]{vector of versions}
+$c$ \tcp*[r]{local counter}
+$bests$ \tcp*[r]{last delivered $\alpha$ of $p$ and neighbors}
+
+\BlankLine
+
+\Function{\textup{Add ( )} \tcp*[f]{$\alpha_{p, c}^{0, \varnothing} $}} {
+  $c \leftarrow c + 1$ \;
+  \textup{receiveAdd($\langle p, c \rangle$, $0$, $\varnothing$)}
+}
+
+\Function{\textup{Del ( )} \tcp*[f]{$\delta_{p, c}$}} {
+  $c \leftarrow c + 1$ \;
+  \textup{receiveDel($\langle p, c \rangle$)}
+}
+
+\Function{\textup{Undo ( )} \tcp*[f]{$\mu_{bests[p]}$}} {
+  \textup{receiveUndo(bests[p])}
+}
+
+\BlankLine
+
+\Function{\textup{receiveAdd($s'$, $c'$, $d'$, $\pi$)} \tcp*[f]{$r_p(\alpha_{s', c'}^{d', \pi})$}} {
+  $bests[\pi[|\pi|-1]] \leftarrow \langle s', c', d', \pi \rangle$ \;
+  \If {$p \not\in \pi$} {
+      \If {$c' \geq bests[s']$} {
+          \If { $d' < d$ } {
+              \textup{deliverAdd($s'$, $d'$)}
+          }
+      }
+  }
+}
+
+%% \BlankLine
+
+%% \Function{\textup{broadcast($m$)} {
+%%   $d \leftarrow d'$ \;
+%%   $s \leftarrow s'$ \;
+
+%%   \ForEach {$\langle n, w_{pn} \rangle \in \mathcal{O}_p$} {
+%%     \textup{send$_n$($s', d' + w_{pn}$)} \label{line:accumulator}
+%%     \tcp*[r]{$b_p(\alpha_{s'}^{d'})$}
+%%   }
+    
+%% } 
+
+
