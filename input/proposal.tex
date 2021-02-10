@@ -10,13 +10,16 @@ on its usage: when the system becomes quiescent, processes eventually
 converge to their respective partition and do not require further
 communication afterwards.
 
-The main idea is maintaining graphs of partitions using local
-knowledge only and use graphs as often as possible: it improves
-resilience to crashes, convergence speed etc. Unfortunately,
-maintaining graphs of partitions in dynamic networks may require the
-use of broadcast tree. The removal of a communication channel between
-2 processes may remove an advantageous path from processes downstream
-to the source of the partition they belong to.
+Each process works autonomously and each change is broadcast to its
+neighborhood, for neighbors may depend on this change as well. 
+
+% The main idea is maintaining graphs of partitions using local
+% knowledge only and use graphs as often as possible: it improves
+% resilience to crashes, convergence speed etc. Unfortunately,
+% maintaining graphs of partitions in dynamic networks may require the
+% use of broadcast tree. The removal of a communication channel between
+% 2 processes may remove an advantageous path from processes downstream
+% to the source of the partition they belong to.
 
 This section describes \NAME's components by starting from the
 simplest case of add-only partition, to the most complex case of
@@ -44,39 +47,37 @@ messages.  \TODO{Traffic of each partition is contained to the
 At any time, a source can revoke its self-appointed status of source,
 hence \TODO{removing} its partition of the system. All processes that
 belong to this partition must choose another partition to belong to.
-To handle dynamic partitions, processes require two additional
-components.
 
-\noindent \textbf{First,} since the number of partitions does not
-monotonically increase in the system any longer, they require a vector
-of versions that monotonically increases over \TODO{add and del}
-operations. This allows processes to quickly discard stale messages
-saving bandwidth. For instance, a process that received a message
-originated at Process $a$ with a version $2$ knows that any message
-originated at Process $a$ with a version $1$ are stale system-wide; it
-must not forward it. As consequence, vectors of versions also ensure
+\noindent Since the number of partitions does not monotonically
+increase in the system any longer, they require a vector of versions
+that monotonically increases over \TODO{add and del} operations. This
+allows processes to quickly discard stale messages saving
+bandwidth. For instance, a process that received a message originated
+at Process $a$ with a version $2$ knows that any message originated at
+Process $a$ with a version $1$ are stale system-wide; it must not
+forward it. As consequence, vectors of versions also ensure
 termination, for messages \TODO{add and del} cannot follow each other
 in an infinite loop. In terms of traffic, this only requires each
 \TODO{delete} message to piggyback a source identifier and version
 number.
 
-\noindent \textbf{Second,} processes need to maintain a local view of
-their neighbors' partition.  Figure~\ref{fig:del} shows that
-\TODO{deletes} may not propagate properly to all processes in
-need. The path leading to processes delivering $add$ may be broken due
-to concurrent deliveries.  To solve this issue, each process is able
-to know with certainty that each of its neighbor does not need a
-delete (either because it is in another partition, or because another
-path exists from the source to this neighbor). \TODO{More, figures
-  etc.} In terms of traffic, this requires to acknowledge each message
-in a way or another (acknowledgement messages or included in each
-add-del message) using FIFO communication channels. The propagation of
-delete messages is limited to the partition it targets plus uncertain
-processes.
+% \noindent \textbf{Second,} processes need to maintain a local view of
+% their neighbors' partition.  Figure~\ref{fig:del} shows that
+% \TODO{deletes} may not propagate properly to all processes in
+% need. The path leading to processes delivering $add$ may be broken due
+% to concurrent deliveries.  To solve this issue, each process is able
+% to know with certainty that each of its neighbor does not need a
+% delete (either because it is in another partition, or because another
+% path exists from the source to this neighbor). \TODO{More, figures
+%   etc.} In terms of traffic, this requires to acknowledge each message
+% in a way or another (acknowledgement messages or included in each
+% add-del message) using FIFO communication channels. The propagation of
+% delete messages is limited to the partition it targets plus uncertain
+% processes.
 
-\noindent \textbf{Finally,} the delete must trigger another
-competition amongst neighboring partitions. These \TODO{add}
-messages operate normally and fill gaps left open by deletes.
+\noindent Deletes must trigger competition amongst neighboring
+partitions. These \TODO{add} messages operate normally and fill gaps
+left open by deletes.
 
 \paragraph{Networks with new communication links.}
 Adding new communication links to the network may create shortcuts

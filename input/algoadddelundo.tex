@@ -6,51 +6,72 @@
 \DontPrintSemicolon
 \LinesNumbered
 
-$\mathcal{O}_p$ \tcp*[r]{set of neighbors and weights}
-$\mathcal{D}$ \tcp*[r]{vector of versions}
-$c$ \tcp*[r]{local counter}
-$bests$ \tcp*[r]{last delivered $\alpha$ of $p$ and neighbors}
+$\mathcal{O}_p$ \tcp*[r]{set of neighbors}
+$\mathcal{V} \leftarrow \varnothing$ \tcp*[r]{vector of versions}
+$c \leftarrow 0$ \tcp*[r]{local counter}
+$best \leftarrow \varnothing$ \tcp*[r]{best $\alpha$ so far}
+%% $bests$ \tcp*[r]{last delivered $\alpha$ of $p$ and neighbors}
 
 \BlankLine
 
 \Function{\textup{Add ( )} \tcp*[f]{$\alpha_{p, c}^{0, \varnothing} $}} {
   $c \leftarrow c + 1$ \;
-  \textup{receiveAdd($\langle p, c \rangle$, $0$, $\varnothing$)}
+  \textup{receiveAdd($p$, $p$, $c$, $0$, $\varnothing$)}
 }
 
 \Function{\textup{Del ( )} \tcp*[f]{$\delta_{p, c}$}} {
   $c \leftarrow c + 1$ \;
-  \textup{receiveDel($\langle p, c \rangle$)}
+  \textup{receiveDel($p$, $p$, $c$)}
 }
 
-\Function{\textup{Undo ( )} \tcp*[f]{$\mu_{bests[p]}$}} {
-  \textup{receiveUndo(bests[p])}
+% \Function{\textup{Undo ( )} \tcp*[f]{$\mu_{best}$}} {
+%   \textup{receiveUndo($best$)} \tcp*[r]{no increment}
+% }
+
+\BlankLine
+\BlankLine
+
+\Function{\textup{receiveAdd($q$, $s'$, $c'$, $d'$, $\pi$)}
+\tcp*[f]{\smash{$r_p(\alpha_{s', c'}^{d', \pi})$}}  \textup{\texttt{from}} $q$} {
+  \If {$p \not\in \pi$} {
+      \uIf {$c' \geq \mathcal{V}[s']$} {
+          $V[s'] \leftarrow c'$ \;
+          \If {$best \leq_\alpha \langle s', c', d' + w_{qp}, \pi \cup q \rangle$ } {
+              $best \leftarrow \langle s', c', d' + w_{qp}, \pi \cup q \rangle$ \;
+              \textup{broadcast($best$)} \;
+           }
+      } \uElseIf {$q = best.\pi[|best.\pi| - 1]$} {
+          \textup{receiveDel($q$, $best$)} \tcp*[r]{undo}
+      }
+      
+   }
+}
+
+\Function{\textup{receiveDel($q$, $s'$, $c'$, $d'$, $\pi$)}
+\tcp*[f]{\scriptsize $r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{d', \pi})$}} {
+  \If {$p \not\in \pi$} {
+     $\mathcal{V}[s'] \leftarrow \max(\mathcal{V}[s'], c')$ \;
+     \uIf {$\langle s', c', d' + w_{qp}, \pi \cup q \rangle \overset{\alpha}{=} best $} {
+         $best \leftarrow \varnothing$ \;
+         \lIf{$\pi \neq \varnothing$} {
+         \scriptsize{\textup{broadcast($s'$, $c'$, $d' + w_{qp}$, $\pi \cup q$)}}
+         \small
+         }
+         \lIf {$\pi = \varnothing$} {
+         \scriptsize{\textup{broadcast($s'$, $c'$)}}
+         }
+     } \uElseIf {$best \neq \varnothing$} {
+         \textup{send$_q$($best$)} \tcp*[r]{compete again}
+     }
+  }
 }
 
 \BlankLine
 
-\Function{\textup{receiveAdd($s'$, $c'$, $d'$, $\pi$)} \tcp*[f]{$r_p(\alpha_{s', c'}^{d', \pi})$}} {
-  $bests[\pi[|\pi|-1]] \leftarrow \langle s', c', d', \pi \rangle$ \;
-  \If {$p \not\in \pi$} {
-      \If {$c' \geq bests[s']$} {
-          \If { $d' < d$ } {
-              \textup{deliverAdd($s'$, $d'$)}
-          }
-      }
-  }
+\Function{\textup{broadcast($m$)}
+\tcp*[f]{$b_p(m)$ with $m\in\{\alpha, \delta\}$}} {
+   \lForEach {$n \in \mathcal{O}_p$} {
+       \textup{send$_n$($m$)}
+   }
 }
-
-%% \BlankLine
-
-%% \Function{\textup{broadcast($m$)} {
-%%   $d \leftarrow d'$ \;
-%%   $s \leftarrow s'$ \;
-
-%%   \ForEach {$\langle n, w_{pn} \rangle \in \mathcal{O}_p$} {
-%%     \textup{send$_n$($s', d' + w_{pn}$)} \label{line:accumulator}
-%%     \tcp*[r]{$b_p(\alpha_{s'}^{d'})$}
-%%   }
-    
-%% } 
-
 
