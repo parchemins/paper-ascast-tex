@@ -1,0 +1,46 @@
+
+\begin{tikzpicture}[scale=0.87]
+
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+  
+  \newcommand\X{50pt}
+  \newcommand\Y{-45pt}
+
+  \newcommand\ADD{\alpha}
+  \newcommand\DEL{\delta}
+
+  \draw[opacity=0] (-2*\X, 0) -- (3*\X, 0);
+  
+
+  
+  \draw[->] (-\X + 5pt, 0) -- node[above, color=\PA, font=\small]{$\ADD_a^1$} (0 - 5pt, 0); %% a - b
+
+  \draw[->] (0 +5pt, 0) -- (\X -5pt, 0); %% b - ...
+
+  \draw[->] ( \X +5pt, 0) -- (2*\X -5pt, 0); %% ... - c
+  
+  \draw[->] ( 0, \Y + 5pt) -- ( 0, -5pt); %% ... - b
+
+  \draw[->] ( -\X + 5pt, \Y ) -- ( -5pt, \Y); %% d - ...
+
+
+  
+  \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+  \draw[fill=white] (0, 0) node{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (\X, 0) node{$\ldots$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (2*\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+
+  \draw[fill=white] ( 0, \Y) node{$\ldots$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (-\X, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+
+
+  
+  \draw (-\X, 5pt) node[above, color=\PA]{$\ADD_a^0$};
+  \draw ( 0, 5pt) node[above, color=\PC]{$\ADD_d^{0.5}$};
+  \draw (2*\X, 5pt) node[above]{expect \textcolor{\PA}{$\alpha_a$}};
+  
+  \draw (-\X, \Y + 5pt) node[above, color=\PC]{$\DEL_d$};
+
+\end{tikzpicture}

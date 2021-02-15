@@ -3,4 +3,6 @@
 *.out
 *.log
 *.pdf
+*.blg
+*.bbl
 *#*
