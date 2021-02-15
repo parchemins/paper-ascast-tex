@@ -1,0 +1,19 @@
+\SetKwProg{Function}{func}{}{}
+
+\small
+
+\DontPrintSemicolon
+\LinesNumbered
+
+\Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$}}  {
+  \If {$best \neq \varnothing$} {
+    \textbf{let} $\langle s, c, d, \pi \rangle \leftarrow best$ \;
+    \textup{send$_q$($s, c, d + w_{pq}, \pi \cup p$)} \tcp*[r]{compete}
+  }
+}
+
+\Function{\textup{edgeDown($q$)} \tcp*[f]{link to $q$ removed}} {
+  \If {$q = best.\pi[|best.\pi| - 1]$} {
+    \textup{receiveDel($q$, $best$)} \tcp*[r]{undo}
+  }
+}
