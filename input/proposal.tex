@@ -2,56 +2,53 @@
 \section{Dynamic partitioning}
 \label{sec:proposal}
 
-\TODO{Remember to say stateless, asynchronous system.}
-
 In this section, we introduce \NAME, (\TODO{stands for}) a reactive
 protocol for logical partitioning the cost of which actually depends
 on its usage: when the system becomes quiescent, processes eventually
 converge to their respective partition and do not require further
 communication afterwards.
 
-Each process works autonomously and each change is broadcast to its
-neighborhood, for neighbors may depend on this change as well. 
+Each process is stateless, works autonomously and asynchronously, in a
+peer-to-peer fashion. Each process broadcasts each change to its
+neighborhood, for the state of its neighbors may depend on this change
+as well. Yet, generated traffic remains \TODO{low} using scoped
+flooding. Messages that carry changes travel through the network
+depending on partition of processes, stopping as soon as they
+encounter uninterested processes. We demonstrate that \NAME guarantees
+consistent partitioning despite different order in message deliveries
+from one process to another.
 
-% The main idea is maintaining graphs of partitions using local
-% knowledge only and use graphs as often as possible: it improves
-% resilience to crashes, convergence speed etc. Unfortunately,
-% maintaining graphs of partitions in dynamic networks may require the
-% use of broadcast tree. The removal of a communication channel between
-% 2 processes may remove an advantageous path from processes downstream
-% to the source of the partition they belong to.
+This section describes \NAME's components and algorithms. First, it
+starts by detailing a logical partitioning protocol in static
+network. Second, it extends such protocol to dynamic systems. Last, it
+describes an optimization based on Bloom filter. 
 
-This section describes \NAME's components by starting from the
-simplest case of add-only partition, to the most complex case of
-dynamic partitions in dynamic networks. 
-
-\TODO{Probably better to pair operation as ``ins, del'' and ``add, rem''?}
+
 
 \begin{algorithm}
   \input{input/algoadddelundo.tex}
   \caption{\label{algo:adddelundo}Dynamic partitioning by Process $p$.}
 \end{algorithm}
 
+\subsection{Dynamic partitions}
 
-\paragraph{Static network with add-only.}
-At any time, a process can become a source, hence \TODO{creating} a
-new partition in the system. This partition eventually includes all
+At any time, a process can become a source, hence adding a new
+partition to the system. This partition eventually includes all
 processes that are closer from this new source than any other else. We
 described such protocol in Section~\ref{sec:background}. Processes
 naturally converge towards their respective best partition by only
 piggybacking a monotonically increasing distance in forwarded
-messages.  \TODO{Traffic of each partition is contained to the
-  partition.}
+messages. % \TODO{Traffic of each partition is contained to the
+%  partition.}
 
-\paragraph{Static network with dynamic partitions.}
-At any time, a source can revoke its self-appointed status of source,
-hence \TODO{removing} its partition of the system. All processes that
-belong to this partition must choose another partition to belong to.
+Then, at any time, a source can revoke its self-appointed status of
+source, hence deleting its partition from the system. All processes
+that belong to this partition must eventually choose another partition
+to belong to. Since the number of partitions does not monotonically
+increase in the system any longer, each process requires a vector of
+versions that monotonically increases over delivered operations.
 
-\noindent Since the number of partitions does not monotonically
-increase in the system any longer, they require a vector of versions
-that monotonically increases over \TODO{add and del} operations. This
-allows processes to quickly discard stale messages saving
+This allows processes to quickly discard stale messages saving
 bandwidth. For instance, a process that received a message originated
 at Process $a$ with a version $2$ knows that any message originated at
 Process $a$ with a version $1$ are stale system-wide; it must not
@@ -97,7 +94,7 @@ left open by deletes.
   \end{center}
 \end{figure*}
 
-\paragraph{Networks with new communication links.}
+\subsection{Dynamic networks}
 Adding new communication links to the network may create shortcuts
 between processes. Both processes must send their current best
 partition to each other. Upon receipt, they act normally: if a process
@@ -115,7 +112,7 @@ new neighbors.
 \end{algorithm}
 
 
-\paragraph{Dynamic networks with dynamic partitions.}
+
 When removing a communication link between two processes does not
 break any active path, because neither distances of processes depend
 on the other, then nothing needs to be done. \NAME has no overhead.
@@ -152,7 +149,7 @@ consequence, \NAME still makes use of vector of versions.
 well, for the size of these paths decreases quickly as the number of
 partitions grows.
 
-\paragraph{A last optimisation}
+\subsection{A last optimization}
 \TODO{Carry information that is useless. such as order of processes in
   paths, and identities of processes themselves.} \TODO{Icarus for
   dissemination trees~\cite{whitaker2002forwarding}}. \TODO{No need to
