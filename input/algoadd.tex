@@ -1,4 +1,3 @@
-
 \SetKwProg{Function}{func}{}{}
 
 \small
@@ -20,20 +19,16 @@ $d \leftarrow \infty$ \tcp*[r]{lowest distance to $q$}
 \BlankLine
 
 \Function{\textup{receiveAdd($s'$, $d'$)} \tcp*[f]{$r_p(\alpha_{s'}^{d'})$}} {
-  \lIf { $d' < d$ } {\textup{deliverAdd($s'$, $d'$)}}
-}
+  \If { $d' < d$ } {
+      $d \leftarrow d'$ \;
+      $s \leftarrow s'$ \tcp*[r]{$d_p(\alpha_{s'}^{d'})$}
 
-\BlankLine
+      \ForEach {$\langle n, w_{pn} \rangle \in \mathcal{O}_p$} {
+          \textup{send$_n$($s', d' + w_{pn}$)} \label{line:accumulator}
+          \tcp*[r]{$b_p(\alpha_{s'}^{d'})$}
+       }      
 
-\Function{\textup{deliverAdd($s'$, $d'$)} \tcp*[f]{$d_p(\alpha_{s'}^{d'})$}} {
-  $d \leftarrow d'$ \;
-  $s \leftarrow s'$ \;
-
-  \ForEach {$\langle n, w_{pn} \rangle \in \mathcal{O}_p$} {
-    \textup{send$_n$($s', d' + w_{pn}$)} \label{line:accumulator}
-    \tcp*[r]{$b_p(\alpha_{s'}^{d'})$}
   }
-    
-} 
+}
 
 

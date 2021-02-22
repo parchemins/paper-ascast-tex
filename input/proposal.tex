@@ -1,12 +1,12 @@
 
-\section{Dynamic partitioning}
+\section{\NAME for Dynamic Partitioning}
 \label{sec:proposal}
 
 In this section, we introduce \NAME, (\TODO{stands for}) a reactive
-protocol for logical partitioning the cost of which actually depends
-on its usage: when the system becomes quiescent, processes eventually
-converge to their respective partition and do not require further
-communication afterwards.
+protocol for logical partitioning in autonomous sytems the cost of
+which actually depends on its usage: when the system becomes
+quiescent, processes eventually converge to their respective partition
+and do not require further communication afterwards.
 
 Each process is stateless, works autonomously and asynchronously, in a
 peer-to-peer fashion. Each process broadcasts each change to its
@@ -25,12 +25,30 @@ describes an optimization based on Bloom filter.
 
 
 
+\subsection{Autonomous systems}
+
+Autonomous systems are geo-distributed networks. Heterogenous
+communication links. Hierarchy of communication links. Per-object
+broadcast.
+
+We leave the link handling to membership protocols~\REF. The ordering
+of links can be done based on latency. For instance, from 0 to 100 ms,
+rank 0, from 100 to 1s, rank 2 \ldots
+
+\begin{algorithm}
+  \input{input/algoaaaa.tex}
+  \caption{\label{algo:aaaa}Primitives for general purpose logical
+    partitioning in dynamic systems.}
+\end{algorithm}
+
+\TODO{Not so easy\ldots}
+
+\subsection{Dynamic partitions}
+
 \begin{algorithm}
   \input{input/algoadddelundo.tex}
   \caption{\label{algo:adddelundo}Dynamic partitioning by Process $p$.}
 \end{algorithm}
-
-\subsection{Dynamic partitions}
 
 At any time, a process can become a source, hence adding a new
 partition to the system. This partition eventually includes all

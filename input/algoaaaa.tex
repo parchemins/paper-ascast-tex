@@ -1,0 +1,38 @@
+\SetKwProg{Function}{func}{}{}
+
+\small
+
+\DontPrintSemicolon
+\LinesNumbered
+
+$\mathcal{A} \leftarrow \varnothing$ \tcp*[r]{map each object to its \TODO{\NAME}}
+$\mathcal{O}_p$ \tcp*[r]{sorted list of sets of links}
+
+\BlankLine
+\BlankLine
+
+\Function{\textup{newObject($o$)}} {
+
+\Function{\textup{receive($q$, $m$)}} {
+   \If {$m \in \alpha$} {
+      \textbf{let} $best \leftarrow a.best$ \;
+      $a$.receiveAdd($q$, $m$) \;
+      \If {$best = a.best$} {
+      \TODO{from higher $q$ to min $q$} \;
+      broadcast($q$, $a.best$)
+      }
+   }
+}
+
+\Function{\textup{broadcast($q$, $m$)}} {
+
+  \textbf{let} $i$ \textbf{with} $q \in \mathcal{O}^i_p$ \textbf{or} $0$
+  \tcp*[r]{$i^{th}$ set of links}
+
+  \ForEach{$q \in O_p^j$ \textbf{\textup{with}} $i \leq j < |\mathcal{O}_p|$}  {
+        \textup{sendTo$_q$($m +_\alpha w_{pq}$)}
+  }
+  
+}
+
+}
