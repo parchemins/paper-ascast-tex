@@ -13,27 +13,19 @@
 
 
   
-  \draw[->] (-\X + 5pt, 0 + 2pt ) --
-  node[above=-0.3em,font=\tiny, color=\PA]{$\ADD_{a}^{1.5}$}
-  (0 - 5pt, 0 + 2pt); %% a - b
-  \draw[<-] (-\X + 5pt, 0 - 2pt ) --
-  (0 - 5pt, 0 - 2pt); %% b - a 
+  \draw (-\X + 5pt, 0) --
+  node[above=-0.3em,font=\tiny]{$\textcolor{\PA}{\ADD_{a}^{1.5}} \rightarrow$}
+  (0 - 5pt, 0); %% b - a 
 
-  \draw[<-] (0 +5pt, 0 + 2pt) --
-  node[above=-0.3em, font=\tiny, color=\PC]{$\ADD_{c}^{1}$}
-  (\X -5pt, 0 + 2pt); %% c - b
-  \draw[->] (0 +5pt, 0 - 2pt) --
-  (\X -5pt, 0 - 2pt); %% b - c
+  \draw (0 +5pt, 0) --
+  node[above=-0.3em, font=\tiny]{$\leftarrow \textcolor{\PC}{\ADD_{c}^{1}}$}
+  (\X -5pt, 0); %% b - c
 
-  \draw[->] (0 + 2pt, 0 - 5pt) --
-  (0 + 2pt, \Y + 5pt); %% b - d
-  \draw[->] (0 - 2pt, \Y + 5pt) --
-  (0 - 2pt, 0 - 5pt);  %% d - b
+  \draw (0, 0 - 5pt) --
+  (0, \Y - 5pt);  %% d - b
   
-  \draw[<-] (\X - 3pt, 0 - 5pt) --
-  (0 + 5pt, \Y + 3pt); %% d - c
-  \draw[->] (\X + 3pt, 0 - 5pt) --
-  node[below=-0.3em, font=\tiny, sloped, color=\PC]{$\ADD_{c}^{1}$}
+  \draw (\X + 3pt, 0 - 5pt) --
+  node[below=-0.3em, font=\tiny, sloped]{$\leftarrow \textcolor{\PC}{\ADD_{c}^{1}}$}
   (0 + 5pt, \Y - 3pt); %% c - d
 
 

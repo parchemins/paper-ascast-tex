@@ -3,7 +3,7 @@
 \label{sec:proposal}
 
 In this section, we introduce \NAME, (\TODO{stands for}) a reactive
-protocol for logical partitioning in autonomous sytems the cost of
+protocol for logical partitioning in autonomous systems the cost of
 which actually depends on its usage: when the system becomes
 quiescent, processes eventually converge to their respective partition
 and do not require further communication afterwards.
@@ -27,7 +27,13 @@ describes an optimization based on Bloom filter.
 
 \subsection{Autonomous systems}
 
-Autonomous systems are geo-distributed networks. Heterogenous
+\begin{figure}
+  \centering\input{input/figAS.tex}
+  \caption{\label{fig:AS}Inter autonomous systems partitioning. \TODO{new
+      issue not introduced in background}}
+\end{figure}
+
+Autonomous systems are geo-distributed networks. Heterogeneous
 communication links. Hierarchy of communication links. Per-object
 broadcast.
 
@@ -40,6 +46,19 @@ rank 0, from 100 to 1s, rank 2 \ldots
   \caption{\label{algo:aaaa}Primitives for general purpose logical
     partitioning in dynamic systems.}
 \end{algorithm}
+
+Figure~\ref{fig:AS} shows an example of inter-AS logical partitioning
+where each process ranks its communication links, and each process
+forwards messages to its neighbors starting from the rank of the link
+that triggered the receipt, to its highest rank neighbors. In this
+example, Process $e$ adds a partition. It forwards the generated
+message to all its neighbors as if it received it from its lowest rank
+links. When Process $a$ receives $\alpha_e^1$ from its rank-$0$ link,
+it forwards it to rank-$0$ links and rank-$1$ links.  Process $b$
+stops the propagation, for all its links have lower ranks than the one
+from which it received the message $\alpha_e^2$. Ultimately, the
+partition includes Process $e$, Process $a$, and Process $b$. Process
+$c$ and Process $d$ remain unaware of the new \TODO{object}.
 
 \TODO{Not so easy\ldots}
 

@@ -12,23 +12,15 @@
 
 
   
-  \draw[->] (-\X + 5pt, 0 + 2pt ) -- (0 - 5pt, 0 + 2pt); %% a - b
-  \draw[<-] (-\X + 5pt, 0 - 2pt ) --
-  (0 - 5pt, 0 - 2pt); %% b - a 
+  \draw (-\X + 5pt, 0) -- (0 - 5pt, 0); %% a - b
 
-  \draw[<-] (0 +5pt, 0 + 2pt) --
-  (\X -5pt, 0 + 2pt); %% c - b
-  \draw[->] (0 +5pt, 0 - 2pt) --
-  (\X -5pt, 0 - 2pt); %% b - c
+  \draw (0 +5pt, 0) --
+  (\X -5pt, 0); %% b - c
 
-  \draw[->] (0 + 2pt, 0 - 5pt) --
-  (0 + 2pt, \Y + 5pt); %% b - d
-  \draw[->] (0 - 2pt, \Y + 5pt) --
-  (0 - 2pt, 0 - 5pt);  %% d - b
+  \draw (0, \Y + 5pt) --
+  (0, 0 - 5pt);  %% d - b
   
-  \draw[<-] (\X - 3pt, 0 - 5pt) --
-  (0 + 5pt, \Y + 3pt); %% d - c
-  \draw[->] (\X + 3pt, 0 - 5pt) --
+  \draw (\X + 3pt, 0 - 5pt) --
   (0 + 5pt, \Y - 3pt); %% c - d
 
 

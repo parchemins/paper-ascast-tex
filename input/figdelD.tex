@@ -11,25 +11,17 @@
   \medmuskip=0mu
   \thinmuskip=0mu
 
-  \draw[->] (-\X + 5pt, 0 + 2pt ) --
-  node[above=-0.3em,font=\tiny]{$\DEL{c}\cdot\ADD_c^{4}\cdot$\textcolor{\WRONG}{$\bm{\DEL_{a}}$}}
-  (0 - 5pt, 0 + 2pt); %% a - b
-  \draw[<-] (-\X + 5pt, 0 - 2pt ) --
-  (0 - 5pt, 0 - 2pt); %% b - a 
+  \draw (-\X + 5pt, 0) --
+  node[above=-0.3em,font=\tiny]{$\DEL{c}\cdot\ADD_c^{4}\cdot\textcolor{\WRONG}{\bm{\DEL_{a}}} \rightarrow$}
+  (0 - 5pt, 0); %% b - a 
 
-  \draw[<-] (0 +5pt, 0 + 2pt) --
-  (\X -5pt, 0 + 2pt); %% c - b
-  \draw[->] (0 +5pt, 0 - 2pt) --
-  (\X -5pt, 0 - 2pt); %% b - c
+  \draw (0 +5pt, 0) --
+  (\X - 5pt, 0); %% b - c
 
-  \draw[->] (0 + 2pt, 0 - 5pt) --
+  \draw (0 + 2pt, 0 - 5pt) --
   (0 + 2pt, \Y + 5pt); %% b - d
-  \draw[->] (0 - 2pt, \Y + 5pt) --
-  (0 - 2pt, 0 - 5pt);  %% d - b
-  
-  \draw[<-] (\X - 3pt, 0 - 5pt) --
-  (0 + 5pt, \Y + 3pt); %% d - c
-  \draw[->] (\X + 3pt, 0 - 5pt) --
+
+  \draw (\X + 3pt, 0 - 5pt) --
   (0 + 5pt, \Y - 3pt); %% c - d
 
 

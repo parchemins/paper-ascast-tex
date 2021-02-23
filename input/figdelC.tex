@@ -13,33 +13,27 @@
 
 
   
-  \draw[->] (-\X + 5pt, 0 + 2pt ) --
-  node[above=-0.3em,font=\tiny]{$\bm{\DEL_{a}}$}
-  (0 - 5pt, 0 + 2pt); %% a - b
-  \draw[<-] (-\X + 5pt, 0 - 2pt ) --
-  node[below=-0.3em,font=\tiny]{$\ADD_{c}^{2.5}\cdot\DEL_{c}$}
-  (0 - 5pt, 0 - 2pt); %% b - a 
+  \draw (-\X + 5pt, 0) --
+  node[above=-0.3em,font=\tiny]{$\bm{\DEL_{a}}\rightarrow$}
+  node[below=-0.3em,font=\tiny]{$\leftarrow \ADD_{c}^{2.5}\cdot\DEL_{c}$}
+  (0 - 5pt, 0); %% b - a 
 
-  \draw[<-] (0 +5pt, 0 + 2pt) --
-  node[above=-0.3em, font=\tiny]{$\ADD_a^{3.5}$}
-  (\X -5pt, 0 + 2pt); %% c - b
-  \draw[->] (0 +5pt, 0 - 2pt) --
-  node[below=-0.3em, font=\tiny]{$\DEL_{c}\cdot\ADD_c^{2}$}
-  (\X -5pt, 0 - 2pt); %% b - c
+  \draw (0 +5pt, 0) --
+  node[above=-0.3em, font=\tiny]{$\leftarrow \ADD_a^{3.5}$}
+  node[below=-0.3em, font=\tiny]{$\DEL_{c}\cdot\ADD_c^{2} \rightarrow$}
+  (\X -5pt, 0); %% b - c
 
-  \draw[->] (0 + 2pt, 0 - 5pt) --
-  node[above=-0.3em, font=\tiny, sloped]{$\DEL_{c}\cdot\ADD_c^{2}$}
-  (0 + 2pt, \Y + 5pt); %% b - d
-  \draw[->] (0 - 2pt, \Y + 5pt) --
-  node[above=-0.3em, font=\tiny, sloped]{$\ADD_{a}^{3.5}\cdot\DEL_c$}
-  (0 - 2pt, 0 - 5pt);  %% d - b
+  \draw [opacity=0] (0, 0 - 5pt) --
+  node[above=-0.3em, opacity=1, font=\tiny, sloped]{$\DEL_{c}\cdot\ADD_c^{2} \rightarrow$}
+  (0, \Y + 5pt); %% b - d
+  \draw (0, \Y + 5pt) --
+  node[above=-0.3em, font=\tiny, sloped]{$\ADD_{a}^{3.5}\cdot\DEL_c \rightarrow$}
+  (0, 0 - 5pt);  %% d - b
   
-  \draw[<-] (\X - 3pt, 0 - 5pt) --
-  node[above=-0.3em, font=\tiny, sloped]{$\ADD_{a}^{3.5}\cdot\DEL_{c}$}
-  (0 + 5pt, \Y + 3pt); %% d - c
-  \draw[->] (\X + 3pt, 0 - 5pt) --
-  node[below=-0.3em, font=\tiny, sloped]{$\ADD_{a}^{3.5}$}
-  (0 + 5pt, \Y - 3pt); %% c - d
+  \draw (\X + 3pt , 0 - 5pt) --
+  node[above=-0.3em, font=\tiny, sloped]{$\ADD_{a}^{3.5}\cdot\DEL_{c} \rightarrow$}
+  node[below=-0.3em, font=\tiny, sloped]{$\leftarrow \ADD_{a}^{3.5}$}
+  (0 + 5pt, \Y -3pt ); %% c - d
 
 
 
