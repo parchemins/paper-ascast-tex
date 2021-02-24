@@ -11,28 +11,66 @@ $\mathcal{O}_p$ \tcp*[r]{sorted list of sets of links}
 \BlankLine
 \BlankLine
 
-\Function{\textup{newObject($o$)}} {
-
-\Function{\textup{receive($q$, $m$)}} {
-   \If {$m \in \alpha$} {
-      \textbf{let} $best \leftarrow a.best$ \;
-      $a$.receiveAdd($q$, $m$) \;
-      \If {$best = a.best$} {
-      \TODO{from higher $q$ to min $q$} \;
-      broadcast($q$, $a.best$)
-      }
-   }
+\Function{\textup{create($o$)}} {
+    initObject($o$) \;
+    \lForEach {$a \in \mathcal{A}[o]$} {$a$.Add( )}
 }
 
-\Function{\textup{broadcast($q$, $m$)}} {
+\Function{\textup{remove($o$)}} {
+    \lForEach {$a \in \mathcal{A}[o]$} {$a$.Del( )}
+}
 
-  \textbf{let} $i$ \textbf{with} $q \in \mathcal{O}^i_p$ \textbf{or} $0$
-  \tcp*[r]{$i^{th}$ set of links}
+\BlankLine
+\BlankLine
 
-  \ForEach{$q \in O_p^j$ \textbf{\textup{with}} $i \leq j < |\mathcal{O}_p|$}  {
-        \textup{sendTo$_q$($m +_\alpha w_{pq}$)}
-  }
+\Function{\textup{receive($q$, $o$, $m$) }} {
+    initObject($o$) \;
+
+    \textbf{let} $i$ \textbf{with} $q \in \mathcal{O}^i_p$ \textbf{or} $0$
+    \tcp*[r]{$i^{th}$ set of links}
+
+    \For{$j$ \textbf{\textup{with}} $i \leq j < |\mathcal{A}[o]|$}  {
+       \textbf{let} $a \leftarrow \mathcal{A}[o][j]$ \;
+       \lIf {$m \in \alpha$} {$a$.receivedAdd($q$, $m$)}
+       \lIf {$m \in \delta$} {$a$.receivedDel($q$, $m$)}
+    }
+}
+
+\BlankLine
+\BlankLine
+
+\Function{\textup{initObject($o$)} \tcp*[f]{utility}} {
+    \If {$o \not\in \mathcal{A}$} {
+        $\mathcal{A}[o] \leftarrow \varnothing$ \;
+        \ForEach {$\mathcal{O}_p^r \in \mathcal{O}_p$} {
+           $\mathcal{A}[o] \leftarrow \mathcal{A}[o] \cup \{ \TODO{A^4}(\mathcal{O}_p^r) \} $
+        }
+    }
+
+}
+
+% \Function{\textup{newObject($o$)}} {
+
+% \Function{\textup{receive($q$, $m$)}} {
+%    \If {$m \in \alpha$} {
+%       \textbf{let} $best \leftarrow a.best$ \;
+%       $a$.receiveAdd($q$, $m$) \;
+%       \If {$best = a.best$} {
+%       \TODO{from higher $q$ to min $q$} \;
+%       broadcast($q$, $a.best$)
+%       }
+%    }
+% }
+
+% \Function{\textup{broadcast($q$, $m$)}} {
+
+%   \textbf{let} $i$ \textbf{\textup{with}} $q \in \mathcal{O}^i_p$ \textbf{or} $0$
+%   \tcp*[r]{$i^{th}$ set of links}
+
+%   \ForEach{$q \in O_p^j$ \textbf{\textup{with}} $i \leq j < |\mathcal{O}_p|$}  {
+%         \textup{sendTo$_q$($m +_\alpha w_{pq}$)}
+%   }
   
-}
+% }
 
-}
+% }

@@ -38,7 +38,7 @@ $best \leftarrow \varnothing$ \tcp*[r]{best $\alpha$ so far}
               \ForEach{$n \in \mathcal{O}_p$}
                   {send$_n$($s'$, $c'$, $d' + w_{pq}$, $\pi' \cup p$)}
            }
-      } \uElseIf {$q = best.\pi[|best.\pi| - 1]$} {
+      } \uElseIf {$q = best.\pi[|best.\pi| - 1] \wedge q \in \mathcal{O}_p$} {
           \textup{receiveDel($q$, $best$)} \tcp*[r]{undo}
       }
       
@@ -54,7 +54,7 @@ $best \leftarrow \varnothing$ \tcp*[r]{best $\alpha$ so far}
         \ForEach{$n \in \mathcal{O}_p$} {
             \lIf{$\pi' = \varnothing$} {send$_q$($s'$, $c'$)}
             \lElse{send$_n$($s'$, $c'$, $\pi' \cup p$)}}
-     } \uElseIf {$best \neq \varnothing$} {
+     } \uElseIf {$best \neq \varnothing \wedge q \in \mathcal{O}_p$} {
          \textbf{let} $\langle s, c, d, \pi \rangle \leftarrow best$ \;
          \textup{send$_q$($s, c, d + w_{pq}, \pi \cup p$)} \tcp*[r]{compete}
      }

@@ -60,7 +60,22 @@ from which it received the message $\alpha_e^2$. Ultimately, the
 partition includes Process $e$, Process $a$, and Process $b$. Process
 $c$ and Process $d$ remain unaware of the new \TODO{object}.
 
-\TODO{Not so easy\ldots}
+To ease the reasoning about inter-AS dynamic partitioning in dynamic
+networks, \NAME runs an independant broadcast protocol for each
+object, and for each rank of links.  \TODO{Not so easy\ldots}
+\TODO{Write and describe algo.} \TODO{Overhead of separating things,
+  slightly more memory, but traffic wise? slower ?}  \TODO{In the
+  example, not only Process $b$ keeps $e_1$ as its best partition, but
+  it keeps it for links of rank 0, and links of rank 1.}
+
+The rest of this section describes our proposal to solve these smaller
+scientific problems. It first tackles dynamic partitions where
+processes can add or delete partitions resulting in stale information
+that may impair correctness. It then tackles dynamic networks where
+edges appear and disappear at any time resulting in invalid
+information that may impair correctness.
+
+
 
 \subsection{Dynamic partitions}
 
@@ -90,10 +105,10 @@ bandwidth. For instance, a process that received a message originated
 at Process $a$ with a version $2$ knows that any message originated at
 Process $a$ with a version $1$ are stale system-wide; it must not
 forward it. As consequence, vectors of versions also ensure
-termination, for messages \TODO{add and del} cannot follow each other
-in an infinite loop. In terms of traffic, this only requires each
-\TODO{delete} message to piggyback a source identifier and version
-number.
+termination, for corresponding add and delete messages cannot follow
+each other in an infinite loop. In terms of traffic, this only
+requires each \TODO{delete} message to piggyback a source identifier
+and version number.
 
 % \noindent \textbf{Second,} processes need to maintain a local view of
 % their neighbors' partition.  Figure~\ref{fig:del} shows that
@@ -131,6 +146,8 @@ left open by deletes.
   \end{center}
 \end{figure*}
 
+
+
 \subsection{Dynamic networks}
 Adding new communication links to the network may create shortcuts
 between processes. Both processes must send their current best
@@ -147,8 +164,6 @@ new neighbors.
   \input{input/algoedges.tex}
   \caption{\label{algo:edges}Dynamic partitioning by Process $p$ in dynamic networks.}
 \end{algorithm}
-
-
 
 When removing a communication link between two processes does not
 break any active path, because neither distances of processes depend
@@ -186,12 +201,16 @@ consequence, \NAME still makes use of vector of versions.
 well, for the size of these paths decreases quickly as the number of
 partitions grows.
 
+
+
 \subsection{A last optimization}
 \TODO{Carry information that is useless. such as order of processes in
   paths, and identities of processes themselves.} \TODO{Icarus for
   dissemination trees~\cite{whitaker2002forwarding}}. \TODO{No need to
   know the dimension of networks and
   partitions~\cite{almeida2007scalable}}.
+
+
 
 \subsection{Complexity}
 \label{subsec:complexity}
