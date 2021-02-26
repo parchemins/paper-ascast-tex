@@ -3,14 +3,14 @@
 \label{sec:background}
 
 Fog infrastructures are distributed systems comprising heterogeneous
-machines interconnected by communication links. \TODO{We do not
-  consider byzantine processes.}
+machines interconnected by communication links. We do not consider
+byzantine processes.
 
 \begin{definition}[Fog infrastructure]
   A fog infrastructure is a \underline{g}raph $G(V, E)$ of
   \underline{v}ertices $V$ and bidirectional \underline{e}dges $E \in
   V \times V$. Edges have symmetric \underline{w}eights $w_{ij} =
-  w_{ij}$ with $i, j \in V$.
+  w_{ji}$ with $i, j \in V$.
 \end{definition}
 
 \begin{definition}[Logical partition]
@@ -20,10 +20,10 @@ machines interconnected by communication links. \TODO{We do not
   of sources is $S \subseteq V$.
 \end{definition}
 
-Processes belong to logical partitions depending on path lengths. When
-weights are latency or hop numbers, the optimal partitioning consists
-in processing the multiple destinations shortest path at each process
-\REF.
+Processes belong to logical partitions depending on path weights. When
+weights are about latency or hop numbers, the optimal partitioning
+consists in processing the multiple destinations shortest path at each
+process \REF.
 
 \begin{definition}[Shortest path]
   A \underline{p}ath $\pi_{ij}$ from Process $i$ to Process $j$ is a
@@ -51,6 +51,8 @@ its change through \underline{b}roadcast $b_i(\alpha_s^w)$.  Without
 global knowledge, processes only rely on their own behavior to deduce
 the behavior of their neighbor processes.
 
+\input{input/figdel.tex} %% figure positioning
+
 \begin{definition}[\label{def:transitivedelivery}Transitive delivery]
   Transitive delivery ensures the system eventually converges to
   optimal partitioning:
@@ -67,33 +69,10 @@ the behavior of their neighbor processes.
   \end{inparaenum}
 \end{definition}
 
-
-\begin{figure*}
-  \begin{center}
-    \subfloat[Part A][\label{fig:addA}Both Process $a$ and
-      Process $c$ initiate a partition.
-      $w_{ab} = 1.5$; $w_{bc} = w_{cd} = w_{bd} = 1$.]{\input{input/figaddA.tex}}
-    \hspace{5pt}
-    \subfloat[Part B][\label{fig:addB}Messages transit through communication
-      links and carry increasing weights.]{\input{input/figaddB.tex}}
-    \hspace{5pt}
-    \subfloat[Part C][\label{fig:addC}Process $b$ receives and forwards
-      $\alpha_{c}^{1}$ then discards $\alpha_{a}^{1.5}$, for the latter distance
-      is higher.]{\input{input/figaddC.tex}}
-    \hspace{5pt}
-    \subfloat[Part D][\label{fig:addD}Processes $b$, $c$, and $d$ discard
-      incoming messages. The system converged to optimal partitions.]{
-      \input{input/figaddD.tex}}
-    \caption{\label{fig:add}Simple accumulation in messages makes the
-      system converge to optimal partitions with scoped flooding.}
-  \end{center}
-\end{figure*}
-
 \begin{algorithm}
   \input{input/algoadd.tex}
   \caption{\label{algo:add}Adding a partition by Process $p$.}
 \end{algorithm}
-
 
 Algorithm~\ref{algo:add} shows the instructions that implement the
 rules of Definition~\ref{def:transitivedelivery} to converge towards
@@ -137,6 +116,9 @@ straightforward, removing them introduces additional complexity.
   messages $\delta_i$: $Del(i \in S(t)) \implies i \not\in S(t+1)$.
 \end{definition}
 
+Unfortunately, due to differences in receipt order of messages between
+processes, stale information may stop prematurely the propagation of
+relevant messages leading to inconsistent partitioning.
 \TODO{Figure~\ref{fig:del} shows that.}
 
 One could solve this issue by using a conflict-free replicated data
@@ -155,38 +137,47 @@ since timeouts imply a continuous maintenance of partitions, such
 partitioning protocol incurs an overhead even in quiet contexts
 without dynamic partitions.
 
-
-\begin{figure*}
-  \begin{center}
-    \subfloat[Part A][\label{fig:delA}Both Process $a$ and
-      Process $c$ initiate then remove a partition.
-      $w_{ab} = 1.5$; $w_{bc} = w_{cd} = w_{bd} = 1$.]{\input{input/figdelA.tex}}
-    \hspace{5pt}
-    \subfloat[Part B][\label{fig:delB}Process $b$ and Process $d$ receive and deliver
-      messages based on their weights. $a$'s partition propagates to all processes.]
-             {\input{input/figdelB.tex}}
-    \hspace{5pt}
-    \subfloat[Part C][\label{fig:delC}Process $c$'s partition reach $b$ and $d$.
-      Its removal shortly follows. Process $b$ does not have any control
-      information about partitions any more.]{\input{input/figdelC.tex}}
-    \hspace{5pt}
-    \subfloat[Part D][\label{fig:delD}Processes discard remaining messages.
-      Process $b$ does not deliver $\delta_a$, for it already removed $a$ when
-      Partition $c$ dominated it. Processes $c$ and $d$ remain in an incorrect
-      partition.]{\input{input/figdelD.tex}}
-  \end{center}
-  \caption{\label{fig:del}Partition removals cannot rely only on
-    current partition, for it may lead to either inconsistent
-    partitioning, or every process receiving every broadcast.}
-\end{figure*}
-
 \begin{problem}[Consistent partitioning]
   How to enable \emph{consistent} dynamic optimal partitioning in
   dynamic network using scoped flooding?
 \end{problem}
 
-\TODO{Dynamic Multiple-sources All-destinations shortest path on
-  dynamic graphs?}
+% \TODO{Dynamic Multiple-sources All-destinations shortest path on
+%  dynamic graphs?}
+
+\begin{figure}
+  \begin{center}
+    \input{input/figASmotivation.tex}
+    \caption{\label{fig:ASmotivation}Scoped flooding extended to
+      objects, processes do not know about all partitions that exist
+      in the whole distributed system.}
+  \end{center}
+\end{figure}
+
+To further improve scoped flooding in autonomous systems, processes
+may belong to multiple partitions representing the objects they are
+aware of. Figure~\ref{fig:ASmotivation} highlights the geo-distributed
+nature of autonomous systems. Autonomous systems have topological
+properties~\cite{nur2018geography} that processes can leverage to
+avoid flooding the whole systems with control information about all
+partitions. In Figure~\ref{fig:ASmotivation}, Process $e$ creates a
+partition about a specific object, flooding Paris's AS to notify
+neighboring processes of the object. However, it does not flood the
+whole network, for control information stops at Process $b$. It
+significantly saves bandwidth compared to broadcast since processes
+below entrypoints of autonomous systems are order of magnitude more
+numerous. Yet, Processes $c$ and $d$ know whom to ask when they need
+to return an object they are unaware of. Processes remain efficient in
+answering requests. \TODO{which is important for end users \REF.}
+
+\begin{definition}[Partitions in asynchronous systems]
+  Processes may hold multiple partitions \TODO{Use $\mathcal{P}$}
+  \TODO{TODO}
+\end{definition}
+
+\begin{problem}[Consistent partitioning in AS]
+  How to enable scoped flooding of objects in autonomous systems?
+\end{problem}
 
 \TODO{Next Section presents our approach that solves this problem
   statement by relying only on logical control information.}

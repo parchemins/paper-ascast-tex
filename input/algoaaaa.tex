@@ -42,35 +42,9 @@ $\mathcal{O}_p$ \tcp*[r]{sorted list of sets of links}
 \Function{\textup{initObject($o$)} \tcp*[f]{utility}} {
     \If {$o \not\in \mathcal{A}$} {
         $\mathcal{A}[o] \leftarrow \varnothing$ \;
-        \ForEach {$\mathcal{O}_p^r \in \mathcal{O}_p$} {
-           $\mathcal{A}[o] \leftarrow \mathcal{A}[o] \cup \{ \TODO{A^4}(\mathcal{O}_p^r) \} $
+        \lForEach {$\mathcal{O}_p^r \in \mathcal{O}_p$} {
+           $\mathcal{A}[o][r] \leftarrow \TODO{A^4}(\mathcal{O}_p^r)$
         }
     }
 
 }
-
-% \Function{\textup{newObject($o$)}} {
-
-% \Function{\textup{receive($q$, $m$)}} {
-%    \If {$m \in \alpha$} {
-%       \textbf{let} $best \leftarrow a.best$ \;
-%       $a$.receiveAdd($q$, $m$) \;
-%       \If {$best = a.best$} {
-%       \TODO{from higher $q$ to min $q$} \;
-%       broadcast($q$, $a.best$)
-%       }
-%    }
-% }
-
-% \Function{\textup{broadcast($q$, $m$)}} {
-
-%   \textbf{let} $i$ \textbf{\textup{with}} $q \in \mathcal{O}^i_p$ \textbf{or} $0$
-%   \tcp*[r]{$i^{th}$ set of links}
-
-%   \ForEach{$q \in O_p^j$ \textbf{\textup{with}} $i \leq j < |\mathcal{O}_p|$}  {
-%         \textup{sendTo$_q$($m +_\alpha w_{pq}$)}
-%   }
-  
-% }
-
-% }

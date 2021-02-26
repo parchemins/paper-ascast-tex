@@ -21,59 +21,8 @@ from one process to another.
 This section describes \NAME's components and algorithms. First, it
 starts by detailing a logical partitioning protocol in static
 network. Second, it extends such protocol to dynamic systems. Last, it
-describes an optimization based on Bloom filter. 
-
-
-
-\subsection{Autonomous systems}
-
-\begin{figure}
-  \centering\input{input/figAS.tex}
-  \caption{\label{fig:AS}Inter autonomous systems partitioning. \TODO{new
-      issue not introduced in background}}
-\end{figure}
-
-Autonomous systems are geo-distributed networks. Heterogeneous
-communication links. Hierarchy of communication links. Per-object
-broadcast.
-
-We leave the link handling to membership protocols~\REF. The ordering
-of links can be done based on latency. For instance, from 0 to 100 ms,
-rank 0, from 100 to 1s, rank 2 \ldots
-
-\begin{algorithm}
-  \input{input/algoaaaa.tex}
-  \caption{\label{algo:aaaa}Primitives for general purpose logical
-    partitioning in dynamic systems.}
-\end{algorithm}
-
-Figure~\ref{fig:AS} shows an example of inter-AS logical partitioning
-where each process ranks its communication links, and each process
-forwards messages to its neighbors starting from the rank of the link
-that triggered the receipt, to its highest rank neighbors. In this
-example, Process $e$ adds a partition. It forwards the generated
-message to all its neighbors as if it received it from its lowest rank
-links. When Process $a$ receives $\alpha_e^1$ from its rank-$0$ link,
-it forwards it to rank-$0$ links and rank-$1$ links.  Process $b$
-stops the propagation, for all its links have lower ranks than the one
-from which it received the message $\alpha_e^2$. Ultimately, the
-partition includes Process $e$, Process $a$, and Process $b$. Process
-$c$ and Process $d$ remain unaware of the new \TODO{object}.
-
-To ease the reasoning about inter-AS dynamic partitioning in dynamic
-networks, \NAME runs an independant broadcast protocol for each
-object, and for each rank of links.  \TODO{Not so easy\ldots}
-\TODO{Write and describe algo.} \TODO{Overhead of separating things,
-  slightly more memory, but traffic wise? slower ?}  \TODO{In the
-  example, not only Process $b$ keeps $e_1$ as its best partition, but
-  it keeps it for links of rank 0, and links of rank 1.}
-
-The rest of this section describes our proposal to solve these smaller
-scientific problems. It first tackles dynamic partitions where
-processes can add or delete partitions resulting in stale information
-that may impair correctness. It then tackles dynamic networks where
-edges appear and disappear at any time resulting in invalid
-information that may impair correctness.
+describes an optimization based on Bloom filter. \TODO{More more
+  more. Thousands of pages paper it seems.}
 
 
 
@@ -209,6 +158,53 @@ partitions grows.
   dissemination trees~\cite{whitaker2002forwarding}}. \TODO{No need to
   know the dimension of networks and
   partitions~\cite{almeida2007scalable}}.
+
+
+
+\subsection{Autonomous systems}
+
+\begin{figure}
+  \centering\input{input/figAS.tex}
+  \caption{\label{fig:AS}Inter autonomous systems partitioning. \TODO{new
+      issue not introduced in background}}
+\end{figure}
+
+Autonomous systems are geo-distributed networks. Heterogeneous
+communication links. Hierarchy of communication links. Per-object
+broadcast.
+
+We leave the link handling to membership protocols~\REF. The ordering
+of links can be done based on latency. For instance, from 0 to 100 ms,
+rank 0, from 100 to 1s, rank 2 \ldots
+
+\begin{algorithm}
+  \input{input/algoaaaa.tex}
+  \caption{\label{algo:aaaa}Primitives for general purpose logical
+    partitioning in dynamic systems.}
+\end{algorithm}
+
+Figure~\ref{fig:AS} shows an example of inter-AS logical partitioning
+where each process ranks its communication links, and each process
+forwards messages to its neighbors starting from the rank of the link
+that triggered the receipt, to its highest rank neighbors. In this
+example, Process $e$ adds a partition. It forwards the generated
+message to all its neighbors as if it received it from its lowest rank
+links. When Process $a$ receives $\alpha_e^1$ from its rank-$0$ link,
+it forwards it to rank-$0$ links and rank-$1$ links.  Process $b$
+stops the propagation, for all its links have lower ranks than the one
+from which it received the message $\alpha_e^2$. Ultimately, the
+partition includes Process $e$, Process $a$, and Process $b$. Process
+$c$ and Process $d$ remain unaware of the new \TODO{object}.
+
+To ease the reasoning about inter-AS dynamic partitioning in dynamic
+networks, \NAME runs an independant broadcast protocol for each
+object, and for each rank of links.  \TODO{Not so easy\ldots}
+\TODO{Write and describe algo.} \TODO{Overhead of separating things,
+  slightly more memory, but traffic wise? slower ?}  \TODO{In the
+  example, not only Process $b$ keeps $e_1$ as its best partition, but
+  it keeps it for links of rank 0, and links of rank 1.}  When there
+are no ranking in links, processes solely rely on
+Algorithm~\ref{algo:adddelundo} for optimal partitioning.
 
 
 

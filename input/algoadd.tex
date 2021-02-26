@@ -5,9 +5,9 @@
 \DontPrintSemicolon
 \LinesNumbered
 
-$\mathcal{O}_p$ \tcp*[r]{set of neighbors and weights}
+$O_p$, $W_p$\tcp*[r]{set of neighbors and weights}
 $s$ \tcp*[r]{best source of partition}
-$d \leftarrow \infty$ \tcp*[r]{lowest distance to $q$}
+$d \leftarrow \infty$ \tcp*[r]{smallest distance to $s$}
 
 
 \BlankLine
@@ -23,8 +23,8 @@ $d \leftarrow \infty$ \tcp*[r]{lowest distance to $q$}
       $d \leftarrow d'$ \;
       $s \leftarrow s'$ \tcp*[r]{$d_p(\alpha_{s'}^{d'})$}
 
-      \ForEach {$\langle n, w_{pn} \rangle \in \mathcal{O}_p$} {
-          \textup{send$_n$($s', d' + w_{pn}$)} \label{line:accumulator}
+      \ForEach {$n \in O_p$} {
+          \textup{send$_n$($s', d' + W_{pn}$)} \label{line:accumulator}
           \tcp*[r]{$b_p(\alpha_{s'}^{d'})$}
        }      
 

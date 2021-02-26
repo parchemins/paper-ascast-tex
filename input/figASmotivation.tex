@@ -1,0 +1,62 @@
+\begin{tikzpicture}[scale=1]
+
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+  
+  \newcommand\X{50pt}
+  \newcommand\Y{-50pt}
+
+  \newcommand\ADD{\alpha}
+
+
+
+  \draw (-1.5*\X, \Y + 5pt)
+  -- node[above, font=\scriptsize, sloped]{$10ms$}
+  (-1.5*\X, 0 - 5pt); %% a-e
+
+  \draw (-1.5*\X + 5pt, 0)
+  --
+  (-1*\X, 0);
+
+  \draw[dotted] (-1*\X, 0) --
+  node[above, font=\scriptsize]{$300ms$} (-0.5*\X, 0);
+  
+  \draw (-0.5*\X, 0)
+  --  
+  (0 - 5pt, 0); %% a - b
+
+  \draw (0 +5pt, 0)
+  -- node[above, font=\scriptsize, sloped]{$15ms$}  
+  (\X -5pt, 0); %% b - c
+  
+  \draw (0, \Y + 5pt)
+  -- node[above, font=\scriptsize, sloped]{$20ms$}  
+  (0, 0 - 5pt); %% b - d
+
+  \draw (\X + 3pt, 0 - 5pt)
+  -- node[above, font=\scriptsize, sloped]{$10ms$}  
+  (0 + 5pt, \Y - 3pt); %% c - d
+
+
+
+  \draw[dashed] (-0.75*\X, -0.5*\Y) -- (-0.75*\X, 1.5*\Y)
+  node[above left]{\textit{(FR) Paris -- AS 1 \vphantom{g}}}
+  node[above right]{\textit{AS 2 -- Wellington (NZ)}};
+
+  \draw[fill=white] (-1.5*\X, 0) node[color=\PA]{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw [left] (-1.5*\X - 5pt, 0) node{\textbf{e: 1}};
+  \draw[fill=white] (0, 0) node[color=\PA]{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw [above] ( 0, 5pt ) node{\textbf{e: 2}};
+  \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+
+  \draw[fill=white] (-1.5*\X, \Y) node[color=\PA]{$\bm{e}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw [left] (-1.5*\X - 5pt, \Y) node{\textbf{e: 0}};
+  
+  
+  % \draw (-\X, 5pt) node[above, color=\PA]{$\ADD_a^0$};
+  % \draw (\X, 5pt) node[above, color=\PC]{$\ADD_c^0$};
+
+
+\end{tikzpicture}
