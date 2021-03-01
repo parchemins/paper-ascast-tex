@@ -129,15 +129,15 @@ operations. Some processes may receive operations unnecessary to their
 correct functioning, for these operations did not happen in their
 locality.  One could also solve this issue by removing partitions that
 were not advertised for a defined
-time~\cite{hemmati2015namebased}. However, relying on physical timeout
-could lead to either premature removals of partitions when they are
-still operating; or slow convergence where processes believe they
-belong to a partition that was removed (\TODO{plot ?}). In addition,
-since timeouts imply a continuous maintenance of partitions, such
-partitioning protocol incurs an overhead even in quiet contexts
-without dynamic partitions.
+time~\cite{hemmati2015namebased}. \TODO{check distance-vector
+  protocols.} However, relying on physical timeout could lead to
+either premature removals of partitions when they are still operating;
+or slow convergence where processes believe they belong to a partition
+that was removed (\TODO{plot ?}). In addition, since timeouts imply a
+continuous maintenance of partitions, such partitioning protocol
+incurs an overhead even in quiet contexts without dynamic partitions.
 
-\begin{problem}[Consistent partitioning]
+\begin{problem}[\label{prob:intra}Consistent partitioning]
   How to enable \emph{consistent} dynamic optimal partitioning in
   dynamic network using scoped flooding?
 \end{problem}
@@ -172,15 +172,15 @@ answering requests. \TODO{which is important for end users \REF.}
 
 \begin{definition}[Partitions in asynchronous systems]
   Processes may hold multiple partitions \TODO{Use $\mathcal{P}$}
-  \TODO{TODO}
+  \TODO{TODO} \TODO{or multi-partitioning?}
 \end{definition}
 
-\begin{problem}[Consistent partitioning in AS]
+\begin{problem}[\label{prob:inter}Inter-AS consistent partitioning]
   How to enable scoped flooding of objects in autonomous systems?
 \end{problem}
 
-\TODO{Next Section presents our approach that solves this problem
-  statement by relying only on logical control information.}
+Next Section presents our approach that solves these scientific
+problems by relying on logical control information only.
 
 %%% Local Variables: 
 %%% mode: latex

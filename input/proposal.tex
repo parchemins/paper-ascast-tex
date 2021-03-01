@@ -2,11 +2,12 @@
 \section{\NAME for Dynamic Partitioning}
 \label{sec:proposal}
 
-In this section, we introduce \NAME, (\TODO{stands for}) a reactive
-protocol for logical partitioning in autonomous systems the cost of
-which actually depends on its usage: when the system becomes
-quiescent, processes eventually converge to their respective partition
-and do not require further communication afterwards.
+In this section, we introduce \NAME (\TODO{stands for}) and its
+\underline{ex}tension \NAMEB, reactive protocols for logical
+partitioning in autonomous systems the cost of which actually depends
+on their usage: when the system becomes quiescent, processes
+eventually converge to their respective partition and do not require
+further communication afterward.
 
 Each process is stateless, works autonomously and asynchronously, in a
 peer-to-peer fashion. Each process broadcasts each change to its
@@ -16,23 +17,33 @@ flooding. Messages that carry changes travel through the network
 depending on partition of processes, stopping as soon as they
 encounter uninterested processes. We demonstrate that \NAME guarantees
 consistent partitioning despite different order in message deliveries
-from one process to another.
+from one process to another. While \NAME is a general purpose logical
+partitioning protocol for dynamic networks, \NAMEB further reduces
+generated traffic in the context of inter-autonomous systems by
+leveraging the hierarchical properties of such networks. 
 
-This section describes \NAME's components and algorithms. First, it
-starts by detailing a logical partitioning protocol in static
-network. Second, it extends such protocol to dynamic systems. Last, it
-describes an optimization based on Bloom filter. \TODO{More more
-  more. Thousands of pages paper it seems.}
+This section starts by describing \NAME's functioning by detailing its
+operation to avoid inconsistent states due to ordering and staleness
+of delivered messages. Then, it describes its extension \NAMEB that
+builds multiple broadcast layers ordered using local knowledge only.
+Finally, it ends with a complexity analysis of proposed protocols. 
 
 
 
-\subsection{Dynamic partitions}
+\subsection{Intra-autonomous system partitioning}
 
 \begin{algorithm}
   \input{input/algoadddelundo.tex}
   \caption{\label{algo:adddelundo}Dynamic partitioning by Process $p$.}
 \end{algorithm}
 
+\input{input/figproof.tex}
+
+In this section, we aim at solving Problem Statement~\ref{prob:intra}
+by proposing \NAME, a reactive logical partitioning protocol for
+dynamic partitioning in dynamic networks.
+
+\paragraph{Dynamic partitions.}
 At any time, a process can become a source, hence adding a new
 partition to the system. This partition eventually includes all
 processes that are closer from this new source than any other else. We
@@ -53,51 +64,22 @@ This allows processes to quickly discard stale messages saving
 bandwidth. For instance, a process that received a message originated
 at Process $a$ with a version $2$ knows that any message originated at
 Process $a$ with a version $1$ are stale system-wide; it must not
-forward it. As consequence, vectors of versions also ensure
-termination, for corresponding add and delete messages cannot follow
-each other in an infinite loop. In terms of traffic, this only
-requires each \TODO{delete} message to piggyback a source identifier
-and version number.
-
-% \noindent \textbf{Second,} processes need to maintain a local view of
-% their neighbors' partition.  Figure~\ref{fig:del} shows that
-% \TODO{deletes} may not propagate properly to all processes in
-% need. The path leading to processes delivering $add$ may be broken due
-% to concurrent deliveries.  To solve this issue, each process is able
-% to know with certainty that each of its neighbor does not need a
-% delete (either because it is in another partition, or because another
-% path exists from the source to this neighbor). \TODO{More, figures
-%   etc.} In terms of traffic, this requires to acknowledge each message
-% in a way or another (acknowledgement messages or included in each
-% add-del message) using FIFO communication channels. The propagation of
-% delete messages is limited to the partition it targets plus uncertain
-% processes.
+forward it. As consequence, this also ensure termination, for
+corresponding add and delete messages cannot follow each other in
+infinite loops.
+% In terms of traffic, this only requires each message
+% to piggyback a source identifier and version number.
 
 \noindent Deletes must trigger competition amongst neighboring
 partitions. These \TODO{add} messages operate normally and fill gaps
-left open by deletes.
+left open by deletes. 
 
-\begin{figure*}
-  \begin{center}
-    \subfloat[Part A][\label{fig:proofA}Stale $\alpha$'s may stop up-to-date $\alpha$'s
-    from reaching all processes that require it along the shortest path from $a$ to $c$.
-    To solve this issue, we must guarantee
-    the eventual removal of stale $\alpha$'s (see Figure~\ref{fig:proofB}).]
-    {\input{input/figproofA.tex}}
-    \hspace{10pt}
-    \subfloat[Part B][\label{fig:proofB}Stale $\alpha$'s may stop $\delta$'s from reaching
-    processes with targeted $\alpha$'s. To ensure correctness, $b$ must either
-    deliver $\delta_d$, $\delta_d^{0.5}$, or another $\alpha$, as well as downstream processes
-    that delivered $\alpha$ coming from $b$ such as $g$.]
-    {\input{input/figproofB.tex}}
-    \caption{\label{fig:proof}Dynamic partitioning leads to correctness issues due to
-      staleness and ordering of operations.}
-  \end{center}
-\end{figure*}
+\TODO{Paths and \NAME synergize well, for paths tend to be smaller as the
+number of sources increase in the system.}
 
 
 
-\subsection{Dynamic networks}
+\paragraph{Dynamic networks.}
 Adding new communication links to the network may create shortcuts
 between processes. Both processes must send their current best
 partition to each other. Upon receipt, they act normally: if a process
@@ -152,22 +134,37 @@ partitions grows.
 
 
 
-\subsection{A last optimization}
-\TODO{Carry information that is useless. such as order of processes in
-  paths, and identities of processes themselves.} \TODO{Icarus for
-  dissemination trees~\cite{whitaker2002forwarding}}. \TODO{No need to
-  know the dimension of networks and
-  partitions~\cite{almeida2007scalable}}.
+\paragraph{A last optimization.}
+\NAME makes extensive use of paths to enable deleting messages without
+incrementing local counters. Messages carry their respective path and
+processes detect when such messages have been looping when they carry
+their identity (see Lines~\ref{line:notloopingA} and
+\ref{line:notloopingB} of Algorithm~\ref{algo:adddelundo}). Since
+membership is all that matters, we propose to trade vectors of
+identities for Bloom filters~\cite{almeida2007scalable} to improve on
+generated traffic and
+anonymity~\cite{whitaker2002forwarding}. Processes know with high
+probability if they already received and forwarded each message
+without knowing the identity of all processes that received it.  False
+positive probability only incurs premature stopping of broadcast
+messages and does not invalidate the delete of specific messages.
 
 
 
-\subsection{Autonomous systems}
+\subsection{Inter-autonomous system partitioning}
 
 \begin{figure}
   \centering\input{input/figAS.tex}
-  \caption{\label{fig:AS}Inter autonomous systems partitioning. \TODO{new
-      issue not introduced in background}}
+  \caption{\label{fig:AS}Inter autonomous systems
+    partitioning. \TODO{More about relative ordering of links at each
+      process}}
 \end{figure}
+
+In this section, we aim at solving Problem Statement~\ref{prob:inter}
+by proposing \NAMEB, an extension of \NAME, that enables dynamic
+logical partitioning in inter-autonomous systems. It leverages
+hierarchical properties of these networks to further improve on scoped
+flooding.
 
 Autonomous systems are geo-distributed networks. Heterogeneous
 communication links. Hierarchy of communication links. Per-object
@@ -179,8 +176,8 @@ rank 0, from 100 to 1s, rank 2 \ldots
 
 \begin{algorithm}
   \input{input/algoaaaa.tex}
-  \caption{\label{algo:aaaa}Primitives for general purpose logical
-    partitioning in dynamic systems.}
+  \caption{\label{algo:aaaa}\NAMEB running at Process $p$ for dynamic
+    partitioning in inter-autonomous systems.}
 \end{algorithm}
 
 Figure~\ref{fig:AS} shows an example of inter-AS logical partitioning
@@ -197,7 +194,7 @@ partition includes Process $e$, Process $a$, and Process $b$. Process
 $c$ and Process $d$ remain unaware of the new \TODO{object}.
 
 To ease the reasoning about inter-AS dynamic partitioning in dynamic
-networks, \NAME runs an independant broadcast protocol for each
+networks, \NAME runs an independent broadcast protocol for each
 object, and for each rank of links.  \TODO{Not so easy\ldots}
 \TODO{Write and describe algo.} \TODO{Overhead of separating things,
   slightly more memory, but traffic wise? slower ?}  \TODO{In the

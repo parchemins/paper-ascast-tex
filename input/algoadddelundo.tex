@@ -6,8 +6,8 @@
 \DontPrintSemicolon
 \LinesNumbered
 
-$\mathcal{O}_p$ \tcp*[r]{set of neighbors}
-$\mathcal{V} \leftarrow \varnothing$ \tcp*[r]{vector of versions}
+$O_p$, $W_p$ \tcp*[r]{set of neighbors and weights}
+$V \leftarrow \varnothing$ \tcp*[r]{vector of versions}
 $c \leftarrow 0$ \tcp*[r]{local counter}
 $best \leftarrow \varnothing$ \tcp*[r]{best $\alpha$ so far}
 %% $bests$ \tcp*[r]{last delivered $\alpha$ of $p$ and neighbors}
@@ -30,15 +30,15 @@ $best \leftarrow \varnothing$ \tcp*[r]{best $\alpha$ so far}
 
 \Function{\textup{receiveAdd($q$, $s'$, $c'$, $d'$, $\pi'$)}
 \tcp*[f]{\smash{$r_p(\alpha_{s', c'}^{d', \pi'})$}}  \textup{\texttt{from}} $q$} {
-  \If {$p \not\in \pi'$} {
-      \uIf {$c' \geq \mathcal{V}[s']$} {
+  \If {$p \not\in \pi'$ \label{line:notloopingA}} {
+      \uIf {$c' \geq V[s']$} {
           $V[s'] \leftarrow c'$ \;
           \If {$best \leq_\alpha \langle s', c', d', \pi'\rangle$ } {
               $best \leftarrow \langle s', c', d', \pi'\rangle$ \;
-              \ForEach{$n \in \mathcal{O}_p$}
-                  {send$_n$($s'$, $c'$, $d' + w_{pq}$, $\pi' \cup p$)}
+              \ForEach{$n \in O_p$}
+                  {send$_n$($s'$, $c'$, $d' + W_{pq}$, $\pi' \cup p$)}
            }
-      } \uElseIf {$q = best.\pi[|best.\pi| - 1] \wedge q \in \mathcal{O}_p$} {
+      } \uElseIf {$q = best.\pi[|best.\pi| - 1] \wedge q \in O_p$} {
           \textup{receiveDel($q$, $best$)} \tcp*[r]{undo}
       }
       
@@ -47,16 +47,16 @@ $best \leftarrow \varnothing$ \tcp*[r]{best $\alpha$ so far}
 
 \Function{\textup{receiveDel($q$, $s'$, $c'$, $\pi'$)}
 \tcp*[f]{\tiny \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}} {
-  \If {$p \not\in \pi'$} {
-     $\mathcal{V}[s'] \leftarrow \max(\mathcal{V}[s'], c')$ \;
+  \If {$p \not\in \pi'$ \label{line:notloopingB}} {
+     $V[s'] \leftarrow \max(V[s'], c')$ \;
      \uIf {$\langle s', c', \pi' \rangle \overset{\alpha}{=} best $} {
          $best \leftarrow \varnothing$ \;
-        \ForEach{$n \in \mathcal{O}_p$} {
+        \ForEach{$n \in O_p$} {
             \lIf{$\pi' = \varnothing$} {send$_q$($s'$, $c'$)}
             \lElse{send$_n$($s'$, $c'$, $\pi' \cup p$)}}
-     } \uElseIf {$best \neq \varnothing \wedge q \in \mathcal{O}_p$} {
+     } \uElseIf {$best \neq \varnothing \wedge q \in O_p$} {
          \textbf{let} $\langle s, c, d, \pi \rangle \leftarrow best$ \;
-         \textup{send$_q$($s, c, d + w_{pq}, \pi \cup p$)} \tcp*[r]{compete}
+         \textup{send$_q$($s, c, d + W_{pq}, \pi \cup p$)} \tcp*[r]{compete}
      }
   }
 }
