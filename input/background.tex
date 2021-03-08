@@ -7,11 +7,34 @@ machines interconnected by communication links. We do not consider
 byzantine processes.
 
 \begin{definition}[Fog infrastructure]
-  A fog infrastructure is a \underline{g}raph $G(V, E)$ of
+  A fog infrastructure is a connected \underline{g}raph $G(V, E)$ of
   \underline{v}ertices $V$ and bidirectional \underline{e}dges $E \in
   V \times V$. Edges have symmetric \underline{w}eights $w_{ij} =
   w_{ji}$ with $i, j \in V$.
 \end{definition}
+
+Processes can send messages to their neighboring processes. Processes
+can reliably broadcast messages by forwarding delivered
+messages~\cite{nedelec2018causal,raynal2013distributed}. However,
+reliable broadcast definition states that \emph{all} correct processes
+should deliver broadcast messages. This proves costly in large scale
+systems comprising thousands of processes. Instead, we define
+\emph{scoped broadcast} where messages reach only interested
+processes, significantly reducing generated traffic.
+
+\begin{definition}[Scoped broadcast]
+  \TODO{meow predicate, meow path, meow state, meow message.}
+\end{definition}
+
+This definition highlights the transitive relevance of sent messages
+and encompasses more specific definitions of related
+work~\cite{hsiao2005scoped,lue2006scoped,wang2015prodiluvian}.  A
+process from Paris could scoped broadcast a message to all processes
+in this city. A process from Paris could scoped broadcast a message to
+all processes in this city plus neighboring cities by overloading
+forwarded messages the first time they reach another city. As for
+reliable broadcast, there exists different trade-off on space, time,
+and communication.
 
 \begin{definition}[Logical partition]
   A logical \underline{p}artition $P_s$ originated at a
