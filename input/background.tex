@@ -2,167 +2,22 @@
 \section{Background and motivation}
 \label{sec:background}
 
-Fog infrastructures are distributed systems comprising heterogeneous
-machines interconnected by communication links. We do not consider
-byzantine processes.
+\TODO{More related work. More motivations etc. Maybe describe IPFS?}
 
-\begin{definition}[Fog infrastructure]
-  A fog infrastructure is a connected \underline{g}raph $G(V, E)$ of
-  \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
-  \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from Process
-  $i$ to Process $j$ is a sequence of vertices $[i, k_1, k_2, \ldots
-    k_n, j]$ with $\forall m: 0\leq m \leq n, \langle \pi_{ij}[m],
-  \pi_{ij}[m+1] \rangle \in E$.
-\end{definition}
-
-Processes can send messages to their neighboring processes. Processes
-can reliably broadcast messages by forwarding delivered
-messages~\cite{hadzilacos1994modular,nedelec2018causal,raynal2013distributed}. However,
-uniform reliable broadcast states that \emph{all} correct processes
-must deliver broadcast messages. This proves costly in large scale
-systems comprising thousands of processes. Instead, we define
-\emph{scoped broadcast} where messages reach only interested
-processes, significantly reducing generated traffic.
-
-\begin{definition}[\underline{S}coped broadcast (S-broadcast)]
-  When Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
-  \underline{m}essage $m$, every correct Process $y$ within a scope
-  \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
-  $d_y(m)$. The scope depends on \underline{s}tates $\sigma$ of
-  processes, \underline{m}etadata $\mu$ within received messages, and
-  a \underline{p}redicate $\phi$ verified from process to process:
-  $b_x(m) \wedge r_y(m) \implies \exists \pi_{xy} : \forall z \in
-  \pi_{xy}, \phi(\mu_z, \sigma_z)$.
-\end{definition}
-
-This definition highlights the transitive relevance of messages and
-encompasses more specific definitions of related
-work~\cite{hsiao2005scoped,lue2006scoped,wang2015prodiluvian}.  A
-process from Paris could scoped broadcast a message to all processes
-in this city. A process from Paris could scoped broadcast a message to
-all processes in this city plus neighboring cities by overloading
-forwarded messages the first time they reach another city. Similarly
-to reliable broadcast, scoped broadcast implementations expose
-different trade-offs on space, time, and communication.
-
-%% \begin{definition}[S-broadcast properties]
-%%   S-broadcast guarantees 3 properties:
-%%   \begin{inparaenum}[(i)]
-%%   \item Validity: If a correct process broadcasts a message, it
-%%     eventually delivers it;
-%%   \item Scoped Agreement: If a process broadcasts a message, then all
-%%     correct processes within the scope eventually delivers it;
-%%   \item Scoped Integrity: A process delivers a message only if it was
-%%     previously broadcast within the scope.
-%%   \end{inparaenum}
+%% \begin{definition}[Dynamic optimal partitioning]
+%%   A dynamic optimal partitioning is an optimal partitioning where the
+%%   set of sources $S$ does not monotonically increase. We suffix this
+%%   set with \underline{t}ime $t$ : $S(t)$.  Process $i$ joins the set
+%%   of sources by \underline{a}dding its partition with messages
+%%   $\alpha_i^{0}$: $Add(i \not\in S(t)) \implies i \in S(t+1)$; and
+%%   leaves the set of sources by \underline{d}eleting its partition with
+%%   messages $\delta_i$: $Del(i \in S(t)) \implies i \not\in S(t+1)$.
 %% \end{definition}
 
-In this paper, we propose to dynamically adapt the scope of
-S-broadcast using S-broadcast itself.  \textbf{First}, at any time, a
-process can become the source of a new logical partition by
-transitively modifying the respective state of neighboring processes
-using path weights.  When a process S-broadcasts a message in this
-partition, it reaches all processes belonging to this partition. While
-the first partition gathers all processes of the system, the following
-partitions reduce the membership size of their neighboring
-partitions. In turns, the traffic generated to adapt scopes scales
-with the number of partitions.
- 
-\begin{definition}[Consistent partitioning]
-  Let $S \subseteq V$ be the set of \underline{s}ources, $W_{xy} =
-  W_{yx}$ be the symetric \underline{w}eight between $x$ and $y$,
-  $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to $z$ the
-  weight of which $|\Pi_{xz}|$ is lower than any other path weight,
-  the consistent partitioning $\mathcal{P}$ is a set of logical
-  partitions $P_{s\in S}$ such that each process belongs to a logical
-  partition comprising its closest source process.  $\forall p \in
-  P_{s_1}, \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
-\end{definition}
-
-\input{input/figdel.tex} %% figure positioning
-
-%% \begin{definition}[\label{def:transitivedelivery}Transitive delivery]
-%%   Transitive delivery ensures the system eventually converges to
-%%   optimal partitioning:
-%%   \begin{inparaenum}[(i)]
-%%   \item (\textbf{termination}) processes do not need to propagate
-%%     operations they do not deliver: $\forall \langle i, j \rangle \in
-%%     E, \neg d_i(\alpha_{s}^w)\implies \neg
-%%     d_j(\alpha_{s}^{w+w_{ij}})$;
-%%   \item (\textbf{propagation}) operations delivered by a process may
-%%     also benefit neighbor processes: $\forall \langle i, j \rangle \in
-%%     E, d_i(\alpha_{s}^{w_1}) \implies
-%%     d_j(\alpha_{s}^{w_1+w_{ij}}) \vee
-%%     d_j(\alpha_{*}^{w_2 < w_1 + w_{ij}})$.
-%%   \end{inparaenum}
-%% \end{definition}
-
-\begin{algorithm}
-  \input{input/algoadd.tex}
-  \caption{\label{algo:add}Adding a partition by Process $p$.}
-\end{algorithm}
-
-Algorithm~\ref{algo:add} shows the instructions that implement
-eventually consistent partitioning when weights are scalar values.
-
-%% Processes use reliable asynchronous message passing to reach optimal
-%% partitioning together. When Process $s$ wants to become a source, it
-%% generates a message $\alpha_s^0$. Upon \underline{r}eceipt
-%% $r_i(\alpha_s^{w})$, Process $i$ knows that Process $s$ created a
-%% partition at a path length of $w$. Process $i$ may choose to
-%% \underline{d}eliver $d_i(\alpha_s^{w})$ if it improves its
-%% partitioning. Process $i$ may choose to propagate its change through
-%% \underline{b}roadcast $b_i(\alpha_s^w)$.  Without global knowledge,
-%% processes only rely on their own behavior to deduce the behavior of
-%% their neighbor processes.
-
-
-
-\TODO{the rules of Definition~\ref{def:transitivedelivery} to converge
-towards optimal partitioning. Figure~\ref{fig:add} illustrates its
-behavior on a system comprising 4 processes $a$, $b$, $c$, and
-$d$. Two processes $a$ and $c$ concurrently create a partition. They
-initialize their own state with the lowest possible bound $0$ (see
-Line~\ref{line:lowestbound}), and send a message to each of their}
-neighbors by accumulating the corresponding edge weight (see
-Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, Process $b$
-receives $\alpha_{c}^{1}$. Since it improves its own partition
-distance, it keeps it and forwards it to its neighbors. Process $b$
-discards $\alpha_{b}^{1.5}$, for it does not improve its partition
-distance. Processes $c$ and $d$ will never hear of Process $a$'s
-partition. At scale, such \emph{scoped flooding} saves bandwidth by
-limiting generated traffic to subsets of
-processes~\cite{wang2015prodiluvian}. In Figure~\ref{fig:addD},
-processes discard last transiting messages. The system converged to
-the optimal partitioning.  Transitive relationships ensure that each
-process gets its closest source while accumulation of weights ensures
-that messages propagation terminates.  Interestingly, while the
-receipt order of messages does not impact on local control information
-($r_b(\alpha_a^{1.5}) \cdot r_b(\alpha_a^{1}) \Leftrightarrow
-r_b(\alpha_a^{1}) \cdot r_b(\alpha_a^{1.5}) \implies
-\TODO{d_b(\alpha_a^{1})}$), it impacts on control information
-broadcast in the network ($r_b(\alpha_a^{1.5}) \cdot r_b(\alpha_a^{1})
-\implies b_b(\alpha_{b}^{1.5}) \cdot b_b(\alpha_{b}^{1})$ while
-$r_b(\alpha_a^{1}) \cdot r_b(\alpha_a^{1.5}) \implies
-b_b(\alpha_a^{1})$).
-
-While only adding logical partitions to the distributed system is
-straightforward, removing them introduces additional complexity. 
-
-\begin{definition}[Dynamic optimal partitioning]
-  A dynamic optimal partitioning is an optimal partitioning where the
-  set of sources $S$ does not monotonically increase. We suffix this
-  set with \underline{t}ime $t$ : $S(t)$.  Process $i$ joins the set
-  of sources by \underline{a}dding its partition with messages
-  $\alpha_i^{0}$: $Add(i \not\in S(t)) \implies i \in S(t+1)$; and
-  leaves the set of sources by \underline{d}eleting its partition with
-  messages $\delta_i$: $Del(i \in S(t)) \implies i \not\in S(t+1)$.
-\end{definition}
-
-Unfortunately, due to differences in receipt order of messages between
-processes, stale information may stop prematurely the propagation of
-relevant messages leading to inconsistent partitioning.
-\TODO{Figure~\ref{fig:del} shows that.}
+%% Unfortunately, due to differences in receipt order of messages between
+%% processes, stale information may stop prematurely the propagation of
+%% relevant messages leading to inconsistent partitioning.
+%% \TODO{Figure~\ref{fig:del} shows that.}
 
 One could solve this issue by using a conflict-free replicated data
 type (CRDT) for set data structures~\cite{shapiro2011crdts}. CRDTs
@@ -180,50 +35,50 @@ that was removed (\TODO{plot ?}). In addition, since timeouts imply a
 continuous maintenance of partitions, such partitioning protocol
 incurs an overhead even in quiet contexts without dynamic partitions.
 
-\begin{problem}[\label{prob:intra}Consistent partitioning]
-  How to enable \emph{consistent} dynamic optimal partitioning in
-  dynamic network using scoped flooding?
-\end{problem}
+%% \begin{problem}[\label{prob:intra}Consistent partitioning]
+%%   How to enable \emph{consistent} dynamic optimal partitioning in
+%%   dynamic network using scoped flooding?
+%% \end{problem}
 
 % \TODO{Dynamic Multiple-sources All-destinations shortest path on
 %  dynamic graphs?}
 
-\begin{figure}
-  \begin{center}
-    \input{input/figASmotivation.tex}
-    \caption{\label{fig:ASmotivation}Scoped flooding extended to
-      objects, processes do not know about all partitions that exist
-      in the whole distributed system.}
-  \end{center}
-\end{figure}
+%% \begin{figure}
+%%   \begin{center}
+%%     \input{input/figASmotivation.tex}
+%%     \caption{\label{fig:ASmotivation}Scoped flooding extended to
+%%       objects, processes do not know about all partitions that exist
+%%       in the whole distributed system.}
+%%   \end{center}
+%% \end{figure}
 
-To further improve scoped flooding in autonomous systems, processes
-may belong to multiple partitions representing the objects they are
-aware of. Figure~\ref{fig:ASmotivation} highlights the geo-distributed
-nature of autonomous systems. Autonomous systems have topological
-properties~\cite{nur2018geography} that processes can leverage to
-avoid flooding the whole systems with control information about all
-partitions. In Figure~\ref{fig:ASmotivation}, Process $e$ creates a
-partition about a specific object, flooding Paris's AS to notify
-neighboring processes of the object. However, it does not flood the
-whole network, for control information stops at Process $b$. It
-significantly saves bandwidth compared to broadcast since processes
-below entrypoints of autonomous systems are order of magnitude more
-numerous. Yet, Processes $c$ and $d$ know whom to ask when they need
-to return an object they are unaware of. Processes remain efficient in
-answering requests. \TODO{which is important for end users \REF.}
+%% To further improve scoped flooding in autonomous systems, processes
+%% may belong to multiple partitions representing the objects they are
+%% aware of. Figure~\ref{fig:ASmotivation} highlights the geo-distributed
+%% nature of autonomous systems. Autonomous systems have topological
+%% properties~\cite{nur2018geography} that processes can leverage to
+%% avoid flooding the whole systems with control information about all
+%% partitions. In Figure~\ref{fig:ASmotivation}, Process $e$ creates a
+%% partition about a specific object, flooding Paris's AS to notify
+%% neighboring processes of the object. However, it does not flood the
+%% whole network, for control information stops at Process $b$. It
+%% significantly saves bandwidth compared to broadcast since processes
+%% below entrypoints of autonomous systems are order of magnitude more
+%% numerous. Yet, Processes $c$ and $d$ know whom to ask when they need
+%% to return an object they are unaware of. Processes remain efficient in
+%% answering requests. \TODO{which is important for end users \REF.}
 
-\begin{definition}[Partitions in asynchronous systems]
-  Processes may hold multiple partitions \TODO{Use $\mathcal{P}$}
-  \TODO{TODO} \TODO{or multi-partitioning?}
-\end{definition}
+%% \begin{definition}[Partitions in asynchronous systems]
+%%   Processes may hold multiple partitions \TODO{Use $\mathcal{P}$}
+%%   \TODO{TODO} \TODO{or multi-partitioning?}
+%% \end{definition}
 
-\begin{problem}[\label{prob:inter}Inter-AS consistent partitioning]
-  How to enable scoped flooding of objects in autonomous systems?
-\end{problem}
+%% \begin{problem}[\label{prob:inter}Inter-AS consistent partitioning]
+%%   How to enable scoped flooding of objects in autonomous systems?
+%% \end{problem}
 
-Next Section presents our approach that solves these scientific
-problems by relying on logical control information only.
+%% Next Section presents our approach that solves these scientific
+%% problems by relying on logical control information only.
 
 %%% Local Variables: 
 %%% mode: latex

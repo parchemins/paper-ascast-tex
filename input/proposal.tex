@@ -1,36 +1,171 @@
 
-\section{\NAME for Dynamic Partitioning}
-\label{sec:proposal}
+\section{Scoped broadcast}
+\label{sec:scoped}
 
-In this section, we introduce \NAME (\TODO{stands for}) and its
-\underline{ex}tension \NAMEB, reactive protocols for logical
-partitioning in autonomous systems the cost of which actually depends
-on their usage: when the system becomes quiescent, processes
-eventually converge to their respective partition and do not require
-further communication afterward.
+Fog infrastructures are distributed systems comprising heterogeneous
+machines interconnected by communication links. We do not consider
+byzantine processes.
+
+\begin{definition}[Fog infrastructure]
+  A fog infrastructure is a connected \underline{g}raph $G(V, E)$ of
+  \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
+  \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from Process
+  $i$ to Process $j$ is a sequence of vertices $[i, k_1, k_2, \ldots
+    k_n, j]$ with $\forall m: 0\leq m \leq n, \langle \pi_{ij}[m],
+  \pi_{ij}[m+1] \rangle \in E$.
+\end{definition}
+
+Processes can send messages to their neighboring processes. Processes
+can reliably broadcast messages by forwarding delivered
+messages~\cite{hadzilacos1994modular,nedelec2018causal,raynal2013distributed}. However,
+uniform reliable broadcast states that \emph{all} correct processes
+must deliver broadcast messages. This proves costly in large scale
+systems comprising thousands of processes. Instead, we define
+\emph{scoped broadcast} where messages reach only interested
+processes, significantly reducing generated traffic.
+
+\begin{definition}[\underline{S}coped broadcast (S-broadcast)]
+  When Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
+  \underline{m}essage $m$, every correct Process $y$ within a scope
+  \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
+  $d_y(m)$. The scope depends on \underline{s}tates $\sigma$ of
+  processes, \underline{m}etadata $\mu$ within received messages, and
+  a \underline{p}redicate $\phi$ verified from process to process:
+  $b_x(m) \wedge r_y(m) \implies \exists \pi_{xy} : \forall z \in
+  \pi_{xy}, \phi(\mu_z, \sigma_z)$.
+\end{definition}
+
+This definition highlights the transitive relevance of messages and
+encompasses more specific definitions of related
+work~\cite{hsiao2005scoped,lue2006scoped,wang2015prodiluvian}.  A
+process from Paris could scoped broadcast a message to all processes
+in this city. A process from Paris could scoped broadcast a message to
+all processes in this city plus neighboring cities by overloading
+forwarded messages the first time they reach another city. Similarly
+to reliable broadcast, scoped broadcast implementations expose
+different trade-offs on space, time, and communication.
+
+%% \begin{definition}[S-broadcast properties]
+%%   S-broadcast guarantees 3 properties:
+%%   \begin{inparaenum}[(i)]
+%%   \item Validity: If a correct process broadcasts a message, it
+%%     eventually delivers it;
+%%   \item Scoped Agreement: If a process broadcasts a message, then all
+%%     correct processes within the scope eventually delivers it;
+%%   \item Scoped Integrity: A process delivers a message only if it was
+%%     previously broadcast within the scope.
+%%   \end{inparaenum}
+%% \end{definition}
+
+In this paper, we propose to dynamically adapt the scope of
+S-broadcast using S-broadcast itself.  At any time, a process can
+become the source of a new logical partition by transitively modifying
+the respective state of neighboring processes using path weights.
+When a process S-broadcasts a message in this partition, it reaches
+all processes belonging to this partition. While the first partition
+gathers all processes of the system, the following partitions reduce
+the membership size of their neighboring partitions. In turns, the
+traffic generated to adapt scopes scales with the number of
+partitions.
+ 
+\begin{definition}[Consistent partitioning]
+  Let $S \subseteq V$ be the set of \underline{s}ources, $W_{xy} =
+  W_{yx}$ be the symetric \underline{w}eight between $x$ and $y$,
+  $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to $z$ the
+  weight of which $|\Pi_{xz}|$ is lower than any other path weight,
+  the consistent partitioning $\mathcal{P}$ is a set of logical
+  partitions $P_{s\in S}$ such that each process belongs to a logical
+  partition comprising its closest source process.  $\forall p \in
+  P_{s_1}, \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
+\end{definition}
+
+\input{input/figdel.tex} %% figure positioning
+
+%% \begin{definition}[\label{def:transitivedelivery}Transitive delivery]
+%%   Transitive delivery ensures the system eventually converges to
+%%   optimal partitioning:
+%%   \begin{inparaenum}[(i)]
+%%   \item (\textbf{termination}) processes do not need to propagate
+%%     operations they do not deliver: $\forall \langle i, j \rangle \in
+%%     E, \neg d_i(\alpha_{s}^w)\implies \neg
+%%     d_j(\alpha_{s}^{w+w_{ij}})$;
+%%   \item (\textbf{propagation}) operations delivered by a process may
+%%     also benefit neighbor processes: $\forall \langle i, j \rangle \in
+%%     E, d_i(\alpha_{s}^{w_1}) \implies
+%%     d_j(\alpha_{s}^{w_1+w_{ij}}) \vee
+%%     d_j(\alpha_{*}^{w_2 < w_1 + w_{ij}})$.
+%%   \end{inparaenum}
+%% \end{definition}
+
+\begin{algorithm}
+  \input{input/algoadd.tex}
+  \caption{\label{algo:add}Adding a partition by Process $p$.}
+\end{algorithm}
+
+Algorithm~\ref{algo:add} shows the instructions that implement
+eventually consistent partitioning when weights are scalar values.  At
+any time, a process running this protocol can add a logical partition
+to its distributed system.  Figure~\ref{fig:add} illustrates its
+behavior on a system comprising 4 processes $a$, $b$, $c$, and
+$d$. Two processes $a$ and $c$ concurrently create a partition by
+S-broadcasting their respective \underline{a}dd message: $\alpha_a^0$
+and $\alpha_c^0$. They initialize their own state with the lowest
+possible bound $0$ (see Line~\ref{line:lowestbound}), and send a
+message to each of their neighbors by accumulating the corresponding
+edge weight (see Line~\ref{line:accumulator}). In
+Figure~\ref{fig:addC}, Process $b$ receives $\alpha_{c}^{1}$. Since it
+improves its own partition distance, it keeps it and forwards it to
+its neighbors. Process $b$ discards $\alpha_{b}^{1.5}$, for it does
+not improve its partition distance. Processes $c$ and $d$ will never
+hear of Process $a$'s partition.  In Figure~\ref{fig:addD}, processes
+discard last transiting messages. The system converged to the optimal
+partitioning.  Transitive relationships ensure that each process gets
+its closest source while accumulation of weights ensures that messages
+propagation terminates.
+
+%% Interestingly, while the receipt order of messages does not impact on
+%% local control information ($r_b(\alpha_a^{1.5}) \cdot
+%% r_b(\alpha_a^{1}) \Leftrightarrow r_b(\alpha_a^{1}) \cdot
+%% r_b(\alpha_a^{1.5}) \implies \TODO{d_b(\alpha_a^{1})}$), it impacts on
+%% control information broadcast in the network ($r_b(\alpha_a^{1.5})
+%% \cdot r_b(\alpha_a^{1}) \implies b_b(\alpha_{b}^{1.5}) \cdot
+%% b_b(\alpha_{b}^{1})$ while $r_b(\alpha_a^{1}) \cdot
+%% r_b(\alpha_a^{1.5}) \implies b_b(\alpha_a^{1})$).
+
+While only adding logical partitions to the distributed system is
+straightforward, removing them introduces additional complexity. 
+
+
+
+
+
+\section{Adaptive scoped broadcast}
+\label{sec:adaptive}
+
+In this section, we introduce \NAME, a wait-free reactive protocol for
+logical partitioning in dynamic distributed systems the cost of which
+actually depends on its usage: When the system becomes quiescent,
+processes eventually converge to their respective partition and do not
+require further communication afterward.
 
 Each process is stateless, works autonomously and asynchronously, in a
 peer-to-peer fashion. Each process broadcasts each change to its
 neighborhood, for the state of its neighbors may depend on this change
 as well. Yet, generated traffic remains \TODO{low} using scoped
-flooding. Messages that carry changes travel through the network
+broadcast. Messages that carry changes travel through the network
 depending on partition of processes, stopping as soon as they
 encounter uninterested processes. We demonstrate that \NAME guarantees
 consistent partitioning despite different order in message deliveries
-from one process to another. While \NAME is a general purpose logical
-partitioning protocol for dynamic networks, \NAMEB further reduces
-generated traffic in the context of inter-autonomous systems by
-leveraging the hierarchical properties of such networks. 
+from one process to another.
 
 This section starts by describing \NAME's functioning by detailing its
 operation to avoid inconsistent states due to ordering and staleness
-of delivered messages. Then, it describes its extension \NAMEB that
-builds multiple broadcast layers ordered using local knowledge only.
-Finally, it ends with a complexity analysis of proposed protocols. 
+of delivered messages. This section ends with a complexity analysis of
+proposed protocols.
 
 
 
-\subsection{Intra-autonomous system partitioning}
+%% \subsection{Intra-autonomous system partitioning}
 
 \begin{algorithm}
   \input{input/algoadddelundo.tex}
@@ -39,15 +174,15 @@ Finally, it ends with a complexity analysis of proposed protocols.
 
 \input{input/figproof.tex}
 
-In this section, we aim at solving Problem Statement~\ref{prob:intra}
-by proposing \NAME, a reactive logical partitioning protocol for
-dynamic partitioning in dynamic networks.
+%% In this section, we aim at solving Problem Statement~\ref{prob:intra}
+%% by proposing \NAME, a reactive logical partitioning protocol for
+%% dynamic partitioning in dynamic networks.
 
 \paragraph{Dynamic partitions.}
 At any time, a process can become a source, hence adding a new
 partition to the system. This partition eventually includes all
 processes that are closer from this new source than any other else. We
-described such protocol in Section~\ref{sec:background}. Processes
+described such protocol in Section~\ref{sec:scoped}. Processes
 naturally converge towards their respective best partition by only
 piggybacking a monotonically increasing distance in forwarded
 messages. % \TODO{Traffic of each partition is contained to the
@@ -151,62 +286,64 @@ messages and does not invalidate the delete of specific messages.
 
 
 
-\subsection{Inter-autonomous system partitioning}
+%% \subsection{Inter-autonomous system partitioning}
 
-\begin{figure}
-  \centering\input{input/figAS.tex}
-  \caption{\label{fig:AS}Inter autonomous systems
-    partitioning. \TODO{More about relative ordering of links at each
-      process}}
-\end{figure}
+%% \begin{figure}
+%%   \centering\input{input/figAS.tex}
+%%   \caption{\label{fig:AS}Inter autonomous systems
+%%     partitioning. \TODO{More about relative ordering of links at each
+%%       process}}
+%% \end{figure}
 
-In this section, we aim at solving Problem Statement~\ref{prob:inter}
-by proposing \NAMEB, an extension of \NAME, that enables dynamic
-logical partitioning in inter-autonomous systems. It leverages
-hierarchical properties of these networks to further improve on scoped
-flooding.
+%% In this section, we aim at solving Problem Statement~\ref{prob:inter}
+%% by proposing \NAMEB, an extension of \NAME, that enables dynamic
+%% logical partitioning in inter-autonomous systems. It leverages
+%% hierarchical properties of these networks to further improve on scoped
+%% flooding.
 
-Autonomous systems are geo-distributed networks. Heterogeneous
-communication links. Hierarchy of communication links. Per-object
-broadcast.
+%% Autonomous systems are geo-distributed networks. Heterogeneous
+%% communication links. Hierarchy of communication links. Per-object
+%% broadcast.
 
-We leave the link handling to membership protocols~\REF. The ordering
-of links can be done based on latency. For instance, from 0 to 100 ms,
-rank 0, from 100 to 1s, rank 2 \ldots
+%% We leave the link handling to membership protocols~\REF. The ordering
+%% of links can be done based on latency. For instance, from 0 to 100 ms,
+%% rank 0, from 100 to 1s, rank 2 \ldots
 
-\begin{algorithm}
-  \input{input/algoaaaa.tex}
-  \caption{\label{algo:aaaa}\NAMEB running at Process $p$ for dynamic
-    partitioning in inter-autonomous systems.}
-\end{algorithm}
+%% \begin{algorithm}
+%%   \input{input/algoaaaa.tex}
+%%   \caption{\label{algo:aaaa}\NAMEB running at Process $p$ for dynamic
+%%     partitioning in inter-autonomous systems.}
+%% \end{algorithm}
 
-Figure~\ref{fig:AS} shows an example of inter-AS logical partitioning
-where each process ranks its communication links, and each process
-forwards messages to its neighbors starting from the rank of the link
-that triggered the receipt, to its highest rank neighbors. In this
-example, Process $e$ adds a partition. It forwards the generated
-message to all its neighbors as if it received it from its lowest rank
-links. When Process $a$ receives $\alpha_e^1$ from its rank-$0$ link,
-it forwards it to rank-$0$ links and rank-$1$ links.  Process $b$
-stops the propagation, for all its links have lower ranks than the one
-from which it received the message $\alpha_e^2$. Ultimately, the
-partition includes Process $e$, Process $a$, and Process $b$. Process
-$c$ and Process $d$ remain unaware of the new \TODO{object}.
+%% Figure~\ref{fig:AS} shows an example of inter-AS logical partitioning
+%% where each process ranks its communication links, and each process
+%% forwards messages to its neighbors starting from the rank of the link
+%% that triggered the receipt, to its highest rank neighbors. In this
+%% example, Process $e$ adds a partition. It forwards the generated
+%% message to all its neighbors as if it received it from its lowest rank
+%% links. When Process $a$ receives $\alpha_e^1$ from its rank-$0$ link,
+%% it forwards it to rank-$0$ links and rank-$1$ links.  Process $b$
+%% stops the propagation, for all its links have lower ranks than the one
+%% from which it received the message $\alpha_e^2$. Ultimately, the
+%% partition includes Process $e$, Process $a$, and Process $b$. Process
+%% $c$ and Process $d$ remain unaware of the new \TODO{object}.
 
-To ease the reasoning about inter-AS dynamic partitioning in dynamic
-networks, \NAME runs an independent broadcast protocol for each
-object, and for each rank of links.  \TODO{Not so easy\ldots}
-\TODO{Write and describe algo.} \TODO{Overhead of separating things,
-  slightly more memory, but traffic wise? slower ?}  \TODO{In the
-  example, not only Process $b$ keeps $e_1$ as its best partition, but
-  it keeps it for links of rank 0, and links of rank 1.}  When there
-are no ranking in links, processes solely rely on
-Algorithm~\ref{algo:adddelundo} for optimal partitioning.
+%% To ease the reasoning about inter-AS dynamic partitioning in dynamic
+%% networks, \NAME runs an independent broadcast protocol for each
+%% object, and for each rank of links.  \TODO{Not so easy\ldots}
+%% \TODO{Write and describe algo.} \TODO{Overhead of separating things,
+%%   slightly more memory, but traffic wise? slower ?}  \TODO{In the
+%%   example, not only Process $b$ keeps $e_1$ as its best partition, but
+%%   it keeps it for links of rank 0, and links of rank 1.}  When there
+%% are no ranking in links, processes solely rely on
+%% Algorithm~\ref{algo:adddelundo} for optimal partitioning.
 
 
+
+
 
-\subsection{Complexity}
-\label{subsec:complexity}
+\section{Complexity}
+\label{sec:complexity}
 
 \TODO{To rework, for there are more components now. Maybe do this
   along the description of the approach.}
