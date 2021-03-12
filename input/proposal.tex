@@ -2,9 +2,11 @@
 \section{Scoped broadcast}
 \label{sec:scoped}
 
-Fog infrastructures are distributed systems comprising heterogeneous
-machines interconnected by communication links. We do not consider
-byzantine processes.
+In this section, we introduce model and notations to provide a general
+definition of scoped broadcast in distributed systems.  Distributed
+systems such as Edge infrastructures comprise heterogeneous machines
+interconnected by communication links. We do not consider byzantine
+processes.
 
 \begin{definition}[Fog infrastructure]
   A fog infrastructure is a connected \underline{g}raph $G(V, E)$ of
@@ -103,25 +105,26 @@ partitions.
 \end{algorithm}
 
 Algorithm~\ref{algo:add} shows the instructions that implement
-eventually consistent partitioning when weights are scalar values.  At
-any time, a process running this protocol can add a logical partition
-to its distributed system.  Figure~\ref{fig:add} illustrates its
-behavior on a system comprising 4 processes $a$, $b$, $c$, and
-$d$. Two processes $a$ and $c$ concurrently create a partition by
-S-broadcasting their respective \underline{a}dd message: $\alpha_a^0$
-and $\alpha_c^0$. They initialize their own state with the lowest
-possible bound $0$ (see Line~\ref{line:lowestbound}), and send a
-message to each of their neighbors by accumulating the corresponding
-edge weight (see Line~\ref{line:accumulator}). In
-Figure~\ref{fig:addC}, Process $b$ receives $\alpha_{c}^{1}$. Since it
-improves its own partition distance, it keeps it and forwards it to
-its neighbors. Process $b$ discards $\alpha_{b}^{1.5}$, for it does
-not improve its partition distance. Processes $c$ and $d$ will never
-hear of Process $a$'s partition.  In Figure~\ref{fig:addD}, processes
-discard last transiting messages. The system converged to the optimal
-partitioning.  Transitive relationships ensure that each process gets
-its closest source while accumulation of weights ensures that messages
-propagation terminates.
+eventually consistent partitioning when weights are scalar values, and
+processes only add new partitions to the system.  At any time, a
+process running this protocol can add a logical partition to its
+distributed system.  Figure~\ref{fig:add} illustrates its behavior on
+a system comprising 4 processes $a$, $b$, $c$, and $d$. Two processes
+$a$ and $c$ concurrently create a partition by S-broadcasting their
+respective \underline{a}dd message: $\alpha_a^0$ and
+$\alpha_c^0$. They initialize their own state with the lowest possible
+bound $0$ (see Line~\ref{line:lowestbound}), and send a message to
+each of their neighbors by accumulating the corresponding edge weight
+(see Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, Process
+$b$ receives $\alpha_{c}^{1}$. Since it improves its own partition
+distance, it keeps it and forwards it to its neighbors. Process $b$
+discards $\alpha_{b}^{1.5}$, for it does not improve its partition
+distance. Processes $c$ and $d$ will never hear of Process $a$'s
+partition.  In Figure~\ref{fig:addD}, processes discard last
+transiting messages. The system converged to the optimal partitioning.
+Transitive relationships ensure that each process gets its closest
+source while accumulation of weights ensures that messages propagation
+terminates.
 
 %% Interestingly, while the receipt order of messages does not impact on
 %% local control information ($r_b(\alpha_a^{1.5}) \cdot
@@ -143,25 +146,27 @@ straightforward, removing them introduces additional complexity.
 \label{sec:adaptive}
 
 In this section, we introduce \NAME, a wait-free reactive protocol for
-logical partitioning in dynamic distributed systems the cost of which
-actually depends on its usage: When the system becomes quiescent,
-processes eventually converge to their respective partition and do not
-require further communication afterward.
+dynamic logical partitioning in dynamic distributed systems the cost
+of which actually depends on its usage. At any time, processes can add
+\emph{and} remove partitions from the system. When the system becomes
+quiescent, processes eventually converge to their respective partition
+and do not require further communication afterward.
 
 Each process is stateless, works autonomously and asynchronously, in a
 peer-to-peer fashion. Each process broadcasts each change to its
 neighborhood, for the state of its neighbors may depend on this change
-as well. Yet, generated traffic remains \TODO{low} using scoped
-broadcast. Messages that carry changes travel through the network
-depending on partition of processes, stopping as soon as they
+as well. Yet, the traffic generated to to adapt the scope of
+S-broadcast remains bounded, for it uses the principles of scoped
+broadcast itself. Messages that carry changes travel through the
+network depending on partition of processes, stopping as soon as they
 encounter uninterested processes. We demonstrate that \NAME guarantees
 consistent partitioning despite different order in message deliveries
 from one process to another.
 
-This section starts by describing \NAME's functioning by detailing its
-operation to avoid inconsistent states due to ordering and staleness
-of delivered messages. This section ends with a complexity analysis of
-proposed protocols.
+%% This section starts by describing \NAME's functioning by detailing its
+%% operation to avoid inconsistent states due to ordering and staleness
+%% of delivered messages. This section ends with a complexity analysis of
+%% proposed protocols.
 
 
 
@@ -191,9 +196,28 @@ messages. % \TODO{Traffic of each partition is contained to the
 Then, at any time, a source can revoke its self-appointed status of
 source, hence deleting its partition from the system. All processes
 that belong to this partition must eventually choose another partition
-to belong to. Since the number of partitions does not monotonically
-increase in the system any longer, each process requires a vector of
-versions that monotonically increases over delivered operations.
+to belong to.
+
+\begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
+  The transitive, irreflexive, and antisymmetric happens-before
+  relationship defines a strict partial order between events. Two
+  messages are concurrent if none happens before the other.
+\end{definition}
+  
+\begin{definition}[\TODO{Last win order}]
+  For any $b_p(m) \rightarrow b_p(m')$, no process can deliver $m$ if
+  it has delivered $m'$.
+\end{definition}
+
+\begin{definition}[\TODO{Adaptive scope}]
+  Eventual consistent partitioning in presence of dynamic
+  partitioning. Eventually get the last partition, eventually remove
+  all outdated control information.
+\end{definition}
+
+Since the number of partitions does not monotonically increase in the
+system any longer, each process requires a vector of versions that
+monotonically increases over delivered operations.
 
 This allows processes to quickly discard stale messages saving
 bandwidth. For instance, a process that received a message originated
@@ -209,7 +233,7 @@ infinite loops.
 partitions. These \TODO{add} messages operate normally and fill gaps
 left open by deletes. 
 
-\TODO{Paths and \NAME synergize well, for paths tend to be smaller as the
+\TODO{Paths and \NAME synergies well, for paths tend to be smaller as the
 number of sources increase in the system.}
 
 
