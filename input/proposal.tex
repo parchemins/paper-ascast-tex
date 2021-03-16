@@ -60,26 +60,56 @@ different trade-offs on space, time, and communication.
 %% \end{definition}
 
 In this paper, we propose to dynamically adapt the scope of
-S-broadcast using S-broadcast itself.  At any time, a process can
+S-broadcast using S-broadcast itself. At any time, a process can
 become the source of a new logical partition by transitively modifying
-the respective state of neighboring processes using path weights.
-When a process S-broadcasts a message in this partition, it reaches
-all processes belonging to this partition. While the first partition
-gathers all processes of the system, the following partitions reduce
-the membership size of their neighboring partitions. In turns, the
-traffic generated to adapt scopes scales with the number of
-partitions.
- 
-\begin{definition}[Consistent partitioning]
+the respective state of neighboring processes using path weights. When
+a process S-broadcasts a message in this partition, it eventually
+reaches all processes belonging to this partition.  While the first
+partition gathers all processes of the system, the following
+partitions reduce the membership size of their neighboring
+partitions. In turns, the traffic generated to adapt scopes scales
+with the number of partitions. 
+
+\begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
   Let $S \subseteq V$ be the set of \underline{s}ources, $W_{xy} =
   W_{yx}$ be the symetric \underline{w}eight between $x$ and $y$,
   $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to $z$ the
   weight of which $|\Pi_{xz}|$ is lower than any other path weight,
-  the consistent partitioning $\mathcal{P}$ is a set of logical
+  the only consistent partitioning $\mathcal{P}$ is a set of logical
   partitions $P_{s\in S}$ such that each process belongs to a logical
-  partition comprising its closest source process.  $\forall p \in
-  P_{s_1}, \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
+  partition comprising its closest source: $\forall p \in P_{s_1},
+  \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
 \end{definition}
+
+%% \begin{theorem}[$SPED \implies CP$]
+%%   \underline{S}hortest \underline{p}ath \underline{e}ventual
+%%   \underline{d}elivery (SPED) where each process $k_n$ in the shortest
+%%   path $\Pi_{ps}: [s, k_1,\ldots,k_n,p]$ eventually deliver the
+%%   message forwarded by its predecessor $k_{n-1}$ leads to consistent
+%%   partitioning.
+%% \end{theorem}
+
+%% \TODO{or:}
+
+\begin{theorem}[\underline{B}est \underline{e}ventual \underline{d}elivery $(BED) \implies CP$]
+  Every process eventually delivers, hence forwards, the notification
+  message $\alpha_s$ of its best partition $P_s$, eventually leading
+  to consistent partitioning.
+\end{theorem}
+
+\begin{proof} When a process $s_1$ becomes a source, it belongs to
+its own partition, for there exists no better partition than its own:
+$\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1 p}|$. It broadcasts such
+message to its neighbors. Since communication channels are reliable,
+neighboring processes eventually receive such notification. In
+particular, whatever the order of received messages, every process
+$p_1$ such that there exists no better partition $s_2$ than the
+received one delivers and forwards it: $\forall s_2 \in S: |\Pi_{p
+  s_1}| < |\Pi_{p s_2}|$. The notification emanating from $s_1$
+transitively reaches all such processes through shortest paths. Since
+there exists only one best value per process that can never be
+retracted, processes eventually reach consistent partitioning.
+\end{proof}
 
 \input{input/figdel.tex} %% figure positioning
 
@@ -105,26 +135,36 @@ partitions.
 \end{algorithm}
 
 Algorithm~\ref{algo:add} shows the instructions that implement
-eventually consistent partitioning when weights are scalar values, and
-processes only add new partitions to the system.  At any time, a
-process running this protocol can add a logical partition to its
-distributed system.  Figure~\ref{fig:add} illustrates its behavior on
-a system comprising 4 processes $a$, $b$, $c$, and $d$. Two processes
-$a$ and $c$ concurrently create a partition by S-broadcasting their
-respective \underline{a}dd message: $\alpha_a^0$ and
-$\alpha_c^0$. They initialize their own state with the lowest possible
-bound $0$ (see Line~\ref{line:lowestbound}), and send a message to
-each of their neighbors by accumulating the corresponding edge weight
-(see Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, Process
-$b$ receives $\alpha_{c}^{1}$. Since it improves its own partition
-distance, it keeps it and forwards it to its neighbors. Process $b$
-discards $\alpha_{b}^{1.5}$, for it does not improve its partition
-distance. Processes $c$ and $d$ will never hear of Process $a$'s
-partition.  In Figure~\ref{fig:addD}, processes discard last
-transiting messages. The system converged to the optimal partitioning.
-Transitive relationships ensure that each process gets its closest
-source while accumulation of weights ensures that messages propagation
-terminates.
+eventually consistent partitioning when
+\begin{inparaenum}[(i)]
+\item processes only have local knowledge about their direct
+  neighborhoods,
+\item weights are scalar values,
+\item and processes only add new partitions to the system.
+\end{inparaenum}
+At any time, a process running this protocol can add a logical
+partition to its distributed system.  Figure~\ref{fig:add} illustrates
+its behavior on a system comprising 4 processes $a$, $b$, $c$, and
+$d$. Two processes $a$ and $c$ concurrently create a partition by
+S-broadcasting their respective \underline{a}dd message: $\alpha_a^0$
+and $\alpha_c^0$. They initialize their own state with the lowest
+possible bound $0$ (see Line~\ref{line:lowestbound}), and send a
+message to each of their neighbors by accumulating the corresponding
+edge weight (see Line~\ref{line:accumulator}). In
+Figure~\ref{fig:addC}, Process $b$ receives $\alpha_{c}^{1}$. Since it
+improves its own partition distance, it keeps it and forwards it to
+its neighbors. Process $b$ discards $\alpha_{b}^{1.5}$, for it does
+not improve its partition distance. Processes $c$ and $d$ will never
+hear of Process $a$'s partition.  In Figure~\ref{fig:addD}, processes
+discard last transiting messages. The system converged to the
+consistent partitioning. However, since processes operate using local
+knowledge only, generated traffic may be sub-optimal, for processes
+may receive, deliver, and forward messages emanating from a same
+source simply because it did not come from the shortest path yet.
+
+%% Transitive relationships ensure that each
+%% process gets its closest source while accumulation of weights ensures
+%% that messages propagation terminates.
 
 %% Interestingly, while the receipt order of messages does not impact on
 %% local control information ($r_b(\alpha_a^{1.5}) \cdot
@@ -136,7 +176,9 @@ terminates.
 %% r_b(\alpha_a^{1.5}) \implies b_b(\alpha_a^{1})$).
 
 While only adding logical partitions to the distributed system is
-straightforward, removing them introduces additional complexity. 
+straightforward, removing them introduces additional complexity:
+messages of old partitions may stop the notification of best sources,
+for former weights are better than the newly received one. 
 
 
 
@@ -290,23 +332,6 @@ consequence, \NAME still makes use of vector of versions.
 \noindent Although costly, piggybacking paths with logical partitioning synergies
 well, for the size of these paths decreases quickly as the number of
 partitions grows.
-
-
-
-\paragraph{A last optimization.}
-\NAME makes extensive use of paths to enable deleting messages without
-incrementing local counters. Messages carry their respective path and
-processes detect when such messages have been looping when they carry
-their identity (see Lines~\ref{line:notloopingA} and
-\ref{line:notloopingB} of Algorithm~\ref{algo:adddelundo}). Since
-membership is all that matters, we propose to trade vectors of
-identities for Bloom filters~\cite{almeida2007scalable} to improve on
-generated traffic and
-anonymity~\cite{whitaker2002forwarding}. Processes know with high
-probability if they already received and forwarded each message
-without knowing the identity of all processes that received it.  False
-positive probability only incurs premature stopping of broadcast
-messages and does not invalidate the delete of specific messages.
 
 
 
