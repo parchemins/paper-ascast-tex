@@ -72,7 +72,7 @@ with the number of partitions.
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
   Let $S \subseteq V$ be the set of \underline{s}ources, $W_{xy} =
-  W_{yx}$ be the symetric \underline{w}eight between $x$ and $y$,
+  W_{yx}$ be the symmetric \underline{w}eight between $x$ and $y$,
   $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to $z$ the
   weight of which $|\Pi_{xz}|$ is lower than any other path weight,
   the only consistent partitioning $\mathcal{P}$ is a set of logical
@@ -187,12 +187,14 @@ for former weights are better than the newly received one.
 \section{Adaptive scoped broadcast}
 \label{sec:adaptive}
 
-In this section, we introduce \NAME, a wait-free reactive protocol for
-dynamic logical partitioning in dynamic distributed systems the cost
-of which actually depends on its usage. At any time, processes can add
-\emph{and} remove partitions from the system. When the system becomes
-quiescent, processes eventually converge to their respective partition
-and do not require further communication afterward.
+In this section, we introduce \NAME (stands for \underline{A}daptive
+\underline{S}coped broad\underline{cast}), a wait-free reactive
+protocol for dynamic logical partitioning in dynamic distributed
+systems the cost of which actually depends on its usage. At any time,
+processes can add \emph{and} remove partitions from the system. When
+the system becomes quiescent, processes eventually converge to their
+respective partition and do not require further communication
+afterward.
 
 Each process is stateless, works autonomously and asynchronously, in a
 peer-to-peer fashion. Each process broadcasts each change to its
@@ -225,7 +227,7 @@ from one process to another.
 %% by proposing \NAME, a reactive logical partitioning protocol for
 %% dynamic partitioning in dynamic networks.
 
-\paragraph{Dynamic partitions.}
+\subsection{Dynamic partitions}
 At any time, a process can become a source, hence adding a new
 partition to the system. This partition eventually includes all
 processes that are closer from this new source than any other else. We
@@ -238,17 +240,29 @@ messages. % \TODO{Traffic of each partition is contained to the
 Then, at any time, a source can revoke its self-appointed status of
 source, hence deleting its partition from the system. All processes
 that belong to this partition must eventually choose another partition
-to belong to.
+to belong to. Unfortunately, stale control information about deleted
+partitions may impair the propagation of both
+\begin{inparaenum}[(i)]
+\item notifications about actual sources, and
+\item notifications about other deleted partitions.
+\end{inparaenum}
+The correctness of the partitioning depends on receipt orders at each
+processes.
 
 \begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
   relationship defines a strict partial order between events. Two
   messages are concurrent if none happens before the other.
 \end{definition}
-  
-\begin{definition}[\TODO{Last win order}]
-  For any $b_p(m) \rightarrow b_p(m')$, no process can deliver $m$ if
-  it has delivered $m'$.
+
+We define a last win order to forbid the delivery of stale information
+emanating from a same process. In other terms, the \emph{best}
+notification message is always the most recent known of each process.
+ 
+\begin{definition}[Last win order]
+  When a process $p$ broadcasts two messages $b_p(m) \rightarrow
+  b_p(m')$, no process $q$ can deliver $m$ if it has delivered $m'$:
+  $\not\exists q \in V$ with $d_q(m') \rightarrow d_q(m)$.
 \end{definition}
 
 \begin{definition}[\TODO{Adaptive scope}]
@@ -280,7 +294,7 @@ number of sources increase in the system.}
 
 
 
-\paragraph{Dynamic networks.}
+\subsection{Dynamic networks}
 Adding new communication links to the network may create shortcuts
 between processes. Both processes must send their current best
 partition to each other. Upon receipt, they act normally: if a process
@@ -332,6 +346,10 @@ consequence, \NAME still makes use of vector of versions.
 \noindent Although costly, piggybacking paths with logical partitioning synergies
 well, for the size of these paths decreases quickly as the number of
 partitions grows.
+
+\subsection{Implementation}
+
+\TODO{Move everything related to implementation here, including optimizations.}
 
 
 
