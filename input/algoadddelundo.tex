@@ -31,14 +31,14 @@ $best \leftarrow \varnothing$ \tcp*[r]{best $\alpha$ so far}
 \Function{\textup{receiveAdd($q$, $s'$, $c'$, $d'$, $\pi'$)}
 \tcp*[f]{\smash{$r_p(\alpha_{s', c'}^{d', \pi'})$}}  \textup{\texttt{from}} $q$} {
   \If {$p \not\in \pi'$ \label{line:notloopingA}} {
-      \uIf {$c' \geq V[s']$} {
+      \uIf {$c' \geq V[s']$ \label{line:detectA}} {
           $V[s'] \leftarrow c'$ \;
-          \If {$best \leq_\alpha \langle s', c', d', \pi'\rangle$ } {
+          \If {$best \leq_\alpha \langle s', c', d', \pi'\rangle$} {
               $best \leftarrow \langle s', c', d', \pi'\rangle$ \;
               \ForEach{$n \in O_p$}
                   {send$_n$($s'$, $c'$, $d' + W_{pq}$, $\pi' \cup p$)}
            }
-      } \uElseIf {$q = best.\pi[|best.\pi| - 1] \wedge q \in O_p$} {
+      } \uElseIf {$q = best.\pi[|best.\pi| - 1] \wedge q \in O_p$ \label{line:detectB}} {
           \textup{receiveDel($q$, $best$)} \tcp*[r]{undo}
       }
       
