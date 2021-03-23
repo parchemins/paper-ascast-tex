@@ -260,6 +260,32 @@ notification message is always the most recent known of each process.
   $\not\exists q \in V$ with $d_q(m') \rightarrow d_q(m)$.
 \end{definition}
 
+Figure~\ref{fig:proof} depicts the issues with staleness and message
+orderings. In Figure~\ref{fig:proofA}, the shortest path from any
+source to Process $c$ is $[a, b, c]$. However, Process $b$ still holds
+a stale $\alpha_d^{0.5}$ without knowing. When it receives
+$\alpha_a^1$, it discards it, for it assumes that downstream processes
+are more interested in $\alpha_d^{0.5}$. To reach consistent
+partitioning, Process $b$ first needs to purge its current partition
+to later accept that of its current actual shortest path:
+$\alpha_a^1$.
+
+\noindent Figure~\ref{fig:proofB} shows that removing stale control
+information is even more complex. The removal must reach all processes
+of the previous shortest path going from $d$ to $b''$. Label I shows
+the most obvious issue where Process $e$ changed partition for a
+better but stale $\alpha_f$. Since it can remember its previous
+deliveries, it could still forward $\delta_d$ for the sake of
+consistency. However, this would lead to every process forwarding
+every $\delta$ they ever delivered. Such protocol's overhead would
+depend on past partitioning instead of current one. Label III shows
+the issue when the blocking partition is already known to be stale at
+Process $b'$. Process $b''$ eventually receives $\alpha_f$ from
+$e$. However, it cannot deliver it, for it would break last win order.
+Process $b'$ may be in an inconsistent state. Label IV shows the
+corollary issue: Process $b''$ delivered a message from a process that
+may be inconsistent without knowing it.
+
 \begin{theorem}[Dynamic consistent partitioning]
   Eventual consistent partitioning in presence of dynamic sources
   requires
