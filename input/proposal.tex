@@ -111,7 +111,7 @@ there exists only one best value per process that can never be
 retracted, processes eventually reach consistent partitioning.
 \end{proof}
 
-\input{input/figdel.tex} %% figure positioning
+%% \input{input/figdel.tex} %% figure positioning
 
 %% \begin{definition}[\label{def:transitivedelivery}Transitive delivery]
 %%   Transitive delivery ensures the system eventually converges to
@@ -216,11 +216,6 @@ from one process to another.
 
 %% \subsection{Intra-autonomous system partitioning}
 
-\begin{algorithm}
-  \input{input/algoadddelundo.tex}
-  \caption{\label{algo:adddelundo}Dynamic partitioning by Process $p$.}
-\end{algorithm}
-
 \input{input/figproof.tex}
 
 %% In this section, we aim at solving Problem Statement~\ref{prob:intra}
@@ -265,32 +260,18 @@ notification message is always the most recent known of each process.
   $\not\exists q \in V$ with $d_q(m') \rightarrow d_q(m)$.
 \end{definition}
 
-\begin{definition}[\TODO{Adaptive scope}]
-  Eventual consistent partitioning in presence of dynamic
-  partitioning. Eventually get the last partition, eventually remove
-  all outdated control information.
-\end{definition}
+\begin{theorem}[Dynamic consistent partitioning]
+  Eventual consistent partitioning in presence of dynamic sources
+  requires
+  \begin{inparaenum}[(i)]
+  \item eventual purging of stale notifications, and
+  \item eventual delivery of bests partitions.
+  \end{inparaenum}
+\end{theorem}
 
-Since the number of partitions does not monotonically increase in the
-system any longer, each process requires a vector of versions that
-monotonically increases over delivered operations.
-
-This allows processes to quickly discard stale messages saving
-bandwidth. For instance, a process that received a message originated
-at Process $a$ with a version $2$ knows that any message originated at
-Process $a$ with a version $1$ are stale system-wide; it must not
-forward it. As consequence, this also ensure termination, for
-corresponding add and delete messages cannot follow each other in
-infinite loops.
-% In terms of traffic, this only requires each message
-% to piggyback a source identifier and version number.
-
-\noindent Deletes must trigger competition amongst neighboring
-partitions. These \TODO{add} messages operate normally and fill gaps
-left open by deletes. 
-
-\TODO{Paths and \NAME synergies well, for paths tend to be smaller as the
-number of sources increase in the system.}
+\begin{proof}
+\TODO{Meow meow meow.}
+\end{proof}
 
 
 
@@ -305,11 +286,6 @@ amongst neighbors due to forwarding.
 \noindent Joining the network is equivalent to add as many
 communication links as necessary between the joining process and its
 new neighbors.
-
-\begin{algorithm}
-  \input{input/algoedges.tex}
-  \caption{\label{algo:edges}Dynamic partitioning by Process $p$ in dynamic networks.}
-\end{algorithm}
 
 When removing a communication link between two processes does not
 break any active path, because neither distances of processes depend
@@ -349,7 +325,40 @@ partitions grows.
 
 \subsection{Implementation}
 
+\begin{algorithm}
+  \input{input/algoadddelundo.tex}
+  \caption{\label{algo:adddelundo}Dynamic partitioning by Process $p$.}
+\end{algorithm}
+
 \TODO{Move everything related to implementation here, including optimizations.}
+
+Since the number of partitions does not monotonically increase in the
+system any longer, each process requires a vector of versions that
+monotonically increases over delivered operations.
+
+This allows processes to quickly discard stale messages saving
+bandwidth. For instance, a process that received a message originated
+at Process $a$ with a version $2$ knows that any message originated at
+Process $a$ with a version $1$ are stale system-wide; it must not
+forward it. As consequence, this also ensure termination, for
+corresponding add and delete messages cannot follow each other in
+infinite loops.
+% In terms of traffic, this only requires each message
+% to piggyback a source identifier and version number.
+
+\noindent Deletes must trigger competition amongst neighboring
+partitions. These \TODO{add} messages operate normally and fill gaps
+left open by deletes. 
+
+\TODO{Paths and \NAME synergies well, for paths tend to be smaller as the
+number of sources increase in the system.}
+
+\begin{algorithm}
+  \input{input/algoedges.tex}
+  \caption{\label{algo:edges}Dynamic partitioning by Process $p$ in dynamic networks.}
+\end{algorithm}
+
+
 
 
 

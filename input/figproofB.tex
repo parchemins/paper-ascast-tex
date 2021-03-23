@@ -5,53 +5,43 @@
   \medmuskip=0mu
   \thinmuskip=0mu
   
-  \newcommand\X{50pt}
-  \newcommand\Y{-45pt}
+  \newcommand\X{70pt}
+  \newcommand\Y{-40pt}
 
   \newcommand\ADD{\alpha}
   \newcommand\DEL{\delta}
 
-
+  \draw[opacity=0] (-1.5*\X, 0) -- (2.5*\X, 0);
   
+
+
+  \draw[<->] (-5pt - \X, -\Y) -- node[above]{III} (5pt, -\Y); %% III    
   \draw[->] (-\X + 5pt, 0) -- node[above, font=\small, color=\PC]{$\DEL_d$} (0 - 5pt, 0); %% d - e
 
-  \draw[->] (0 +5pt, 0) -- (\X -5pt, 0); %% e - ...
-
-  \draw[->] ( \X +5pt, 0) -- (2*\X -5pt, 0); %% ... - b
-
+  \draw[<->] (-5pt , 5pt -\Y) -- node[above]{IV} (5pt + \X, 5pt -\Y); %% IV
+  \draw[->] (0 +5pt, 0) -- (\X -5pt, 0); %% e - b'
   
-  \draw[->] ( 0, \Y + 5pt) -- ( 0, -5pt); %% ... - e
-
-  \draw[->] ( -\X + 5pt, \Y ) -- ( -5pt, \Y); %% f - ...
-
-  \draw[->] ( 5pt, \Y) -- ( \X - 5pt, \Y); % ... - ...
-  
-  \draw[->] ( \X + 5pt, \Y + 5pt ) -- ( 2*\X - 5pt, -5pt); % ... - b
-  
-  \draw[->] ( 2*\X + 5pt, 0 ) -- ( 3*\X - 5pt, 0); % b - g
+  \draw[<->] (-5pt + \X , 10pt -\Y) -- node[above]{V} (5pt + 2*\X, 10pt -\Y); %% V
+  \draw[->] ( \X +5pt, 0) -- (2*\X -5pt, 0); %% b - b''
 
 
   
   \draw[fill=white] (-\X, 0) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
   \draw[fill=white] (0, 0) node{$\bm{e}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (\X, 0) node{$\ldots$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (2*\X, 0) node{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-
-  \draw[fill=white] ( 0, \Y) node{$\ldots$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (-\X, \Y) node{$\bm{f}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-
-  \draw[fill=white] ( \X, \Y) node{$\ldots$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  
-  \draw[fill=white] ( 3*\X, 0) node{$\bm{g}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (\X, 0) node{$\bm{b'}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (2*\X, 0) node{$\bm{b''}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
 
 
   
   \draw (-\X, 5pt) node[above, color=\PC]{$\DEL_d$};
-  \draw ( 0, 5pt) node[above, color=\PB]{$\ADD_f^{0.5}$};
-  \draw (2*\X, 5pt) node[above, align=center]{expect $\textcolor{\PC}{\DEL_d}$ or $\textcolor{\PC}{\DEL_d^{0.5}}$\\$\textcolor{\PB}{\ADD_f^1} \rightarrow \textcolor{\PB}{\DEL_f} \rightarrow \textcolor{\PC}{\ADD_d^{0.5}}$};
   
-  \draw (-\X, \Y + 5pt) node[above, color=\PB]{$\DEL_f$};
+  \draw ( 0, 5pt) node[above, color=\WRONG]{$\ADD_f^{0.5}$};
+  \draw ( 0, -5pt) node[below, font=\footnotesize]{expect $\textcolor{\PB}{\DEL_f}$};
+  
+  \draw ( \X, 5pt) node[above]{$\textcolor{\PB}{\ADD_f^1} \rightarrow \textcolor{\PB}{\DEL_f} \rightarrow \textcolor{\PC}{\ADD_d^{0.5}}$};
+  \draw ( \X, -5pt) node[below, font=\footnotesize]{expect $\textcolor{\PC}{\DEL_d}$ or $\textcolor{\PC}{\DEL_d^{0.5}}$};
 
-  \draw (3*\X, -5pt) node[below, align=center]{$\textcolor{\PC}{\ADD_d^{1.5}}$\\expect $\textcolor{\PC}{\DEL_d}$ or $\textcolor{\PC}{\DEL_d^{1.5}}$};
+  \draw (2*\X, 5pt) node[above]{$\textcolor{\PC}{\ADD_d^{1.5}}$};
+  \draw (2*\X, -5pt) node[below, font=\footnotesize]{expect $\textcolor{\PC}{\DEL_d}$ or $\textcolor{\PC}{\DEL_d^{1.5}}$};
   
 \end{tikzpicture}

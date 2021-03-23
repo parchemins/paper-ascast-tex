@@ -1,16 +1,18 @@
 
 \begin{figure*}
   \begin{center}
-    \subfloat[Part A][\label{fig:proofA}Stale $\alpha$'s may stop up-to-date $\alpha$'s
-    from reaching all processes that require it along the shortest path from $a$ to $c$.
-    To solve this issue, we must guarantee
-    the eventual removal of stale $\alpha$'s (see Figure~\ref{fig:proofB}).]
-    {\input{input/figproofA.tex}}
+    \subfloat[Part A][\label{fig:proofA}Stale $\alpha$'s may stop
+      other $\alpha$'s from reaching all processes ($b$ and $c$) that
+      require it along the shortest path. Hence, we must guarantee
+      eventual purging of stale $\alpha$'s (see
+      Figure~\ref{fig:proofB}).]  {\input{input/figproofA.tex}}
     \hspace{10pt}
-    \subfloat[Part B][\label{fig:proofB}Stale $\alpha$'s may stop $\delta$'s from reaching
-    processes with targeted $\alpha$'s. To ensure correctness, $b$ must either
-    deliver $\delta_d$, $\delta_d^{0.5}$, or another $\alpha$, as well as downstream processes
-    that delivered $\alpha$ coming from $b$ such as $g$.]
+    \subfloat[Part B][\label{fig:proofB}Stale $\alpha$'s may
+      stop $\delta$'s from reaching
+      processes with targeted $\alpha$'s.
+      To ensure consistent partitioning, $b'$ and $b''$
+      must remove $\alpha_{d}$ either by delivering $\delta_d$,
+      or a more specific $\delta_d^{0.5}$ and $\delta_d^{1.5}$ respectively.]
     {\input{input/figproofB.tex}}
     \caption{\label{fig:proof}Dynamic partitioning leads to correctness issues due to
       staleness and ordering of operations.}
