@@ -196,13 +196,13 @@ the system becomes quiescent, processes eventually converge to their
 respective partition and do not require further communication
 afterward.
 
-Each process is stateless, works autonomously and asynchronously, in a
-peer-to-peer fashion. Each process broadcasts each change to its
-neighborhood, for the state of its neighbors may depend on this change
-as well. Yet, the traffic generated to to adapt the scope of
-S-broadcast remains bounded, for it uses the principles of scoped
-broadcast itself. Messages that carry changes travel through the
-network depending on partition of processes, stopping as soon as they
+Each process works autonomously and asynchronously, in a peer-to-peer
+fashion. Each process broadcasts each change to its neighborhood, for
+the state of its neighbors may depend on this change as well. Yet, the
+traffic generated to to adapt the scope of scoped broadcast remains
+bounded, for it uses the principles of scoped broadcast
+itself. Messages that carry changes travel through the network
+depending on partition of processes, stopping as soon as they
 encounter uninterested processes. We demonstrate that \NAME guarantees
 consistent partitioning despite different order in message deliveries
 from one process to another.
@@ -286,7 +286,7 @@ Process $b'$ may be in an inconsistent state. Label IV shows the
 corollary issue: Process $b''$ delivered a message from a process that
 may be inconsistent without knowing it.
 
-\begin{theorem}[Dynamic consistent partitioning]
+\begin{theorem}[\label{theo:dcp}Dynamic consistent partitioning]
   Eventual consistent partitioning in presence of dynamic sources
   requires
   \begin{inparaenum}[(i)]
@@ -316,14 +316,18 @@ may be inconsistent without knowing it.
 Algorithm~\ref{algo:adddelundo} provides the instructions that
 implement dynamic consistent partitioning:
 \begin{inparaenum}[(i)]
-\item most of the time, it propagates $\alpha$'s and $\delta$'s when
-  the partitions allow it;
-\item sometimes, it detects possible inconsistent partitioning and
-\item solves it using propagation trees (as opposed to propagation
-  graphs);
-\item when required, it triggers competitions among neighboring
-  partitions.
+\item \label{algo:most} most of the time, it propagates $\alpha$'s and
+  $\delta$'s when the partitions allow it;
+\item \label{algo:sometimes} sometimes, it detects possible
+  inconsistent partitioning and
+\item \label{algo:solves}solves it using propagation trees (as opposed
+  to propagation graphs);
+\item \label{algo:competition} when required, it triggers competitions
+  among neighboring partitions.
 \end{inparaenum}
+While (\ref{algo:most})-(\ref{algo:solves}) tackle the eventual purging of
+stale notifications, (\ref{algo:competition}) tackle the eventual
+delivery of the best up-to-date partitions.
 
 \paragraph{Dynamic partitions.}
 We extend Algorithm~\ref{algo:add} to enable each source to revoke its
@@ -331,10 +335,10 @@ self-appointed status of source and become a simple process again. In
 that regard, we enforce the delivery order of messages at each
 process.
 
-\noindent To implement last win order, each process maintains a vector
-of versions that associates to each known source, or has-been source,
-its known local counter. It enables processes to deliver only
-up-to-date $\alpha$'s that may improve their best known partition (see
+To implement last win order, each process maintains a vector of
+versions that associates to each known source, or has-been source, its
+known local counter. It enables processes to deliver only up-to-date
+$\alpha$'s that may improve their best known partition (see
 Line~\ref{line:detectA}), but also to detect possible inconsistent
 partitioning (see Line~\ref{line:detectB}) as labeled by III in
 Figure~\ref{fig:proofB}. From a global perspective, it ensures
@@ -343,19 +347,48 @@ sources. In turns, it contributes to convergence and termination, for
 corresponding $\alpha$ and $\delta$ cannot follow each other in an
 infinite loop.
 
-\noindent Upon possible inconsistency, the detecting process must
-remove all $\alpha$ messages originating from it, as labeled by IV in
-Figure~\ref{fig:proofB}. Contrarily to delete operations, this applies
-to a sub-partition of the current partition, and cannot rely on local
-counters to operate. Therefore, we implement this behavior by
-piggybacking paths in messages.  \TODO{Paths and \NAME synergies well,
-  for paths tend to be smaller as the number of sources increase in
-  the system.}
+Implementing the propagation of deletes is no different from the
+propagation of adds as hinted in Figure~\ref{fig:proof} with Labels I
+and I'. Messages and comparisons include the local counter of the
+source. When a process receives a better up-to-date partition, it
+delivers and forwards it. When a process receives a delete
+notification about its partition, it delivers and forwards it. It is
+worth noting that such $\delta$'s apply to the whole partition. They
+travel in the propagation graph of their partition using all
+communication links, allowing processes to change partition as soon as
+possible.
 
-\noindent Deletes must trigger competition amongst neighboring
-partitions. These \TODO{add} messages operate normally and fill gaps
-left open by deletes.
+Vectors of versions also allow each process to detect possible last
+win order violations. Upon possible inconsistency, the detecting
+process must remove all $\alpha$ messages originating from it, as
+labeled by IV in Figure~\ref{fig:proofB}. Contrarily to delete
+operations, this applies to a sub-partition of the current partition,
+and cannot rely on local counters to
+operate. Algorithm~\ref{algo:adddelundo} implements this behavior by
+piggybacking paths in messages. Paths guarantee that such $\delta$
+messages apply to all and only $\alpha$'s that followed an identical
+path. $\delta$'s propagate in the propagation tree rooted at the
+detecting process. Local states of processes remain unchanged, but
+paths in messages monotonically grow. In turns, $\alpha$ and $\delta$
+cannot follow each other in an infinite loop, for a process knows when
+it already received a forwarded a message (see
+Lines~\ref{line:notloopingA} and \ref{line:notloopingB}).
 
+\noindent It is worth noting that scoped broadcast and the
+piggybacking of paths synergies well: Paths tend to be smaller as the
+number of sources in the system increases.
+
+Finally, as stated in Theorem~\ref{theo:dcp}, dynamic consistent
+partitioning not only requires the removal of all stale partitions,
+but also the retrieval of the best up-to-date partitions. In that
+regard, $\delta$'s have dual use: since they already reach borders of
+partitions when they remove stale control informations, they also
+trigger a competition when reaching such bordering processes (see
+Line~\ref{line:compete}). This simply consists in sending the current
+partition through the communication link from which the process
+received the $\delta$. Upon receipt of this answer, processes act
+normally by propagating their changes when they improve. These adds
+fill the gaps left open by deletes.
 
 \begin{algorithm}
   \input{input/algoedges.tex}
@@ -363,58 +396,39 @@ left open by deletes.
 \end{algorithm}
 
 \paragraph{Dynamic network.}
-Adding new communication links to the network may create shortcuts
-between processes. Both processes must send their current best
-partition to each other. Upon receipt, they act normally: if a process
-finds out that the received partition is closer than its current one,
-it delivers it which in turns also triggers another competition
-amongst neighbors due to forwarding.
+Algorithm~\ref{algo:edges} provides the instructions of \NAME that
+enable dynamic consistent partitioning in dynamic networks where
+processes can join or leave the system without
+notification. \TODO{More.}
 
-\noindent Joining the network is equivalent to add as many
-communication links as necessary between the joining process and its
-new neighbors.
+%% Adding new communication links to the network may create shortcuts
+%% between processes. Both processes must send their current best
+%% partition to each other. Upon receipt, they act normally: if a process
+%% finds out that the received partition is closer than its current one,
+%% it delivers it which in turns also triggers another competition
+%% amongst neighbors due to forwarding.
 
-When removing a communication link between two processes does not
-break any active path, because neither distances of processes depend
-on the other, then nothing needs to be done. \NAME has no overhead.
-Unfortunately, when a process' distance depends on the other process,
-the protocol becomes much more complex. Indeed, this requires to
-\TODO{undo} all add messages originated from this process. A message
-must convey the fact that
-\begin{inparaenum}[(i)]
-\item an edge at a particular process has been removed, and
-\item the distance that has been delivered by a process comes from
-  this particular process.
-\end{inparaenum}
+%% \noindent Joining the network is equivalent to add as many
+%% communication links as necessary between the joining process and its
+%% new neighbors.
 
-\noindent \NAME handles this as a particular case of partition within
-current partition: it contains to affected regions the traffic
-generated to patch affected regions. In order to know if it is
-affected by the \TODO{undo} operation, using distances already
-piggybacked in messages is not sufficient.  Each process must know the
-path taken by delivered message. Since we do not beforehand which
-communication links will crash and which messages will be affected by
-undos, each message has to carry its path along forwarding. This also
-allows processes to remove loops, for they cannot rely on version
-number (that remains unchanged) for this operation.
+%% When removing a communication link between two processes does not
+%% break any active path, because neither distances of processes depend
+%% on the other, then nothing needs to be done. \NAME has no overhead.
+%% Unfortunately, when a process' distance depends on the other process,
+%% the protocol becomes much more complex. Indeed, this requires to
+%% \TODO{undo} all add messages originated from this process. A message
+%% must convey the fact that
+%% \begin{inparaenum}[(i)]
+%% \item an edge at a particular process has been removed, and
+%% \item the distance that has been delivered by a process comes from
+%%   this particular process.
+%% \end{inparaenum}
 
-\noindent Instead of version number, one could use such paths to remove loops
-due to \TODO{add and del}, however this may be much more costly in
-terms of generated traffic. Version numbers guarantee that only one
-delete is delivered and all prior inserts are then discarded, while
-using paths, processes may deliver multiple inserts and deletes before
-reaching termination. \TODO{maybe clearer with figures.} As
-consequence, \NAME still makes use of vector of versions.
-
-\noindent Although costly, piggybacking paths with logical partitioning synergies
-well, for the size of these paths decreases quickly as the number of
-partitions grows.
-
-
-\paragraph{Bloom filters.}
-We also propose an implementation that further decreases generated
-traffic and improves on anonymity~\cite{whitaker2002forwarding}.
-\NAME makes extensive use of paths to enable deleting messages without
+\paragraph{Another trade-off.}
+We propose an implementation that further decreases generated traffic
+and improves on anonymity~\cite{whitaker2002forwarding}.  \NAME makes
+extensive use of paths to enable deleting messages without
 incrementing local counters. Messages carry their respective path and
 processes detect when such messages have been looping when they carry
 their identity (see Lines~\ref{line:notloopingA} and

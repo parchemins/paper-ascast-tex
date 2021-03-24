@@ -56,7 +56,7 @@ $best \leftarrow \varnothing$ \tcp*[r]{best $\alpha$ so far}
             \lElse{send$_n$($s'$, $c'$, $\pi' \cup p$)}}
      } \uElseIf {$best \neq \varnothing \wedge q \in O_p$} {
          \textbf{let} $\langle s, c, d, \pi \rangle \leftarrow best$ \;
-         \textup{send$_q$($s, c, d + W_{pq}, \pi \cup p$)} \tcp*[r]{compete}
+         \textup{send$_q$($s, c, d + W_{pq}, \pi \cup p$)} \tcp*[r]{\label{line:compete}compete}
      }
   }
 }
