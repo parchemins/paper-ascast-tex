@@ -500,21 +500,54 @@ messages.
 
 
 \subsection{Complexity}
-\label{sec:complexity}
-
-\TODO{To rework, for there are more components now. Maybe do this
-  along the description of the approach.}
 
 We focus on average-case and worst-case complexity. We divide our
 analysis into space, time, and communication complexity.
 
-\textbf{The communication complexity} concerns the size and number of
-messages required to reach optimal partitioning. In the average-case,
-a process $i$ chosen uniformly at random among all processes creates a
-logical partition. Its messages $\alpha_i$ propagate through the
-network until reaching processes that belong to another partition
-closer to them. This splits partitions in half in average. Overall,
-the $a^{th}$ new partition comprises
+\paragraph{Space.}
+Each process needs to maintain a vector of versions the size of which
+depends on the number of sources. In the worst case, the size of this
+vector increases linearly with the number of distinct sources that
+ever existed in the system. For the sake of last win order, processes
+can never purge this vector from any entry. \TODO{Even when the
+  process leaves the system.} Fortunately, scoped broadcast limits
+message propagation to interested processes. A process at a side of
+the system may never hear of a source at the other side of the
+system. In turns, it may never have to maintain an entry for this
+source. \TODO{This is application-dependent?}
+
+\noindent Each process must also maintain the partition it belongs to,
+along with its control informations. Among other, it must maintain a
+path the size of which depends on the membership size of the
+partition. In the worst case, this path includes the identity of every
+process of the system that currently belong to the system. Eventually,
+the size of this path increases linearly with the diameter of the
+current partition. \TODO{assuming weight equals 1 \ldots}
+
+\paragraph{\TODO{Time.}}
+In terms of processing time, whatever the operation, it increases
+linearly with the number of neighbors of the process. It scales well,
+for the number of neighbors is commonly order of magnitude lower than
+the number of processes in the system. For instance, random networks
+only require $O(\log(|V|))$ neighbors to work properly \REF; and
+processes in autonomous systems have in average \TODO{X} neighbors
+\REF. Lines~\ref{line:notloopingA} and \ref{line:notloopingB} can
+prove costly depending on the data structure encoding paths. Using
+Bloom filters however, this is \TODO{efficient}: it depends on the
+number of buckets, and the number of hash functions.
+
+\noindent In terms of convergence time, every $\alpha$ needs to travel
+at least its shortest path before termination. Every $\delta$ needs to
+reach the border of its partition, triggering an $\alpha$ that fills
+the gaps left open by the removal. \TODO{More.}
+
+\paragraph{\TODO{Communication.}}
+In terms of number of messages required to reach optimal
+partitioning. In the average-case, a process $i$ chosen uniformly at
+random among all processes creates a logical partition. Its messages
+$\alpha_i$ propagate through the network until reaching processes that
+belong to another partition closer to them. This splits partitions in
+half in average. Overall, the $a^{th}$ new partition comprises
 \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor \log_2 a \rfloor}})$}
 processes. This decreases every new partition until reaching $0$
 processes per new partition: even the chosen process already belongs
@@ -530,6 +563,9 @@ $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot a^2)$. As
 for the average-case, the number of messages for the partition
 deletion is identical to the number of messages of the corresponding
 partition creation.
+
+\noindent \TODO{In terms of size of messages.}
+
 
 %%% Local Variables: 
 %%% mode: latex
