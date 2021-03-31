@@ -26,7 +26,7 @@ systems comprising thousands of processes. Instead, we define
 \emph{scoped broadcast} where messages reach only interested
 processes, significantly reducing generated traffic.
 
-\begin{definition}[\underline{S}coped broadcast (S-broadcast)]
+\begin{definition}[\underline{S}coped broad\underline{cast} (\NAMEB)]
   When Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
   \underline{m}essage $m$, every correct Process $y$ within a scope
   \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
@@ -45,7 +45,10 @@ in this city. A process from Paris could scoped broadcast a message to
 all processes in this city plus neighboring cities by overloading
 forwarded messages the first time they reach another city. Similarly
 to reliable broadcast, scoped broadcast implementations expose
-different trade-offs on space, time, and communication.
+different trade-offs on space, time, and communication. In this paper,
+we introduce an adaptive scoped broadcast the cost of which actually
+depends on its operations, and the current scopes that exist in the
+system.
 
 %% \begin{definition}[S-broadcast properties]
 %%   S-broadcast guarantees 3 properties:
@@ -59,16 +62,44 @@ different trade-offs on space, time, and communication.
 %%   \end{inparaenum}
 %% \end{definition}
 
-In this paper, we propose to dynamically adapt the scope of
-S-broadcast using S-broadcast itself. At any time, a process can
-become the source of a new logical partition by transitively modifying
-the respective state of neighboring processes using path weights. When
-a process S-broadcasts a message in this partition, it eventually
-reaches all processes belonging to this partition.  While the first
-partition gathers all processes of the system, the following
-partitions reduce the membership size of their neighboring
-partitions. In turns, the traffic generated to adapt scopes scales
-with the number of partitions. 
+\section{Adaptive scoped broadcast}
+\label{sec:adaptive}
+
+In this section, we propose to dynamically adapt the scopes of \NAMEB
+using \NAMEB itself for the sake of efficiency. At any time, a process
+decides whether or not it becomes the center (or \emph{source}) of a
+scope (or \emph{partition}). Processes must eventually rally the
+partition corresponding to their closest source despite concurrent
+operations, and dynamic changes in the network.
+
+\noindent In that regard, we introduce \NAME (stands for
+\underline{A}daptive \underline{S}coped broad\underline{cast}), a
+wait-free reactive protocol for dynamic logical partitioning that
+enables adaptive scoped broadcast in dynamic distributed
+systems. \NAME's operation guarantees that processes eventually reach
+consistent partitioning by efficiently propagating their state
+changes. \NAME's overhead actually depends on its operations and
+current partitions in the system. In other terms,
+\begin{inparaenum}[(i)]
+\item when the system becomes quiescent, processes eventually converge to
+their respective partition and do not require further communication
+afterward; and
+\item processes do not pay the price of past partitioning.
+\end{inparaenum}
+
+\noindent This section starts by introducing consistent partitioning
+and its implementation when a process can only become a new source to
+create a new partition, i.e., it cannot revoke its self-appointed
+status of source. Then, it extends to include the latter behavior: it
+introduces the properties that guarantee consistent partitioning in
+such context, and it details our implementation called \NAME. Finally,
+it provides the complexity analysis of \NAME divided in time, space,
+and communication.
+
+
+\subsection{Consistent partitioning}
+
+At any time, a process can decide to become a source. \TODO{more.}
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
   Let $S \subseteq V$ be the set of \underline{s}ources, $W_{xy} =
@@ -180,49 +211,9 @@ straightforward, removing them introduces additional complexity:
 messages of old partitions may stop the notification of best sources,
 for former weights are better than the newly received one. 
 
-
-
-
-
-\section{Adaptive scoped broadcast}
-\label{sec:adaptive}
-
-In this section, we introduce \NAME (stands for \underline{A}daptive
-\underline{S}coped broad\underline{cast}), a wait-free reactive
-protocol for dynamic logical partitioning in dynamic distributed
-systems the cost of which actually depends on its usage. At any time,
-processes can add \emph{and} remove partitions from the system. When
-the system becomes quiescent, processes eventually converge to their
-respective partition and do not require further communication
-afterward.
-
-Each process works autonomously and asynchronously, in a peer-to-peer
-fashion. Each process broadcasts each change to its neighborhood, for
-the state of its neighbors may depend on this change as well. Yet, the
-traffic generated to to adapt the scope of scoped broadcast remains
-bounded, for it uses the principles of scoped broadcast
-itself. Messages that carry changes travel through the network
-depending on partition of processes, stopping as soon as they
-encounter uninterested processes. We demonstrate that \NAME guarantees
-consistent partitioning despite different order in message deliveries
-from one process to another.
-
-%% This section starts by describing \NAME's functioning by detailing its
-%% operation to avoid inconsistent states due to ordering and staleness
-%% of delivered messages. This section ends with a complexity analysis of
-%% proposed protocols.
-
-
-
-%% \subsection{Intra-autonomous system partitioning}
-
 \input{input/figproof.tex}
 
-%% In this section, we aim at solving Problem Statement~\ref{prob:intra}
-%% by proposing \NAME, a reactive logical partitioning protocol for
-%% dynamic partitioning in dynamic networks.
-
-\subsection{Principle}
+\subsection{Dynamic consistent partitioning}
 At any time, a process can become a source, hence adding a new
 partition to the system. This partition eventually includes all
 processes that are closer from this new source than any other else. We
@@ -517,7 +508,7 @@ system. In turns, it may never have to maintain an entry for this
 source. \TODO{This is application-dependent?}
 
 \noindent Each process must also maintain the partition it belongs to,
-along with its control informations. Among other, it must maintain a
+along with its control information. Among other, it must maintain a
 path the size of which depends on the membership size of the
 partition. In the worst case, this path includes the identity of every
 process of the system that currently belong to the system. Eventually,
