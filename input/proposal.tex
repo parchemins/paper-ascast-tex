@@ -26,7 +26,7 @@ systems comprising thousands of processes. Instead, we define
 \emph{scoped broadcast} where messages reach only interested
 processes, significantly reducing generated traffic.
 
-\begin{definition}[\underline{S}coped broad\underline{cast} (\NAMEB)]
+\begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
   When Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
   \underline{m}essage $m$, every correct Process $y$ within a scope
   \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
@@ -65,6 +65,8 @@ system.
 \section{Adaptive scoped broadcast}
 \label{sec:adaptive}
 
+\input{input/figadd.tex} %% positioning (belong to problem & motivation)
+
 In this section, we propose to dynamically adapt the scopes of \NAMEB
 using \NAMEB itself for the sake of efficiency. At any time, a process
 decides whether or not it becomes the center (or \emph{source}) of a
@@ -99,33 +101,52 @@ and communication.
 
 \subsection{Consistent partitioning}
 
-At any time, a process can decide to become a source. \TODO{more.}
+At any time, a process can decide to become a source, hence creating a
+new partition in the system by executing an \texttt{Add}
+operation. This partition includes at least its source plus
+neighboring processes that estimate they are closer to this source
+than any other source. Such distance (or \emph{weight}) is
+application-dependant. For instance, weights could be latency in live
+streaming applications, or differences in profiles for recommendation
+systems.
+
+\begin{definition}[\label{def:partitioning}Partitioning]
+  Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
+  the \underline{p}artition including at least Process $s$, each
+  process belongs to at most one partition $\forall p,q \in V, \forall
+  s_1,s_2 \in S: p \in P_{s_1} \wedge q \in P_{s_2} \implies p \neq q
+  \vee s_1 = s_2$, and there exists at least one path $\pi_{ps}$ of
+  processes that belong to this partition $\forall q \in \pi_{ps}: q
+  \in P_s$.
+\end{definition}
+
+Definition~\ref{def:scoped} and Definition~\ref{def:partitioning}
+share the transitive relevance of process states. However, we further
+constrain the partitioning in order to guarantee the existence of
+exactly one consistent partitioning that processes eventually converge
+to.
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
-  Let $S \subseteq V$ be the set of \underline{s}ources, $W_{xy} =
-  W_{yx}$ be the symmetric \underline{w}eight between $x$ and $y$,
-  $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to $z$ the
-  weight of which $|\Pi_{xz}|$ is lower than any other path weight,
-  the only consistent partitioning $\mathcal{P}$ is a set of logical
+  Let $W_{xy} = W_{yx}$ be the symmetric \underline{w}eight between
+  $x$ and $y$, $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to
+  $z$ the weight of which $|\Pi_{xz}|$ is lower than any other path
+  weight, the only consistent partitioning $\mathcal{P}$ is a set of
   partitions $P_{s\in S}$ such that each process belongs to a logical
   partition comprising its closest source: $\forall p \in P_{s_1},
   \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
 \end{definition}
 
-%% \begin{theorem}[$SPED \implies CP$]
-%%   \underline{S}hortest \underline{p}ath \underline{e}ventual
-%%   \underline{d}elivery (SPED) where each process $k_n$ in the shortest
-%%   path $\Pi_{ps}: [s, k_1,\ldots,k_n,p]$ eventually deliver the
-%%   message forwarded by its predecessor $k_{n-1}$ leads to consistent
-%%   partitioning.
-%% \end{theorem}
-
-%% \TODO{or:}
+Unfortunately, processes do not share a common global knowledge of the
+network state. For process to reach consistent partitioning together,
+a process becoming a source must notify every process that is closer
+to it than any other source. Epidemic
+dissemination~\cite{birman1999bimodal} constitutes an efficient
+communication pattern to perform such operation.
 
 \begin{theorem}[\underline{B}est \underline{e}ventual \underline{d}elivery $(BED) \implies CP$]
-  Every process eventually delivers, hence forwards, the notification
-  message $\alpha_s$ of its best partition $P_s$, eventually leading
-  to consistent partitioning.
+  Assuming reliable communication links, every process eventually
+  delivers, hence forwards, the notification message $\alpha_s$ of its
+  best partition $P_s$, eventually leading to consistent partitioning.
 \end{theorem}
 
 \begin{proof} When a process $s_1$ becomes a source, it belongs to
