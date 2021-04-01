@@ -5,12 +5,12 @@ There is an ongoing evlution of storing data from the cloud to the
 edges of the network. Either because it is where it has been created
 and it is too expensive to be transmitted through the network, or
 because it has been replicated to bring data closer to the end users
-~\cite{shi2016edge, fogstore, foggy_cache, cachier}.
+~\cite{shi2016edge, foggy_cache, cachier}.
 %
 To favour this transition, the design and the development of building
 blocks to manage data sets across Edge infrastructures have been
 investigated for the last few years \cite{confais2017performance,
-  confais2017object, hasenburg2020towards}.  Although these systems,
+  confais2017object, fogstore, hasenburg2020towards}.  Although these systems,
 provide good properties such as favouring network traffic confinement
 by writting data locally, determining the location where to get the
 content might be more expensive than retrieving the content itself.
@@ -53,11 +53,26 @@ the nearest copy: if the message that a node receives indicates an
 object has a longer distance than that which the node knows then the
 transfer of the message is useless and so stopped.
 
-
 \TODO{add something about the paper work}
 
-\input{input/figadd.tex} %% positioning (belong to problem & motivation)
+We evaluated our protocol through simulations using \textit{Peersim}~\cite{montresor2009peersim}. The topolgies we simulated are based on real-world ones from the Internet Toplogy
+Zoo~\cite{topology-zoo}.  Our evaluation shows that \NAME is able to
+provide a similar localization service when compared to a DHT-based
+approach while removing the lookup penalty or to an hypothetical complete and robust broadcast. This directly translates
+into faster data access as shown by our measurements, with a time
+reduction from $20\%$ to $60\%$, depending on the sizes of the
+objects. %\AVK[Talk about load balancing and traffic containment here]
+We also show that by slightly delaying the sending of messages, \NAME
+can match the number of messages of a DHT-based approach, at the cost
+of a moderate increase in message sizes.
 
+\TODO{Update the conclustion of the experiment}
+
+%\input{input/figadd.tex} %% positioning (belong to problem & motivation)
+
+\TODO{add a paragraph on possible usage of the protocol in other use-cases.}
+
+\TODO{update the outline}
 \TODO{The rest of this paper is organized as follows. Section II
   introduces background, related works and details the motivation
   behind our proposal.  Section III describes the protocol behavior,
