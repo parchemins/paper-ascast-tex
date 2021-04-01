@@ -1,21 +1,39 @@
-
 \begin{abstract}
+%% Context and problem
+  Edge infrastructures have been proposed as an alternative to Cloud
+  Computing to provide computing and storage capabilities closer to
+  the locations where data is generated/consumed, with the objectives
+  of reducing the latency and the volume of data passing through the
+  network. A few systems have been proposed to store data in those
+  infrastructures. Unfortunately, locating the closest copy of a
+  specific content in these systems requires to keep up-to-date an index
+  of all replicas and their respective locations. While flooding
+  approaches will not enable the maintenance of such an index for each
+  node in large systems, relying on a dedicated service contradicts
+  with the properties of Edge infrastructures in terms of locality and
+  robustness (locating sources may effectively take more time than
+  actually downloading contents).
 
-  Fog infrastructures allows content providers to better distribute
-  data over autonomous systems, hence improving on quality of user
-  experience by reducing latency. However, locating the closest data
-  sources can prove challenging in dynamic networks with dynamic
-  sources. Locating sources may effectively take more time than
-  actually downloading contents. \TODO{Related work ?} In this paper,
-  we introduce \NAME, a reactive protocol for dynamic logical
-  partitioning in dynamic networks. \TODO{source automatically create
-    partitions.} \NAME uses epidemic dissemination (\TODO{scoped
-    flooding}). \TODO{costs of operations.} When the system becomes
-  quiescent, every process eventually converges to its closest
-  partition, then \NAME incurs no overhead. \TODO{Proof, simulation,
-    testbed?}
-
+%%% Our proposal
+  In this paper, we introduce \NAME, an efficient broadcast protocol
+  that relies on dynamic logical partitioning of the
+  infrastructure. \NAME only floods the relevant nodes (\ie the ones
+  that should be informed of a the creation of a closest copy),
+  enabling to keep up-to-date an index for each node eventually.  In
+  addition to demonstrating formally the correctness of our protocol \TODO{Is it true?},
+  we discuss several evaluatons performed by simulations and show
+  \TODO{blabla}.  While \NAME tackles our location problem, it can be
+  used as a building block to design new advanced services such as
+  \TODO{blabla}.
+  
 \end{abstract}
+
+%\TODO{source automatically create
+%    partitions.} \NAME uses epidemic dissemination (\TODO{scoped
+%    flooding}). \TODO{costs of operations.} When the system becomes
+%  quiescent, every process eventually converges to its closest
+%  partition, then \NAME incurs no overhead. \TODO{Proof, simulation,
+%+    testbed?}
 
 
 %%% Local Variables: 
