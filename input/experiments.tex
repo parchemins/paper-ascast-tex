@@ -14,25 +14,21 @@ scale networks~\cite{montresor2009peersim}. The code is available on
 the Github platform at
 \url{https://github.com/Chat-Wane/peersim-partition}.\TODO{Anonoymous.}
 
-\subsection{Convergence and overhead}
+\subsection{Confirm the complexity analysis stating that
+  communication and time overheads depend on the current partitioning
+  of the system.}
 
-\paragraph{Objective:}
-
-To confirm the complexity analysis stating that the overhead in time
-and communication depends on current partitioning.
-
-\paragraph{Description:}
-
-We build a network comprising 10k processes. First, we chain processes
-together, then we add another communication link per process to
-another process. Since links are bidirectional, each process has 4
-communication links on average. We set the latency of links between 20
-and 40 ms at random following a uniform distribution. We set the
-weight of links between 5 and 15 at random following a uniform
-distribution. Weights and latency are different, hence the first
-$\alpha$ received by a process may not be that of its shortest
-path. It implies more concurrent operations, hence more traffic to
-reach consistent partitioning.
+\begin{asparadesc}
+\item [Description:] We build a network comprising 10k
+  processes. First, we chain processes together, then we add another
+  communication link per process to another process. Since links are
+  bidirectional, each process has 4 communication links on average. We
+  set the latency of links between 20 and 40 ms at random following a
+  uniform distribution. We set the weight of links between 5 and 15 at
+  random following a uniform distribution. Weights and latency are
+  different, hence the first $\alpha$ received by a process may not be
+  that of its shortest path. It implies more concurrent operations,
+  hence more traffic to reach consistent partitioning.
 
 \noindent We evaluate dynamic scoped broadcast. First, we create 100
 partitions one at a time: before adding a new partition, consistent
@@ -55,7 +51,7 @@ removing a partition.
   %%   removing a partition, totaling 100 new partition then removed.}
 \end{figure}
 
-\paragraph{Results:}
+\item [Results:]
 
 Figure~\ref{fig:complexity} shows the results of this experiment. The
 top part of the figure shows the average traffic per process divided
@@ -97,6 +93,8 @@ does not depend on the past partitioning.
 not generate traffic anymore. Being reactive, \NAME has no overhead
 when there is no operation in the system. This is important, for it
 means that \NAME's overhead actually depends on its usage.
+
+\end{asparadesc}
 
 \subsection{Distribution and hotspots}
 
