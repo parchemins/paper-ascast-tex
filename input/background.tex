@@ -1,8 +1,76 @@
 
-\section{Background and motivation}
+\section{Related Work and Motivation}
 \label{sec:background}
 
-\TODO{More related work. More motivations etc. Maybe describe IPFS?}
+%\TODO{More related work. More motivations etc. Maybe describe IPFS?}
+This section reviews the existing solutions to locate a given content in a network and details the limitations 
+of such solutions in a Fog context. We first present the related work on content localization at the system level, 
+either with centralized or distributed approaches. We then focus on message-passing solutions and explain why well-known existing software middlewares such as broadcast, or gossip protocols are not good candidates in their existing implementations. Finally, we provide the intuition that motivated the design of our protocol.
+
+\subsection*{Content indexing}
+
+The easiest way to implement a localization service is to store all replica localizations, namely the \textit{index}, on a centralized server~\cite{fogstore, p2p-alto, p2p-oracle, snamp}. Before downloading any content, the client first requests the server the list of all its available replicas, in order to select the closest copy, according to its place in the topology. While being straightforward to deploy, this solution suffers from well-known disadvantages (load balancing, robustness, locality, etc.) that are even magnified in a Fog context.
+
+A first step to mitigate the drawbacks inherent to a unique centralized server is to deploy a \textit{landmark} system~\cite{landmarks}. The idea is to spread special nodes called landmarks across the network so that nodes announce their current cache content to the closest landmarks in a given geographical area. Requests are then processed by one or the closest landmarks from the requester. One of the the main problems of these lankmark-based solutions is that they require a reliable infrastructure to provide these landmarks which must remain always available to continuously offer the indexing service.
+
+Goind further, fully distributing this index among nodes in the network has been proposed, either using coordinate-based overlays~\cite{coin_19, voronet} or Distributed Hash Tables~\cite{squirrel, ipfs, dht-name-resolution, mdht} for example. In the latter, each node stores a part of the index, defined by an interval between hash values. 
+Before downloading any object, a node first
+hashes the content to obtain the address of the node that stores the replica localizations of this given object. After obtaining from the remote node the list of available replicas, it can select the closest copy to download from. We emphasize that, in this setting, the DHT only stores information about replicas localizations, not the content itself. DHT-based approaches are well-studied and easy to deploy in order to offer such a localization service. 
+
+However, either being centralized, landmark-based or distributed, solutions that require to contact a remote node to obtain a given content localization usually violate the locality property. In other words, a request about a given object localization may travel far away in the network even if this object is actually close to the requester.
+Moreover, they incur a lookup penalty that increases the time to actually get the object. In fact, the lookup delay can sometimes be larger than downloading the object itself, especially for smaller objects, as already observed in~\cite{confais2017performance}.
+
+Instead of requesting localization information from a remote node, another approach consists in disseminating this information accross the network.
+Broadcasting information about cache updates to all nodes in the system is a straightforward way to maintain consistent information about replica localization for all nodes~\cite{nlsr,lscr}. Indeed, having the full knowledge of all the replica localizations along with distance information carried into messages, each node can easily compute where the closest copy of a given object resides, without contacting any remote node. Moreover, removing the lookup latency directly involves faster downloading times. 
+Multiple broadcast protocols have been designed to cope with various requirements[REF], and [REF or REF].
+One could also solve this issue by using a conflict-free replicated datantype (CRDT) for set data structures~\cite{shapiro2011crdts}. 
+However, either by broadcasting or with CRDTs, both inherently imply that every nodes will eventuall receive all messages. 
+That means information that might only interests a small subset of nodes is actually spread out all over the network. This is in contradiction 
+with the locality property we mentionned above.
+
+Gossip protocols are also appealing candidates to disseminate information reliably across a network~\cite{epidemic-protocol}. Numerous studies have shown how quickly they converge despite high level of churn and/or failures~\cite{lpbcast}.
+These protocols usually relies on a so-called \textit{peer-sampling service}~\cite{gossip-peer-sampling} to efficiently propagate the information. This implies that nodes will exchange messages with random nodes in the system that can be physically far away thus violating the locality property once again. 
+
+To cope with this locality requirment, we now present the intutition behind the design of our proposal.
+
+\subsection*{Logical partioning}
+At the system level, we claim that distributing the index actually boils down to logicaly partition the physical topology, depending on the current replicas localization. 
+Exemple and Figures ?
+
+\subsection*{Overlays and membership protocols}
+At first glance, membership protocols as proposed in~\cite{t-man}[REF] would appear to provide suitable abstractions to create such a partioning. 
+BUT, usually rely on peer sampling, thus same locality problem.
+Moreover, membership protocols are designed to generate logical overlays by modifying the neighboring of a given node according to a given metric. 
+On the contrary, we do not aim at building any overlay, as we only rely on the physical topology so the neighbors of a given node ar not continusously modifed. 
+Lastly, these protocols are usually cycle-based, meaning that they impose a constant load on the network traffic, even when the system state does not change.
+
+\subsection*{Consistency}
+Finally, we emphasize that consistency is at the core of \NAME. some blabla..
+
+To avoid flooding, authors in~\cite{opnl} propose to propagate information about cache updates only towards the source. This enables for a request to be caught \textit{on-path} to the source, and be redirected to the closest replica. However, the announcement is only performed towards the source, that is requests can miss closer replicas that are not on the path to the source, thus decreasing the efficiency of the cache sharing mechanism. On the contrary, \NAME ensures that eventually all 
+
+One could also solve this issue by removing partitions that were not advertised for a defined time~\cite{hemmati2015namebased, garcia-lopez}. \TODO{check distance-vector protocols.} 
+However, relying on physical timeout could lead to either premature removals of partitions when they are still operating; or slow convergence where processes believe they belong to a partition that was removed (\TODO{plot ?}). In addition, since timeouts imply a
+continuous maintenance of partitions, such partitioning protocol
+incurs an overhead even in quiet contexts without dynamic partitions.
+
+
+% AVK
+% t-man: T-Man: Gossip-Based Overlay Topology Management5doat a random time 
+% at a random time once in eachconsecutive interval of T time unit
+% This buffer contains a random sample of the nodes from the entirenetwork. It is provided by apeer sampling service
+% 
+% We do not try to to create a topology aware overlay ! Because locality.
+% We do not provide routing ! routing is two determine path between any pair of nodes. We only provide path to objects 
+% 
+% Koala locality aware routing. Long links. Lazzy (nothing happens)
+% Koala  shares  many  core  aspectswith similar overlays, such as Chord and Symphony.
+% 
+% VoroNet: overlay and routing. i.e. long links 
+% It links application objects rathen than physical nodes so that objects with similar characteristic are neighbors. 
+% are logigal overlay, that are not correlated to the physical infrstructure. 
+% Usually rely on long links...
+% AVK
 
 %% \begin{definition}[Dynamic optimal partitioning]
 %%   A dynamic optimal partitioning is an optimal partitioning where the
@@ -18,22 +86,22 @@
 %% processes, stale information may stop prematurely the propagation of
 %% relevant messages leading to inconsistent partitioning.
 %% \TODO{Figure~\ref{fig:del} shows that.}
-
-One could solve this issue by using a conflict-free replicated data
-type (CRDT) for set data structures~\cite{shapiro2011crdts}. CRDTs
-require eventual delivery of messages to ensure convergence. All
-processes need to receive, deliver, hence broadcast all
-operations. Some processes may receive operations unnecessary to their
-correct functioning, for these operations did not happen in their
-locality.  One could also solve this issue by removing partitions that
-were not advertised for a defined
-time~\cite{hemmati2015namebased}. \TODO{check distance-vector
-  protocols.} However, relying on physical timeout could lead to
-either premature removals of partitions when they are still operating;
-or slow convergence where processes believe they belong to a partition
-that was removed (\TODO{plot ?}). In addition, since timeouts imply a
-continuous maintenance of partitions, such partitioning protocol
-incurs an overhead even in quiet contexts without dynamic partitions.
+% 
+% One could solve this issue by using a conflict-free replicated data
+% type (CRDT) for set data structures~\cite{shapiro2011crdts}. CRDTs
+% require eventual delivery of messages to ensure convergence. All
+% processes need to receive, deliver, hence broadcast all
+% operations. Some processes may receive operations unnecessary to their
+% correct functioning, for these operations did not happen in their
+% locality.  One could also solve this issue by removing partitions that
+% were not advertised for a defined
+% time~\cite{hemmati2015namebased}. \TODO{check distance-vector
+%   protocols.} However, relying on physical timeout could lead to
+% either premature removals of partitions when they are still operating;
+% or slow convergence where processes believe they belong to a partition
+% that was removed (\TODO{plot ?}). In addition, since timeouts imply a
+% continuous maintenance of partitions, such partitioning protocol
+% incurs an overhead even in quiet contexts without dynamic partitions.
 
 %% \begin{problem}[\label{prob:intra}Consistent partitioning]
 %%   How to enable \emph{consistent} dynamic optimal partitioning in
