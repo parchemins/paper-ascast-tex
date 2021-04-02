@@ -1,6 +1,8 @@
 
 %% to better adapt positioning (I expect 2.5 pages
 %% intro+related work)
+
+\vfill \TODO{spacing for intro and related work: 2.5 pages}
 \newpage
 
 \section{Scoped broadcast}
@@ -67,20 +69,13 @@ broadcast, scoped broadcast implementations expose different
 trade-offs on space, time, and communication.
 
 Next Section introduces an adaptive scoped broadcast where the state
-of each process is dynamic and changes depending all distinct scopes
-that exist in the system.
-
-
-% the cost of
-% which actually depends on its operations, and the current scopes that
-% exist in the system.
+of each process is dynamic and changes depending on all distinct
+scopes that exist in the system.
 
 
 
 \section{Adaptive scoped broadcast}
 \label{sec:adaptive}
-
-\input{input/figadd.tex} 
 
 In this section, we propose to dynamically adapt the scopes of \NAMEB
 using \NAMEB itself for the sake of efficiency. At any time, a process
@@ -152,82 +147,80 @@ to.
 \end{definition}
 
 Unfortunately, processes do not share a common global knowledge of the
-network state. For process to reach consistent partitioning together,
-a process becoming a source must notify every process that is closer
-to it than any other source. Epidemic
+network state. For processes to reach consistent partitioning
+together, a process becoming a source must notify every process that
+is closer to it than any other source. Epidemic
 dissemination~\cite{birman1999bimodal} constitutes an efficient
 communication pattern to perform such operation.
 
-\begin{theorem}[\underline{B}est \underline{e}ventual \underline{d}elivery $(BED) \implies CP$]
-  Assuming reliable communication links, every process eventually
-  delivers, hence forwards, the notification message $\alpha_s$ of its
-  best partition $P_s$, eventually leading to consistent partitioning.
+\begin{theorem}[\underline{B}est \underline{e}ventual \underline{f}orwarding $(BEF) \iff CP$]
+  Assuming reliable communication links where a correct process $q$
+  eventually receives the message $m$ \underline{s}ent to it by a
+  process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a static system ($G^t =
+  G^{t+1}$); assuming local knowledge only, processes eventually reach
+  consistent partitioning if and only if each process eventually
+  forwards its best known partition.
 \end{theorem}
 
-\begin{proof} When a process $s_1$ becomes a source, it belongs to
-its own partition, for there exists no better partition than its own:
-$\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1 p}|$. It broadcasts such
-message to its neighbors. Since communication channels are reliable,
-neighboring processes eventually receive such notification. In
-particular, whatever the order of received messages, every process
-$p_1$ such that there exists no better partition $s_2$ than the
-received one delivers and forwards it: $\forall s_2 \in S: |\Pi_{p
-  s_1}| < |\Pi_{p s_2}|$. The notification emanating from $s_1$
-transitively reaches all such processes through shortest paths. Since
-there exists only one best value per process that can never be
-retracted, processes eventually reach consistent partitioning.
+\TODO{If forwarding defined as send to all neighbors, then it also
+  works in dynamic systems where processes join and edges are added,
+  for when a new neighbor appears, the processes must forward their
+  best.}
+
+\begin{proof}
+  \begin{asparadesc}
+  \item [$BEF \implies CP$:] When a process $s_1$ becomes a source, it
+    belongs to its own partition, for there exists no better partition
+    than its own: $\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1
+      p}|$. It broadcasts such message to its neighbors. Since
+    communication channels are reliable, neighboring processes
+    eventually receive such notification. In particular, whatever the
+    order of received messages, every process $p_1$ such that there
+    exists no better partition $s_2$ than the received one delivers
+    and forwards it: $\forall s_2 \in S: |\Pi_{p s_1}| < |\Pi_{p
+      s_2}|$. The notification emanating from $s_1$ transitively
+    reaches all such processes through shortest paths. Since there
+    exists only one best value per process that can never be
+    retracted, processes eventually reach consistent
+    partitioning. \TODO{Rework this with $s_{pq}$ and $r_{pq}$.}
+  \item [$CP \implies BEF$:] \TODO{By contradiction, if there is a
+    process $p$ that does not forward, then another process $q$ may
+    never gets its best because it needs the weight $W_{pq}$.}
+  \end{asparadesc}
 \end{proof}
-
-%% \input{input/figdel.tex} %% figure positioning
-
-%% \begin{definition}[\label{def:transitivedelivery}Transitive delivery]
-%%   Transitive delivery ensures the system eventually converges to
-%%   optimal partitioning:
-%%   \begin{inparaenum}[(i)]
-%%   \item (\textbf{termination}) processes do not need to propagate
-%%     operations they do not deliver: $\forall \langle i, j \rangle \in
-%%     E, \neg d_i(\alpha_{s}^w)\implies \neg
-%%     d_j(\alpha_{s}^{w+w_{ij}})$;
-%%   \item (\textbf{propagation}) operations delivered by a process may
-%%     also benefit neighbor processes: $\forall \langle i, j \rangle \in
-%%     E, d_i(\alpha_{s}^{w_1}) \implies
-%%     d_j(\alpha_{s}^{w_1+w_{ij}}) \vee
-%%     d_j(\alpha_{*}^{w_2 < w_1 + w_{ij}})$.
-%%   \end{inparaenum}
-%% \end{definition}
 
 \begin{algorithm}
   \input{input/algoadd.tex}
   \caption{\label{algo:add}Adding a partition by Process $p$.}
 \end{algorithm}
 
-Algorithm~\ref{algo:add} shows the instructions that implement
-eventually consistent partitioning when
+\input{input/figadd.tex} 
+
+Algorithm~\ref{algo:add} shows the instructions that implement such
+consistent partitioning when
 \begin{inparaenum}[(i)]
-\item processes only have local knowledge about their direct
-  neighborhoods,
 \item weights are scalar values,
-\item and processes only add new partitions to the system.
+\item processes only add new partitions to the system,
+\item and processes never crash nor leave the system.
 \end{inparaenum}
-At any time, a process running this protocol can add a logical
-partition to its distributed system.  Figure~\ref{fig:add} illustrates
-its behavior on a system comprising 4 processes $a$, $b$, $c$, and
-$d$. Two processes $a$ and $c$ concurrently create a partition by
-S-broadcasting their respective \underline{a}dd message: $\alpha_a^0$
-and $\alpha_c^0$. They initialize their own state with the lowest
-possible bound $0$ (see Line~\ref{line:lowestbound}), and send a
-message to each of their neighbors by accumulating the corresponding
-edge weight (see Line~\ref{line:accumulator}). In
-Figure~\ref{fig:addC}, Process $b$ receives $\alpha_{c}^{1}$. Since it
-improves its own partition distance, it keeps it and forwards it to
-its neighbors. Process $b$ discards $\alpha_{b}^{1.5}$, for it does
-not improve its partition distance. Processes $c$ and $d$ will never
-hear of Process $a$'s partition.  In Figure~\ref{fig:addD}, processes
-discard last transiting messages. The system converged to the
-consistent partitioning. However, since processes operate using local
-knowledge only, generated traffic may be sub-optimal, for processes
-may receive, deliver, and forward messages emanating from a same
-source simply because it did not come from the shortest path yet.
+ Figure~\ref{fig:add} illustrates its behavior on a system comprising
+ 4 processes $a$, $b$, $c$, and $d$. Two processes $a$ and $c$
+ concurrently create a partition by S-broadcasting their respective
+ \underline{a}dd message: $\alpha_a^0$ and $\alpha_c^0$. They
+ initialize their own state with the lowest possible bound $0$ (see
+ Line~\ref{line:lowestbound}), and send a message to each of their
+ neighbors by accumulating the corresponding edge weight (see
+ Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, Process $b$
+ receives $\alpha_{c}^{1}$. Since it improves its own partition
+ distance, it keeps it and forwards it to its neighbors. Process $b$
+ discards $\alpha_{b}^{1.5}$, for it does not improve its partition
+ distance. Processes $c$ and $d$ will never hear of Process $a$'s
+ partition.  In Figure~\ref{fig:addD}, processes discard last
+ transiting messages. The system converged to the consistent
+ partitioning. However, since processes operate using local knowledge
+ only, generated traffic may be sub-optimal, for processes may
+ receive, deliver, and forward messages emanating from a same source
+ simply because it did not come from the shortest path yet.
 
 %% Transitive relationships ensure that each
 %% process gets its closest source while accumulation of weights ensures
@@ -252,12 +245,10 @@ for former weights are better than the newly received one.
 \subsection{Dynamic consistent partitioning}
 At any time, a process can become a source, hence adding a new
 partition to the system. This partition eventually includes all
-processes that are closer from this new source than any other else. We
-described such protocol in Section~\ref{sec:scoped}. Processes
-naturally converge towards their respective best partition by only
-piggybacking a monotonically increasing distance in forwarded
-messages. % \TODO{Traffic of each partition is contained to the
-%  partition.}
+processes that are closer from this new source than any other
+else. Processes naturally converge towards their respective best
+partition by only piggybacking a monotonically increasing distance in
+forwarded messages.
 
 Then, at any time, a source can revoke its self-appointed status of
 source, hence deleting its partition from the system. All processes
@@ -313,14 +304,14 @@ Process $b'$ may be in an inconsistent state. Label IV shows the
 corollary issue: Process $b''$ delivered a message from a process that
 may be inconsistent without knowing it.
 
-\begin{theorem}[\label{theo:dcp}Dynamic consistent partitioning]
+\begin{corollary}[\label{theo:dcp}Dynamic consistent partitioning]
   Eventual consistent partitioning in presence of dynamic sources
   requires
   \begin{inparaenum}[(i)]
   \item eventual purging of stale notifications, and
   \item eventual delivery of bests partitions.
   \end{inparaenum}
-\end{theorem}
+\end{corollary}
 
 \begin{proof}
   \TODO{Meow meow meow.}
