@@ -29,7 +29,7 @@ That means information that might only interests a small subset of nodes is actu
 with the locality property we mentionned above.
 
 Gossip protocols are also appealing candidates to disseminate information reliably across a network~\cite{epidemic-protocol}. Numerous studies have shown how quickly they converge despite high level of churn and/or failures~\cite{lpbcast}.
-These protocols usually relies on a so-called \textit{peer-sampling service}~\cite{gossip-peer-sampling} to efficiently propagate the information. This implies that nodes will exchange messages with random nodes in the system that can be physically far away thus violating the locality property once again. 
+These protocols usually relies on a so-called \textit{peer-sampling service}~\cite{jelasity2007gossip} to efficiently propagate the information. This implies that nodes will exchange messages with random nodes in the system that can be physically far away thus violating the locality property once again. 
 
 To cope with this locality requirment, we now present the intutition behind the design of our proposal.
 
