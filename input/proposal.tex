@@ -1,12 +1,27 @@
 
+%% to better adapt positioning (I expect 2.5 pages
+%% intro+related work)
+\newpage
+
 \section{Scoped broadcast}
 \label{sec:scoped}
 
-In this section, we introduce model and notations to provide a general
-definition of scoped broadcast in distributed systems.  Distributed
-systems such as Edge infrastructures comprise heterogeneous machines
-interconnected by communication links. We do not consider byzantine
-processes.
+Scoped broadcast is a communication primitive that propagates a
+message around its broadcaster within an application-dependant scope.
+For instance, a process from Paris could scoped broadcast messages to
+all processes in Paris; and processes from other cities would never
+deliver such messages. Scoped broadcast allows its implementations to
+reduce generated traffic compared to uniform reliable
+broadcast~\cite{hadzilacos1994modular, raynal2013distributed}, for
+message propagation can stop as soon as messages reach the borders of
+the scope.  This section introduces model and notations to provide a
+general definition of scoped broadcast in distributed
+systems. \TODO{to help understand adaptive scoped broadcast :).}
+\TODO{Better transition to the rest of this section.}
+
+Distributed systems such as Edge infrastructures comprise
+heterogeneous machines interconnected by communication links. We do
+not consider byzantine processes.
 
 \begin{definition}[Fog infrastructure]
   A fog infrastructure is a connected \underline{g}raph $G(V, E)$ of
@@ -19,53 +34,53 @@ processes.
 
 Processes can send messages to their neighboring processes. Processes
 can reliably broadcast messages by forwarding delivered
-messages~\cite{hadzilacos1994modular,nedelec2018causal,raynal2013distributed}. However,
-uniform reliable broadcast states that \emph{all} correct processes
-must deliver broadcast messages. This proves costly in large scale
-systems comprising thousands of processes. Instead, we define
-\emph{scoped broadcast} where messages reach only interested
-processes, significantly reducing generated traffic.
+messages~\cite{birman1999bimodal, hadzilacos1994modular,
+  nedelec2018causal, raynal2013distributed}. However, uniform reliable
+broadcast states that \emph{all} correct processes must deliver
+broadcast messages. This proves costly in large scale systems
+comprising thousands of processes. Instead, we define \emph{scoped
+broadcast} where messages reach only interested processes,
+significantly reducing generated traffic.
 
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
   When Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
   \underline{m}essage $m$, every correct Process $y$ within a scope
   \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
-  $d_y(m)$. The scope depends on \underline{s}tates $\sigma$ of
-  processes, \underline{m}etadata $\mu$ within received messages, and
-  a \underline{p}redicate $\phi$ verified from process to process:
-  $b_x(m) \wedge r_y(m) \implies \exists \pi_{xy} : \forall z \in
-  \pi_{xy}, \phi(\mu_z, \sigma_z)$.
+  $d_y(m)$. The scope depends on the \underline{s}tate $\sigma$ of
+  each process, the \underline{m}etadata $\mu$ piggybacked by each
+  message, and a \underline{p}redicate $\phi$ verified from process to
+  process: $b_x(m) \wedge r_y(m) \implies \exists \pi_{xy}: \forall z
+  \in \pi_{xy}, \phi(\mu_z, \sigma_z)$.
 \end{definition}
 
 This definition highlights the transitive relevance of messages and
 encompasses more specific definitions of related
-work~\cite{hsiao2005scoped,lue2006scoped,wang2015prodiluvian}.  A
-process from Paris could scoped broadcast a message to all processes
-in this city. A process from Paris could scoped broadcast a message to
-all processes in this city plus neighboring cities by overloading
-forwarded messages the first time they reach another city. Similarly
-to reliable broadcast, scoped broadcast implementations expose
-different trade-offs on space, time, and communication. In this paper,
-we introduce an adaptive scoped broadcast the cost of which actually
-depends on its operations, and the current scopes that exist in the
-system.
+work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}. For
+instance, a process from Paris could scoped broadcast messages to all
+processes in Paris. This requires processes to know the city they are
+in. In another instance, a process from Paris could scoped broadcast
+messages to all processes in Paris plus neighboring cities. This
+requires processes to overload forwarded messages the first time they
+reach another city. The predicate checks if messages already reached
+two distinct cities before delivery. Similarly to uniform reliable
+broadcast, scoped broadcast implementations expose different
+trade-offs on space, time, and communication.
 
-%% \begin{definition}[S-broadcast properties]
-%%   S-broadcast guarantees 3 properties:
-%%   \begin{inparaenum}[(i)]
-%%   \item Validity: If a correct process broadcasts a message, it
-%%     eventually delivers it;
-%%   \item Scoped Agreement: If a process broadcasts a message, then all
-%%     correct processes within the scope eventually delivers it;
-%%   \item Scoped Integrity: A process delivers a message only if it was
-%%     previously broadcast within the scope.
-%%   \end{inparaenum}
-%% \end{definition}
+Next Section introduces an adaptive scoped broadcast where the state
+of each process is dynamic and changes depending all distinct scopes
+that exist in the system.
+
+
+% the cost of
+% which actually depends on its operations, and the current scopes that
+% exist in the system.
+
+
 
 \section{Adaptive scoped broadcast}
 \label{sec:adaptive}
 
-\input{input/figadd.tex} %% positioning (belong to problem & motivation)
+\input{input/figadd.tex} 
 
 In this section, we propose to dynamically adapt the scopes of \NAMEB
 using \NAMEB itself for the sake of efficiency. At any time, a process
@@ -394,7 +409,7 @@ Finally, as stated in Theorem~\ref{theo:dcp}, dynamic consistent
 partitioning not only requires the removal of all stale partitions,
 but also the retrieval of the best up-to-date partitions. In that
 regard, $\delta$'s have dual use: since they already reach borders of
-partitions when they remove stale control informations, they also
+partitions when they remove stale control information, they also
 trigger a competition when reaching such bordering processes (see
 Line~\ref{line:compete}). This simply consists in sending the current
 partition through the communication link from which the process
