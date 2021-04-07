@@ -151,7 +151,8 @@ network state. For processes to reach consistent partitioning
 together, a process becoming a source must notify every process that
 is closer to it than any other source. Epidemic
 dissemination~\cite{birman1999bimodal} constitutes an efficient
-communication pattern to perform such operation.
+communication pattern to perform such operation. \TODO{More about
+  \emph{forwarding}.}
 
 \begin{theorem}[\underline{B}est \underline{e}ventual \underline{f}orwarding $(BEF) \iff CP$]
   Assuming reliable communication links where a correct process $q$
@@ -175,8 +176,8 @@ communication pattern to perform such operation.
       p}|$. It broadcasts such message to its neighbors. Since
     communication channels are reliable, neighboring processes
     eventually receive such notification. In particular, whatever the
-    order of received messages, every process $p_1$ such that there
-    exists no better partition $s_2$ than the received one delivers
+    order of received messages, every process $p_1$ -- such that there
+    exists no better partition $s_2$ than the received one -- delivers
     and forwards it: $\forall s_2 \in S: |\Pi_{p s_1}| < |\Pi_{p
       s_2}|$. The notification emanating from $s_1$ transitively
     reaches all such processes through shortest paths. Since there
@@ -201,7 +202,7 @@ consistent partitioning when
 \begin{inparaenum}[(i)]
 \item weights are scalar values,
 \item processes only add new partitions to the system,
-\item and processes never crash nor leave the system.
+\item and processes never join nor crash nor leave the system.
 \end{inparaenum}
  Figure~\ref{fig:add} illustrates its behavior on a system comprising
  4 processes $a$, $b$, $c$, and $d$. Two processes $a$ and $c$
@@ -234,15 +235,15 @@ consistent partitioning when
 %% \cdot r_b(\alpha_a^{1}) \implies b_b(\alpha_{b}^{1.5}) \cdot
 %% b_b(\alpha_{b}^{1})$ while $r_b(\alpha_a^{1}) \cdot
 %% r_b(\alpha_a^{1.5}) \implies b_b(\alpha_a^{1})$).
-
+ 
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity:
 messages of old partitions may stop the notification of best sources,
 for former weights are better than the newly received one. 
 
-\input{input/figproof.tex}
 
 \subsection{Dynamic consistent partitioning}
+
 At any time, a process can become a source, hence adding a new
 partition to the system. This partition eventually includes all
 processes that are closer from this new source than any other
@@ -253,14 +254,29 @@ forwarded messages.
 Then, at any time, a source can revoke its self-appointed status of
 source, hence deleting its partition from the system. All processes
 that belong to this partition must eventually choose another partition
-to belong to. Unfortunately, stale control information about deleted
-partitions may impair the propagation of both
+to belong to. In Figure~\ref{fig:del}, two partitions exist initially:
+$P_a$ and $P_c$ that respectively include $\{a\}$, and $\{b, c,
+d\}$. In Figure~\ref{fig:delA}, Process $a$ deletes its partition. It
+notifies all neighboring processes -- here only Process $b$ -- that
+may belong to its partition using \NAMEB. Upon receipt, Process $b$
+discards the message $\delta_a$, for the latter does not target the
+former's partition. Yet, Process $b$ sends its own partition that may
+be the best for Process $a$. Eventually, every processes belong to the
+same partition $P_c$.
+
+\input{input/figdel.tex}
+
+Unfortunately, stale control information about deleted partitions may
+impair the propagation of both
 \begin{inparaenum}[(i)]
 \item notifications about actual sources, and
 \item notifications about other deleted partitions.
 \end{inparaenum}
+\TODO{Figure showing inconsistency.}
 The correctness of the partitioning depends on receipt orders at each
 processes.
+
+\input{input/figproblem.tex}
 
 \begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
@@ -277,6 +293,8 @@ notification message is always the most recent known of each process.
   b_p(m')$, no process $q$ can deliver $m$ if it has delivered $m'$:
   $\not\exists q \in V$ with $d_q(m') \rightarrow d_q(m)$.
 \end{definition}
+
+\input{input/figproof.tex}
 
 Figure~\ref{fig:proof} depicts the issues with staleness and message
 orderings. In Figure~\ref{fig:proofA}, the shortest path from any

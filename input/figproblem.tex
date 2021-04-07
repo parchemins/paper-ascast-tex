@@ -1,0 +1,31 @@
+
+\begin{figure*}
+  \begin{center}
+    \subfloat[Part A][\label{fig:problemA}Both Process $a$ and
+      Process $c$ initiate then remove a partition.
+      $w_{ab} = 1.5$; $w_{bc} = w_{cd} = w_{bd} = 1$.]{\input{input/figproblemA.tex}}
+    \hspace{5pt}
+    \subfloat[Part B][\label{fig:problemB}Process $b$ and Process $d$ receive and deliver
+      messages based on their weights. $a$'s partition propagates to all processes.]
+             {\input{input/figproblemB.tex}}
+    \hspace{5pt}
+    \subfloat[Part C][\label{fig:problemC}Process $c$'s partition reach $b$ and $d$.
+      Its removal shortly follows. Process $b$ does not have any control
+      information about partitions any more.]{\input{input/figproblemC.tex}}
+    \hspace{5pt}
+    \subfloat[Part D][\label{fig:problemD}Processes discard remaining messages.
+      Process $b$ does not deliver $\delta_a$, for it already removed $a$ when
+      Partition $c$ dominated it. Processes $c$ and $d$ remain in an incorrect
+      partition.]{\input{input/figproblemD.tex}}
+  \end{center}
+  \caption{\label{fig:problem}Partition removals cannot rely only on
+    current partition, for it may lead to either inconsistent
+    partitioning, or every process receiving every broadcast.}
+\end{figure*}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% ispell-local-dictionary: "english"
+%%% End: 
+

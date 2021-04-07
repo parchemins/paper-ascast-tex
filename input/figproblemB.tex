@@ -1,0 +1,52 @@
+
+\begin{tikzpicture}[scale=0.87]
+
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+  
+  \newcommand\X{50pt}
+  \newcommand\Y{-50pt}
+
+  \newcommand\ADD{\alpha}
+  \newcommand\DEL{\delta}
+
+
+
+  \draw (-\X + 5pt, 0) --
+  node[above=-0.3em,font=\tiny]{$\DEL_{a} \rightarrow$}
+  node[below=-0.3em,font=\tiny]{$\leftarrow \ADD_{a}^{3}$}
+  (0 - 5pt, 0); %% b - a 
+
+  \draw (0 +5pt, 0) --
+  node[above=-0.3em, font=\tiny]{$\leftarrow \textcolor{\PC}{\ADD_{c}^{1}}\cdot\DEL{c}$}
+  node[below=-0.3em, font=\tiny]{$\textcolor{\PA}{\ADD_a^{2.5}} \rightarrow$}
+  (\X -5pt, 0); %% b - c
+
+  \draw[opacity=0] (0, 0 - 5pt) --
+  node[opacity=1, above=-0.3em, font=\tiny, sloped]{$\ADD_a^{2.5} \rightarrow$}
+  (0, \Y + 5pt); %% b - d
+  \draw (0, \Y + 5pt) --
+  node[above=-0.3em, font=\tiny, sloped]{$\ADD_c^2 \rightarrow$}
+  (0, 0 - 5pt);  %% d - b
+  
+  \draw (\X + 3pt, 0 - 5pt) --
+  node[above=-0.3em, font=\tiny, sloped]{$\ADD_{c}^{2} \rightarrow$}
+  node[below=-0.3em, font=\tiny, sloped]{$\leftarrow \DEL_c$}
+  (0 + 5pt, \Y - 3pt); %% c - d
+
+
+
+  
+  \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+  \draw[fill=white] (0, 0) node[color=\PA]{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0, \Y) node[color=\PC]{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  
+  % \draw (-\X+5pt, 5pt) node[above left]{$\DEL_a$};
+  % \draw (\X+5pt, 5pt) node[above right]{$\DEL_c$};
+  \draw (0, 5pt) node[above]{$\bm{a: 1.5}$};
+  \draw (-5pt, \Y) node[left]{$\bm{c: 1}$};
+
+
+\end{tikzpicture}
