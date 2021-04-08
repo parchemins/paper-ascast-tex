@@ -19,7 +19,10 @@ Indeed, those systems, when not using a centralized index stored in a
 Cloud, rely on a Distributed Hash Table (DHT) across the different
 peers composing the infrastructure: When a client wants to access a
 specific content, it has to perform a request to a first node to
-determine from which site it will retrieve the content. Once it has
+determine from which site it will retrieve the content.
+\TODO{Add something about the fact that in addition to the location service of the replica, we need a service that maintain a view of the infrastructure topology so that each node can infer which replica is the closest one.}
+
+Once it has
 retrieved the content from the location it selected, a local replica
 is created to improve the performance for future accesses and the
 server in charge of maintaining the index is updated to reflect this
