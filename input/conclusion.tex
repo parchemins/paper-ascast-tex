@@ -13,6 +13,22 @@ As future work, we plan on enhancing the
 logical partitioning capabilities in order to improve its caching
 policy of popular contents at marginal cost.
 
+\noindent We propose an implementation that further decreases
+generated traffic and improves on
+anonymity~\cite{whitaker2002forwarding}.  \NAME makes extensive use of
+paths to enable deleting messages without incrementing local
+counters. Messages carry their respective path and processes detect
+when such messages have been looping when they carry their identity
+(see Lines~\ref{line:notloopingA} and \ref{line:notloopingB} of
+Algorithm~\ref{algo:adddelundo}). Since membership is all that
+matters, we propose to trade vectors of identities for Bloom
+filters~\cite{almeida2007scalable}. Processes know with high
+probability if they already received and forwarded each message
+without knowing the identity of all processes that received it.  False
+positive probability only incurs premature stopping of broadcast
+messages and does not invalidate the delete of specific
+messages. \TODO{Rework.}
+
 \noindent We also plan on further improving scoped broadcast between
 multiple autonomous systems. Indeed, processes could leverage the
 hierarchical properties of such topology~\cite{nur2018geography} to

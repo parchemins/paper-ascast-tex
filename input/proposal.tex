@@ -252,17 +252,18 @@ partition by only piggybacking a monotonically increasing distance in
 forwarded messages.
 
 Then, at any time, a source can revoke its self-appointed status of
-source, hence deleting its partition from the system. All processes
-that belong to this partition must eventually choose another partition
-to belong to. In Figure~\ref{fig:del}, two partitions exist initially:
-$P_a$ and $P_c$ that respectively include $\{a\}$, and $\{b, c,
-d\}$. In Figure~\ref{fig:delA}, Process $a$ deletes its partition. It
-notifies all neighboring processes -- here only Process $b$ -- that
-may belong to its partition using \NAMEB. Upon receipt, Process $b$
-discards the message $\delta_a$, for the latter does not target the
-former's partition. Yet, Process $b$ sends its own partition that may
-be the best for Process $a$. Eventually, every processes belong to the
-same partition $P_c$.
+source, hence deleting its partition from the system, by executing a
+\texttt{Del} operation. All processes that belong to this partition
+must eventually choose another partition to belong to. In
+Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_c$
+that respectively include $\{a\}$, and $\{b, c, d\}$. In
+Figure~\ref{fig:delA}, Process $a$ deletes its partition. It notifies
+all neighboring processes -- here only Process $b$ -- that may belong
+to its partition using \NAMEB. Upon receipt, Process $b$ discards the
+message $\delta_a$, for the latter does not target the former's
+partition. Yet, Process $b$ sends its own partition that may be the
+best for Process $a$. Eventually, every processes belong to the same
+partition $P_c$.
 
 \input{input/figdel.tex}
 
@@ -332,6 +333,14 @@ may be inconsistent without knowing it.
 \end{corollary}
 
 \begin{proof}
+  \TODO{Quite obvious.}
+\end{proof}
+
+\begin{theorem}[\TODO{meow}]
+  \TODO{Puring stale notifications requires to handle I...IV.}
+\end{theorem}
+
+\begin{proof}
   \TODO{Meow meow meow.}
   \TODO{Label I: default propagation to what seems the border of the partition but isn't.}
   \TODO{Label II: gates eventually break because of I', III, IV.}
@@ -349,6 +358,8 @@ may be inconsistent without knowing it.
   \caption{\label{algo:adddelundo}Dynamic partitioning by Process $p$.}
 \end{algorithm}
 
+We extend Algorithm~\ref{algo:add} to enable each source to revoke its
+self-appointed status of source and become a simple process again.
 Algorithm~\ref{algo:adddelundo} provides the instructions that
 implement dynamic consistent partitioning:
 \begin{inparaenum}[(i)]
@@ -365,15 +376,10 @@ While (\ref{algo:most})-(\ref{algo:solves}) tackle the eventual purging of
 stale notifications, (\ref{algo:competition}) tackle the eventual
 delivery of the best up-to-date partitions.
 
-\paragraph{Dynamic partitions.}
-We extend Algorithm~\ref{algo:add} to enable each source to revoke its
-self-appointed status of source and become a simple process again. In
-that regard, we enforce the delivery order of messages at each
-process.
-
-To implement last win order, each process maintains a vector of
-versions that associates to each known source, or has-been source, its
-known local counter. It enables processes to deliver only up-to-date
+To constrain the order of delivery at each process, each process
+implements last win order by maintaining a vector of versions that
+associates to each known source, or has-been source, with its known
+local counter. It enables processes to deliver only up-to-date
 $\alpha$'s that may improve their best known partition (see
 Line~\ref{line:detectA}), but also to detect possible inconsistent
 partitioning (see Line~\ref{line:detectB}) as labeled by III in
@@ -431,7 +437,6 @@ fill the gaps left open by deletes.
   \caption{\label{algo:edges}Dynamic partitioning by Process $p$ in dynamic networks.}
 \end{algorithm}
 
-\paragraph{Dynamic network.}
 Algorithm~\ref{algo:edges} provides the instructions of \NAME that
 enable dynamic consistent partitioning in dynamic networks where
 processes can join or leave the system without
@@ -460,22 +465,6 @@ notification. \TODO{More.}
 %% \item the distance that has been delivered by a process comes from
 %%   this particular process.
 %% \end{inparaenum}
-
-\paragraph{Another trade-off.}
-We propose an implementation that further decreases generated traffic
-and improves on anonymity~\cite{whitaker2002forwarding}.  \NAME makes
-extensive use of paths to enable deleting messages without
-incrementing local counters. Messages carry their respective path and
-processes detect when such messages have been looping when they carry
-their identity (see Lines~\ref{line:notloopingA} and
-\ref{line:notloopingB} of Algorithm~\ref{algo:adddelundo}). Since
-membership is all that matters, we propose to trade vectors of
-identities for Bloom filters~\cite{almeida2007scalable}. Processes
-know with high probability if they already received and forwarded each
-message without knowing the identity of all processes that received
-it.  False positive probability only incurs premature stopping of
-broadcast messages and does not invalidate the delete of specific
-messages.
 
 
 
