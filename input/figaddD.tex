@@ -8,7 +8,7 @@
   \newcommand\X{50pt}
   \newcommand\Y{-50pt}
 
-  \newcommand\ADD{Add}
+  \newcommand\ADD{\alpha}
 
 
   
@@ -21,6 +21,7 @@
   (0, 0 - 5pt);  %% d - b
   
   \draw (\X + 3pt, 0 - 5pt) --
+  node[below=-0.3em, sloped, font=\tiny]{$\leftarrow \textcolor{\PD}{\ADD_{d}^{5}}$}
   (0 + 5pt, \Y - 3pt); %% c - d
 
 
@@ -38,9 +39,10 @@
   node[color=\PC]{$\bm{d}$}
   +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-  \draw (-\X, 5pt) node[above]{$a: 0$};
-  \draw (0, 5pt) node[above]{$c: 1$};
-  \draw (\X, 5pt) node[above]{$c: 0$};
-  \draw (-5pt, \Y) node[left]{$c: 1$};
+  \draw ( 0, 5pt) node[above, font=\small, color=\PD]{$\ADD_d^1$}; % b
+  \draw ( \X, 5pt) node[above, font=\small, color=\PD]{$\ADD_d^2$}; % c
+  \draw (-\X, 5pt) node[above, font=\small, color=\PA]{$\ADD_a^0$}; % a
+  \draw (-5pt, \Y) node[left, font=\small, color=\PD]{$\ADD_d^0$}; % d
 
+  
 \end{tikzpicture}
