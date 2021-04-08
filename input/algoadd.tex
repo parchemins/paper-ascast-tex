@@ -6,28 +6,27 @@
 \LinesNumbered
 
 $O_p$, $W_p$\tcp*[r]{set of neighbors and weights}
-$s$ \tcp*[r]{best source of partition}
+$s \leftarrow \varnothing$ \tcp*[r]{best source of partition}
 $d \leftarrow \infty$ \tcp*[r]{smallest distance to $s$}
 
 
 \BlankLine
 
 \Function{\textup{Add ( )} \tcp*[f]{$\alpha_p^0$}} {
-  \textup{receiveAdd($p$, $0$)} \label{line:lowestbound}
+  \textup{receiveAdd($\varnothing$, $p$, $0$)} \label{line:lowestbound} \tcp*[f]{$b_p(\alpha_p^0)$}
 }
 
 \BlankLine
 
-\Function{\textup{receiveAdd($s'$, $d'$)} \tcp*[f]{$r_p(\alpha_{s'}^{d'})$}} {
+\Function{\textup{receiveAdd($q$, $s'$, $d'$)} \tcp*[f]{$r_p(\alpha_{s'}^{d'})$ from $q$}} {
   \If { $d' < d$ } {
+      $s \leftarrow s'$ \tcp*[r]{\smash{$d_p(\alpha_{s'}^{d'})$}}
       $d \leftarrow d'$ \;
-      $s \leftarrow s'$ \tcp*[r]{$d_p(\alpha_{s'}^{d'})$}
 
-      \ForEach {$n \in O_p$} {
+      \ForEach(\tcp*[f]{\smash{$f_p(\alpha_{s'}^{d'})$}}) {$n \in O_p \setminus q$} {
           \textup{send$_n$($s', d' + W_{pn}$)} \label{line:accumulator}
-          \tcp*[r]{$b_p(\alpha_{s'}^{d'})$}
+          \tcp*[r]{\smash{$s_{pn}(\alpha_{s'}^{d'+w_{pn}})$}}
        }      
-
   }
 }
 

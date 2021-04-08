@@ -204,24 +204,25 @@ consistent partitioning when
 \item processes only add new partitions to the system,
 \item and processes never join nor crash nor leave the system.
 \end{inparaenum}
- Figure~\ref{fig:add} illustrates its behavior on a system comprising
- 4 processes $a$, $b$, $c$, and $d$. Two processes $a$ and $c$
- concurrently create a partition by S-broadcasting their respective
- \underline{a}dd message: $\alpha_a^0$ and $\alpha_c^0$. They
- initialize their own state with the lowest possible bound $0$ (see
- Line~\ref{line:lowestbound}), and send a message to each of their
- neighbors by accumulating the corresponding edge weight (see
- Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, Process $b$
- receives $\alpha_{c}^{1}$. Since it improves its own partition
- distance, it keeps it and forwards it to its neighbors. Process $b$
- discards $\alpha_{b}^{1.5}$, for it does not improve its partition
- distance. Processes $c$ and $d$ will never hear of Process $a$'s
- partition.  In Figure~\ref{fig:addD}, processes discard last
- transiting messages. The system converged to the consistent
- partitioning. However, since processes operate using local knowledge
- only, generated traffic may be sub-optimal, for processes may
- receive, deliver, and forward messages emanating from a same source
- simply because it did not come from the shortest path yet.
+Figure~\ref{fig:add} illustrates its behavior on a system comprising 4
+processes $a$, $b$, $c$, and $d$. Process~$a$ and Process~$d$ become
+the sources of their partition. They \NAMEB a notification
+\underline{a}dd message: $\alpha_a^0$ and $\alpha_d^0$. They
+initialize their own state with the lowest possible bound $0$ (see
+Line~\ref{line:lowestbound}), and send a message to each of their
+neighbors by accumulating the corresponding edge weight (see
+Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, Process~$b$
+receives $\alpha_{d}^{1}$. Since it improves its own partition
+distance, it keeps it and forwards it to its neighbors. In
+Figure~\ref{fig:addD}, Process~$b$ discards $\alpha_{a}^{2}$, for it
+does not improve its partition distance. Processes $c$ and $d$ will
+never hear of Source~$a$. Ultimately, processes discard last
+transiting messages. The system reached consistent partitioning.
+
+%% However, since processes operate using local knowledge only, generated
+%% traffic may be sub-optimal, for processes may receive, deliver, and
+%% forward messages emanating from a same source simply because it did
+%% not come from the shortest path yet.
 
 %% Transitive relationships ensure that each
 %% process gets its closest source while accumulation of weights ensures
@@ -273,9 +274,24 @@ impair the propagation of both
 \item notifications about actual sources, and
 \item notifications about other deleted partitions.
 \end{inparaenum}
-\TODO{Figure showing inconsistency.}
-The correctness of the partitioning depends on receipt orders at each
-processes.
+Figure~\ref{fig:problem} highlights such consistency issue with
+dynamic partitions. Both Process~$a$ and Process~$d$ add then delete
+their partition concurrently. Assuming \TODO{FIFO communication
+  links}, Process~$c$ receives, delivers, and forwards $\alpha_d^3$
+followed by $\delta_d$. In the meantime, Process~$b$ receives,
+delivers, and forwards $\alpha_a^2$. In Figure~\ref{fig:problemC},
+both Process~$c$ and Process~$d$ deliver the message about Partition
+$P_a$, for they did not have any known partition at receipt time. On
+the contrary, Process~$b$ delivers $\alpha_d^1$, for it improves its
+distance to a known source. Process~$b$ then blocks Process~$a$'s
+removal notification $\delta_a$. It never reaches Process~$c$ nor
+Process~$d$. Also, Process~$c$ and Process~$d$ do not deliver any
+$\alpha_d$ or $\delta_d$ since they already delivered it. The system
+converges to an unconsistent state where some processes assume they
+belong to a partition while it does not exist any longer.
+
+Dynamic consistent partitioning depends on receipt orders at each
+processes. \TODO{Transition.}
 
 \input{input/figproblem.tex}
 
