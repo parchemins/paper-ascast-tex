@@ -295,12 +295,41 @@ $\alpha$ and $\delta$ messages is insufficient to guarantee consistent
 partitioning when each process can add or delete its partition at any
 time.
 
-To identify and solve the issue with dynamic consistent partitioning
-where protocols enable processes to \texttt{Add} and \texttt{Del} at
-any time, we need to further constrain the delivery order at each
-process.
+One could solve this issue by always propagating the $\delta$ messages
+corresponding to the $\alpha$ messages it propagated before. In
+Figure~\ref{fig:problem}, it means that as soon as Process~$b$
+forwards $\alpha_a^2$, it assumes that its neighbors Process~$c$ and
+Process~$d$ may need the notification of removal $\delta_a$ if it
+exists. However, such solution also implies that processes generate
+traffic not only related to their current partition, but also related
+to partitions they belong to in the past. Instead, we propose to use
+the delivery order at each process to detect possible inconsistencies
+and solve them. Together, processes eventually remove all stale
+control information (transiting messages and local states) of the
+system leaving room for propagation of messages about up-to-date
+partitions.
+
+%% To identify and solve the issue with dynamic consistent partitioning
+%% where protocols enable processes to \texttt{Add} and \texttt{Del} at
+%% any time, we need to further constrain the delivery order at each
+%% process.
 
 \input{input/figproblem.tex}
+
+\begin{corollary}[\label{theo:dcp}Dynamic consistent partitioning]
+  Consistent partitioning where each process can \texttt{Add} and
+  \texttt{Del} its partition at any time requires 
+  \begin{inparaenum}[(i)]
+  \item eventual purging of stale notifications, and
+  \item eventual delivery of bests partitions.
+  \end{inparaenum}
+\end{corollary}
+
+\begin{proof}
+  \TODO{Quite obvious.}
+\end{proof}
+
+
 
 \begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
@@ -346,18 +375,6 @@ Process $b'$ may be in an inconsistent state. Label IV shows the
 corollary issue: Process $b''$ delivered a message from a process that
 may be inconsistent without knowing it.
 
-\begin{corollary}[\label{theo:dcp}Dynamic consistent partitioning]
-  Eventual consistent partitioning in presence of dynamic sources
-  requires
-  \begin{inparaenum}[(i)]
-  \item eventual purging of stale notifications, and
-  \item eventual delivery of bests partitions.
-  \end{inparaenum}
-\end{corollary}
-
-\begin{proof}
-  \TODO{Quite obvious.}
-\end{proof}
 
 \begin{theorem}[\TODO{meow}]
   \TODO{Puring stale notifications requires to handle I...IV.}
