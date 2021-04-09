@@ -42,7 +42,13 @@ broadcast states that \emph{all} correct processes must deliver
 broadcast messages. This proves costly in large scale systems
 comprising thousands of processes. Instead, we define \emph{scoped
 broadcast} where messages reach only interested processes,
-significantly reducing generated traffic.
+significantly reducing generated traffic. \TODO{Epidemic propagation
+  and forwarding are well-aligned with scoped broadcast.}
+
+%% Epidemic
+%% dissemination~\cite{birman1999bimodal} constitutes an efficient
+%% communication pattern to perform such operation. \TODO{More about
+%%   \emph{forwarding}.}
 
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
   When Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
@@ -78,11 +84,12 @@ scopes that exist in the system.
 \label{sec:adaptive}
 
 In this section, we propose to dynamically adapt the scopes of \NAMEB
-using \NAMEB itself for the sake of efficiency. At any time, a process
-decides whether or not it becomes the center (or \emph{source}) of a
-scope (or \emph{partition}). Processes must eventually rally the
-partition corresponding to their closest source despite concurrent
-operations, and dynamic changes in the network.
+using \NAMEB itself for the sake of efficiency. \TODO{States of
+  processes change, predicates change over time.} At any time, a
+process decides whether or not it becomes the center (or
+\emph{source}) of a scope (or \emph{partition}). Processes must
+eventually rally the partition corresponding to their closest source
+despite concurrent operations, and dynamic changes in the network.
 
 \noindent In that regard, we introduce \NAME (stands for
 \underline{A}daptive \underline{S}coped broad\underline{cast}), a
@@ -91,13 +98,9 @@ enables adaptive scoped broadcast in dynamic distributed
 systems. \NAME's operation guarantees that processes eventually reach
 consistent partitioning by efficiently propagating their state
 changes. \NAME's overhead actually depends on its operations and
-current partitions in the system. In other terms,
-\begin{inparaenum}[(i)]
-\item when the system becomes quiescent, processes eventually converge to
-their respective partition and do not require further communication
-afterward; and
-\item processes do not pay the price of past partitioning.
-\end{inparaenum}
+current partitions in the system. When the system becomes quiescent,
+processes eventually converge to their respective partition and do not
+require further communication afterward.
 
 \noindent This section starts by introducing consistent partitioning
 and its implementation when a process can only become a new source to
@@ -116,9 +119,12 @@ new partition in the system by executing an \texttt{Add}
 operation. This partition includes at least its source plus
 neighboring processes that estimate they are closer to this source
 than any other source. Such distance (or \emph{weight}) is
-application-dependant. For instance, weights could be latency in live
-streaming applications, or differences in profiles for recommendation
-systems.
+application-dependant: in the context of maintaining distributed
+indexes, weights are latency.
+
+%For instance, weights could be latency in live
+% streaming applications, or differences in profiles for recommendation
+%systems.
 
 \begin{definition}[\label{def:partitioning}Partitioning]
   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
@@ -149,10 +155,8 @@ to.
 Unfortunately, processes do not share a common global knowledge of the
 network state. For processes to reach consistent partitioning
 together, a process becoming a source must notify every process that
-is closer to it than any other source. Epidemic
-dissemination~\cite{birman1999bimodal} constitutes an efficient
-communication pattern to perform such operation. \TODO{More about
-  \emph{forwarding}.}
+is closer to it than any other source, using \NAMEB for the sake of
+efficiency.
 
 \begin{theorem}[\underline{B}est \underline{e}ventual \underline{f}orwarding $(BEF) \iff CP$]
   Assuming reliable communication links where a correct process $q$
@@ -219,29 +223,8 @@ does not improve its partition distance. Processes $c$ and $d$ will
 never hear of Source~$a$. Ultimately, processes discard last
 transiting messages. The system reached consistent partitioning.
 
-%% However, since processes operate using local knowledge only, generated
-%% traffic may be sub-optimal, for processes may receive, deliver, and
-%% forward messages emanating from a same source simply because it did
-%% not come from the shortest path yet.
-
-%% Transitive relationships ensure that each
-%% process gets its closest source while accumulation of weights ensures
-%% that messages propagation terminates.
-
-%% Interestingly, while the receipt order of messages does not impact on
-%% local control information ($r_b(\alpha_a^{1.5}) \cdot
-%% r_b(\alpha_a^{1}) \Leftrightarrow r_b(\alpha_a^{1}) \cdot
-%% r_b(\alpha_a^{1.5}) \implies \TODO{d_b(\alpha_a^{1})}$), it impacts on
-%% control information broadcast in the network ($r_b(\alpha_a^{1.5})
-%% \cdot r_b(\alpha_a^{1}) \implies b_b(\alpha_{b}^{1.5}) \cdot
-%% b_b(\alpha_{b}^{1})$ while $r_b(\alpha_a^{1}) \cdot
-%% r_b(\alpha_a^{1.5}) \implies b_b(\alpha_a^{1})$).
- 
 While only adding logical partitions to the distributed system is
-straightforward, removing them introduces additional complexity:
-messages of old partitions may stop the notification of best sources,
-for former weights are better than the newly received one. 
-
+straightforward, removing them introduces additional complexity.
 
 \subsection{Dynamic consistent partitioning}
 
@@ -256,7 +239,7 @@ Then, at any time, a source can revoke its self-appointed status of
 source, hence deleting its partition from the system, by executing a
 \texttt{Del} operation. All processes that belong to this partition
 must eventually choose another partition to belong to. In
-Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_c$
+Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_d$
 that respectively include $\{a\}$, and $\{b, c, d\}$. In
 Figure~\ref{fig:delA}, Process $a$ deletes its partition. It notifies
 all neighboring processes -- here only Process $b$ -- that may belong
@@ -264,7 +247,7 @@ to its partition using \NAMEB. Upon receipt, Process $b$ discards the
 message $\delta_a$, for the latter does not target the former's
 partition. Yet, Process $b$ sends its own partition that may be the
 best for Process $a$. Eventually, every processes belong to the same
-partition $P_c$.
+partition $P_d$.
 
 \input{input/figdel.tex}
 
@@ -318,9 +301,9 @@ partitions.
 
 \begin{corollary}[\label{theo:dcp}Dynamic consistent partitioning]
   Consistent partitioning where each process can \texttt{Add} and
-  \texttt{Del} its partition at any time requires 
+  \texttt{Del} its partition at any time requires
   \begin{inparaenum}[(i)]
-  \item eventual purging of stale notifications, and
+  \item eventual purging of stale notifications, then
   \item eventual delivery of bests partitions.
   \end{inparaenum}
 \end{corollary}

@@ -20,7 +20,7 @@
 
   \draw (0 +5pt, 0) --
   node[above=-0.3em, font=\tiny]{$\leftarrow \DEL_d$}
-  node[below=-0.3em, font=\tiny]{$\ADD_d^{2} \rightarrow$}
+  node[below=-0.3em, font=\tiny]{$\textcolor{\PD}{\ADD_d^{2}} \rightarrow$}
   (\X -5pt, 0); %% b - c
 
   \draw [opacity=0] (0, 0 - 5pt) --
@@ -31,8 +31,8 @@
   (0, 0 - 5pt);  %% d - b
   
   \draw (\X + 3pt , 0 - 5pt) --
-  node[above=-0.3em, font=\tiny, sloped]{$\ADD_{a}^{6} \rightarrow$}
-  node[below=-0.3em, font=\tiny, sloped]{$\leftarrow \ADD_{a}^{6}$}
+  node[above=-0.3em, font=\tiny, sloped]{$\textcolor{\PA}{\ADD_{a}^{6}} \rightarrow$}
+  node[below=-0.3em, font=\tiny, sloped]{$\leftarrow \textcolor{\PA}{\ADD_{a}^{6}}$}
   (0 + 5pt, \Y -3pt ); %% c - d
 
 
@@ -47,10 +47,10 @@
   node[color=\PA]{$\bm{d}$} +(-5pt, -5pt)
   rectangle +(5pt, 5pt);
   
-  \draw (-\X+5pt, 5pt) node[above, font=\small]{$\ADD_a \rightarrow \DEL_a$};
-  \draw (\X+5pt, 5pt) node[above, font=\small]{$\ADD_d \rightarrow \DEL_d \rightarrow \textcolor{\PA}{\ADD_a^3}$}; %% c
-  \draw (0, 5pt) node[above, font=\small]{$\ADD_a \rightarrow \textcolor{\PD}{\ADD_d^1}$}; %% b
-  \draw (-5pt, \Y) node[left, font=\small]{$\ADD_d \rightarrow \DEL_d \rightarrow \textcolor{\PA}{\ADD_a^3}$}; %% d
+  \draw (-\X+5pt, 5pt) node[above, font=\small]{$\textcolor{\PA}{\ADD_a} \rightarrow \DEL_a$};
+  \draw (\X+5pt, 5pt) node[above, font=\small]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d \rightarrow \textcolor{\PA}{\ADD_a^3}$}; %% c
+  \draw (0, 5pt) node[above, font=\small]{$\textcolor{\PA}{\ADD_a} \rightarrow \textcolor{\PD}{\ADD_d^1}$}; %% b
+  \draw (-5pt, \Y) node[left, font=\small]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d \rightarrow \textcolor{\PA}{\ADD_a^3}$}; %% d
 
 
 \end{tikzpicture}
