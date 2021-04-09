@@ -275,23 +275,30 @@ impair the propagation of both
 \item notifications about other deleted partitions.
 \end{inparaenum}
 Figure~\ref{fig:problem} highlights such consistency issue with
-dynamic partitions. Both Process~$a$ and Process~$d$ add then delete
-their partition concurrently. Assuming \TODO{FIFO communication
-  links}, Process~$c$ receives, delivers, and forwards $\alpha_d^3$
-followed by $\delta_d$. In the meantime, Process~$b$ receives,
-delivers, and forwards $\alpha_a^2$. In Figure~\ref{fig:problemC},
-both Process~$c$ and Process~$d$ deliver the message about Partition
-$P_a$, for they did not have any known partition at receipt time. On
-the contrary, Process~$b$ delivers $\alpha_d^1$, for it improves its
-distance to a known source. Process~$b$ then blocks Process~$a$'s
-removal notification $\delta_a$. It never reaches Process~$c$ nor
-Process~$d$. Also, Process~$c$ and Process~$d$ do not deliver any
-$\alpha_d$ or $\delta_d$ since they already delivered it. The system
-converges to an unconsistent state where some processes assume they
-belong to a partition while it does not exist any longer.
+dynamic partitions, even in contexts where processes have FIFO links,
+\ie where processes receive the messages in the order of their
+sending. Both Process~$a$ and Process~$d$ add then delete their
+partition concurrently. Process~$c$ receives, delivers, and forwards
+$\alpha_d^3$ followed by $\delta_d$. In the meantime, Process~$b$
+receives, delivers, and forwards $\alpha_a^2$. In
+Figure~\ref{fig:problemC}, both Process~$c$ and Process~$d$ deliver
+the message about Partition $P_a$, for they did not have any known
+partition at receipt time. On the contrary, Process~$b$ delivers
+$\alpha_d^1$, for it improves its distance to a known
+source. Process~$b$ then blocks Process~$a$'s removal notification
+$\delta_a$. It never reaches Process~$c$ nor Process~$d$. Also,
+Process~$c$ and Process~$d$ do not deliver any $\alpha_d$ or
+$\delta_d$ since they already delivered it. The system converges to an
+unconsistent state where some processes assume they belong to a
+partition while it does not exist anymore. Naive propagation of
+$\alpha$ and $\delta$ messages is insufficient to guarantee consistent
+partitioning when each process can add or delete its partition at any
+time.
 
-Dynamic consistent partitioning depends on receipt orders at each
-processes. \TODO{Transition.}
+To identify and solve the issue with dynamic consistent partitioning
+where protocols enable processes to \texttt{Add} and \texttt{Del} at
+any time, we need to further constrain the delivery order at each
+process.
 
 \input{input/figproblem.tex}
 
