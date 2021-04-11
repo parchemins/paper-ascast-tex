@@ -1,40 +1,51 @@
 \begin{abstract}
-%% Context and problem
-  Edge infrastructures have been proposed as an alternative to Cloud
-  Computing to provide computing and storage capabilities closer to
-  the locations where data is generated/consumed, with the objectives
-  of reducing the latency and the volume of data passing through the
-  network. A few systems have been proposed to store data in those
-  infrastructures. Unfortunately, locating the closest copy of a
-  specific content in these systems requires to keep up-to-date an index
-  of all replicas and their respective locations. While flooding
-  approaches will not enable the maintenance of such an index for each
-  node in large systems, relying on a dedicated service contradicts
-  with the properties of Edge infrastructures in terms of locality and
-  robustness (locating sources may effectively take more time than
-  actually downloading contents).
+  %% Context and problem
+  Edge infrastructures constitute an alternative to Cloud Computing
+  that aims at improving on latency and traffic by providing computing
+  and storage capabilities closer to data producers and consumers.
+  %% Edge infrastructures have been proposed as an alternative to Cloud
+  %% Computing to provide computing and storage capabilities closer to
+  %% the locations where data is generated/consumed, with the objectives
+  %% of reducing the latency and the volume of data passing through the
+  %% network.
+  A few systems, such as content delivery networks, replicate and
+  distribute produced data in these infrastructures.
+  % A few systems have been proposed to store data in those
+  % infrastructures.
+  Locating the closest replica of a specific content requires to
+  maintain an up-to-date index of all live replicas along with their
+  respective locations. 
+  %
+  Unfortunately, relying on a centralized service would bring
+  scalability issues, single point of failure, as well as additional
+  middleman latency where locating replicas may effectively take more
+  time than actually downloading contents. Instead, data consumer
+  \processes must maintain an up-to-date index
+  themselves. Unfortunately, maintaining an index of all live replicas
+  at every \process would prove overly costly in terms of memory and
+  generated traffic, especially in large scale dynamic systems where
+  \processes create and destroy replicas at any time.
+  % while flooding approaches will not enable the maintenance of such
+  % an index for each node in large systems, relying on a dedicated
+  % service contradicts with the properties of Edge infrastructures in
+  % terms of locality and robustness
 
 %%% Our proposal
-  In this paper, we introduce \NAME, an efficient broadcast protocol
-  that relies on dynamic logical partitioning of the
-  infrastructure. \NAME only floods the relevant nodes (\ie the ones
-  that should be informed of a the creation of a closest copy),
-  enabling to keep up-to-date an index for each node eventually.  In
-  addition to demonstrating formally the correctness of our protocol \TODO{Is it true?},
-  we discuss several evaluatons performed by simulations and show
-  \TODO{blabla}.  While \NAME tackles our location problem, it can be
-  used as a building block to design new advanced services such as
-  \TODO{blabla}.
-  
+  \noindent In this paper, we introduce \NAME, an efficient and
+  decentralized partitioning protocol for dynamic distributed systems:
+  When a \node hosts a replica, it notifies all and only \nodes (new
+  members of its partition) that are closer from it than any other
+  replica; When a \node destroys a replica, it notifies members of its
+  partition to switch to another closer partition. \NAME guarantees
+  that eventually, every \process knows its best partition, hence its
+  closest replica, despite concurrent operations and receipt orders.
+  Our complexity analysis supported by simulations shows that \NAME
+  scales well in terms of generated traffic and convergence time, for
+  the effect of operations remains lock down to its logical
+  partition. While \NAME tackles our content indexing problem, it can
+  be used as a building block to design new advanced services such as
+  decentralized recommendation systems.
 \end{abstract}
-
-%\TODO{source automatically create
-%    partitions.} \NAME uses epidemic dissemination (\TODO{scoped
-%    flooding}). \TODO{costs of operations.} When the system becomes
-%  quiescent, every process eventually converges to its closest
-%  partition, then \NAME incurs no overhead. \TODO{Proof, simulation,
-%+    testbed?}
-
 
 %%% Local Variables: 
 %%% mode: latex

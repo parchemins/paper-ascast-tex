@@ -10,72 +10,77 @@
 
 Scoped broadcast is a communication primitive that propagates a
 message around its broadcaster within an application-dependant scope.
-For instance, a process from Paris could scoped broadcast messages to
-all processes in Paris; and processes from other cities would never
-deliver such messages. Scoped broadcast allows its implementations to
-reduce generated traffic compared to uniform reliable
-broadcast~\cite{hadzilacos1994modular, raynal2013distributed}, for
-message propagation can stop as soon as messages reach the borders of
-the scope.  This section introduces model and notations to provide a
-general definition of scoped broadcast in distributed
-systems. \TODO{to help understand adaptive scoped broadcast :).}
-\TODO{Better transition to the rest of this section.}
-
+For instance, a \process from Paris could scoped broadcast messages to
+all \processes in Paris; and \processes from other cities would never
+deliver such messages.
+%% Dedicated scoped broadcast implementations
+%% outperform uniform reliable broadcast
+%% implementations~\cite{hadzilacos1994modular, raynal2013distributed}
+%% since the former targets a connected \emph{subset} of the whole
+%% network while the latter targets \emph{all} \processes of the
+%% distributed system.
+Scoped broadcast only targets a connected \emph{subset} of \processes
+in the whole distributed system.
+%
 Distributed systems such as Edge infrastructures comprise
-heterogeneous machines interconnected by communication links. We do
-not consider byzantine processes.
+heterogeneous machines interconnected by communication
+links. \Processes may crash but are not byzantine.
+
+% \TODO{dynamic graph: superscript with $t$?}
 
 \begin{definition}[Fog infrastructure]
   A fog infrastructure is a connected \underline{g}raph $G(V, E)$ of
   \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
-  \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from Process
-  $i$ to Process $j$ is a sequence of vertices $[i, k_1, k_2, \ldots
+  \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from \Process
+  $i$ to \Process $j$ is a sequence of vertices $[i, k_1, k_2, \ldots
     k_n, j]$ with $\forall m: 0\leq m \leq n, \langle \pi_{ij}[m],
   \pi_{ij}[m+1] \rangle \in E$.
 \end{definition}
 
-Processes can send messages to their neighboring processes. Processes
-can reliably broadcast messages by forwarding delivered
-messages~\cite{birman1999bimodal, hadzilacos1994modular,
+\Processes can reliably communicate through asynchronous message
+passing to other known \processes called neighbors. Using epidemic
+propagation (or gossiping), \processes can reliably broadcast messages
+by forwarding delivered messages from neighbors to
+neighbors~\cite{birman1999bimodal, hadzilacos1994modular,
   nedelec2018causal, raynal2013distributed}. However, uniform reliable
-broadcast states that \emph{all} correct processes must deliver
+broadcast states that \emph{all} correct \processes must deliver all
 broadcast messages. This proves costly in large scale systems
-comprising thousands of processes. Instead, we define \emph{scoped
-broadcast} where messages reach only interested processes,
-significantly reducing generated traffic. \TODO{Epidemic propagation
-  and forwarding are well-aligned with scoped broadcast.}
-
-%% Epidemic
-%% dissemination~\cite{birman1999bimodal} constitutes an efficient
-%% communication pattern to perform such operation. \TODO{More about
-%%   \emph{forwarding}.}
+comprising thousands of \processes. Instead, we define \emph{scoped
+broadcast} where messages reach only an application-dependant subset
+of connected \processes, thus significantly reducing the generated
+traffic of broadcast.
 
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
-  When Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
-  \underline{m}essage $m$, every correct Process $y$ within a scope
+  When \Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
+  \underline{m}essage $m$, every correct \process $y$ within a scope
   \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
   $d_y(m)$. The scope depends on the \underline{s}tate $\sigma$ of
-  each process, the \underline{m}etadata $\mu$ piggybacked by each
-  message, and a \underline{p}redicate $\phi$ verified from process to
-  process: $b_x(m) \wedge r_y(m) \implies \exists \pi_{xy}: \forall z
-  \in \pi_{xy}, \phi(\mu_z, \sigma_z)$.
+  each \process, the \underline{m}etadata $\mu$ piggybacked by each
+  message, and a \underline{p}redicate $\phi$ verified from \process to
+  \process: {\small{$b_x(m) \wedge r_y(m) \implies \exists \pi_{xy}: \forall z
+  \in \pi_{xy}, \phi(\mu_z, \sigma_z)$}}.
 \end{definition}
 
-This definition highlights the transitive relevance of messages and
-encompasses more specific definitions of related
-work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}. For
-instance, a process from Paris could scoped broadcast messages to all
-processes in Paris. This requires processes to know the city they are
-in. In another instance, a process from Paris could scoped broadcast
-messages to all processes in Paris plus neighboring cities. This
-requires processes to overload forwarded messages the first time they
-reach another city. The predicate checks if messages already reached
-two distinct cities before delivery. Similarly to uniform reliable
-broadcast, scoped broadcast implementations expose different
-trade-offs on space, time, and communication.
+This definition encompasses more specific definitions of related
+work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}.  This
+definition also highlights that epidemic propagation and scoped
+broadcast have well-aligned preoccupations: It highlights the
+transitive relevance of messages, thus \processes can stop forwarding
+messages as soon as the corresponding predicate becomes unverified.
+For instance, a \process from Paris could scoped broadcast messages to
+all \processes in Paris. This requires \processes to store and
+maintain their city location in their local state. \Processes stop
+delivering and forwarding their received messages when they come from
+a different city.  In another instance, a \process from Paris could
+scoped broadcast messages to all \processes in Paris plus neighboring
+cities. This requires \processes to overload forwarded messages the
+first time they reach another city. The predicate checks if messages
+already reached two distinct cities before delivery. Similarly to
+uniform reliable broadcast, scoped broadcast implementations expose
+different trade-offs on space, time, and communication.
 
 Next Section introduces an adaptive scoped broadcast where the state
-of each process is dynamic and changes depending on all distinct
+of each \process is dynamic and changes depending on all distinct
 scopes that exist in the system.
 
 
@@ -85,9 +90,9 @@ scopes that exist in the system.
 
 In this section, we propose to dynamically adapt the scopes of \NAMEB
 using \NAMEB itself for the sake of efficiency. \TODO{States of
-  processes change, predicates change over time.} At any time, a
-process decides whether or not it becomes the center (or
-\emph{source}) of a scope (or \emph{partition}). Processes must
+  \processes change, predicates change over time.} At any time, a
+\process decides whether or not it becomes the center (or
+\emph{source}) of a scope (or \emph{partition}). \Processes must
 eventually rally the partition corresponding to their closest source
 despite concurrent operations, and dynamic changes in the network.
 
@@ -95,15 +100,15 @@ despite concurrent operations, and dynamic changes in the network.
 \underline{A}daptive \underline{S}coped broad\underline{cast}), a
 wait-free reactive protocol for dynamic logical partitioning that
 enables adaptive scoped broadcast in dynamic distributed
-systems. \NAME's operation guarantees that processes eventually reach
+systems. \NAME's operation guarantees that \processes eventually reach
 consistent partitioning by efficiently propagating their state
 changes. \NAME's overhead actually depends on its operations and
 current partitions in the system. When the system becomes quiescent,
-processes eventually converge to their respective partition and do not
+\processes eventually converge to their respective partition and do not
 require further communication afterward.
 
 \noindent This section starts by introducing consistent partitioning
-and its implementation when a process can only become a new source to
+and its implementation when a \process can only become a new source to
 create a new partition, i.e., it cannot revoke its self-appointed
 status of source. Then, it extends to include the latter behavior: it
 introduces the properties that guarantee consistent partitioning in
@@ -114,10 +119,10 @@ and communication.
 
 \subsection{Consistent partitioning}
 
-At any time, a process can decide to become a source, hence creating a
+At any time, a \process can decide to become a source, hence creating a
 new partition in the system by executing an \texttt{Add}
 operation. This partition includes at least its source plus
-neighboring processes that estimate they are closer to this source
+neighboring \processes that estimate they are closer to this source
 than any other source. Such distance (or \emph{weight}) is
 application-dependant: in the context of maintaining distributed
 indexes, weights are latency.
@@ -128,18 +133,18 @@ indexes, weights are latency.
 
 \begin{definition}[\label{def:partitioning}Partitioning]
   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
-  the \underline{p}artition including at least Process $s$, each
-  process belongs to at most one partition $\forall p,q \in V, \forall
+  the \underline{p}artition including at least \Process $s$, each
+  \process belongs to at most one partition $\forall p,q \in V, \forall
   s_1,s_2 \in S: p \in P_{s_1} \wedge q \in P_{s_2} \implies p \neq q
   \vee s_1 = s_2$, and there exists at least one path $\pi_{ps}$ of
-  processes that belong to this partition $\forall q \in \pi_{ps}: q
+  \processes that belong to this partition $\forall q \in \pi_{ps}: q
   \in P_s$.
 \end{definition}
 
 Definition~\ref{def:scoped} and Definition~\ref{def:partitioning}
-share the transitive relevance of process states. However, we further
+share the transitive relevance of \process states. However, we further
 constrain the partitioning in order to guarantee the existence of
-exactly one consistent partitioning that processes eventually converge
+exactly one consistent partitioning that \processes eventually converge
 to.
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
@@ -147,56 +152,56 @@ to.
   $x$ and $y$, $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to
   $z$ the weight of which $|\Pi_{xz}|$ is lower than any other path
   weight, the only consistent partitioning $\mathcal{P}$ is a set of
-  partitions $P_{s\in S}$ such that each process belongs to a logical
+  partitions $P_{s\in S}$ such that each \process belongs to a logical
   partition comprising its closest source: $\forall p \in P_{s_1},
   \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
 \end{definition}
 
-Unfortunately, processes do not share a common global knowledge of the
-network state. For processes to reach consistent partitioning
-together, a process becoming a source must notify every process that
+Unfortunately, \processes do not share a common global knowledge of the
+network state. For \processes to reach consistent partitioning
+together, a \process becoming a source must notify every \process that
 is closer to it than any other source, using \NAMEB for the sake of
 efficiency.
 
 \begin{theorem}[\underline{B}est \underline{e}ventual \underline{f}orwarding $(BEF) \iff CP$]
-  Assuming reliable communication links where a correct process $q$
+  Assuming reliable communication links where a correct \process $q$
   eventually receives the message $m$ \underline{s}ent to it by a
-  process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a static system ($G^t =
-  G^{t+1}$); assuming local knowledge only, processes eventually reach
-  consistent partitioning if and only if each process eventually
+  \process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a static system ($G^t =
+  G^{t+1}$); assuming local knowledge only, \processes eventually reach
+  consistent partitioning if and only if each \process eventually
   forwards its best known partition.
 \end{theorem}
 
 \TODO{If forwarding defined as send to all neighbors, then it also
-  works in dynamic systems where processes join and edges are added,
-  for when a new neighbor appears, the processes must forward their
+  works in dynamic systems where \processes join and edges are added,
+  for when a new neighbor appears, the \processes must forward their
   best.}
 
 \begin{proof}
   \begin{asparadesc}
-  \item [$BEF \implies CP$:] When a process $s_1$ becomes a source, it
+  \item [$BEF \implies CP$:] When a \process $s_1$ becomes a source, it
     belongs to its own partition, for there exists no better partition
     than its own: $\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1
       p}|$. It broadcasts such message to its neighbors. Since
-    communication channels are reliable, neighboring processes
+    communication channels are reliable, neighboring \processes
     eventually receive such notification. In particular, whatever the
-    order of received messages, every process $p_1$ -- such that there
+    order of received messages, every \process $p_1$ -- such that there
     exists no better partition $s_2$ than the received one -- delivers
     and forwards it: $\forall s_2 \in S: |\Pi_{p s_1}| < |\Pi_{p
       s_2}|$. The notification emanating from $s_1$ transitively
-    reaches all such processes through shortest paths. Since there
-    exists only one best value per process that can never be
-    retracted, processes eventually reach consistent
+    reaches all such \processes through shortest paths. Since there
+    exists only one best value per \process that can never be
+    retracted, \processes eventually reach consistent
     partitioning. \TODO{Rework this with $s_{pq}$ and $r_{pq}$.}
   \item [$CP \implies BEF$:] \TODO{By contradiction, if there is a
-    process $p$ that does not forward, then another process $q$ may
+    \process $p$ that does not forward, then another \process $q$ may
     never gets its best because it needs the weight $W_{pq}$.}
   \end{asparadesc}
 \end{proof}
 
 \begin{algorithm}
   \input{input/algoadd.tex}
-  \caption{\label{algo:add}Adding a partition by Process $p$.}
+  \caption{\label{algo:add}Adding a partition by \Process $p$.}
 \end{algorithm}
 
 \input{input/figadd.tex} 
@@ -205,22 +210,22 @@ Algorithm~\ref{algo:add} shows the instructions that implement such
 consistent partitioning when
 \begin{inparaenum}[(i)]
 \item weights are scalar values,
-\item processes only add new partitions to the system,
-\item and processes never join nor crash nor leave the system.
+\item \processes only add new partitions to the system,
+\item and \processes never join nor crash nor leave the system.
 \end{inparaenum}
 Figure~\ref{fig:add} illustrates its behavior on a system comprising 4
-processes $a$, $b$, $c$, and $d$. Process~$a$ and Process~$d$ become
+\processes $a$, $b$, $c$, and $d$. \Process~$a$ and \Process~$d$ become
 the sources of their partition. They \NAMEB a notification
 \underline{a}dd message: $\alpha_a^0$ and $\alpha_d^0$. They
 initialize their own state with the lowest possible bound $0$ (see
 Line~\ref{line:lowestbound}), and send a message to each of their
 neighbors by accumulating the corresponding edge weight (see
-Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, Process~$b$
+Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, \Process~$b$
 receives $\alpha_{d}^{1}$. Since it improves its own partition
 distance, it keeps it and forwards it to its neighbors. In
-Figure~\ref{fig:addD}, Process~$b$ discards $\alpha_{a}^{2}$, for it
-does not improve its partition distance. Processes $c$ and $d$ will
-never hear of Source~$a$. Ultimately, processes discard last
+Figure~\ref{fig:addD}, \Process~$b$ discards $\alpha_{a}^{2}$, for it
+does not improve its partition distance. \Processes $c$ and $d$ will
+never hear of Source~$a$. Ultimately, \processes discard last
 transiting messages. The system reached consistent partitioning.
 
 While only adding logical partitions to the distributed system is
@@ -228,25 +233,25 @@ straightforward, removing them introduces additional complexity.
 
 \subsection{Dynamic consistent partitioning}
 
-At any time, a process can become a source, hence adding a new
+At any time, a \process can become a source, hence adding a new
 partition to the system. This partition eventually includes all
-processes that are closer from this new source than any other
-else. Processes naturally converge towards their respective best
+\processes that are closer from this new source than any other
+else. \Processes naturally converge towards their respective best
 partition by only piggybacking a monotonically increasing distance in
 forwarded messages.
 
 Then, at any time, a source can revoke its self-appointed status of
 source, hence deleting its partition from the system, by executing a
-\texttt{Del} operation. All processes that belong to this partition
+\texttt{Del} operation. All \processes that belong to this partition
 must eventually choose another partition to belong to. In
 Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_d$
 that respectively include $\{a\}$, and $\{b, c, d\}$. In
-Figure~\ref{fig:delA}, Process $a$ deletes its partition. It notifies
-all neighboring processes -- here only Process $b$ -- that may belong
-to its partition using \NAMEB. Upon receipt, Process $b$ discards the
+Figure~\ref{fig:delA}, \Process $a$ deletes its partition. It notifies
+all neighboring \processes -- here only \Process $b$ -- that may belong
+to its partition using \NAMEB. Upon receipt, \Process $b$ discards the
 message $\delta_a$, for the latter does not target the former's
-partition. Yet, Process $b$ sends its own partition that may be the
-best for Process $a$. Eventually, every processes belong to the same
+partition. Yet, \Process $b$ sends its own partition that may be the
+best for \Process $a$. Eventually, every \processes belong to the same
 partition $P_d$.
 
 \input{input/figdel.tex}
@@ -258,49 +263,49 @@ impair the propagation of both
 \item notifications about other deleted partitions.
 \end{inparaenum}
 Figure~\ref{fig:problem} highlights such consistency issue with
-dynamic partitions, even in contexts where processes have FIFO links,
-\ie where processes receive the messages in the order of their
-sending. Both Process~$a$ and Process~$d$ add then delete their
-partition concurrently. Process~$c$ receives, delivers, and forwards
-$\alpha_d^3$ followed by $\delta_d$. In the meantime, Process~$b$
+dynamic partitions, even in contexts where \processes have FIFO links,
+\ie where \processes receive the messages in the order of their
+sending. Both \Process~$a$ and \Process~$d$ add then delete their
+partition concurrently. \Process~$c$ receives, delivers, and forwards
+$\alpha_d^3$ followed by $\delta_d$. In the meantime, \Process~$b$
 receives, delivers, and forwards $\alpha_a^2$. In
-Figure~\ref{fig:problemC}, both Process~$c$ and Process~$d$ deliver
+Figure~\ref{fig:problemC}, both \Process~$c$ and \Process~$d$ deliver
 the message about Partition $P_a$, for they did not have any known
-partition at receipt time. On the contrary, Process~$b$ delivers
+partition at receipt time. On the contrary, \Process~$b$ delivers
 $\alpha_d^1$, for it improves its distance to a known
-source. Process~$b$ then blocks Process~$a$'s removal notification
-$\delta_a$. It never reaches Process~$c$ nor Process~$d$. Also,
-Process~$c$ and Process~$d$ do not deliver any $\alpha_d$ or
+source. \Process~$b$ then blocks \Process~$a$'s removal notification
+$\delta_a$. It never reaches \Process~$c$ nor \Process~$d$. Also,
+\Process~$c$ and \Process~$d$ do not deliver any $\alpha_d$ or
 $\delta_d$ since they already delivered it. The system converges to an
-unconsistent state where some processes assume they belong to a
+unconsistent state where some \processes assume they belong to a
 partition while it does not exist anymore. Naive propagation of
 $\alpha$ and $\delta$ messages is insufficient to guarantee consistent
-partitioning when each process can add or delete its partition at any
+partitioning when each \process can add or delete its partition at any
 time.
 
 One could solve this issue by always propagating the $\delta$ messages
 corresponding to the $\alpha$ messages it propagated before. In
-Figure~\ref{fig:problem}, it means that as soon as Process~$b$
-forwards $\alpha_a^2$, it assumes that its neighbors Process~$c$ and
-Process~$d$ may need the notification of removal $\delta_a$ if it
-exists. However, such solution also implies that processes generate
+Figure~\ref{fig:problem}, it means that as soon as \Process~$b$
+forwards $\alpha_a^2$, it assumes that its neighbors \Process~$c$ and
+\Process~$d$ may need the notification of removal $\delta_a$ if it
+exists. However, such solution also implies that \processes generate
 traffic not only related to their current partition, but also related
 to partitions they belong to in the past. Instead, we propose to use
-the delivery order at each process to detect possible inconsistencies
-and solve them. Together, processes eventually remove all stale
+the delivery order at each \process to detect possible inconsistencies
+and solve them. Together, \processes eventually remove all stale
 control information (transiting messages and local states) of the
 system leaving room for propagation of messages about up-to-date
 partitions.
 
 %% To identify and solve the issue with dynamic consistent partitioning
-%% where protocols enable processes to \texttt{Add} and \texttt{Del} at
+%% where protocols enable \processes to \texttt{Add} and \texttt{Del} at
 %% any time, we need to further constrain the delivery order at each
-%% process.
+%% \process.
 
 \input{input/figproblem.tex}
 
 \begin{corollary}[\label{theo:dcp}Dynamic consistent partitioning]
-  Consistent partitioning where each process can \texttt{Add} and
+  Consistent partitioning where each \process can \texttt{Add} and
   \texttt{Del} its partition at any time requires
   \begin{inparaenum}[(i)]
   \item eventual purging of stale notifications, then
@@ -321,12 +326,12 @@ partitions.
 \end{definition}
 
 We define a last win order to forbid the delivery of stale information
-emanating from a same process. In other terms, the \emph{best}
-notification message is always the most recent known of each process.
+emanating from a same \process. In other terms, the \emph{best}
+notification message is always the most recent known of each \process.
  
 \begin{definition}[Last win order]
-  When a process $p$ broadcasts two messages $b_p(m) \rightarrow
-  b_p(m')$, no process $q$ can deliver $m$ if it has delivered $m'$:
+  When a \process $p$ broadcasts two messages $b_p(m) \rightarrow
+  b_p(m')$, no \process $q$ can deliver $m$ if it has delivered $m'$:
   $\not\exists q \in V$ with $d_q(m') \rightarrow d_q(m)$.
 \end{definition}
 
@@ -334,28 +339,28 @@ notification message is always the most recent known of each process.
 
 Figure~\ref{fig:proof} depicts the issues with staleness and message
 orderings. In Figure~\ref{fig:proofA}, the shortest path from any
-source to Process $c$ is $[a, b, c]$. However, Process $b$ still holds
+source to \Process $c$ is $[a, b, c]$. However, \Process $b$ still holds
 a stale $\alpha_d^{0.5}$ without knowing. When it receives
-$\alpha_a^1$, it discards it, for it assumes that downstream processes
+$\alpha_a^1$, it discards it, for it assumes that downstream \processes
 are more interested in $\alpha_d^{0.5}$. To reach consistent
-partitioning, Process $b$ first needs to purge its current partition
+partitioning, \Process $b$ first needs to purge its current partition
 to later accept that of its current actual shortest path:
 $\alpha_a^1$.
 
 \noindent Figure~\ref{fig:proofB} shows that removing stale control
-information is even more complex. The removal must reach all processes
+information is even more complex. The removal must reach all \processes
 of the previous shortest path going from $d$ to $b''$. Label I' shows
-the most obvious issue where Process $e$ changed partition for a
+the most obvious issue where \Process $e$ changed partition for a
 better but stale $\alpha_f$. Since it can remember its previous
 deliveries, it could still forward $\delta_d$ for the sake of
-consistency. However, this would lead to every process forwarding
+consistency. However, this would lead to every \process forwarding
 every $\delta$ they ever delivered. Such protocol's overhead would
 depend on past partitioning instead of current one. Label III shows
 the issue when the blocking partition is already known to be stale at
-Process $b'$. Process $b''$ eventually receives $\alpha_f$ from
+\Process $b'$. \Process $b''$ eventually receives $\alpha_f$ from
 $e$. However, it cannot deliver it, for it would break last win order.
-Process $b'$ may be in an inconsistent state. Label IV shows the
-corollary issue: Process $b''$ delivered a message from a process that
+\Process $b'$ may be in an inconsistent state. Label IV shows the
+corollary issue: \Process $b''$ delivered a message from a \process that
 may be inconsistent without knowing it.
 
 
@@ -378,11 +383,11 @@ may be inconsistent without knowing it.
 
 \begin{algorithm}
   \input{input/algoadddelundo.tex}
-  \caption{\label{algo:adddelundo}Dynamic partitioning by Process $p$.}
+  \caption{\label{algo:adddelundo}Dynamic partitioning by \Process $p$.}
 \end{algorithm}
 
 We extend Algorithm~\ref{algo:add} to enable each source to revoke its
-self-appointed status of source and become a simple process again.
+self-appointed status of source and become a simple \process again.
 Algorithm~\ref{algo:adddelundo} provides the instructions that
 implement dynamic consistent partitioning:
 \begin{inparaenum}[(i)]
@@ -399,10 +404,10 @@ While (\ref{algo:most})-(\ref{algo:solves}) tackle the eventual purging of
 stale notifications, (\ref{algo:competition}) tackle the eventual
 delivery of the best up-to-date partitions.
 
-To constrain the order of delivery at each process, each process
+To constrain the order of delivery at each \process, each \process
 implements last win order by maintaining a vector of versions that
 associates to each known source, or has-been source, with its known
-local counter. It enables processes to deliver only up-to-date
+local counter. It enables \processes to deliver only up-to-date
 $\alpha$'s that may improve their best known partition (see
 Line~\ref{line:detectA}), but also to detect possible inconsistent
 partitioning (see Line~\ref{line:detectB}) as labeled by III in
@@ -415,17 +420,17 @@ infinite loop.
 Implementing the propagation of deletes is no different from the
 propagation of adds as hinted in Figure~\ref{fig:proof} with Labels I
 and I'. Messages and comparisons include the local counter of the
-source. When a process receives a better up-to-date partition, it
-delivers and forwards it. When a process receives a delete
+source. When a \process receives a better up-to-date partition, it
+delivers and forwards it. When a \process receives a delete
 notification about its partition, it delivers and forwards it. It is
 worth noting that such $\delta$'s apply to the whole partition. They
 travel in the propagation graph of their partition using all
-communication links, allowing processes to change partition as soon as
+communication links, allowing \processes to change partition as soon as
 possible.
 
-Vectors of versions also allow each process to detect possible last
+Vectors of versions also allow each \process to detect possible last
 win order violations. Upon possible inconsistency, the detecting
-process must remove all $\alpha$ messages originating from it, as
+\process must remove all $\alpha$ messages originating from it, as
 labeled by IV in Figure~\ref{fig:proofB}. Contrarily to delete
 operations, this applies to a sub-partition of the current partition,
 and cannot rely on local counters to
@@ -433,9 +438,9 @@ operate. Algorithm~\ref{algo:adddelundo} implements this behavior by
 piggybacking paths in messages. Paths guarantee that such $\delta$
 messages apply to all and only $\alpha$'s that followed an identical
 path. $\delta$'s propagate in the propagation tree rooted at the
-detecting process. Local states of processes remain unchanged, but
+detecting \process. Local states of \processes remain unchanged, but
 paths in messages monotonically grow. In turns, $\alpha$ and $\delta$
-cannot follow each other in an infinite loop, for a process knows when
+cannot follow each other in an infinite loop, for a \process knows when
 it already received a forwarded a message (see
 Lines~\ref{line:notloopingA} and \ref{line:notloopingB}).
 
@@ -448,45 +453,45 @@ partitioning not only requires the removal of all stale partitions,
 but also the retrieval of the best up-to-date partitions. In that
 regard, $\delta$'s have dual use: since they already reach borders of
 partitions when they remove stale control information, they also
-trigger a competition when reaching such bordering processes (see
+trigger a competition when reaching such bordering \processes (see
 Line~\ref{line:compete}). This simply consists in sending the current
-partition through the communication link from which the process
-received the $\delta$. Upon receipt of this answer, processes act
+partition through the communication link from which the \process
+received the $\delta$. Upon receipt of this answer, \processes act
 normally by propagating their changes when they improve. These adds
 fill the gaps left open by deletes.
 
 \begin{algorithm}
   \input{input/algoedges.tex}
-  \caption{\label{algo:edges}Dynamic partitioning by Process $p$ in dynamic networks.}
+  \caption{\label{algo:edges}Dynamic partitioning by \Process $p$ in dynamic networks.}
 \end{algorithm}
 
 Algorithm~\ref{algo:edges} provides the instructions of \NAME that
 enable dynamic consistent partitioning in dynamic networks where
-processes can join or leave the system without
+\processes can join or leave the system without
 notification. \TODO{More.}
 
 %% Adding new communication links to the network may create shortcuts
-%% between processes. Both processes must send their current best
-%% partition to each other. Upon receipt, they act normally: if a process
+%% between \processes. Both \processes must send their current best
+%% partition to each other. Upon receipt, they act normally: if a \process
 %% finds out that the received partition is closer than its current one,
 %% it delivers it which in turns also triggers another competition
 %% amongst neighbors due to forwarding.
 
 %% \noindent Joining the network is equivalent to add as many
-%% communication links as necessary between the joining process and its
+%% communication links as necessary between the joining \process and its
 %% new neighbors.
 
-%% When removing a communication link between two processes does not
-%% break any active path, because neither distances of processes depend
+%% When removing a communication link between two \processes does not
+%% break any active path, because neither distances of \processes depend
 %% on the other, then nothing needs to be done. \NAME has no overhead.
-%% Unfortunately, when a process' distance depends on the other process,
+%% Unfortunately, when a \process' distance depends on the other \process,
 %% the protocol becomes much more complex. Indeed, this requires to
-%% \TODO{undo} all add messages originated from this process. A message
+%% \TODO{undo} all add messages originated from this \process. A message
 %% must convey the fact that
 %% \begin{inparaenum}[(i)]
-%% \item an edge at a particular process has been removed, and
-%% \item the distance that has been delivered by a process comes from
-%%   this particular process.
+%% \item an edge at a particular \process has been removed, and
+%% \item the distance that has been delivered by a \process comes from
+%%   this particular \process.
 %% \end{inparaenum}
 
 
@@ -497,7 +502,7 @@ notification. \TODO{More.}
 %%   \centering\input{input/figAS.tex}
 %%   \caption{\label{fig:AS}Inter autonomous systems
 %%     partitioning. \TODO{More about relative ordering of links at each
-%%       process}}
+%%       \process}}
 %% \end{figure}
 
 %% In this section, we aim at solving Problem Statement~\ref{prob:inter}
@@ -516,31 +521,31 @@ notification. \TODO{More.}
 
 %% \begin{algorithm}
 %%   \input{input/algoaaaa.tex}
-%%   \caption{\label{algo:aaaa}\NAMEB running at Process $p$ for dynamic
+%%   \caption{\label{algo:aaaa}\NAMEB running at \Process $p$ for dynamic
 %%     partitioning in inter-autonomous systems.}
 %% \end{algorithm}
 
 %% Figure~\ref{fig:AS} shows an example of inter-AS logical partitioning
-%% where each process ranks its communication links, and each process
+%% where each \process ranks its communication links, and each \process
 %% forwards messages to its neighbors starting from the rank of the link
 %% that triggered the receipt, to its highest rank neighbors. In this
-%% example, Process $e$ adds a partition. It forwards the generated
+%% example, \Process $e$ adds a partition. It forwards the generated
 %% message to all its neighbors as if it received it from its lowest rank
-%% links. When Process $a$ receives $\alpha_e^1$ from its rank-$0$ link,
-%% it forwards it to rank-$0$ links and rank-$1$ links.  Process $b$
+%% links. When \Process $a$ receives $\alpha_e^1$ from its rank-$0$ link,
+%% it forwards it to rank-$0$ links and rank-$1$ links.  \Process $b$
 %% stops the propagation, for all its links have lower ranks than the one
 %% from which it received the message $\alpha_e^2$. Ultimately, the
-%% partition includes Process $e$, Process $a$, and Process $b$. Process
-%% $c$ and Process $d$ remain unaware of the new \TODO{object}.
+%% partition includes \Process $e$, \Process $a$, and \Process $b$. \Process
+%% $c$ and \Process $d$ remain unaware of the new \TODO{object}.
 
 %% To ease the reasoning about inter-AS dynamic partitioning in dynamic
 %% networks, \NAME runs an independent broadcast protocol for each
 %% object, and for each rank of links.  \TODO{Not so easy\ldots}
 %% \TODO{Write and describe algo.} \TODO{Overhead of separating things,
 %%   slightly more memory, but traffic wise? slower ?}  \TODO{In the
-%%   example, not only Process $b$ keeps $e_1$ as its best partition, but
+%%   example, not only \Process $b$ keeps $e_1$ as its best partition, but
 %%   it keeps it for links of rank 0, and links of rank 1.}  When there
-%% are no ranking in links, processes solely rely on
+%% are no ranking in links, \processes solely rely on
 %% Algorithm~\ref{algo:adddelundo} for optimal partitioning.
 
 
@@ -553,32 +558,32 @@ We focus on average-case and worst-case complexity. We divide our
 analysis into space, time, and communication complexity.
 
 \paragraph{Space.}
-Each process needs to maintain a vector of versions the size of which
+Each \process needs to maintain a vector of versions the size of which
 depends on the number of sources. In the worst case, the size of this
 vector increases linearly with the number of distinct sources that
-ever existed in the system. For the sake of last win order, processes
+ever existed in the system. For the sake of last win order, \processes
 can never purge this vector from any entry. \TODO{Even when the
-  process leaves the system.} Fortunately, scoped broadcast limits
-message propagation to interested processes. A process at a side of
+  \process leaves the system.} Fortunately, scoped broadcast limits
+message propagation to interested \processes. A \process at a side of
 the system may never hear of a source at the other side of the
 system. In turns, it may never have to maintain an entry for this
 source. \TODO{This is application-dependent?}
 
-\noindent Each process must also maintain the partition it belongs to,
+\noindent Each \process must also maintain the partition it belongs to,
 along with its control information. Among other, it must maintain a
 path the size of which depends on the membership size of the
 partition. In the worst case, this path includes the identity of every
-process of the system that currently belong to the system. Eventually,
+\process of the system that currently belong to the system. Eventually,
 the size of this path increases linearly with the diameter of the
 current partition. \TODO{assuming weight equals 1 \ldots}
 
 \paragraph{\TODO{Time.}}
 In terms of processing time, whatever the operation, it increases
-linearly with the number of neighbors of the process. It scales well,
+linearly with the number of neighbors of the \process. It scales well,
 for the number of neighbors is commonly order of magnitude lower than
-the number of processes in the system. For instance, random networks
+the number of \processes in the system. For instance, random networks
 only require $O(\log(|V|))$ neighbors to work properly \REF; and
-processes in autonomous systems have in average \TODO{X} neighbors
+\processes in autonomous systems have in average \TODO{X} neighbors
 \REF. Lines~\ref{line:notloopingA} and \ref{line:notloopingB} can
 prove costly depending on the data structure encoding paths. Using
 Bloom filters however, this is \TODO{efficient}: it depends on the
@@ -591,21 +596,21 @@ the gaps left open by the removal. \TODO{More.}
 
 \paragraph{\TODO{Communication.}}
 In terms of number of messages required to reach optimal
-partitioning. In the average-case, a process $i$ chosen uniformly at
-random among all processes creates a logical partition. Its messages
-$\alpha_i$ propagate through the network until reaching processes that
+partitioning. In the average-case, a \process $i$ chosen uniformly at
+random among all \processes creates a logical partition. Its messages
+$\alpha_i$ propagate through the network until reaching \processes that
 belong to another partition closer to them. This splits partitions in
 half in average. Overall, the $a^{th}$ new partition comprises
 \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor \log_2 a \rfloor}})$}
-processes. This decreases every new partition until reaching $0$
-processes per new partition: even the chosen process already belongs
-to its optimal partition. The average number of messages per process
+\processes. This decreases every new partition until reaching $0$
+\processes per new partition: even the chosen \process already belongs
+to its optimal partition. The average number of messages per \process
 is \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
       \rfloor}})$}. \TODO{Multiple receipt and multiple delivery imply
   more messages (receipt bounded by $|O|$ as well).} Deleting the
 $a^{th}$ partition generates the exact same number of messages than
 the $a^{th}$ partition creation. \TODO{But what about echos?} In the
-worst-case, every new partition includes all but one process belonging
+worst-case, every new partition includes all but one \process belonging
 to the previous partition. The total number of messages after the
 $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot a^2)$. As
 for the average-case, the number of messages for the partition
