@@ -6,8 +6,8 @@
 \LinesNumbered
 
 $O_p$, $W_p$\tcp*[r]{set of neighbors and weights}
-$s \leftarrow \varnothing$ \tcp*[r]{best source of partition}
-$d \leftarrow \infty$ \tcp*[r]{smallest distance to $s$}
+$s \leftarrow \varnothing$ \tcp*[r]{best source of partition ($\sigma$)}
+$d \leftarrow \infty$ \tcp*[r]{smallest distance to $s$ ($\sigma$ and $\mu$)}
 
 
 \BlankLine
@@ -19,7 +19,7 @@ $d \leftarrow \infty$ \tcp*[r]{smallest distance to $s$}
 \BlankLine
 
 \Function{\textup{receiveAdd($q$, $s'$, $d'$)} \tcp*[f]{$r_p(\alpha_{s'}^{d'})$ from $q$}} {
-  \If { $d' < d$ } {
+  \If (\tcp*[f]{($\phi$)}){$d' < d$} {
       $s \leftarrow s'$ \tcp*[r]{\smash{$d_p(\alpha_{s'}^{d'})$}}
       $d \leftarrow d'$ \;
 
@@ -28,6 +28,12 @@ $d \leftarrow \infty$ \tcp*[r]{smallest distance to $s$}
           \tcp*[r]{\smash{$s_{pn}(\alpha_{s'}^{d'+w_{pn}})$}}
        }      
   }
+}
+
+\BlankLine
+
+\Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$}} {
+  \lIf { $d < \infty$} {\textup{send$_q$($s, d + W_{pq}$)}}
 }
 
 

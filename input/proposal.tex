@@ -13,12 +13,6 @@ message around its broadcaster within an application-dependant scope.
 For instance, a \process from Paris could scoped broadcast messages to
 all \processes in Paris; and \processes from other cities would never
 deliver such messages.
-%% Dedicated scoped broadcast implementations
-%% outperform uniform reliable broadcast
-%% implementations~\cite{hadzilacos1994modular, raynal2013distributed}
-%% since the former targets a connected \emph{subset} of the whole
-%% network while the latter targets \emph{all} \processes of the
-%% distributed system.
 Scoped broadcast only targets a connected \emph{subset} of \processes
 in the whole distributed system.
 %
@@ -89,12 +83,13 @@ scopes that exist in the system.
 \label{sec:adaptive}
 
 In this section, we propose to dynamically adapt the scopes of \NAMEB
-using \NAMEB itself for the sake of efficiency. \TODO{States of
-  \processes change, predicates change over time.} At any time, a
-\process decides whether or not it becomes the center (or
-\emph{source}) of a scope (or \emph{partition}). \Processes must
-eventually rally the partition corresponding to their closest source
-despite concurrent operations, and dynamic changes in the network.
+using \NAMEB itself for the sake of efficiency: a \NAMEB message may
+modify the state of a \process, consequently changing predicate
+evaluations over deliveries.  At any time, a \process decides whether
+or not it becomes the center (or \emph{source}) of a scope (or
+\emph{partition}). \Processes must eventually rally the partition
+corresponding to their closest source despite concurrent operations,
+and dynamic changes in the network.
 
 \noindent In that regard, we introduce \NAME (stands for
 \underline{A}daptive \underline{S}coped broad\underline{cast}), a
@@ -148,51 +143,48 @@ exactly one consistent partitioning that \processes eventually converge
 to.
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
-  Let $W_{xy} = W_{yx}$ be the symmetric \underline{w}eight between
-  $x$ and $y$, $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to
-  $z$ the weight of which $|\Pi_{xz}|$ is lower than any other path
-  weight, the only consistent partitioning $\mathcal{P}$ is a set of
-  partitions $P_{s\in S}$ such that each \process belongs to a logical
-  partition comprising its closest source: $\forall p \in P_{s_1},
-  \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
+  Let $W_{xy} = W_{yx}$ be the positive symmetric \underline{w}eight
+  between $x$ and $y$, $\Pi_{xz}$ be the shortest \underline{p}ath
+  from $x$ to $z$ the weight of which $|\Pi_{xz}|$ is lower than any
+  other path weight, the only consistent partitioning $\mathcal{P}$ is
+  a set of partitions $P_{s\in S}$ such that each \process belongs to
+  a logical partition comprising its closest source: $\forall p \in
+  P_{s_1}, \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
 \end{definition}
 
-Unfortunately, \processes do not share a common global knowledge of the
-network state. For \processes to reach consistent partitioning
+Unfortunately, \processes do not share a common global knowledge of
+the network state. For \processes to reach consistent partitioning
 together, a \process becoming a source must notify every \process that
-is closer to it than any other source, using \NAMEB for the sake of
-efficiency.
+is closer to it than any other source. As stated in
+Section~\ref{sec:scoped}, since epidemic dissemination and scoped
+broadcast have well-aligned preoccupations, we assume implementations
+relying on forwarding of messages from neighbor to neighbor. 
 
 \begin{theorem}[\underline{B}est \underline{e}ventual \underline{f}orwarding $(BEF) \iff CP$]
   Assuming reliable communication links where a correct \process $q$
   eventually receives the message $m$ \underline{s}ent to it by a
-  \process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a static system ($G^t =
-  G^{t+1}$); assuming local knowledge only, \processes eventually reach
-  consistent partitioning if and only if each \process eventually
-  forwards its best known partition.
+  \process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a monotonically
+  growing system ($G^t \subseteq G^{t+1}$); \processes eventually
+  reach consistent partitioning if and only if each \process
+  eventually forwards its best known partition.
 \end{theorem}
-
-\TODO{If forwarding defined as send to all neighbors, then it also
-  works in dynamic systems where \processes join and edges are added,
-  for when a new neighbor appears, the \processes must forward their
-  best.}
 
 \begin{proof}
   \begin{asparadesc}
-  \item [$BEF \implies CP$:] When a \process $s_1$ becomes a source, it
-    belongs to its own partition, for there exists no better partition
-    than its own: $\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1
-      p}|$. It broadcasts such message to its neighbors. Since
-    communication channels are reliable, neighboring \processes
-    eventually receive such notification. In particular, whatever the
-    order of received messages, every \process $p_1$ -- such that there
-    exists no better partition $s_2$ than the received one -- delivers
-    and forwards it: $\forall s_2 \in S: |\Pi_{p s_1}| < |\Pi_{p
-      s_2}|$. The notification emanating from $s_1$ transitively
+  \item [$BEF \implies CP$:] When a \process $s_1$ becomes a source,
+    it belongs to its own partition, for there exists no better
+    partition than its own: $\forall p \in V: |\Pi_{s_1 s_1}| <
+    |\Pi_{s_1 p}|$. It forwards such message to its neighbors. Since
+    communication links are reliable, neighboring \processes
+    eventually receive such notification. Most importantly, whatever
+    the order of received messages, every \process $p_1$ -- such that
+    there exists no better partition $s_2$ than the received one --
+    delivers and forwards it: $\forall s_2 \in S: |\Pi_{p s_1}| <
+    |\Pi_{p s_2}|$. The message originating from $s_1$ transitively
     reaches all such \processes through shortest paths. Since there
     exists only one best value per \process that can never be
     retracted, \processes eventually reach consistent
-    partitioning. \TODO{Rework this with $s_{pq}$ and $r_{pq}$.}
+    partitioning. % \TODO{Rework this with $s_{pq}$ and $r_{pq}$.}
   \item [$CP \implies BEF$:] \TODO{By contradiction, if there is a
     \process $p$ that does not forward, then another \process $q$ may
     never gets its best because it needs the weight $W_{pq}$.}
@@ -277,7 +269,7 @@ source. \Process~$b$ then blocks \Process~$a$'s removal notification
 $\delta_a$. It never reaches \Process~$c$ nor \Process~$d$. Also,
 \Process~$c$ and \Process~$d$ do not deliver any $\alpha_d$ or
 $\delta_d$ since they already delivered it. The system converges to an
-unconsistent state where some \processes assume they belong to a
+inconsistent state where some \processes assume they belong to a
 partition while it does not exist anymore. Naive propagation of
 $\alpha$ and $\delta$ messages is insufficient to guarantee consistent
 partitioning when each \process can add or delete its partition at any
