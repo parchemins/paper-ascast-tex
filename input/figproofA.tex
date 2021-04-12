@@ -5,23 +5,23 @@
   \medmuskip=0mu
   \thinmuskip=0mu
   
-  \newcommand\X{70pt}
+  \newcommand\X{85pt}
   \newcommand\Y{-40pt}
 
   \newcommand\ADD{\alpha}
   \newcommand\DEL{\delta}
 
-  \draw[opacity=0] (-1.5*\X, 0) -- (1.5*\X, 0);
+  \draw[opacity=0] (-1.4*\X, 0) -- (1.4*\X, 0);
   
 
 
-  \draw[<->] (-5pt - \X, -\Y) -- node[above]{I} (5pt, -\Y); %% I
+  \draw[<->] (-5pt - \X, -\Y) -- node[above]{I: propagation} (5pt, -\Y); %% I
   
   \draw[->] (-\X + 5pt, 0) --
   node[above, color=\PA, font=\small]{$\ADD_a^1$}
   (0 - 5pt, 0); %% a - b
 
-  \draw[<->] (-5pt, 5pt -\Y) -- node[above]{II} (5pt + \X, 5pt -\Y); %% II
+  \draw[<->] (-5pt, 5pt -\Y) -- node[above]{II: need I', III, IV} (5pt + \X, 5pt -\Y); %% II
   \draw[->] (0 + 5pt, 0) -- (-5pt +  \X, 0); %% b - c
 
 
@@ -35,6 +35,6 @@
   \draw (-\X, 5pt) node[above, color=\PA]{$\ADD_a^0$};
   \draw ( 0, 5pt) node[above, color=\WRONG]{$\ADD_d^{0.5}$};
   \draw (\X,-5pt) node[below, font=\scriptsize]{expect \textcolor{\PA}{$\alpha_a$}};
-  \draw (0, -5pt) node[below, font=\scriptsize]{expect $\textcolor{\PC}{\DEL_d} \rightarrow \textcolor{\PA}{\alpha_a}$};
+  \draw (0, -5pt) node[below, font=\scriptsize]{expect $\DEL_d \rightarrow \textcolor{\PA}{\alpha_a}$};
 
 \end{tikzpicture}

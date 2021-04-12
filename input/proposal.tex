@@ -234,6 +234,7 @@ While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity.
 
 \subsection{Dynamic consistent partitioning}
+\label{subsec:dynamic}
 
 At any time, a \process can become a source, hence adding a new
 partition to the system. This partition eventually includes all
@@ -242,19 +243,39 @@ else. \Processes naturally converge towards their respective best
 partition by only piggybacking a monotonically increasing distance in
 forwarded messages.
 
-Then, at any time, a source can revoke its self-appointed status of
-source, hence deleting its partition from the system, by executing a
+At any time, a source can revoke its self-appointed status of source,
+hence deleting its partition from the system, by executing a
 \texttt{Del} operation. All \processes that belong to this partition
 must eventually choose another partition to belong to. In
 Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_d$
 that respectively include $\{a\}$, and $\{b, c, d\}$. In
 Figure~\ref{fig:delA}, \Process $a$ deletes its partition. It notifies
-all neighboring \processes -- here only \Process $b$ -- that may belong
-to its partition using \NAMEB. Upon receipt, \Process $b$ discards the
-message $\delta_a$, for the latter does not target the former's
-partition. Yet, \Process $b$ sends its own partition that may be the
-best for \Process $a$. Eventually, every \processes belong to the same
-partition $P_d$.
+all neighboring \processes -- here only \Process $b$ -- that may
+belong to its partition using \NAMEB. Upon receipt, \Process $b$
+discards the message $\delta_a$, for the latter does not target the
+former's partition. \Process $b$ sends its own knowledge of best
+partition $\alpha_d^3$ that may prove to be the best for \Process
+$a$. Eventually, every \processes belong to the same partition
+$P_d$. In this scenario, they reach consistent partitioning.
+
+\texttt{Del}ete operations add a new notion of order between events,
+and most importantly between message deliveries. Delete operations
+implicitly state that all preceding events become obsolete, and that
+all messages originating from these preceding events convey stale
+control information.
+
+\begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
+  The transitive, irreflexive, and antisymmetric happens-before
+  relationship defines a strict partial order between events. Two
+  messages are concurrent if none happens before the other.
+\end{definition}
+
+\begin{definition}[Last win order]
+  When a \process $p$ broadcasts two messages $b_p(m) \rightarrow
+  b_p(m')$, no \process $q$ can deliver $m$ if it has delivered $m'$:
+  $\not\exists q \in V$ with $d_q(m') \rightarrow d_q(m)$, for $m'$
+  convey \emph{stale} control information.
+\end{definition}
 
 \input{input/figdel.tex}
 
@@ -283,59 +304,49 @@ inconsistent state where some \processes assume they belong to a
 partition while it does not exist anymore. Naive propagation of
 $\alpha$ and $\delta$ messages is insufficient to guarantee consistent
 partitioning when each \process can add or delete its partition at any
-time.
+time. \Processes need to exploit their local knowledge gathered over
+message receipts.
 
-One could solve this issue by always propagating the $\delta$ messages
-corresponding to the $\alpha$ messages it propagated before. In
-Figure~\ref{fig:problem}, it means that as soon as \Process~$b$
-forwards $\alpha_a^2$, it assumes that its neighbors \Process~$c$ and
-\Process~$d$ may need the notification of removal $\delta_a$ if it
-exists. However, such solution also implies that \processes generate
-traffic not only related to their current partition, but also related
-to partitions they belong to in the past. Instead, we propose to use
-the delivery order at each \process to detect possible inconsistencies
-and solve them. Together, \processes eventually remove all stale
-control information (transiting messages and local states) of the
-system leaving room for propagation of messages about up-to-date
-partitions.
+\input{input/figproblem.tex}
+
+One could guarantee consistent partitioning by always propagating the
+$\delta$ messages corresponding to the $\alpha$ messages it propagated
+before. In Figure~\ref{fig:problem}, it means that as soon as
+\Process~$b$ forwards $\alpha_a^2$, it assumes that its neighbors
+\Process~$c$ and \Process~$d$ may need the notification of removal
+$\delta_a$ if it exists. However, such solution also implies that
+\processes generate traffic not only related to their current
+partition, but also related to partitions they belong to in the
+past. Instead, we propose to use the delivery order at each \process
+to detect possible inconsistencies and solve them. Together,
+\processes eventually remove all stale control information (transiting
+messages and local states) of the system leaving room for propagation
+of messages about up-to-date partitions.
 
 %% To identify and solve the issue with dynamic consistent partitioning
 %% where protocols enable \processes to \texttt{Add} and \texttt{Del} at
 %% any time, we need to further constrain the delivery order at each
 %% \process.
 
-\input{input/figproblem.tex}
-
 \begin{corollary}[\label{theo:dcp}Dynamic consistent partitioning]
   Consistent partitioning where each \process can \texttt{Add} and
-  \texttt{Del} its partition at any time requires
+  \texttt{Del}ete its partition at any time requires
   \begin{inparaenum}[(i)]
-  \item eventual purging of stale notifications, then
+  \item eventual purging of stale notifications, and
   \item eventual delivery of bests partitions.
   \end{inparaenum}
 \end{corollary}
 
 \begin{proof}
-  \TODO{Quite obvious.}
+  \Processes deliver and forward the best sum of weights they
+  received. The only case where a \process would block such epidemic
+  propagation would be when it received and delivered a message from a
+  partition that has since then been deleted but with a better sum of
+  weights than newly received ones. Removing \emph{forever} all such
+  stale messages about deleted partitions would allow \processes to
+  propagate their best up-to-date partition again, eventually reaching
+  consistent partition together.
 \end{proof}
-
-
-
-\begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
-  The transitive, irreflexive, and antisymmetric happens-before
-  relationship defines a strict partial order between events. Two
-  messages are concurrent if none happens before the other.
-\end{definition}
-
-We define a last win order to forbid the delivery of stale information
-emanating from a same \process. In other terms, the \emph{best}
-notification message is always the most recent known of each \process.
- 
-\begin{definition}[Last win order]
-  When a \process $p$ broadcasts two messages $b_p(m) \rightarrow
-  b_p(m')$, no \process $q$ can deliver $m$ if it has delivered $m'$:
-  $\not\exists q \in V$ with $d_q(m') \rightarrow d_q(m)$.
-\end{definition}
 
 \input{input/figproof.tex}
 
@@ -366,7 +377,8 @@ corollary issue: \Process $b''$ delivered a message from a \process that
 may be inconsistent without knowing it.
 
 
-\begin{theorem}[\TODO{meow}]
+\begin{theorem}[Propagation $+$ detection $\implies$ DCP]
+  % Propagating 
   \TODO{Puring stale notifications requires to handle I...IV.}
 \end{theorem}
 
@@ -383,13 +395,6 @@ may be inconsistent without knowing it.
 
 \subsection{Implementation}
 
-\begin{algorithm}
-  \input{input/algoadddelundo.tex}
-  \caption{\label{algo:adddelundo}Dynamic partitioning by \Process $p$.}
-\end{algorithm}
-
-We extend Algorithm~\ref{algo:add} to enable each source to revoke its
-self-appointed status of source and become a simple \process again.
 Algorithm~\ref{algo:adddelundo} provides the instructions that
 implement dynamic consistent partitioning:
 \begin{inparaenum}[(i)]
@@ -405,6 +410,11 @@ implement dynamic consistent partitioning:
 While (\ref{algo:most})-(\ref{algo:solves}) tackle the eventual purging of
 stale notifications, (\ref{algo:competition}) tackle the eventual
 delivery of the best up-to-date partitions.
+
+\begin{algorithm}
+  \input{input/algoadddelundo.tex}
+  \caption{\label{algo:adddelundo}Dynamic partitioning by \Process $p$.}
+\end{algorithm}
 
 To constrain the order of delivery at each \process, each \process
 implements last win order by maintaining a vector of versions that
