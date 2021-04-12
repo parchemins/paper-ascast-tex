@@ -160,35 +160,44 @@ Section~\ref{sec:scoped}, since epidemic dissemination and scoped
 broadcast have well-aligned preoccupations, we assume implementations
 relying on forwarding of messages from neighbor to neighbor. 
 
-\begin{theorem}[\underline{B}est \underline{e}ventual \underline{f}orwarding $(BEF) \iff CP$]
+\begin{theorem}[\underline{B}est \underline{e}ventual \underline{f}orwarding $(BEF) \implies CP$]
   Assuming reliable communication links where a correct \process $q$
   eventually receives the message $m$ \underline{s}ent to it by a
   \process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a monotonically
   growing system ($G^t \subseteq G^{t+1}$); \processes eventually
-  reach consistent partitioning if and only if each \process
-  eventually forwards its best known partition.
+  reach consistent partitioning if each \process eventually forwards
+  its best known partition.
 \end{theorem}
 
 \begin{proof}
-  \begin{asparadesc}
-  \item [$BEF \implies CP$:] When a \process $s_1$ becomes a source,
-    it belongs to its own partition, for there exists no better
-    partition than its own: $\forall p \in V: |\Pi_{s_1 s_1}| <
-    |\Pi_{s_1 p}|$. It forwards such message to its neighbors. Since
-    communication links are reliable, neighboring \processes
-    eventually receive such notification. Most importantly, whatever
-    the order of received messages, every \process $p_1$ -- such that
-    there exists no better partition $s_2$ than the received one --
-    delivers and forwards it: $\forall s_2 \in S: |\Pi_{p s_1}| <
-    |\Pi_{p s_2}|$. The message originating from $s_1$ transitively
-    reaches all such \processes through shortest paths. Since there
-    exists only one best value per \process that can never be
-    retracted, \processes eventually reach consistent
-    partitioning. % \TODO{Rework this with $s_{pq}$ and $r_{pq}$.}
-  \item [$CP \implies BEF$:] \TODO{By contradiction, if there is a
-    \process $p$ that does not forward, then another \process $q$ may
-    never gets its best because it needs the weight $W_{pq}$.}
-  \end{asparadesc}
+  % \begin{asparadesc}
+  % \item [$BEF \implies CP$:]
+  When a \process $s_1$ becomes a source, it belongs to its own
+  partition, for there exists no better partition than its own:
+  $\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1 p}|$. It delivers,
+  hence forwards such $\alpha$ message to its -- current or future --
+  neighbors. Since communication links are reliable, neighboring
+  \processes eventually receive such notification $\forall \langle
+  s_1, q \rangle \in E, s_1 \in S \iff \eventually
+  r_q(\alpha_{s_1}^{w_{s_1 q}})$. Most importantly, whatever the order
+  of received messages, every \process $q'$ in this neighborhood --
+  such that there exists no better partition $s_2$ than the received
+  one -- delivers and forwards it: $\forall s_2 \in S: |\Pi_{q' s_1}|
+  < |\Pi_{q' s_2}| \implies \eventually d_{q'}(\alpha_{s_1}^{w_{s_1
+      q'}})$. By transitivity, the message originating from $s_1$
+  transitively reaches all such \processes through their shortest
+  paths: $\forall q'' \in V, s_1, s_2 \in S: |\Pi_{q'' s_1}| <
+  |\Pi_{q'' s_2}| \implies \eventually d_{q''}(\alpha_{s_1}^{|\Pi_{s_1
+      q''}|})$.  Since there exists only one best sum of weights per
+  \process that can never be retracted, \processes eventually reach
+  consistent partitioning.
+  %% /!\ not equivalence for there exists other implementations.
+  %% \item [$CP \implies BEF$:] By contradiction, if a \process $q \in
+  %%   \Pi_{sp} = [s, \ldots, q, q', \ldots, p]$ with $s, q, p \in P_s$
+  %%   does not forward its received $\alpha_s^{|\Pi_{sq}|}$, then
+  %%   following \processes from $q'$ to $p$ may mistake another
+  %%   partition for their  because it needs the weight $W_{pq}$.
+  %% \end{asparadesc}
 \end{proof}
 
 \begin{algorithm}
@@ -203,11 +212,11 @@ consistent partitioning when
 \begin{inparaenum}[(i)]
 \item weights are scalar values,
 \item \processes only add new partitions to the system,
-\item and \processes never join nor crash nor leave the system.
+\item and \processes never crash nor leave the system.
 \end{inparaenum}
 Figure~\ref{fig:add} illustrates its behavior on a system comprising 4
-\processes $a$, $b$, $c$, and $d$. \Process~$a$ and \Process~$d$ become
-the sources of their partition. They \NAMEB a notification
+\processes $a$, $b$, $c$, and $d$. \Process~$a$ and \Process~$d$
+become the sources of their partition. They \NAMEB a notification
 \underline{a}dd message: $\alpha_a^0$ and $\alpha_d^0$. They
 initialize their own state with the lowest possible bound $0$ (see
 Line~\ref{line:lowestbound}), and send a message to each of their
@@ -218,7 +227,8 @@ distance, it keeps it and forwards it to its neighbors. In
 Figure~\ref{fig:addD}, \Process~$b$ discards $\alpha_{a}^{2}$, for it
 does not improve its partition distance. \Processes $c$ and $d$ will
 never hear of Source~$a$. Ultimately, \processes discard last
-transiting messages. The system reached consistent partitioning.
+transiting messages. Despite the obvious lack of traffic optimization,
+the system reach consistent partitioning.
 
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity.
