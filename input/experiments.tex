@@ -98,17 +98,60 @@ means that \NAME's overhead actually depends on its usage.
 
 %% \subsection{Distribution and hotspots}
 
-\subsection{Inter-autonomous systems}
+% \subsection{Confirm the relevance of \NAME in the context of dynamic inter-autonomous
+%   system communications.}
+\subsection{Confirm that \NAME locks down the traffic of decentralized content
+  indexing in the context of dynamic inter-autonomous system
+  communications.}
 
 \begin{figure}
   \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_geant.eps}
-  \caption{\label{fig:complexity}Overhead of, and time before,
-    reaching consistent partitioning using \NAME.}
+  \caption{\label{fig:geant}\TODO{Figure caption}}
 \end{figure}
 
 \begin{asparadesc}
-\item [Description:] \TODO{miaw.}
-\item [Results:] \TODO{meow.}
+\item [Description:]
+
+We build a network by duplicating the G{\'E}ANT topology -- a real
+infrastructure spanning across Europe -- and by connecting these two
+clusters with a high latency link: $200$ ms simulating
+cross-continental communications such as Europe-America. The
+experiments comprise $2 \times 271 = 542$ \processes and we derive
+intra-cluster latency from \processes' geographic location~\REF.
+
+\noindent We evaluate the traffic of \NAME by measuring the average
+number of messages per \process over the experiments. In the first
+experiment, at $50$ ms, only one process becomes source, hence there
+is only one partition for the whole distributed system. In the second
+experiment, at $50$ ms, two processes become sources, one per
+cluster. Afterwards both scenarios are identical. At $500$ ms, we
+remove the link between the two clusters. At $1200$ ms, we insert this
+link again.
+
+\item [Results:]
+
+Figure~\ref{fig:geant} shows the results of this experimentation. The
+top part corresponds to the one source experiment, while the bottom
+part corresponds to the one source per cluster experiment.
+
+\noindent Figure~\ref{fig:geant} confirms that concurrent \texttt{Add}
+may generate additional traffic, for processes may deliver and forward
+a partition only to later realize that they have a closer source.
+
+\noindent Figure~\ref{fig:geant} highlights that removing the
+inter-continental link generates additional traffic. The cluster cut
+off the source must remove control information about this
+source. \TODO{There are both $\alpha$s and $\delta$s.}  \TODO{The
+  protocol works when physical partitions exist. The cluster with the
+  source belong to the same partition. The other cluster does not
+  belong to any partition.}
+
+\noindent Figure~\ref{fig:geant} shows that, when adding the link
+again, the two clusters communicate again. \TODO{More.}
+
+\noindent Finally, Figure~\ref{fig:geant} \TODO{(overall less
+  traffic)} empirically demonstrates that \NAME favor
+replication. \TODO{More.}
 \end{asparadesc}
 
 % \subsection{Use case: caching}
