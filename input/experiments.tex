@@ -39,9 +39,9 @@ a time, in the order of their creation, hence starting from the first
 and oldest partition that had been added.
 
 \noindent We focus on the complexity of \NAME. We measure the average
-number of messages generated per \process during the experiment; and
-the time before reaching consistent partitioning after adding or
-removing a partition.
+number of messages generated per \process per second during the
+experiment; and the time before reaching consistent partitioning after
+adding or removing a partition.
 
 \begin{figure}
   \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_complexity.eps}
@@ -56,9 +56,9 @@ removing a partition.
 \item [Results:]
 
 Figure~\ref{fig:complexity} shows the results of this experiment. The
-top part of the figure shows the average traffic per \process divided
-between $\alpha$ and $\delta$ messages. The bottom part of the figure
-shows the time before reaching consistent partitioning.
+top part of the figure shows the average traffic per \process per
+second divided between $\alpha$ and $\delta$ messages. The bottom part
+of the figure shows the time before reaching consistent partitioning.
 
 \noindent Figure~\ref{fig:complexity} confirms that \NAME's overhead
 depends on the size of partitions. The first partition is the most
@@ -86,15 +86,14 @@ the competition is already partially triggered and propagating.
 adding the $1^{st}$ partition does not correspond to the overhead of
 deleting this $1^{st}$ partition. When adding it, messages must reach
 all \processes while when removing it, messages must reach a small
-subset of this membership. This is important, for it means that
-\NAME's overhead actually depends on the current partitioning, and
-does not depend on the past partitioning.
+subset of this membership.  \NAME's overhead actually depends on
+current partitioning as opposed to past partitionings.
 
 \noindent Finally, Figure~\ref{fig:complexity} highlights that after
 49 seconds, i.e., after the 100 adds and the 100 deletes, \processes
 do not generate traffic anymore. Being reactive, \NAME has no overhead
-when there is no operation in the system. This is important, for it
-means that \NAME's overhead actually depends on its usage.
+when there is no operation in the system.  \NAME's overhead actually
+depends on its usage.
 
 \end{asparadesc}
 
@@ -124,11 +123,11 @@ geographic location.
 
 \noindent We evaluate the traffic of \NAME by measuring the average
 number of messages per \process over the experiments. In the first
-experiment, at $50$ ms, only one \process becomes source, hence there
+experiment, at $50$~ms, only one \process becomes source, hence there
 is only one partition for the whole distributed system. In the second
-experiment, at $50$ ms, two \processes become sources, one per
-cluster. Afterwards both scenarios are identical. At $500$ ms, we
-remove the link between the two clusters. At $1200$ ms, we insert this
+experiment, at $50$~ms, two \processes become sources, one per
+cluster. Afterwards both scenarios are identical. At $850$~ms, we
+remove the link between the two clusters. At $1.7$~s, we insert this
 link again.
 
 \item [Results:]
@@ -137,21 +136,19 @@ Figure~\ref{fig:geant} shows the results of this experimentation. The
 top part corresponds to the one source experiment, while the bottom
 part corresponds to the one source per cluster experiment.
 
-\noindent Figure~\ref{fig:geant} confirms that concurrent \texttt{Add}
-may generate additional traffic, for \processes may deliver and forward
-a partition only to later realize that they have a closer source. 
+\noindent Figure~\ref{fig:geant} confirms that concurrent
+\texttt{Add}s may reach consistent partitioning faster. In particular,
+Figure~\ref{fig:geant} depicts a slow down in traffic around $500$ ms
+due to the high latency inter-continental link. This link acts as a
+bottleneck that does not exist when each cluster has its own source.
 
 \noindent Figure~\ref{fig:geant} highlights that removing the
 inter-continental link generates additional traffic. The cluster cut
-off the source must remove control information about this source. This
-generates $\delta$ messages but also $\alpha$ messages, for \NAME
-still triggers competitions in the cut off cluster with $\alpha$
-messages that monotonically grows until they are purged off the system
-by the anti-looping mechanism and corresponding $\delta$s.  Most
-importantly, Figure~\ref{fig:geant} shows that \NAME still operates
-as expected when \emph{physical} partitions appear. \Processes from the
-cluster without source do not belong to any partition while \processes
-from the other cluster belong to the same partition.
+off from the source must purge all control information about this
+source.  Most importantly, Figure~\ref{fig:geant} shows that \NAME
+still operates well when \emph{physical} partitions appear. \Processes
+from the cluster without source do not belong to any partition while
+\processes from the other cluster belong to the same partition. 
 
 \noindent Figure~\ref{fig:geant} shows that, when adding the
 inter-continental link again, the two clusters can communicate
