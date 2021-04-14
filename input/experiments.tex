@@ -19,16 +19,18 @@ the Github platform at
   of the system.}
 
 \begin{asparadesc}
-\item [Description:] We build a network comprising 10k
-  processes. First, we chain processes together, then we add another
-  communication link per process to another process. Since links are
-  bidirectional, each process has 4 communication links on average. We
-  set the latency of links between 20 and 40 ms at random following a
-  uniform distribution. We set the weight of links between 5 and 15 at
-  random following a uniform distribution. Weights and latency are
-  different, hence the first $\alpha$ received by a process may not be
-  that of its shortest path. It implies more concurrent operations,
-  hence more traffic to reach consistent partitioning.
+\item [Description:]
+
+We build a network comprising 10k \processes. First, we chain
+\processes together, then we add another communication link per
+\process to another random \process. Since links are bidirectional,
+each \process has 4 communication links on average. We set the latency
+of links between 20 and 40 ms at random following a uniform
+distribution. We set the weight of links between 5 and 15 at random
+following a uniform distribution. Weights and latency are different,
+hence the first $\alpha$ received by a \process may not be that of its
+shortest path. It implies more concurrent operations, hence more
+traffic to reach consistent partitioning.
 
 \noindent We evaluate dynamic scoped broadcast. First, we create 100
 partitions one at a time: before adding a new partition, consistent
@@ -37,14 +39,14 @@ a time, in the order of their creation, hence starting from the first
 and oldest partition that had been added.
 
 \noindent We focus on the complexity of \NAME. We measure the average
-number of messages generated per process during the experiment; and
+number of messages generated per \process during the experiment; and
 the time before reaching consistent partitioning after adding or
 removing a partition.
 
 \begin{figure}
   \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_complexity.eps}
-  \caption{\label{fig:complexity}Overhead of, and time before,
-    reaching consistent partitioning using \NAME.}
+  \caption{\label{fig:complexity}Overhead of consistent partitioning
+    using \NAME.}
   %% \caption{\label{fig:complexity}Cumulative average number of messages
   %%   per process in a network comprising 10k processes; along with the
   %%   duration before reaching consistent partitioning after adding or
@@ -54,13 +56,13 @@ removing a partition.
 \item [Results:]
 
 Figure~\ref{fig:complexity} shows the results of this experiment. The
-top part of the figure shows the average traffic per process divided
+top part of the figure shows the average traffic per \process divided
 between $\alpha$ and $\delta$ messages. The bottom part of the figure
 shows the time before reaching consistent partitioning.
 
 \noindent Figure~\ref{fig:complexity} confirms that \NAME's overhead
 depends on the size of partitions. The first partition is the most
-expensive, for $\alpha$'s must reach every process which takes time
+expensive, for $\alpha$'s must reach every \process which takes time
 and generate more traffic. Still, being reactive, as opposed as
 cycle-based protocols~\cite{jelasity2007gossip}, \NAME quickly
 converge towards consistent partitioning in only 350 milliseconds. The
@@ -83,14 +85,14 @@ the competition is already partially triggered and propagating.
 \noindent Figure~\ref{fig:complexity} shows that the overhead of
 adding the $1^{st}$ partition does not correspond to the overhead of
 deleting this $1^{st}$ partition. When adding it, messages must reach
-all processes while when removing it, messages must reach a small
+all \processes while when removing it, messages must reach a small
 subset of this membership. This is important, for it means that
 \NAME's overhead actually depends on the current partitioning, and
 does not depend on the past partitioning.
 
 \noindent Finally, Figure~\ref{fig:complexity} highlights that after
-49 seconds, i.e., after the 100 adds and the 100 deletes, processes do
-not generate traffic anymore. Being reactive, \NAME has no overhead
+49 seconds, i.e., after the 100 adds and the 100 deletes, \processes
+do not generate traffic anymore. Being reactive, \NAME has no overhead
 when there is no operation in the system. This is important, for it
 means that \NAME's overhead actually depends on its usage.
 
@@ -106,24 +108,25 @@ means that \NAME's overhead actually depends on its usage.
 
 \begin{figure}
   \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_geant.eps}
-  \caption{\label{fig:geant}\TODO{Figure caption}}
+  \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters.}
 \end{figure}
 
 \begin{asparadesc}
 \item [Description:]
 
-We build a network by duplicating the G{\'E}ANT topology -- a real
-infrastructure spanning across Europe -- and by connecting these two
-clusters with a high latency link: $200$ ms simulating
-cross-continental communications such as Europe-America. The
-experiments comprise $2 \times 271 = 542$ \processes and we derive
-intra-cluster latency from \processes' geographic location~\REF.
+We build a network by duplicating the G{\'E}ANT
+topology~\cite{knight2011internet} -- a real infrastructure spanning
+across Europe -- and by connecting these two clusters with a high
+latency link: $200$ ms simulating cross-continental communications
+such as Europe-America. The experiments comprise $2 \times 271 = 542$
+\processes and we derive intra-cluster latency from their \processes'
+geographic location.
 
 \noindent We evaluate the traffic of \NAME by measuring the average
 number of messages per \process over the experiments. In the first
-experiment, at $50$ ms, only one process becomes source, hence there
+experiment, at $50$ ms, only one \process becomes source, hence there
 is only one partition for the whole distributed system. In the second
-experiment, at $50$ ms, two processes become sources, one per
+experiment, at $50$ ms, two \processes become sources, one per
 cluster. Afterwards both scenarios are identical. At $500$ ms, we
 remove the link between the two clusters. At $1200$ ms, we insert this
 link again.
@@ -135,23 +138,40 @@ top part corresponds to the one source experiment, while the bottom
 part corresponds to the one source per cluster experiment.
 
 \noindent Figure~\ref{fig:geant} confirms that concurrent \texttt{Add}
-may generate additional traffic, for processes may deliver and forward
-a partition only to later realize that they have a closer source.
+may generate additional traffic, for \processes may deliver and forward
+a partition only to later realize that they have a closer source. 
 
 \noindent Figure~\ref{fig:geant} highlights that removing the
 inter-continental link generates additional traffic. The cluster cut
-off the source must remove control information about this
-source. \TODO{There are both $\alpha$s and $\delta$s.}  \TODO{The
-  protocol works when physical partitions exist. The cluster with the
-  source belong to the same partition. The other cluster does not
-  belong to any partition.}
+off the source must remove control information about this source. This
+generates $\delta$ messages but also $\alpha$ messages, for \NAME
+still triggers competitions in the cut off cluster with $\alpha$
+messages that monotonically grows until they are purged off the system
+by the anti-looping mechanism and corresponding $\delta$s.  Most
+importantly, Figure~\ref{fig:geant} shows that \NAME still operates
+as expected when \emph{physical} partitions appear. \Processes from the
+cluster without source do not belong to any partition while \processes
+from the other cluster belong to the same partition.
 
-\noindent Figure~\ref{fig:geant} shows that, when adding the link
-again, the two clusters communicate again. \TODO{More.}
+\noindent Figure~\ref{fig:geant} shows that, when adding the
+inter-continental link again, the two clusters can communicate
+again. In the experiment involving one source for two clusters, it
+generates traffic. After a $200$ milliseconds delay corresponding to
+the new link latency, the cut off cluster starts to communicate
+$\alpha$ messages again. Eventually, all \processes belong to the same
+partition. However, in the experiment involving one source \emph{per}
+cluster, the new link does not trigger noticeable traffic (only $2$
+messages total), for \processes already know their closest source
+located in their respective cluster.
 
-\noindent Finally, Figure~\ref{fig:geant} \TODO{(overall less
-  traffic)} empirically demonstrates that \NAME favor
-replication. \TODO{More.}
+\noindent Overall, this experimentation empirically demonstrates the
+benefits of \NAME in the context of Edge infrastructures:
+inter-connected autonomous systems where \processes may join or leave
+or crash, communications links may be added or removed. \NAME coupled
+with replication strategies designed for the Edge would allow locking
+down the traffic of replica indexing, while providing every \processes
+with quick access to replicated content.
+
 \end{asparadesc}
 
 % \subsection{Use case: caching}

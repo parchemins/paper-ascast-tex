@@ -569,7 +569,9 @@ notification. \TODO{More.}
 We focus on average-case and worst-case complexity. We divide our
 analysis into space, time, and communication complexity.
 
-\paragraph{Space.}
+\begin{asparadesc}
+\item [Space:]
+
 Each \process needs to maintain a vector of versions the size of which
 depends on the number of sources. In the worst case, the size of this
 vector increases linearly with the number of distinct sources that
@@ -589,7 +591,8 @@ partition. In the worst case, this path includes the identity of every
 the size of this path increases linearly with the diameter of the
 current partition. \TODO{assuming weight equals 1 \ldots}
 
-\paragraph{\TODO{Time.}}
+\item[Time:]
+  
 In terms of processing time, whatever the operation, it increases
 linearly with the number of neighbors of the \process. It scales well,
 for the number of neighbors is commonly order of magnitude lower than
@@ -606,31 +609,34 @@ at least its shortest path before termination. Every $\delta$ needs to
 reach the border of its partition, triggering an $\alpha$ that fills
 the gaps left open by the removal. \TODO{More.}
 
-\paragraph{\TODO{Communication.}}
+\item[Communication:]
+  
 In terms of number of messages required to reach optimal
 partitioning. In the average-case, a \process $i$ chosen uniformly at
 random among all \processes creates a logical partition. Its messages
-$\alpha_i$ propagate through the network until reaching \processes that
-belong to another partition closer to them. This splits partitions in
-half in average. Overall, the $a^{th}$ new partition comprises
-\smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor \log_2 a \rfloor}})$}
-\processes. This decreases every new partition until reaching $0$
-\processes per new partition: even the chosen \process already belongs
-to its optimal partition. The average number of messages per \process
-is \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
+$\alpha_i$ propagate through the network until reaching \processes
+that belong to another partition closer to them. This splits
+partitions in half in average. Overall, the $a^{th}$ new partition
+comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor \log_2 a
+      \rfloor}})$} \processes. This decreases every new partition
+until reaching $0$ \processes per new partition: even the chosen
+\process already belongs to its optimal partition. The average number
+of messages per \process is
+\smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
       \rfloor}})$}. \TODO{Multiple receipt and multiple delivery imply
   more messages (receipt bounded by $|O|$ as well).} Deleting the
 $a^{th}$ partition generates the exact same number of messages than
 the $a^{th}$ partition creation. \TODO{But what about echos?} In the
-worst-case, every new partition includes all but one \process belonging
-to the previous partition. The total number of messages after the
-$a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot a^2)$. As
-for the average-case, the number of messages for the partition
-deletion is identical to the number of messages of the corresponding
-partition creation.
+worst-case, every new partition includes all but one \process
+belonging to the previous partition. The total number of messages
+after the $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot
+a^2)$. As for the average-case, the number of messages for the
+partition deletion is identical to the number of messages of the
+corresponding partition creation.
 
 \noindent \TODO{In terms of size of messages.}
 
+\end{asparadesc}
 
 %%% Local Variables: 
 %%% mode: latex
