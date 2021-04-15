@@ -1,35 +1,41 @@
 \begin{abstract}
   %% Context and problem
-  Edge infrastructures constitute an alternative to Cloud Computing
-  that aims at improving on latency and traffic by providing computing
-  and storage capabilities closer to data producers and consumers.
-  %% Edge infrastructures have been proposed as an alternative to Cloud
-  %% Computing to provide computing and storage capabilities closer to
-  %% the locations where data is generated/consumed, with the objectives
-  %% of reducing the latency and the volume of data passing through the
-  %% network.
-  A few systems, such as content delivery networks, replicate and
-  distribute produced data in these infrastructures.
-  % A few systems have been proposed to store data in those
-  % infrastructures.
-  Locating the closest replica of a specific content requires to
-  maintain an up-to-date index of all live replicas along with their
-  respective locations. 
+  %By providing computing and storage capabilities closer to data
+  %producers and consumers, Edge infrastructures constitute an alternative to Cloud Computing platforms
+  %A few systems have been proposed to store and manipulate data in
+  %Edge infrastructures. By relying for instance on appropriate
+  %replication policies, those systems reduce the impact of the latency
+  %as well as the volume of data passing through the network overall.
   %
-  Unfortunately, relying on a centralized service would bring
-  scalability issues, single point of failure, as well as additional
-  middleman latency where locating replicas may effectively take more
-  time than actually downloading contents. Instead, data consumer
-  \processes must maintain an up-to-date index
-  themselves. Unfortunately, maintaining an index of all live replicas
-  at every \process would prove overly costly in terms of memory and
-  generated traffic, especially in large scale dynamic systems where
-  \processes create and destroy replicas at any time.
+  Although, there is no major solution to store and manipulate data in
+  Edge infrastructures yet, existing proposals demonstrated the relevance of appropriate
+  replication strategies to bring contents closer to consumers, reducing the impact of the latency as
+  well as the volume of data passing through the network overall.
+%
+  Unfortunately, locating the closest replica of a specific content requires to
+  maintain an up-to-date index of all live replicas along with their
+  respective locations.
+  %
+  %Current proposals built on a centralized service face scalability
+  %issues, single point of failure, as well as latency penalities where
+  %locating replicas may effectively take more time than actually
+  %downloading contents. Instead, data consumer \processes must
+  %maintain an up-to-date index themselves. Unfortunately, maintaining
+  %an index of all live replicas at every \process would prove overly
+  %costly in terms of memory and generated traffic, especially in large
+  %scale dynamic systems where \processes create and destroy replicas
+  %at any time.
+  % 
+  Relying on a remote service contradicts with the properties of
+  Edge infrastructures as locating replicas may
+  effectively take more time than actually downloading contents.
+  At the opposite,  maintaining such an index at every \process would prove overly
+  costly in terms of memory and generated traffic, especially in an
+  edge context where \processes create and destroy replicas at any
+  time.
   % while flooding approaches will not enable the maintenance of such
-  % an index for each node in large systems, relying on a dedicated
-  % service contradicts with the properties of Edge infrastructures in
-  % terms of locality and robustness
-
+  % an index for each node in large systems,
+  
 %%% Our proposal
   \noindent In this paper, we introduce \NAME, an efficient and
   decentralized partitioning protocol for dynamic distributed systems:
