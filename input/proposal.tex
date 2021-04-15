@@ -185,12 +185,12 @@ relying on forwarding of messages from neighbor to neighbor.
   one -- delivers and forwards it: $\forall s_2 \in S: |\Pi_{q' s_1}|
   < |\Pi_{q' s_2}| \implies \eventually d_{q'}(\alpha_{s_1}^{w_{s_1
       q'}})$. By transitivity, the message originating from $s_1$
-  transitively reaches all such \processes through their shortest
-  paths: $\forall q'' \in V, s_1, s_2 \in S: |\Pi_{q'' s_1}| <
-  |\Pi_{q'' s_2}| \implies \eventually d_{q''}(\alpha_{s_1}^{|\Pi_{s_1
-      q''}|})$.  Since there exists only one best sum of weights per
-  \process that can never be retracted, \processes eventually reach
-  consistent partitioning.
+  reaches all such \processes through their shortest paths: $\forall
+  q'' \in V, s_1, s_2 \in S: |\Pi_{q'' s_1}| < |\Pi_{q'' s_2}|
+  \implies \eventually d_{q''}(\alpha_{s_1}^{|\Pi_{s_1 q''}|})$.
+  Since there exists only one best sum of weights per \process that
+  can never be retracted, \processes eventually reach consistent
+  partitioning.
   %% /!\ not equivalence for there exists other implementations.
   %% \item [$CP \implies BEF$:] By contradiction, if a \process $q \in
   %%   \Pi_{sp} = [s, \ldots, q, q', \ldots, p]$ with $s, q, p \in P_s$
@@ -345,7 +345,7 @@ of messages about up-to-date partitions.
   weights than newly received ones. Removing \emph{forever} all such
   stale messages about deleted partitions would allow \processes to
   propagate their best up-to-date partition again, eventually reaching
-  consistent partition together.
+  consistent partitioning together.
 \end{proof}
 
 \input{input/figproof.tex}
@@ -563,6 +563,12 @@ notification. \TODO{More.}
 
 
 
+
+\vfill
+
+\TODO{spacing}
+
+\newpage
 
 \subsection{Complexity}
 
