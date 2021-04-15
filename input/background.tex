@@ -4,44 +4,53 @@
 
 %\TODO{More related work. More motivations etc. Maybe describe IPFS?}
 This section reviews the existing solutions to locate a given content in a network and details the limitations 
-of such solutions in a Fog context. We first present the related work on content localization at the system level, 
-either with centralized or distributed approaches. We then focus on message-passing solutions and explain why well-known existing software middlewares such as broadcast, or gossip protocols are not good candidates in their existing implementations. Finally, we provide the intuition that motivated the design of our protocol.
+of such solutions in a Fog context. 
+We first present the related work on content localization at the system level, either with centralized or distributed approaches. 
+We then focus on message-passing solutions and explain why well-known existing software middlewares such as broadcast, or gossip protocols are not good candidates in their existing implementations. 
+Finally, we provide the intuition that motivated the design of our protocol.
 
 \subsection*{Content indexing}
+In the context of this paper, an \textit{ideal} content indexing service would enable that for any content, every node would be able to access its closest replica.
+Basically, offering such a service would require (i) to have access to the list, namely the \textit{index}, of current replica localizations, (ii) to be aware of the topology to compute which replica is the closest for a given location.
 
-The easiest way to implement a localization service is to store all replica localizations, namely the \textit{index}, on a centralized server~\cite{fogstore, p2p-alto, p2p-oracle, snamp}. Before downloading any content, the client first requests the server the list of all its available replicas, in order to select the closest copy, according to its place in the topology. While being straightforward to deploy, this solution suffers from well-known disadvantages (load balancing, robustness, locality, etc.) that are even magnified in a Fog context.
 
-A first step to mitigate the drawbacks inherent to a unique centralized server is to deploy a \textit{landmark} system~\cite{landmarks}. The idea is to spread special nodes called landmarks across the network so that nodes announce their current cache content to the closest landmarks in a given geographical area. Requests are then processed by one or the closest landmarks from the requester. One of the the main problems of these lankmark-based solutions is that they require a reliable infrastructure to provide these landmarks which must remain always available to continuously offer the indexing service.
-
-Goind further, fully distributing this index among nodes in the network has been proposed, either using coordinate-based overlays~\cite{coin_19, voronet} or Distributed Hash Tables~\cite{squirrel, ipfs, dht-name-resolution, mdht} for example. In the latter, each node stores a part of the index, defined by an interval between hash values. 
+(i) Deploying a centralized server that maintain an index of all replica localizations has been proposed~\cite{fogstore, p2p-alto, p2p-oracle, snamp}. However, this solution suffers from well-known disadvantages inherent to centralized solutions (load balancing, robustness, locality, etc.) that are even magnified in a Fog context.
+Distributing this index among nodes in the network circumvent some of these issues, either using coordinate-based overlays~\cite{coin_19, voronet} or Distributed Hash Tables~\cite{squirrel, ipfs, dht-name-resolution, mdht} for example. In the latter, each node stores a part of the index, defined by an interval between hash values. 
 Before downloading any object, a node first
 hashes the content to obtain the address of the node that stores the replica localizations of this given object. After obtaining from the remote node the list of available replicas, it can select the closest copy to download from. We emphasize that, in this setting, the DHT only stores information about replicas localizations, not the content itself. DHT-based approaches are well-studied and easy to deploy in order to offer such a localization service. 
 
-However, either being centralized, landmark-based or distributed, solutions that require to contact a remote node to obtain a given content localization usually violate the locality property. In other words, a request about a given object localization may travel far away in the network even if this object is actually close to the requester.
-Moreover, they incur a lookup penalty that increases the time to actually get the object. In fact, the lookup delay can sometimes be larger than downloading the object itself, especially for smaller objects, as already observed in~\cite{confais2017performance}.
 
-Instead of requesting localization information from a remote node, another approach consists in disseminating this information accross the network.
-Broadcasting information about cache updates to all nodes in the system is a straightforward way to maintain consistent information about replica localization for all nodes~\cite{nlsr,lscr}. Indeed, having the full knowledge of all the replica localizations along with distance information carried into messages, each node can easily compute where the closest copy of a given object resides, without contacting any remote node. Moreover, removing the lookup latency directly involves faster downloading times. 
-Multiple broadcast protocols have been designed to cope with various requirements[REF], and [REF or REF].
+(ii) Being centralized or distributed, this index should be enhanced with the topology knowledge in order to be able to decide where resides the closest replica . Maintaining a consistent view of an ever changing topology accross a network is ihnerently complicated, especially in asynchronous settings. This is a well-studied problem in the network community and numerous protocols have been proposed. As for the index, this knowledge about the topology can be either centralized[REF] or distributed[REF].
+
+%However, solutions that require to contact a remote node (either a server or a DHT node) to request this index usually violate the locality property. In other words, a request about a given object localization may travel far away in the network even if this object is actually close to the requester. 
+%Moreover, they incur a lookup penalty that increases the time to actually get the object. In fact, the lookup delay can sometimes be larger than downloading the object itself, especially for smaller objects, as already observed in~\cite{confais2017performance}. Finally, this may prevent accessing objects when network partitons occur, even if they are still accessible.
+
+
+\subsection*{Index dissemination}
+In this paper, we advocate that in the Fog context, content should be accessible without having to request any remote node. 
+To do so, another approach consists in disseminating this information accross the network.
+Broadcasting information about cache updates to all nodes in the system is a straightforward way to maintain consistent information about replica localization for all nodes~\cite{nlsr,lscr}. Indeed, having the entire knowledge of all the replica localizations along with distance information carried into messages, each node can easily compute where the closest copy of a given object resides, without contacting any remote node. Moreover, removing the lookup latency directly involves faster downloading times. 
+Multiple broadcast protocols have been designed to cope with various requirements.
 One could also solve this issue by using a conflict-free replicated datantype (CRDT) for set data structures~\cite{shapiro2011crdts}. 
-However, either by broadcasting or with CRDTs, both inherently imply that every nodes will eventuall receive all messages. 
-That means information that might only interests a small subset of nodes is actually spread out all over the network. This is in contradiction 
-with the locality property we mentionned above.
+However, either by broadcasting or with CRDTs, both inherently imply that every nodes will eventually receive all messages. 
+That means information that might only interests a small subset of nodes is actually spread out all over the network. This is in contradiction with the locality property we mentionned above.
 
 Gossip protocols are also appealing candidates to disseminate information reliably across a network~\cite{epidemic-protocol}. Numerous studies have shown how quickly they converge despite high level of churn and/or failures~\cite{lpbcast}.
 These protocols usually relies on a so-called \textit{peer-sampling service}~\cite{jelasity2007gossip} to efficiently propagate the information. This implies that nodes will exchange messages with random nodes in the system that can be physically far away thus violating the locality property once again. 
 
-To cope with this locality requirment, we now present the intutition behind the design of our proposal.
 
-\subsection*{Logical partioning}
-At the system level, we claim that distributing the index actually boils down to logicaly partition the physical topology, depending on the current replicas localization. 
-Exemple and Figures ?
+\subsection*{Logical partitioning}
+To provide the intuition underlying our proposal, and ease the comparison with other related works, we now describe the problem tackled by this paper at an abstract level. 
+Recall that for any content, every node would be able to access its closest replica \textbf{without any prior request}.
+Suppose there exists an oracle in the system that instantly knows the arrival/departure of nodes in the topology, and the location of the creation/removal of replicas. In other words, this oracle is constantly aware of the current topology and the current list of all available replicas of a given content in the system. Equipped with these two information, it is then trivial for this oracle to compute for each node, where resides its closest replica for a given content. Mapping each node of the topology to a single replica amounts to partition the set of all nodes into $k$ disjoint sets (or partitions), where $k$ is the number of current replicas and every node in the same partition would get the content from the same replica. Interestingly, this partitioning matches the physical topology as neighbors physically closed in the infrastructure will most likely reside in the same partition.
+For any event such as an arrival/departure of nodes or creation/removal of replicas, the oracle is thus able to inform the \textit{exact} subset of nodes that has to update their location (\ie the exact scope of an event). 
+The challenge of implementing such a partitioning in an asynchronous network resides in informing this same subset of nodes (or as close as possible), without any \textit{a priori} knowledge, contrary to the omniscient oracle.
+
 
 \subsection*{Overlays and membership protocols}
-At first glance, membership protocols as proposed in~\cite{t-man}[REF] would appear to provide suitable abstractions to create such a partioning. 
-BUT, usually rely on peer sampling, thus same locality problem.
+At first glance, membership protocols as proposed in~\cite{t-man} would appear to provide suitable abstractions to create such a partioning. Yet, such protocols usually rely on peer sampling, thus same locality problem.
 Moreover, membership protocols are designed to generate logical overlays by modifying the neighboring of a given node according to a given metric. 
-On the contrary, we do not aim at building any overlay, as we only rely on the physical topology so the neighbors of a given node ar not continusously modifed. 
+On the contrary, we do not aim at building any overlay, as we only rely on the physical topology so the neighbors of a given node are not continusously modifed. 
 Lastly, these protocols are usually cycle-based, meaning that they impose a constant load on the network traffic, even when the system state does not change.
 
 \subsection*{Consistency}
