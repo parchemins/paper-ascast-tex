@@ -10,54 +10,82 @@ because it has been replicated to bring data closer to the end users
 To favour this transition, the design and the development of building
 blocks to manage data sets across Edge infrastructures have been
 investigated for the last few years \cite{confais2017performance,
-  confais2017object, fogstore, hasenburg2020towards}.  Although these systems,
-provide good properties such as favouring network traffic confinement
-by writting data locally, determining the location where to get the
-content might be more expensive than retrieving the content itself.
+  confais2017object, fogstore, hasenburg2020towards}.  Although these
+systems, provide good properties such as favouring network traffic
+confinement by writting data locally and replicating contents
+according to the effective needs, determining the location where to
+get the content might be more expensive than retrieving the content
+itself.
 %
 Indeed, those systems, when not using a centralized index stored in a
 Cloud, rely on a Distributed Hash Table (DHT) across the different
-peers composing the infrastructure: When a client wants to access a
-specific content, it has to perform a request to a first node to
-determine from which site it will retrieve the content.
-\TODO{Add something about the fact that in addition to the location service of the replica, we need a service that maintain a view of the infrastructure topology so that each node can infer which replica is the closest one.}
-
-Once it has
-retrieved the content from the location it selected, a local replica
+nodes composing the infrastructure: When a client wants to access a
+specific content, it has to perform a request to a remote process to
+determine from which node(s) it will retrieve the content.  Once it has
+retrieved the content, a local replica
 is created to improve the performance for future accesses and the
-server in charge of maintaining the index is updated to reflect this
+process in charge of maintaining the index is contacted once again to reflect this
 new location.
 %
-Accessing a remote node to find the location of an object (or one of
-its copies) has many drawbacks: (i) The \textit{lookup penalty:} the
-network latency to reach this remote node incurs an additional delay
-to get the object, before being able to start its
-downloading~\cite{asrese2019measuring, doan2019tracing}, (ii)
-Answering external queries increases the load on the remote node,
-potentially impacting its performance, (iii) It prevents nodes to
-access objects in case of network partitioning: if the node in charge
-of maintaining the object locations is isolated from the rest of the
-infrastructure, nodes cannot access the object replicas even if some
-would be reachable.
 
-A simple way to tackle the aforementioned limitations would be to
-maintain an index of all replicas on each node composing the
-system. In addition to being complicated \TODO{impossible} for large-scale
-systems, maintaining such a global index on each node is useless as there
-is no interest to inform a node of the creation of a replica at the
-opposite of the network (each node trying to get content from the closest node).
+%This strategy has two majors drawbacks :
+%\begin{itemize}
+%  \item (i) the lookup penalty: the network latency to reach this
+%    remote node incurs an additional delay~\cite{asrese2019measuring,
+%      doan2019tracing} to get the object before
+%    being able to start its downloading ;
+%  \item (ii) the selection of the node(s) from which the content is
+%    returned: due to the lack of information that would allow the  a request to each process storing a
+%%    replica is perfomed in
+%\end{itemize}
+
+Such a protocol contradicts with the objective of Edge
+infrastructures that aims at reducing the impact of the
+latency as well as the volume of data passing through the network:
+\begin{itemize}
+  \item In addition to hot spot and partitioning issues, accessing a
+    remote node to find the location(s) of a content incurs an
+    additional delay~\cite{asrese2019measuring, doan2019tracing} to
+    get the object, before being able to start its downloading.
+  \item There is no information to select the ``best'' node among the
+     possible candidates from which the content  could be
+     retrieved. This results in parallel requests performed by the client node to
+     each candidate with the goal of retrieving the content as efficient
+     as possible.
+\end{itemize}    
+
+A ``simple'' way to tackle the aforementioned limitations would be to
+maintain on each node composing the infrastructure and for each
+content, an index of all replicas (and their ``distance'').  In such
+an approach, each time a new replica is created or deleted, a message
+is broadcasted from the node that performed the operation (\ie the
+source) to all nodes, increasing the distance information at each hop.
 %
-In this paper, we propose to limit the broadcast of creation/deletions
-of replicas only to a subset of the nodes composing the
-infrastructures.  Concretely, our protocol, entitled \NAME, transmits
-messages from peer to peer until a certain condition is reached. In
-the current scenario, the stop condition is related to the distance to
-the nearest copy: if the message that a node receives indicates an
-object has a longer distance than that which the node knows then the
-transfer of the message is useless and so stopped.
+In addition to being complicated for large-scale systems, maintaining
+a global view on each node is useless as there is no interest to
+inform a node of the creation/removal of a replica at the opposite of
+the network (each node trying to get content from the ``closest''
+node).  In other words, the broadcast should be limited to a partition
+of the infrastructure, (\ie the subset of nodes that has to update the
+current location for this particular content). Obviously, these
+partitions depend and evolve according to concurrent operations made by nodes and
+dynamic changes in the infrastructure (network failures, node
+apparitions/leaves).
 
-\TODO{Explain that the problem can be seen as a graph partitioning problem}
+In this paper, we propose a first implementation of such a protocol.
+Entitled \NAME, our protocol relies on a primitive that forwards
+messages until a certain condition is reached, \ie the scope. The
+scope is defined by a boolean function (predicate) that returns
+whether a message should be propagated or not around its
+broadcaster. In the current scenario, the stop condition is related to
+the distance to the nearest replica : if the message that a node receives
+indicates a content has a longer distance than that which the node
+knows then the transfer of the message is useless and so stopped.
+%
 
+This primitive is used to communicate with the different nodes
+according to four events: creation/removal of a replica and node
+apparitions/leaves. \TODO{network failures is considered as a node leave?}
 
 \TODO{add something about the paper work}
 
@@ -76,7 +104,20 @@ of a moderate increase in message sizes.
 
 %\input{input/figadd.tex} %% positioning (belong to problem & motivation)
 
-\TODO{add a paragraph on possible usage of the protocol in other use-cases.}
+% TODO : Use cases
+While we use the distance to the closest copy in this paper, It is
+notewothy that other scopes can be envisioned according to the
+use-cases.  For instance, the location of a city in order to broadcast
+message to all nodes in the city.  This requires nodes to store and
+maintain their city location in their local state. Nodes stop
+delivering and forwarding their received messages when they come from
+a different city. Such a predicate can be complexified in order to
+broadcast messages to all nodes in the city plus neighboring
+cities. This requires nodes to overload forwarded messages the first
+time they reach another city. The predicate checks if messages already
+reached two distinct cities before delivery.  The predicate can even
+be piggypack within the message and so be different for each
+message.\TODO{Complete the use-cases}
 
 \TODO{update the outline}
 \TODO{The rest of this paper is organized as follows. Section II
