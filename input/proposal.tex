@@ -22,8 +22,8 @@ links. \Processes may crash but are not byzantine.
 
 % \TODO{dynamic graph: superscript with $t$?}
 
-\begin{definition}[Fog infrastructure]
-  A fog infrastructure is a connected \underline{g}raph $G(V, E)$ of
+\begin{definition}[Edge infrastructure]
+  An edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
   \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
   \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from \Process
   $i$ to \Process $j$ is a sequence of vertices $[i, k_1, k_2, \ldots
@@ -328,7 +328,8 @@ of messages about up-to-date partitions.
 %% any time, we need to further constrain the delivery order at each
 %% \process.
 
-\begin{corollary}[\label{theo:dcp}Dynamic consistent partitioning]
+\begin{corollary}[\label{theo:dcp}\underline{D}ynamic \underline{c}onsistent
+    \underline{p}artitioning (DCP)]
   Consistent partitioning where each \process can \texttt{Add} and
   \texttt{Del}ete its partition at any time requires
   \begin{inparaenum}[(i)]
@@ -395,7 +396,7 @@ may be inconsistent without knowing it.
 
 \subsection{Implementation}
 
-Algorithm~\ref{algo:adddelundo} provides the instructions that
+Algorithm~\ref{algo:ascast} provides the instructions that
 implement dynamic consistent partitioning:
 \begin{inparaenum}[(i)]
 \item \label{algo:most} most of the time, it propagates $\alpha$'s and
@@ -412,8 +413,8 @@ stale notifications, (\ref{algo:competition}) tackle the eventual
 delivery of the best up-to-date partitions.
 
 \begin{algorithm}
-  \input{input/algoadddelundo.tex}
-  \caption{\label{algo:adddelundo}Dynamic partitioning by \Process $p$.}
+  \input{input/algoascast.tex}
+  \caption{\label{algo:ascast}\NAME at \Process $p$ in static networks.}
 \end{algorithm}
 
 To constrain the order of delivery at each \process, each \process
@@ -446,7 +447,7 @@ win order violations. Upon possible inconsistency, the detecting
 labeled by IV in Figure~\ref{fig:proofB}. Contrarily to delete
 operations, this applies to a sub-partition of the current partition,
 and cannot rely on local counters to
-operate. Algorithm~\ref{algo:adddelundo} implements this behavior by
+operate. Algorithm~\ref{algo:ascast} implements this behavior by
 piggybacking paths in messages. Paths guarantee that such $\delta$
 messages apply to all and only $\alpha$'s that followed an identical
 path. $\delta$'s propagate in the propagation tree rooted at the
@@ -474,7 +475,7 @@ fill the gaps left open by deletes.
 
 \begin{algorithm}
   \input{input/algoedges.tex}
-  \caption{\label{algo:edges}Dynamic partitioning by \Process $p$ in dynamic networks.}
+  \caption{\label{algo:edges}\NAME at \Process $p$ in dynamic networks.}
 \end{algorithm}
 
 Algorithm~\ref{algo:edges} provides the instructions of \NAME that
@@ -563,12 +564,6 @@ notification. \TODO{More.}
 
 
 
-
-\vfill
-
-\TODO{spacing}
-
-\newpage
 
 \subsection{Complexity}
 

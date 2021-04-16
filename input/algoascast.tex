@@ -1,0 +1,67 @@
+
+\SetKwProg{Function}{func}{}{}
+
+\small
+
+\DontPrintSemicolon
+\LinesNumbered
+
+$O_p$, $W_p$ \tcp*[r]{set of neighbors and weights}
+$A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing} $ \tcp*[r]{best $\alpha$ so far}
+$V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
+
+\BlankLine
+\BlankLine
+
+\Function{\textup{Add ( )}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
+  \textup{receiveAdd($p$, $\alpha_{p, V[p] + 1}^{0, \varnothing}$)}
+}
+
+\BlankLine
+
+\Function{\textup{Del ( )}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
+  \textup{receiveDel($p$, $\delta_{p, V[p] + 1}$)}
+}
+
+\BlankLine
+\BlankLine
+
+\Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}
+\tcp*[f]{\smash{$r_p(\alpha_{s', c'}^{d', \pi'})$}}  \textup{\texttt{from}} $q$} {
+%   \If {$p \not\in \pi'$ \label{line:notloopingA}} {
+    \uIf {$q = \pi[|\pi| - 1] \wedge (c' < V[s'] \, \vee$\tcp*[r]{\footnotesize{III detect}}
+    \hphantom{\textbf{if} $q = \pi[|\pi| - 1] \wedge\,$}~$(\alpha_{s', c'}^{d', \pi'} <_\alpha A_{s, c}^{d, \pi} \wedge p\not\in \pi'))$ \label{line:detectA}} {
+          \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{IV propagate}}
+    }
+    \uElseIf (\tcp*[f]{\footnotesize{I propagate}}) {$A_{s, c}^{d, \pi} <_\alpha \alpha_{s', c'}^{d', \pi} \wedge p \not\in \pi'$  } {
+          $V[s'] \leftarrow c'$ \;
+          $A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}$ \;
+              \lForEach{$n \in O_p$}
+                  {\smash{send$_n$($\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$)}}
+
+     }
+}
+
+
+
+\BlankLine
+
+\Function{\textup{receiveDel($q$, $\delta_{s', c'}^{\pi'}$)}
+\tcp*[f]{\tiny \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}} {
+  \uIf (\tcp*[f]{\footnotesize{I' propagate}}) {$\alpha_{s', c'}^{\_, \pi'} \overset{\alpha}{=} A_{s, c}^{\_, \pi} \wedge p \not\in \pi'$ \label{line:notloopingB}} {
+     $V[s'] \leftarrow \max(V[s'], c')$ \;
+     $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing}$ \;
+
+     \lIf{$\pi' = \varnothing$}{\textbf{foreach} $n\in O_p$
+     \textbf{do} send$_n$(\smash{$\delta_{s', c'}^{\pi' \cup p}$)}}
+     
+     \lIf{$\pi' \neq \varnothing$}{\textbf{foreach} $n\in O_p$
+     \textbf{do} send$_n$($\delta_{s', c'}$)}
+
+     } \uElseIf {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
+         \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)} \tcp*[r]{\label{line:compete}compete}
+     }
+%  }
+}
+
+

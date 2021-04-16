@@ -1,4 +1,10 @@
 
+\vfill
+
+\TODO{spacing}
+
+\newpage
+
 \section{Experimentation}
 \label{sec:experimentation}
 
@@ -43,16 +49,6 @@ number of messages generated per \process per second during the
 experiment; and the time before reaching consistent partitioning after
 adding or removing a partition.
 
-\begin{figure}
-  \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_complexity.eps}
-  \caption{\label{fig:complexity}Overhead of consistent partitioning
-    using \NAME.}
-  %% \caption{\label{fig:complexity}Cumulative average number of messages
-  %%   per process in a network comprising 10k processes; along with the
-  %%   duration before reaching consistent partitioning after adding or
-  %%   removing a partition, totaling 100 new partition then removed.}
-\end{figure}
-
 \item [Results:]
 
 Figure~\ref{fig:complexity} shows the results of this experiment. The
@@ -81,6 +77,16 @@ must reach every partition border before any sound competitors
 propagate their partition. It is worth noting that this delete
 operation involves concurrency: removals continue to propagate while
 the competition is already partially triggered and propagating.
+
+\begin{figure}
+  \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_complexity.eps}
+  \caption{\label{fig:complexity}Overhead of consistent partitioning
+    using \NAME.}
+  %% \caption{\label{fig:complexity}Cumulative average number of messages
+  %%   per process in a network comprising 10k processes; along with the
+  %%   duration before reaching consistent partitioning after adding or
+  %%   removing a partition, totaling 100 new partition then removed.}
+\end{figure}
 
 \noindent Figure~\ref{fig:complexity} shows that the overhead of
 adding the $1^{st}$ partition does not correspond to the overhead of
