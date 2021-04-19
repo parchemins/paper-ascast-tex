@@ -160,13 +160,15 @@ Section~\ref{sec:scoped}, since epidemic dissemination and scoped
 broadcast have well-aligned preoccupations, we assume implementations
 relying on forwarding of messages from neighbor to neighbor. 
 
-\begin{theorem}[\underline{B}est \underline{e}ventual \underline{f}orwarding $(BEF) \implies CP$]
-  Assuming reliable communication links where a correct \process $q$
-  eventually receives the message $m$ \underline{s}ent to it by a
-  \process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a monotonically
-  growing system ($G^t \subseteq G^{t+1}$); \processes eventually
-  reach consistent partitioning if each \process eventually forwards
-  its best known partition.
+\begin{theorem}[\label{theo:bef}\underline{B}est \underline{e}ventual
+    \underline{f}orwarding $(BEF) \implies CP$]
+%
+Assuming reliable communication links where a correct \process $q$
+eventually receives the message $m$ \underline{s}ent to it by a
+\process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a monotonically growing
+system ($G^t \subseteq G^{t+1}$); \processes eventually reach
+consistent partitioning if each \process eventually forwards its best
+known partition.
 \end{theorem}
 
 \begin{proof}
@@ -226,9 +228,9 @@ receives $\alpha_{d}^{1}$. Since it improves its own partition
 distance, it keeps it and forwards it to its neighbors. In
 Figure~\ref{fig:addD}, \Process~$b$ discards $\alpha_{a}^{2}$, for it
 does not improve its partition distance. \Processes $c$ and $d$ will
-never hear of Source~$a$. Ultimately, \processes discard last
-transiting messages. Despite the obvious lack of traffic optimization,
-the system reach consistent partitioning.
+never acknowledge that Source~$a$ exists. Ultimately, \processes
+discard last transiting messages. Despite the obvious lack of traffic
+optimization, the system reach consistent partitioning.
 
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity.
@@ -236,12 +238,12 @@ straightforward, removing them introduces additional complexity.
 \subsection{Dynamic consistent partitioning}
 \label{subsec:dynamic}
 
-At any time, a \process can become a source, hence adding a new
-partition to the system. This partition eventually includes all
-\processes that are closer from this new source than any other
-else. \Processes naturally converge towards their respective best
-partition by only piggybacking a monotonically increasing distance in
-forwarded messages.
+%% At any time, a \process can become a source, hence adding a new
+%% partition to the system. This partition eventually includes all
+%% \processes that are closer from this new source than any other
+%% else. \Processes naturally converge towards their respective best
+%% partition by only piggybacking a monotonically increasing distance in
+%% forwarded messages.
 
 At any time, a source can revoke its self-appointed status of source,
 hence deleting its partition from the system, by executing a
@@ -258,11 +260,11 @@ partition $\alpha_d^3$ that may prove to be the best for \Process
 $a$. Eventually, every \processes belong to the same partition
 $P_d$. In this scenario, they reach consistent partitioning.
 
-\texttt{Del}ete operations add a new notion of order between events,
-and most importantly between message deliveries. Delete operations
-implicitly state that all preceding events become obsolete, and that
-all messages originating from these preceding events convey stale
-control information.
+Delete operations add a new notion of order between events, and most
+importantly between message deliveries. Delete operations implicitly
+state that all preceding events become obsolete, and that all messages
+originating from these preceding events convey stale control
+information.
 
 \begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
@@ -270,7 +272,7 @@ control information.
   messages are concurrent if none happens before the other.
 \end{definition}
 
-\begin{definition}[Last win order]
+\begin{definition}[\label{def:lwo}Last win order]
   When a \process $p$ broadcasts two messages $b_p(m) \rightarrow
   b_p(m')$, no \process $q$ can deliver $m$ if it has delivered $m'$:
   $\not\exists q \in V$ with $d_q(m') \rightarrow d_q(m)$, for $m'$
@@ -279,11 +281,11 @@ control information.
 
 \input{input/figdel.tex}
 
-Unfortunately, stale control information about deleted partitions may
-impair the propagation of both
+Unfortunately, stale control information as stated in
+Definition~\ref{def:lwo} may impair the propagation of both
 \begin{inparaenum}[(i)]
 \item notifications about actual sources, and
-\item notifications about other deleted partitions.
+\item notifications about deleted partitions.
 \end{inparaenum}
 Figure~\ref{fig:problem} highlights such consistency issue with
 dynamic partitions, even in contexts where \processes have FIFO links,
@@ -317,8 +319,10 @@ before. In Figure~\ref{fig:problem}, it means that as soon as
 $\delta_a$ if it exists. However, such solution also implies that
 \processes generate traffic not only related to their current
 partition, but also related to partitions they belong to in the
-past. Instead, we propose to use the delivery order at each \process
-to detect possible inconsistencies and solve them. Together,
+past. This would prove overly expensive in dynamic systems where
+\processes join or leave the system, create or delete partitions, at
+any time. Instead, we propose to use the delivery order at each
+\process to detect possible inconsistencies and solve them. Together,
 \processes eventually remove all stale control information (transiting
 messages and local states) of the system leaving room for propagation
 of messages about up-to-date partitions.
@@ -340,13 +344,14 @@ of messages about up-to-date partitions.
 
 \begin{proof}
   \Processes deliver and forward the best sum of weights they
-  received. The only case where a \process would block such epidemic
-  propagation would be when it received and delivered a message from a
-  partition that has since then been deleted but with a better sum of
-  weights than newly received ones. Removing \emph{forever} all such
-  stale messages about deleted partitions would allow \processes to
-  propagate their best up-to-date partition again, eventually reaching
-  consistent partitioning together.
+  received. Figure~\ref{fig:proofA} depicts the only case where a
+  \process would block such epidemic propagation: the \process
+  received and delivered a message from a partition that has since
+  then been deleted but with a better sum of weights than newly
+  received ones. Removing \emph{forever} all such stale messages about
+  deleted partitions would allow \processes to propagate their best
+  up-to-date partition again, eventually reaching consistent
+  partitioning together, as stated by Theorem~\ref{theo:bef}.
 \end{proof}
 
 \input{input/figproof.tex}

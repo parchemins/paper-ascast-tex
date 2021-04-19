@@ -27,10 +27,11 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 
 \Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}
-\tcp*[f]{\smash{$r_p(\alpha_{s', c'}^{d', \pi'})$}}  \textup{\texttt{from}} $q$} {
+\tcp*[f]{\footnotesize{receive $\alpha$ from $q$}}} {
 %   \If {$p \not\in \pi'$ \label{line:notloopingA}} {
-    \uIf {$q = \pi[|\pi| - 1] \wedge (c' < V[s'] \, \vee$\tcp*[r]{\footnotesize{III detect}}
-    \hphantom{\textbf{if} $q = \pi[|\pi| - 1] \wedge\,$}~$(\alpha_{s', c'}^{d', \pi'} <_\alpha A_{s, c}^{d, \pi} \wedge p\not\in \pi'))$ \label{line:detectA}} {
+    \uIf(\tcp*[f]{\footnotesize{or state}}) {\hphantom{$($}$q = \pi[|\pi| - 1] \, \wedge$\tcp*[f]{{\footnotesize{from parent: III detect}}}\\
+    \hphantom{\textbf{if}} $(c' < V[s'] \,  \vee$\tcp*[f]{\footnotesize{inconsistent version}}\\
+    \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} <_\alpha A_{s, c}^{d, \pi} \wedge p\not\in \pi'))$}\label{line:detectA}} {
           \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{IV propagate}}
     }
     \uElseIf (\tcp*[f]{\footnotesize{I propagate}}) {$A_{s, c}^{d, \pi} <_\alpha \alpha_{s', c'}^{d', \pi} \wedge p \not\in \pi'$  } {
@@ -47,21 +48,25 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 
 \Function{\textup{receiveDel($q$, $\delta_{s', c'}^{\pi'}$)}
-\tcp*[f]{\tiny \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}} {
+\tcp*[f]{\footnotesize \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}} {
   \uIf (\tcp*[f]{\footnotesize{I' propagate}}) {$\alpha_{s', c'}^{\_, \pi'} \overset{\alpha}{=} A_{s, c}^{\_, \pi} \wedge p \not\in \pi'$ \label{line:notloopingB}} {
      $V[s'] \leftarrow \max(V[s'], c')$ \;
      $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing}$ \;
 
-     \lIf{$\pi' = \varnothing$}{\textbf{foreach} $n\in O_p$
-     \textbf{do} send$_n$(\smash{$\delta_{s', c'}^{\pi' \cup p}$)}}
-     
-     \lIf{$\pi' \neq \varnothing$}{\textbf{foreach} $n\in O_p$
-     \textbf{do} send$_n$($\delta_{s', c'}$)}
 
-     } \uElseIf {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
-         \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)} \tcp*[r]{\label{line:compete}compete}
+     \ForEach{$n \in O_p$}{
+       \lIf {$\pi' = \varnothing$} {send$_n$(\smash{$\delta_{s', c'}$)}
+       \textbf{else} send$_n$(\smash{$\delta_{s', c'}^{\pi' \cup p}$)} }
      }
-%  }
+
+  }\uElseIf{$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
+     \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
+     \tcp*[r]{\label{line:compete}\footnotesize{compete}}
+  }
 }
 
-
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% ispell-local-dictionary: "english"
+%%% End: 

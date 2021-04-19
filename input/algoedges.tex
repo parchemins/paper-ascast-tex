@@ -6,14 +6,15 @@
 \LinesNumbered
 
 \Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$}}  {
-  \If {$best \neq \varnothing$} {
-    \textbf{let} $\langle s, c, d, \pi \rangle \leftarrow best$ \;
-    \textup{send$_q$($s, c, d + w_{pq}, \pi \cup p$)} \tcp*[r]{compete}
-  }
+    \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
+         \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
+         \tcp*[r]{\label{line:compete}\footnotesize{compete}}}
 }
 
+\BlankLine
+
 \Function{\textup{edgeDown($q$)} \tcp*[f]{link to $q$ removed}} {
-  \If {$q = best.\pi[|best.\pi| - 1]$} {
-    \textup{receiveDel($q$, $best$)} \tcp*[r]{undo}
+  \If {$q = \pi[|\pi| - 1]$} {
+    \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize IV propagate}
   }
 }
