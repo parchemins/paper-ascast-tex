@@ -31,10 +31,10 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 %   \If {$p \not\in \pi'$ \label{line:notloopingA}} {
     \uIf(\tcp*[f]{\footnotesize{or state}}) {\hphantom{$($}$q = \pi[|\pi| - 1] \, \wedge$\tcp*[f]{{\footnotesize{from parent: III detect}}}\\
     \hphantom{\textbf{if}} $(c' < V[s'] \,  \vee$\tcp*[f]{\footnotesize{inconsistent version}}\\
-    \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} <_\alpha A_{s, c}^{d, \pi} \wedge p\not\in \pi'))$}\label{line:detectA}} {
+    \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} < A_{s, c}^{d, \pi} \wedge p\not\in \pi'))$}\label{line:detectA}} {
           \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{IV propagate}}
     }
-    \uElseIf (\tcp*[f]{\footnotesize{I propagate}}) {$A_{s, c}^{d, \pi} <_\alpha \alpha_{s', c'}^{d', \pi} \wedge p \not\in \pi'$  } {
+    \uElseIf (\tcp*[f]{\footnotesize{I propagate}}) {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \wedge p \not\in \pi'$  } {
           $V[s'] \leftarrow c'$ \;
           $A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}$ \;
               \lForEach{$n \in O_p$}
@@ -49,7 +49,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \Function{\textup{receiveDel($q$, $\delta_{s', c'}^{\pi'}$)}
 \tcp*[f]{\footnotesize \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}} {
-  \uIf (\tcp*[f]{\footnotesize{I' propagate}}) {$\alpha_{s', c'}^{\_, \pi'} \overset{\alpha}{=} A_{s, c}^{\_, \pi} \wedge p \not\in \pi'$ \label{line:notloopingB}} {
+  \uIf (\tcp*[f]{\footnotesize{I' propagate}}) {$\alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi} \wedge p \not\in \pi'$ \label{line:notloopingB}} {
      $V[s'] \leftarrow \max(V[s'], c')$ \;
      $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing}$ \;
 

@@ -5,36 +5,60 @@
   \medmuskip=0mu
   \thinmuskip=0mu
   
-  \newcommand\X{85pt}
-  \newcommand\Y{-40pt}
+  \newcommand\X{95pt}
+  \newcommand\Y{-50pt}
 
   \newcommand\ADD{\alpha}
   \newcommand\DEL{\delta}
 
-  \draw[opacity=0] (-1.4*\X, 0) -- (1.4*\X, 0);
+  \draw[opacity=0] (-1.2*\X, 0) -- (1.2*\X, 0);
   
 
 
-  \draw[<->] (-5pt - \X, -\Y) -- node[above]{I: propagation} (5pt, -\Y); %% I
+  \draw[->] (-1.15*\X, 0) -- (-5pt + -1*\X, 0); \draw[dotted] (-1.25*\X, 0) -- (-1.15*\X, 0);
+  \draw (5pt + \X, 0) -- (1.15*\X, 0); \draw[dotted,->] (1.15*\X, 0) -- (1.25*\X, 0);
   
-  \draw[->] (-\X + 5pt, 0) --
-  node[above, color=\PA, font=\small]{$\ADD_a^1$}
+  \draw[<->] (5pt - \X, 0.4*\Y) -- node[below, font=\small]{\textbf{I: propagation}} (-5pt, 0.4*\Y); %% I
+  
+  \draw[->] (-\X + 5pt, 0)
+  node[below=-0.3em, below right, font=\tiny]{$\textcolor{\PA}{\ADD_a^{x'}} \rightarrow$}
+  --
   (0 - 5pt, 0); %% a - b
 
-  \draw[<->] (-5pt, 5pt -\Y) -- node[above]{II: need I', III, IV} (5pt + \X, 5pt -\Y); %% II
+  \draw[<->] (5pt, 0.4*\Y) -- node[below, align=center, font=\small]{\textbf{II: need purge}\\with I', III, IV} (-5pt + \X, 0.4*\Y); %% II
   \draw[->] (0 + 5pt, 0) -- (-5pt +  \X, 0); %% b - c
 
 
   
-  \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
-  \draw[fill=white] (0, 0) node{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (-\X, 0) node[color=\PA]{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+  \draw[fill=white] (0, 0) node[color=\PD]{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
 
 
   
-  \draw (-\X, 5pt) node[above, color=\PA]{$\ADD_a^0$};
-  \draw ( 0, 5pt) node[above, color=\WRONG]{$\ADD_d^{0.5}$};
-  \draw (\X,-5pt) node[below, font=\scriptsize]{expect \textcolor{\PA}{$\alpha_a$}};
-  \draw (0, -5pt) node[below, font=\scriptsize]{expect $\DEL_d \rightarrow \textcolor{\PA}{\alpha_a}$};
+  \draw (-\X, 5pt) node[above, color=\PA]{$\ADD_a^x$};
+  \draw ( 0, 5pt) node[above]{$
+    \xrightarrow[\textcolor{\PD}{\ADD_d^y}]{\mbox{\small{last}}}
+    \xrightarrow[\DEL_d \rightarrow \textcolor{\PA}{\ADD_a^{x'}}]{\mbox{\small{expect}}}$};
+  
+  \draw (-5pt, 0pt) node [below=-0.3em, below left, font=\tiny]{$\textcolor{\WRONG}{\ADD_d^y < \ADD_a^{x'}}$};
+  % \draw (-5pt, 0pt) node [below=-0.3em, below left, font=\tiny]{$\textcolor{\WRONG}{\ADD_d^{y} < \ADD_e^z}$};
 
+  
+  \draw (\X, 5pt) node[above]{$
+    \xrightarrow[\textcolor{\PA}{\ADD_a^{x''}}]{\mbox{\small{expect}}}$};
+%  \draw (0, -5pt) node[below, font=\scriptsize]{expect $\DEL_d \rightarrow \textcolor{\PA}{\ADD_a}$};
+
+
+  
+  \draw[->] (-\X,  0.5*\Y) -- (-\X, -5pt);
+  \draw[dotted] (-\X,  0.5*\Y) -- (-\X, 0.9*\Y);
+
+  \draw[->] ( 0,  0.5*\Y) -- ( 0, -5pt);
+  \draw[dotted] ( 0,  0.5*\Y) -- ( 0, 0.9*\Y) node[below, font=\scriptsize]{somewhere: $\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d$};
+
+  \draw[->] ( \X,  0.5*\Y) -- ( \X, -5pt);
+  \draw[dotted] ( \X,  0.5*\Y) -- ( \X, 0.9*\Y);
+
+  
 \end{tikzpicture}
