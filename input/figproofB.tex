@@ -17,7 +17,6 @@
 
   \draw[->] (-1.15*\X, 0) -- (-5pt + -1*\X, 0); \draw[dotted] (-1.25*\X, 0) -- (-1.15*\X, 0);
   \draw (5pt + 2*\X, 0) -- (2.15*\X, 0); \draw[dotted,->] (2.15*\X, 0) -- (2.25*\X, 0);
-
   
   \draw[<->] (5pt - \X, 0.4*\Y) --
   node[below, font=\small]{\textbf{I': propagation}}
@@ -34,24 +33,24 @@
   (-5pt + \X, 0.4*\Y); %% IV
   
   \draw[->] (0 +5pt, 0)
-  node[below=-0.3em, below right, font=\tiny]{$\textcolor{\PF}{\ADD_f^{z'}} \rightarrow$}
+  node[below=-0.3em, below right, font=\tiny]{$\textcolor{\PH}{\ADD_h^{z'}} \rightarrow$}
   --
   (\X -5pt, 0)
-  node [left= -0.15em, below=-0.3em, below left, font=\tiny]{$\textcolor{\WRONG}{\DEL_f \not\rightarrow \ADD_f^{z'}}$}
-  ; %% e - b'
+  node [left= -0.15em, below=-0.3em, below left, font=\tiny]{$\textcolor{\WRONG}{\DEL_h \not\rightarrow \ADD_h^{z'}}$}
+  ; %% e - f
   
   \draw[<->] (5pt +\X , 0.4*\Y) --
   node[below, font=\small]{\textbf{IV: propagation}}
   (-5pt + 2*\X, 0.4*\Y); %% V
   
-  \draw[->] ( \X +5pt, 0) -- (2*\X -5pt, 0); %% b - b''
+  \draw[->] ( \X +5pt, 0) -- (2*\X -5pt, 0); %% b - g
 
 
   
   \draw[fill=white] (-\X, 0) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
-  \draw[fill=white] (0, 0) node[color=\PF]{$\bm{e}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (\X, 0) node[color=\PD]{$\bm{b'}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (2*\X, 0) node[color=\PD]{$\bm{b''}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0, 0) node[color=\PH]{$\bm{e}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (\X, 0) node[color=\PD]{$\bm{f}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (2*\X, 0) node[color=\PD]{$\bm{g}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
 
 
   
@@ -59,11 +58,11 @@
   
   \draw ( 0, 5pt) node[above, font=\footnotesize]{$
     \xrightarrow[\textcolor{\PC}{\ADD_d^{\vphantom{z'}}}]{\mbox{\scriptsize{before}}}
-    \xrightarrow[\textcolor{\PF}{\ADD_f^{z\vphantom{'}}}]{\mbox{\scriptsize{last}}}
-    \xrightarrow[\DEL_f^{\vphantom{z'}} ]{\mbox{\scriptsize{expect}}}$};
+    \xrightarrow[\textcolor{\PH}{\ADD_h^{z\vphantom{'}}}]{\mbox{\scriptsize{last}}}
+    \xrightarrow[\DEL_h^{\vphantom{z'}} ]{\mbox{\scriptsize{expect}}}$};
   
   \draw ( \X, 5pt) node[above, font=\footnotesize]{$
-    \xrightarrow[\textcolor{\PF}{\ADD_f^{\vphantom{y'}}} \rightarrow \DEL_f]{\mbox{\scriptsize{before}}}
+    \xrightarrow[\textcolor{\PH}{\ADD_h^{\vphantom{y'}}} \rightarrow \DEL_h]{\mbox{\scriptsize{before}}}
     \xrightarrow[\textcolor{\PC}{\ADD_d^{y'}}]{\mbox{\scriptsize{last}}}
     \xrightarrow[\DEL_d^{\vphantom{z'}}?]{\mbox{\scriptsize{expect}}}$};
 
@@ -77,7 +76,7 @@
   \draw[dotted] (-\X,  0.5*\Y) -- (-\X, 0.9*\Y);
 
   \draw[->] ( 0,  0.5*\Y) -- ( 0, -5pt);
-  \draw[dotted] ( 0,  0.5*\Y) -- ( 0, 0.9*\Y) node[below right, font=\scriptsize]{somewhere: $\textcolor{\PF}{\ADD_f} \rightarrow \DEL_f$};
+  \draw[dotted] ( 0,  0.5*\Y) -- ( 0, 0.9*\Y) node[below right, font=\scriptsize]{somewhere: $\textcolor{\PH}{\ADD_h} \rightarrow \DEL_h$};
 
   \draw[->] ( \X,  0.5*\Y) -- ( \X, -5pt);
   \draw[dotted] ( \X,  0.5*\Y) -- ( \X, 0.9*\Y);

@@ -14,13 +14,13 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 
 \Function{\textup{Add ( )}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
-  \textup{receiveAdd($p$, $\alpha_{p, V[p] + 1}^{0, \varnothing}$)}
+  \textup{\smash{receiveAdd($p$, $\alpha_{p, V[p] + 1}^{0, \varnothing}$)}}\label{line:ascast_add}
 }
 
 \BlankLine
 
 \Function{\textup{Del ( )}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
-  \textup{receiveDel($p$, $\delta_{p, V[p] + 1}$)}
+  \textup{\smash{receiveDel($p$, $\delta_{p, V[p] + 1}$)}}\label{line:ascast_del}
 }
 
 \BlankLine
@@ -28,13 +28,12 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}
 \tcp*[f]{\footnotesize{receive $\alpha$ from $q$}}} {
-%   \If {$p \not\in \pi'$ \label{line:notloopingA}} {
     \uIf(\tcp*[f]{\footnotesize{or state}}) {\hphantom{$($}$q = \pi[|\pi| - 1] \, \wedge$\tcp*[f]{{\footnotesize{from parent: III detect}}}\\
-    \hphantom{\textbf{if}} $(c' < V[s'] \,  \vee$\tcp*[f]{\footnotesize{inconsistent version}}\\
+    \hphantom{\textbf{if}} $(c' < V[s'] \,  \vee$\tcp*[f]{\footnotesize{inconsistent version}\label{line:ascast_version}}\\
     \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} < A_{s, c}^{d, \pi} \wedge p\not\in \pi'))$}\label{line:detectA}} {
-          \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{IV propagate}}
+        \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{IV propagate}}
     }
-    \uElseIf (\tcp*[f]{\footnotesize{I propagate}}) {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \wedge p \not\in \pi'$  } {
+    \uElseIf (\tcp*[f]{\footnotesize{I propagate}\label{line:ascast_better}}) {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \wedge p \not\in \pi'$  } {
           $V[s'] \leftarrow c'$ \;
           $A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}$ \;
               \lForEach{$n \in O_p$}
@@ -49,19 +48,21 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \Function{\textup{receiveDel($q$, $\delta_{s', c'}^{\pi'}$)}
 \tcp*[f]{\footnotesize \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}} {
-  \uIf (\tcp*[f]{\footnotesize{I' propagate}}) {$\alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi} \wedge p \not\in \pi'$ \label{line:notloopingB}} {
+  \uIf {$((\delta_{s', c'} \wedge \alpha_{s', c'-1} = A_{s, c}) \, \vee$\tcp*[f]{\footnotesize{I' propagate}}\\
+    \hphantom{\textbf{if} } $(\delta_{s',c'}^{\pi'} \wedge \alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi})) \, \wedge$\tcp*[f]{\footnotesize{IV propagate}}\\
+    \hphantom{\textbf{if} $($} $p \not\in \pi'$ \label{line:notloopingB}} {
      $V[s'] \leftarrow \max(V[s'], c')$ \;
      $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing}$ \;
 
 
      \ForEach{$n \in O_p$}{
-       \lIf {$\pi' = \varnothing$} {send$_n$(\smash{$\delta_{s', c'}$)}
-       \textbf{else} send$_n$(\smash{$\delta_{s', c'}^{\pi' \cup p}$)} }
+       \lIf {\smash{$\delta_{s', c'}^{\pi'}$}} {send$_n$(\smash{$\delta_{s', c'}^{\pi' \cup p}$)}
+       \textbf{else} send$_n$(\smash{$\delta_{s', c'}$)} }
      }
 
   }\uElseIf{$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
      \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
-     \tcp*[r]{\label{line:compete}\footnotesize{compete}}
+     \tcp*[r]{\label{line:ascast_compete}\footnotesize{compete}}
   }
 }
 
