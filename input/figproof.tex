@@ -1,21 +1,30 @@
 
 \begin{figure*}
   \begin{center}
-    \subfloat[Part A][\label{fig:proofA}Stale $\alpha$'s may stop
-      other $\alpha$'s from reaching all processes ($b$ and $c$) that
-      require it along the shortest path. Hence, we must guarantee
-      eventual purging of stale $\alpha$'s (see
+    \subfloat[Part A][\label{fig:proofA}Stale $\alpha$ messages may
+      stop other $\alpha$ messages from reaching all \processes ($b$
+      and $c$) that require it along the shortest path. Consistent
+      partitioning requires eventual purging of stale messages (see
       Figure~\ref{fig:proofB}).]  {\input{input/figproofA.tex}}
     \hspace{10pt}
-    \subfloat[Part B][\label{fig:proofB}Stale $\alpha$'s may
-      stop $\delta$'s from reaching
-      processes with targeted $\alpha$'s.
-      To ensure consistent partitioning, $b'$ and $b''$
-      must remove $\alpha_{d}$ either by delivering $\delta_d$,
-      or a more specific $\delta_d^{0.5}$ and $\delta_d^{1.5}$ respectively.]
+    \subfloat[Part B][\label{fig:proofB}Stale $\alpha$ messages may
+      stop $\delta$ messages from reaching processes with the corresponding
+      partition. Consistent partitioning requires that all \processes propagate
+      $\delta$ messages as often as possible (I'); detect possible inconsistencies
+      when parents' $\alpha$ messages contradict delivery history (III); notify
+      processes of possible inconsistencies (IV).]
     {\input{input/figproofB.tex}}
-    \caption{\label{fig:proof}Dynamic partitioning leads to
-      consistency issues due to staleness and ordering of operations.}
+    \caption{\label{fig:proof}Concurrent operations,
+      delivery orders, and stale control information may impair
+      consistent partitioning. Dynamic consistent partitioning
+      requires eventual purging of stale messages, and best eventual
+      forwarding.}
   \end{center}
 \end{figure*}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../paper"
+%%% ispell-local-dictionary: "english"
+%%% End: 
 

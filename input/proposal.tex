@@ -114,17 +114,13 @@ and communication.
 
 \subsection{Consistent partitioning}
 
-At any time, a \process can decide to become a source, hence creating a
-new partition in the system by executing an \texttt{Add}
+At any time, a \process can decide to become a source, hence creating
+a new partition in the system by executing an \texttt{Add}
 operation. This partition includes at least its source plus
 neighboring \processes that estimate they are closer to this source
 than any other source. Such distance (or \emph{weight}) is
 application-dependant: in the context of maintaining distributed
-indexes, weights are latency.
-
-%For instance, weights could be latency in live
-% streaming applications, or differences in profiles for recommendation
-%systems.
+indexes, weights would be link latency.
 
 \begin{definition}[\label{def:partitioning}Partitioning]
   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
@@ -332,14 +328,18 @@ of messages about up-to-date partitions.
 %% any time, we need to further constrain the delivery order at each
 %% \process.
 
-\begin{corollary}[\label{theo:dcp}\underline{D}ynamic \underline{c}onsistent
+\begin{corollary}[\label{theo:dcp}purge + BEF $\implies$
+    \underline{D}ynamic \underline{c}onsistent
     \underline{p}artitioning (DCP)]
-  Consistent partitioning where each \process can \texttt{Add} and
-  \texttt{Del}ete its partition at any time requires
-  \begin{inparaenum}[(i)]
-  \item eventual purging of stale notifications, and
-  \item eventual delivery of bests partitions.
-  \end{inparaenum}
+%
+When each \process can \texttt{Add} and \texttt{Del}ete its partition
+at any time, consistent partitioning requires
+\begin{inparaenum}[(i)]
+\item eventual purging of stale messages ($b_p(m) \rightarrow b_p(m')
+  \implies \eventually (d_q(m) \implies d_q(m) \rightarrow
+  d_q(m''))$);
+\item and best eventual forwarding.
+\end{inparaenum}
 \end{corollary}
 
 \begin{proof}
@@ -348,53 +348,91 @@ of messages about up-to-date partitions.
   \process would block such epidemic propagation: the \process
   received and delivered a message from a partition that has since
   then been deleted but with a better sum of weights than newly
-  received ones. Removing \emph{forever} all such stale messages about
-  deleted partitions would allow \processes to propagate their best
-  up-to-date partition again, eventually reaching consistent
+  received ones (in the example $\alpha_d^y <
+  \alpha_a^{x'}$). Removing \emph{forever} all such stale messages
+  about deleted partitions would allow \processes to propagate their
+  best up-to-date partition again, eventually reaching consistent
   partitioning together, as stated by Theorem~\ref{theo:bef}.
 \end{proof}
 
 \input{input/figproof.tex}
 
-Figure~\ref{fig:proof} depicts the issues with staleness and message
-orderings. In Figure~\ref{fig:proofA}, the shortest path from any
-source to \Process $c$ is $[a, b, c]$. However, \Process $b$ still holds
-a stale $\alpha_d^{0.5}$ without knowing. When it receives
-$\alpha_a^1$, it discards it, for it assumes that downstream \processes
-are more interested in $\alpha_d^{0.5}$. To reach consistent
-partitioning, \Process $b$ first needs to purge its current partition
-to later accept that of its current actual shortest path:
-$\alpha_a^1$.
+%% Figure~\ref{fig:proof} depicts the issues with staleness and message
+%% orderings. In Figure~\ref{fig:proofA}, the shortest path from any
+%% source to \Process $c$ is $[a, b, c]$. However, \Process $b$ still holds
+%% a stale $\alpha_d^{0.5}$ without knowing. When it receives
+%% $\alpha_a^1$, it discards it, for it assumes that downstream \processes
+%% are more interested in $\alpha_d^{0.5}$. To reach consistent
+%% partitioning, \Process $b$ first needs to purge its current partition
+%% to later accept that of its current actual shortest path:
+%% $\alpha_a^1$.
 
-\noindent Figure~\ref{fig:proofB} shows that removing stale control
-information is even more complex. The removal must reach all \processes
-of the previous shortest path going from $d$ to $b''$. Label I' shows
-the most obvious issue where \Process $e$ changed partition for a
-better but stale $\alpha_f$. Since it can remember its previous
-deliveries, it could still forward $\delta_d$ for the sake of
-consistency. However, this would lead to every \process forwarding
-every $\delta$ they ever delivered. Such protocol's overhead would
-depend on past partitioning instead of current one. Label III shows
-the issue when the blocking partition is already known to be stale at
-\Process $b'$. \Process $b''$ eventually receives $\alpha_f$ from
-$e$. However, it cannot deliver it, for it would break last win order.
-\Process $b'$ may be in an inconsistent state. Label IV shows the
-corollary issue: \Process $b''$ delivered a message from a \process that
-may be inconsistent without knowing it.
+%% \noindent Figure~\ref{fig:proofB} shows that removing stale control
+%% information is even more complex. The removal must reach all \processes
+%% of the previous shortest path going from $d$ to $b''$. Label I' shows
+%% the most obvious issue where \Process $e$ changed partition for a
+%% better but stale $\alpha_f$. Since it can remember its previous
+%% deliveries, it could still forward $\delta_d$ for the sake of
+%% consistency. However, this would lead to every \process forwarding
+%% every $\delta$ they ever delivered. Such protocol's overhead would
+%% depend on past partitioning instead of current one. Label III shows
+%% the issue when the blocking partition is already known to be stale at
+%% \Process $b'$. \Process $b''$ eventually receives $\alpha_f$ from
+%% $e$. However, it cannot deliver it, for it would break last win order.
+%% \Process $b'$ may be in an inconsistent state. Label IV shows the
+%% corollary issue: \Process $b''$ delivered a message from a \process that
+%% may be inconsistent without knowing it.
 
-
-\begin{theorem}[Propagation $+$ detection $\implies$ DCP]
-  % Propagating 
-  \TODO{Puring stale notifications requires to handle I...IV.}
+\begin{theorem}[Propagations $+$ detection $\implies$ purge]
+  \Processes can purge stale control information by broadcasting a
+  dedicated notification message $\delta$, and detect possible
+  inconsistencies using their history to propagate 
 \end{theorem}
 
 \begin{proof}
-  \TODO{Meow meow meow.}
-  \TODO{Label I: default propagation to what seems the border of the partition but isn't.}
-  \TODO{Label II: gates eventually break because of I', III, IV.}
-  \TODO{Label I': as Label I.}
-  \TODO{Label III: detecting possible inconsistent partitioning.}
-  \TODO{Label IV: propagation of this issue to all and only concerned parties.}
+  Figure~\ref{fig:proofB} depicts all possible cases that need
+  appropriate purging. A chain of \processes $[d, e, b', b'']$
+  delivered and forwarded a message $\alpha_d$. Some \processes may
+  have delivered messages about other partitions before or after
+  $\alpha_d$.
+  \begin{asparadesc}
+  \item [\processes with last $\alpha_d$:] \Processes such as
+    \Process~$d$ where the last and best partition is still $P_d$. By
+    propagating from process to process the corresponding $\delta_d$
+    message, these \processes purge $\alpha_d$.
+  \item [\processes with $\alpha_d^y \rightarrow \alpha_f^z$ with last
+    $\alpha_f^z$, for $\alpha_f^z < \alpha_d^y$:] \Processes such as
+    \Process~$e$ do not directly suffer from the non-delivery of
+    $\delta_d$. They need to purge their own $P_f$ if need
+    be. Nonetheless, they deliver and forward $\alpha_f$ that at least
+    one following \process will receive:
+  \item [\processes with $\delta_f \rightarrow \alpha_d$:] \Processes
+    such as \Process~$b'$ do not belong to the preceding category, for
+    they already delivered $\delta_f$. However, best eventual
+    forwarding guarantees that they receive $\alpha_f$ that
+    contradicts their history or state. In such case, the detecting
+    \processes purge their own $\alpha_d$. The detecting \processes
+    must also notify subsequent \processes that their current
+    partition \emph{may be} deleted, for their parent may have blocked
+    the corresponding $\delta$ messages. We note such notification
+    $\delta_d?$ to emphasize the uncertainty of a $\delta$ message.
+  \item [\processes with last $\alpha_d$ receiving $\delta_d?$ from
+    their parent:] \Processes such as \Process~$b''$ have $\alpha_d$
+    and preceding delivered messages have not importance. Such
+    \processes must trust detecting \processes by delivering and
+    forwarding $\delta_d?$. Messages are subject to all aforementioned
+    blocking conditions, but are also solved by aforementioned
+    mechanisms.
+  \end{asparadesc}
+
+  Propagation I' terminates: a process do not deliver a $\delta$
+  message if it has already delivered it. Propagation IV terminates: a
+  process do not deliver a looping message.  Propagation and detection
+  ensure that \processes eventually purge stale $\alpha$ messages from
+  the system, leaving room for Propagation I.
+  %% In the meantime, \processes that still belong to a partition can
+  %% propagate their respective last $\alpha$ message, and reach
+  %% consistent partitioning.
 \end{proof}
 
 
