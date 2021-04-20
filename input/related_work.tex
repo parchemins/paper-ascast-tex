@@ -2,10 +2,10 @@
 \label{related_work}
 
 
-In the context of this paper, an \textit{ideal} content indexing service would enable that for any content, every node would be able to access its closest replica.
-Basically, offering such a service would require (i) to have access to the list, namely the \textit{index}, of current replica localizations, (ii) to be aware of the topology to compute which replica is the closest for a given location. We review the existing solutions 
+In the context of this paper, a content indexing service enables that for any content, every node is able to access its closest replica.
+Basically, offering such a service requires (i) to have access to the list of current replica localizations, (ii) to be aware of the topology to compute which replica is the closest for a given location. 
 
-(i) Deploying a centralized server that maintain an index of all replica localizations has been proposed~\cite{fogstore, p2p-alto, p2p-oracle, snamp}. However, this solution suffers from well-known disadvantages inherent to centralized solutions (load balancing, robustness, locality, etc.) that are even magnified in a Fog context.
+(i) Deploying a centralized server that maintain an index of all replica localizations has been proposed~\cite{fogstore, p2p-alto, p2p-oracle, snamp}. However, this solution suffers from well-known disadvantages inherent to centralized solutions (load balancing, robustness, locality, etc.) that are even magnified in an Edge context.
 Distributing this index among nodes in the network circumvent some of these issues, either using coordinate-based overlays~\cite{coin_19, voronet} or Distributed Hash Tables~\cite{squirrel, ipfs, dht-name-resolution, mdht} for example. In the latter, each node stores a part of the index, defined by an interval between hash values. 
 Before downloading any object, a node first
 hashes the content to obtain the address of the node that stores the replica localizations of this given object. After obtaining from the remote node the list of available replicas, it can select the closest copy to download from. We emphasize that, in this setting, the DHT only stores information about replicas localizations, not the content itself. DHT-based approaches are well-studied and easy to deploy in order to offer such a localization service. 
