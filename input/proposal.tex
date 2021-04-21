@@ -107,10 +107,8 @@ and its implementation when a \process can only become a new source to
 create a new partition, i.e., it cannot revoke its self-appointed
 status of source. Then, it extends to include the latter behavior: it
 introduces the properties that guarantee consistent partitioning in
-such context, and it details our implementation called \NAME. Finally,
-it provides the complexity analysis of \NAME divided in time, space,
-and communication.
-
+such context, and it details our implementation called \NAME along
+with its complexity analysis.
 
 \subsection{Consistent partitioning}
 
@@ -317,16 +315,12 @@ $\delta_a$ if it exists. However, such solution also implies that
 partition, but also related to partitions they belong to in the
 past. This would prove overly expensive in dynamic systems where
 \processes join or leave the system, create or delete partitions, at
-any time. Instead, we propose to use the delivery order at each
-\process to detect possible inconsistencies and solve them. Together,
-\processes eventually remove all stale control information (transiting
-messages and local states) of the system leaving room for propagation
-of messages about up-to-date partitions.
-
-%% To identify and solve the issue with dynamic consistent partitioning
-%% where protocols enable \processes to \texttt{Add} and \texttt{Del} at
-%% any time, we need to further constrain the delivery order at each
-%% \process.
+any time.  \TODO{Another paragraph with JJ approach?}  Instead, we
+propose to use the delivery order at each \process to detect possible
+inconsistencies and solve them. Together, \processes eventually remove
+all stale control information (transiting messages and local states)
+of the system leaving room for propagation of messages about
+up-to-date partitions.
 
 \begin{corollary}[\label{theo:dcp}purge + BEF $\implies$
     \underline{D}ynamic \underline{c}onsistent
@@ -494,8 +488,9 @@ of such vector increases linearly with the number of sources that the
 $\mathcal{O}(V)$ in the worst case. Unfortunately, \processes cannot
 remove any entry from this vector without running a costly distributed
 consensus protocol to ensure that no \process can mistake an old but
-removed entry for a new one. However, using \NAMEB, we expect that
-every \process knows only a small subset of sources.
+removed entry for a new one. However, following the principles of
+scoped broadcast, we expect that every \process knows only a small
+subset of sources.
 
 This vector of versions constitutes a summary of deliveries. \NAME
 uses it to detect possible inconsistent partitioning as depicted in
@@ -519,32 +514,37 @@ by the corresponding $\alpha$ messages to enable Propagation~IV.  In
 the worst case, the path includes every \processes in the system but
 converges in average to the average diameter of partitions. Thus,
 message paths and \NAME have an interesting synergy: Paths tend to be
-smaller as the number of sources in the system increases.
+smaller as the number of sources in the system increases. Bloom
+filters could introduce another trade-off by further decreasing the
+size of path data structures at the cost of premature stopped
+propagation that could impair consistent
+partitioning~\cite{whitaker2002forwarding}.
 
 As stated in Theorem~\ref{theo:dcp}, dynamic consistent partitioning
 not only requires eventual purging of stale control information, but
 also the retrieval of the best up-to-date partitions. In that regard,
-$\delta$ messages have dual use: since they already reach the borders
-of their partition when they remove stale control information, they
-also trigger a competition when reaching such bordering \processes
-(see Line~\ref{line:ascast_compete}). This simply consists in sending
-the current partition through the communication link from which the
-\process received the $\delta$. Upon receipt of this answer,
-\processes act normally by propagating their changes when they
-improve.
+both kinds of $\delta$ messages have dual use: since they already
+reach the borders of their partition when they remove stale control
+information, they also trigger a competition when reaching such
+bordering \processes (see Line~\ref{line:ascast_compete}). This simply
+consists in sending the current partition through the communication
+link from which the \process received the $\delta$. Upon receipt of
+this answer, \processes act normally by propagating their changes when
+they improve. \TODO{Exemple with figure for detection?}
 
-\TODO{About communication complexity} In terms of number of messages
-required to reach optimal partitioning. In the average-case, a
-\process $i$ chosen uniformly at random among all \processes creates a
-logical partition. Its messages $\alpha_i$ propagate through the
-network until reaching \processes that belong to another partition
-closer to them. This splits partitions in half in average. Overall,
-the $a^{th}$ new partition comprises
-\smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor \log_2 a \rfloor}})$}
-\processes. This decreases every new partition until reaching $0$
-\processes per new partition: even the chosen \process already belongs
-to its optimal partition. The average number of messages per \process
-is \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
+\TODO{Rework this.}\NAME guarantees dynamic consistent partitioning by
+making extensive use of \process to \process communications. In terms
+of number of messages, in the average-case, a \process $i$ chosen
+uniformly at random among all \processes creates a logical
+partition. Its messages $\alpha_i$ propagate through the network until
+reaching \processes that belong to another partition closer to
+them. This splits partitions in half in average. Overall, the $a^{th}$
+new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
+      \log_2 a \rfloor}})$} \processes. This decreases every new
+partition until reaching $0$ \processes per new partition: even the
+chosen \process already belongs to its optimal partition. The average
+number of messages per \process is
+\smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
       \rfloor}})$}. \TODO{Multiple receipt and multiple delivery imply
   more messages (receipt bounded by $|O|$ as well).} Deleting the
 $a^{th}$ partition generates the exact same number of messages than
@@ -555,7 +555,6 @@ after the $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot
 a^2)$. As for the average-case, the number of messages for the
 partition deletion is identical to the number of messages of the
 corresponding partition creation.
-\noindent \TODO{In terms of size of messages.}
 
 \begin{algorithm}
   \input{input/algoedges.tex}
