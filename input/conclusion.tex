@@ -35,6 +35,22 @@ hierarchical properties of such topology~\cite{nur2018geography} to
 avoid flooding the whole systems with control information about all
 partitions.
 
+
+% TODO : Use cases
+While we use the distance to the closest copy in this paper, It is
+notewothy that other scopes can be envisioned according to the
+use-cases.  For instance, the location of a city in order to broadcast
+message to all nodes in the city.  This requires nodes to store and
+maintain their city location in their local state. Nodes stop
+delivering and forwarding their received messages when they come from
+a different city. Such a predicate can be complexified in order to
+broadcast messages to all nodes in the city plus neighboring
+cities. This requires nodes to overload forwarded messages the first
+time they reach another city. The predicate checks if messages already
+reached two distinct cities before delivery.  The predicate can even
+be piggypack within the message and so be different for each
+message.\TODO{Complete the use-cases}
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "../paper"
