@@ -3,7 +3,7 @@
 
 \input{input/figpartitionintuition.tex} %% positioning
 
-There is an ongoing evlution of storing data from the cloud to the
+There is an ongoing evolution of storing data from the cloud to the
 edges of the network. Either because it is where it has been created
 and it is too expensive to be transmitted through the network, or
 because it has been replicated to bring data closer to the end users
@@ -51,7 +51,7 @@ latency as well as the volume of data passing through the network:
     get the object, before being able to start its downloading.
   \item There is no information to select the ``best'' node among the
      possible candidates from which the content  could be
-     retrieved. This results in parallel requests performed by the client node to
+     retrieved. In most cases, this results in parallel requests performed by the client node to
      each candidate with the goal of retrieving the content as efficient
      as possible.
 \end{itemize}    
@@ -67,15 +67,16 @@ In addition to being complicated for large-scale systems, maintaining
 a global view on each node is useless as there is no interest to
 inform a node of the creation/removal of a replica at the opposite of
 the network (each node trying to get content from the ``closest''
-node).  In other words, the broadcast should be limited to a partition
+one).  In other words, the broadcast should be limited to a partition
 of the infrastructure, (\ie the subset of nodes that has to update the
 current location for this particular content). Obviously, these
-partitions depend and evolve according to concurrent operations made by nodes and
-dynamic changes in the infrastructure (network failures, node
-apparitions/leaves).
+partitions depend and evolve according to concurrent operations made
+by nodes (replica creation/removal) as well as dynamic changes in the
+infrastructure (network failures, node apparitions/leaves).
 
 In this paper, we propose a first implementation of such a protocol.
-Entitled \NAME, our protocol relies on a primitive that forwards
+Entitled Adaptive Scoped broadcast (\NAME), 
+our protocol relies on a primitive that forwards
 messages until a certain condition is reached, \ie the scope. The
 scope is defined by a boolean function (predicate) that returns
 whether a message should be propagated or not around its
@@ -84,53 +85,39 @@ the distance to the nearest replica : if the message that a node receives
 indicates a content has a longer distance than that which the node
 knows then the transfer of the message is useless and so stopped.
 %
+This primitive is used to guarantee that eventually, every node knows
+its best partition, hence its closest replica, despite concurrent
+events and receipt orders. Overall, \NAME is a wait-free reactive protocol for
+dynamic logical partitioning.  Its overhead actually depends on
+its operations and current partitions in the system. When the system
+becomes quiescent, nodes eventually converge to their respective
+partition and do not require further communication afterward.
 
-This primitive is used to communicate with the different nodes
-according to four events: creation/removal of a replica and node
-apparitions/leaves. \TODO{network failures is considered as a node leave?}
+\TODO{talk about the proof}
 
-\TODO{add something about the paper work}
-
-We evaluated our protocol through simulations using \textit{Peersim}~\cite{montresor2009peersim}. The topolgies we simulated are based on real-world ones from the Internet Toplogy
-Zoo~\cite{knight2011internet}.  Our evaluation shows that \NAME is able to
-provide a similar localization service when compared to a DHT-based
-approach while removing the lookup penalty or to an hypothetical complete and robust broadcast. This directly translates
-into faster data access as shown by our measurements, with a time
-reduction from $20\%$ to $60\%$, depending on the sizes of the
-objects. %\AVK[Talk about load balancing and traffic containment here]
-We also show that by slightly delaying the sending of messages, \NAME
-can match the number of messages of a DHT-based approach, at the cost
-of a moderate increase in message sizes.
-
-\TODO{Update the conclustion of the experiment}
+We evaluated our protocol through two simulation scenarios using
+\textit{Peersim}~\cite{montresor2009peersim}. First, we confirm that
+\NAME allow consistent partitioning in an ad-hoc network composed of
+10K nodes.  Second, we illustrate how \NAME enables the lock down of
+the traffic in dynamic inter autonomous systems.  More precisely, we
+simulated a worldwilde infrastructure by duplicating the GEANT
+topology - a real infrastructure spanning across Europe – and by
+connecting these two clusters with a high latency link: 200 ms
+simulating cross-continental communications such as Europe-America.
 
 %\input{input/figadd.tex} %% positioning (belong to problem & motivation)
 
-% TODO : Use cases
-While we use the distance to the closest copy in this paper, It is
-notewothy that other scopes can be envisioned according to the
-use-cases.  For instance, the location of a city in order to broadcast
-message to all nodes in the city.  This requires nodes to store and
-maintain their city location in their local state. Nodes stop
-delivering and forwarding their received messages when they come from
-a different city. Such a predicate can be complexified in order to
-broadcast messages to all nodes in the city plus neighboring
-cities. This requires nodes to overload forwarded messages the first
-time they reach another city. The predicate checks if messages already
-reached two distinct cities before delivery.  The predicate can even
-be piggypack within the message and so be different for each
-message.\TODO{Complete the use-cases}
-
-\TODO{update the outline}
-\TODO{The rest of this paper is organized as follows. Section II
-  introduces background, related works and details the motivation
-  behind our proposal.  Section III describes the protocol behavior,
-  as well as the formal definition of the underlying
-  algorithms. Section IV presents the evaluation of the A3
-  implementation and provides an extensive comparison with a DHT-based
-  approach. We discuss some extensions of this work and future
-  directions in Section V before concluding in Section VI.}
-
+The rest of this paper is organized as
+follows. Section~\ref{sec:background} introduces background, and
+details the motivation behind our proposal.
+Section~\ref{sec:adaptive} describes the protocol behavior, as well
+as the formal definition of the underlying
+algorithms. Section~\ref{sec:experimentation} presents the Peersim
+evaluations.  Related work is discussed in
+Section~\ref{sec:related_work} and finally
+Section~\ref{sec:conclusion} concludes this article and highlights a
+few future works.
+  
 
 %%% Local Variables: 
 %%% mode: latex
