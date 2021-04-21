@@ -1,26 +1,72 @@
-
 %% to better adapt positioning (I expect 2.5 pages
 %% intro+related work)
 
 \vfill \TODO{spacing for intro and related work: 2.5 pages}
 \newpage
 
-\section{Scoped broadcast}
-\label{sec:scoped}
 
-Scoped broadcast is a communication primitive that propagates a
-message around its broadcaster within an application-dependant scope.
-For instance, a \process from Paris could scoped broadcast messages to
-all \processes in Paris; and \processes from other cities would never
-deliver such messages.
-Scoped broadcast only targets a connected \emph{subset} of \processes
-in the whole distributed system.
+\section{Adaptive scoped broadcast}
+\label{sec:adaptive}
+
+%% In this section, we propose to dynamically adapt the scopes of \NAMEB
+%% using \NAMEB itself for the sake of efficiency: a \NAMEB message may
+%% modify the state of a \process, consequently changing predicate
+%% evaluations over deliveries.  At any time, a \process decides whether
+%% or not it becomes the center (or \emph{source}) of a scope (or
+%% \emph{partition}). \Processes must eventually rally the partition
+%% corresponding to their closest source despite concurrent operations,
+%% and dynamic changes in the network.
+
+%% \noindent In that regard, we introduce \NAME (stands for
+%% \underline{A}daptive \underline{S}coped broad\underline{cast}), a
+%% wait-free reactive protocol for dynamic logical partitioning that
+%% enables adaptive scoped broadcast in dynamic distributed
+%% systems. \NAME's operation guarantees that \processes eventually reach
+%% consistent partitioning by efficiently propagating their state
+%% changes. \NAME's overhead actually depends on its operations and
+%% current partitions in the system. When the system becomes quiescent,
+%% \processes eventually converge to their respective partition and do not
+%% require further communication afterward.
+
+%% \noindent This section starts by introducing consistent partitioning
+%% and its implementation when a \process can only become a new source to
+%% create a new partition, i.e., it cannot revoke its self-appointed
+%% status of source. Then, it extends to include the latter behavior: it
+%% introduces the properties that guarantee consistent partitioning in
+%% such context, and it details our implementation called \NAME along
+%% with its complexity analysis.
+
+To assign and maintain \processes to their best partition according to
+replica creations/removals as well as dynamic infrastructure changes,
+we designed and implemented \NAME (\NAME stands for
+\underline{A}daptive \underline{S}coped broad\underline{cast}).  \NAME
+relies on a primitive that allows a \process to broadcast a message
+within a limited scope.  This primitive is used in a first algorithm
+to deliver consistent partitioning each time \process creates a new
+replica within the system. This algorithm is then extended to include
+replica removals as well as dynamic changes of the infrastructure.
+This section discussed the different properties that guarantee
+consistent partitioning in such a context and details the \NAME
+implementation along with its complexity analysis.
+
+
+\subsection{Scoped broadcast}
+\label{subsec:scoped}
+
+%For instance, a \process from Paris could scoped broadcast messages to
+%all \processes in Paris; and \processes from other cities would never
+%deliver such messages.
+%Scoped broadcast only targets a connected \emph{subset} of \processes
+%in the whole distributed system.
 %
-Distributed systems such as Edge infrastructures comprise
-heterogeneous machines interconnected by communication
-links. \Processes may crash but are not byzantine.
 
 % \TODO{dynamic graph: superscript with $t$?}
+In the edge infrastructure we consider, nodes are heterogeneous and
+interconnected by communication links. \Processes involved in the
+management of the data sets may crash but are not byzantine.  Finally,
+\processes can reliably communicate through asynchronous message
+passing to other known \processes called neighbors.
+A more formal definition of our system is given below:
 
 \begin{definition}[Edge infrastructure]
   An edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
@@ -31,18 +77,24 @@ links. \Processes may crash but are not byzantine.
   \pi_{ij}[m+1] \rangle \in E$.
 \end{definition}
 
-\Processes can reliably communicate through asynchronous message
-passing to other known \processes called neighbors. Using epidemic
-propagation (or gossiping), \processes can reliably broadcast messages
-by forwarding delivered messages from neighbors to
-neighbors~\cite{birman1999bimodal, hadzilacos1994modular,
-  nedelec2018causal, raynal2013distributed}. However, uniform reliable
-broadcast states that \emph{all} correct \processes must deliver all
-broadcast messages. This proves costly in large scale systems
-comprising thousands of \processes. Instead, we define \emph{scoped
-broadcast} where messages reach only an application-dependant subset
-of connected \processes, thus significantly reducing the generated
-traffic of broadcast.
+
+%Using epidemic
+%propagation (or gossiping), \processes can reliably broadcast messages
+%by forwarding delivered messages from neighbors to
+%neighbors~\cite{birman1999bimodal, hadzilacos1994modular,
+%  nedelec2018causal, raynal2013distributed}.
+%
+%However, uniform reliable
+%broadcast states that \emph{all} correct \processes must deliver all
+%broadcast messages. This proves costly in large scale systems
+%comprising thousands of \processes. Instead, we define \emph{scoped
+%broadcast} where messages reach only an application-dependant subset
+%of connected \processes, thus significantly reducing the generated
+%traffic of broadcast.
+
+We define the Scoped broadcast (\NAMEB) as a communication primitive that propagates a
+message around its broadcaster within an application-dependant scope :
+
 
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
   When \Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
@@ -56,59 +108,27 @@ traffic of broadcast.
 \end{definition}
 
 This definition encompasses more specific definitions of related
-work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}.  This
-definition also highlights that epidemic propagation and scoped
-broadcast have well-aligned preoccupations: It highlights the
-transitive relevance of messages, thus \processes can stop forwarding
-messages as soon as the corresponding predicate becomes unverified.
-For instance, a \process from Paris could scoped broadcast messages to
-all \processes in Paris. This requires \processes to store and
-maintain their city location in their local state. \Processes stop
-delivering and forwarding their received messages when they come from
-a different city.  In another instance, a \process from Paris could
-scoped broadcast messages to all \processes in Paris plus neighboring
-cities. This requires \processes to overload forwarded messages the
-first time they reach another city. The predicate checks if messages
-already reached two distinct cities before delivery. Similarly to
-uniform reliable broadcast, scoped broadcast implementations expose
-different trade-offs on space, time, and communication.
+work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}.  It
+also highlights that epidemic propagation and scoped broadcast have
+well-aligned preoccupations. More precisely, it underlines the transitive relevance of
+messages, thus \processes can stop forwarding messages as soon as the
+corresponding predicate becomes unverified.
+%For instance, a \process
+%from Paris could scoped broadcast messages to all \processes in
+%Paris. This requires \processes to store and maintain their city
+%location in their local state. \Processes stop delivering and
+%forwarding their received messages when they come from a different
+%city.  In another instance, a \process from Paris could scoped
+%broadcast messages to all \processes in Paris plus neighboring
+%cities. This requires \processes to overload forwarded messages the
+%first time they reach another city. The predicate checks if messages
+%already reached two distinct cities before delivery. Similarly to
+%uniform reliable broadcast, scoped broadcast implementations expose
+%different trade-offs on space, time, and communication.
 
-Next Section introduces an adaptive scoped broadcast where the state
-of each \process is dynamic and changes depending on all distinct
-scopes that exist in the system.
+\NAMEB is used to change the state of each \process dynamically, depending on all partitions that exist in the system.
 
 
-
-\section{Adaptive scoped broadcast}
-\label{sec:adaptive}
-
-In this section, we propose to dynamically adapt the scopes of \NAMEB
-using \NAMEB itself for the sake of efficiency: a \NAMEB message may
-modify the state of a \process, consequently changing predicate
-evaluations over deliveries.  At any time, a \process decides whether
-or not it becomes the center (or \emph{source}) of a scope (or
-\emph{partition}). \Processes must eventually rally the partition
-corresponding to their closest source despite concurrent operations,
-and dynamic changes in the network.
-
-\noindent In that regard, we introduce \NAME (stands for
-\underline{A}daptive \underline{S}coped broad\underline{cast}), a
-wait-free reactive protocol for dynamic logical partitioning that
-enables adaptive scoped broadcast in dynamic distributed
-systems. \NAME's operation guarantees that \processes eventually reach
-consistent partitioning by efficiently propagating their state
-changes. \NAME's overhead actually depends on its operations and
-current partitions in the system. When the system becomes quiescent,
-\processes eventually converge to their respective partition and do not
-require further communication afterward.
-
-\noindent This section starts by introducing consistent partitioning
-and its implementation when a \process can only become a new source to
-create a new partition, i.e., it cannot revoke its self-appointed
-status of source. Then, it extends to include the latter behavior: it
-introduces the properties that guarantee consistent partitioning in
-such context, and it details our implementation called \NAME along
-with its complexity analysis.
 
 \subsection{Consistent partitioning}
 
