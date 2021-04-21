@@ -80,11 +80,22 @@ our context have no control over their neighboring processes.
 \item [Dynamic partitioning and adaptive scoped broadcast:]
 
 Finally, in Figure~\ref{fig:partition_intuitionD}, \Process~$G$
-destroys its replica. \TODO{Meow.}
-
+destroys its replica. Every \processes that belong to its green
+partition must choose another partition to be in. While it makes sense
+for \Process~$G$ to scoped broadcast its removal, \Process~$B$ and
+\Process~$R$ cannot afford to continuously advertise their replica to
+fill the gap left open by \Process~$G$. Instead, we want to trigger
+scoped broadcast at bordering \processes of red and blue
+partitions. The scope of scoped broadcast changes over receipts by
+processes. Dynamic partitioning raises additional challenges related
+to concurrent operations where removed partition would block the
+propagation of other partitions.
 \end{asparadesc}
 
-  
+Next Section details adaptive scoped broadcast in dynamic networks. It
+details the properties of such protocol, and provides an
+implementation along with its complexity.
+
 %% \subsection*{Disseminate localization information}
 %% Enabling the accessibility of content without prior requests implies
 %% that the information about replica localization has to be pushed
