@@ -70,8 +70,8 @@ started~\cite{asrese2019measuring, doan2019tracing}.
 Second, the client gets a list of content locations at the discretion
 of content indexing services. Without information about these
 locations, it often ends up downloading from multiple replica hosts,
-yet only keeping the fastest answer~\REF. In turns, either clients
-waste network resources, or face lower response time. 
+yet only keeping the fastest answer~\REF. In turns, clients either
+waste network resources, or face lower response time.
 %% there is no information to select the ``best'' node among the
 %% possible candidates from which the content could be retrieved. In
 %% most cases, this results in parallel requests performed by the
@@ -91,17 +91,17 @@ operation~\cite{birman1999bimodal, hadzilacos1994modular,
 Edge infrastructure objectives, for such protocol does not confine the
 traffic generated to maintain its indexes. A \process may acknowledge
 the existence of replicas at the other side of the network while there
-already exists a replica right next to it.
+already exists a replica next to it.
 
 Instead, a \process creating a replica should notify all and only
-\processes that have no closer replica. This would create
-interconnected sets of \processes, or \emph{partitions}, gathered
-around a \emph{source} being their respective replica. A \process
-deleting its replica should notify all members of its partition so
-they can rally their current closest partition. A periodic
-advertisement protocol already provides both these operations for
-routing purposes~\cite{hemmati2015namebased}. However, its functioning
-requires
+\processes that have no closer replica in the system. This would
+create interconnected sets of \processes, or \emph{partitions},
+gathered around a \emph{source} being their respective replica. A
+\process deleting its replica should notify all members of its
+partition so they can rally their current closest partition. A
+periodic advertisement protocol already provides both these operations
+for routing purposes~\cite{hemmati2015namebased}. However, its
+functioning requires
 \begin{inparaenum}[(i)]
 \item to generate traffic even when the system is quiescent, and
 \item to finely tune physical-time-based intervals that depend on
@@ -126,49 +126,72 @@ requires
 %% by nodes (replica creation/removal) as well as dynamic changes in the
 %% infrastructure (network failures, node apparitions/leaves).
 
-In this paper, we propose a first implementation of such a protocol.
-Entitled Adaptive Scoped broadcast (\NAME), 
-our protocol relies on a primitive that forwards
-messages until a certain condition is reached, \ie the scope. The
-scope is defined by a boolean function (predicate) that returns
-whether a message should be propagated or not around its
-broadcaster. In the current scenario, the stop condition is related to
-the distance to the nearest replica : if the message that a node receives
-indicates a content has a longer distance than that which the node
-knows then the transfer of the message is useless and so stopped.
+In this paper, we first define scoped broadcast has a communication
+primitive that allows epidemic dissemination of messages as long as
+receiving \processes verify an application-dependant predicate.
+
+\noindent Then, we propose \NAME, a logical partitioning protocol that
+uses \underline{s}coped broad\underline{cast} to \underline{a}dapt its
+partitions, \ie scopes, to creations and deletions of partitions in
+the system. Each source advertises its existence to all possibly
+interested \processes, \ie only interconnected \processes of its
+partition plus \processes bordering its partition. In turns, \NAME
+scales well to the number of sources since the higher the number of
+partitions, the earlier the dissemination of notifications stops.
 %
-This primitive is used to guarantee that eventually, every node knows
-its best partition, hence its closest replica, despite concurrent
-events and receipt orders. Overall, \NAME is a wait-free reactive protocol for
-dynamic logical partitioning.  Its overhead actually depends on
-its operations and current partitions in the system. When the system
-becomes quiescent, nodes eventually converge to their respective
-partition and do not require further communication afterward.
+%% In this paper, we propose a first implementation of such a protocol.
+%% Entitled Adaptive Scoped broadcast (\NAME), 
+%% our protocol relies on a primitive that forwards
+%% messages until a certain condition is reached, \ie the scope. The
+%% scope is defined by a boolean function (predicate) that returns
+%% whether a message should be propagated or not around its
+%% broadcaster. In the current scenario, the stop condition is related to
+%% the distance to the nearest replica : if the message that a node receives
+%% indicates a content has a longer distance than that which the node
+%% knows then the transfer of the message is useless and so stopped.
+%
 
-\TODO{talk about the proof}
+\noindent In addition, \NAME guarantees that despite concurrent
+operations, every \process eventually knows one, and only one, source:
+its closest. \NAME being reactive, when the system becomes quiescent,
+\processes do not require further communications.
+%% This primitive is used to guarantee that eventually, every node knows
+%% its best partition, hence its closest replica, despite concurrent
+%% events and receipt orders. Overall, \NAME is a wait-free reactive protocol for
+%% dynamic logical partitioning.  Its overhead actually depends on
+%% its operations and current partitions in the system. When the system
+%% becomes quiescent, nodes eventually converge to their respective
+%% partition and do not require further communication afterward.
+% \TODO{talk about the proof}
 
-We evaluated our protocol through two simulation scenarios using
-\textit{Peersim}~\cite{montresor2009peersim}. First, we confirm that
-\NAME allow consistent partitioning in an ad-hoc network composed of
-10K nodes.  Second, we illustrate how \NAME enables the lock down of
-the traffic in dynamic inter autonomous systems.  More precisely, we
-simulated a worldwilde infrastructure by duplicating the GEANT
-topology - a real infrastructure spanning across Europe – and by
-connecting these two clusters with a high latency link: 200 ms
-simulating cross-continental communications such as Europe-America.
+\noindent Simulations empirically support our complexity analysis and
+the scalability of \NAME in large scale networks comprising 10k
+\processes. Our experiments also highlight the relevance of \NAME in
+autonomous systems. \NAME would allow to lock down the traffic
+generated by content indexing, even in contexts where \emph{physical}
+partitioning may occur.
 
-%\input{input/figadd.tex} %% positioning (belong to problem & motivation)
+\noindent In that regard, \NAME can constitute the building block of
+new geo-distributed services.
+
+%% We evaluated our protocol through two simulation scenarios using
+%% \textit{Peersim}~\cite{montresor2009peersim}. First, we confirm that
+%% \NAME allow consistent partitioning in an ad-hoc network composed of
+%% 10K nodes.  Second, we illustrate how \NAME enables the lock down of
+%% the traffic in dynamic inter autonomous systems.  More precisely, we
+%% simulated a worldwilde infrastructure by duplicating the GEANT
+%% topology - a real infrastructure spanning across Europe – and by
+%% connecting these two clusters with a high latency link: 200 ms
+%% simulating cross-continental communications such as Europe-America.
 
 The rest of this paper is organized as
-follows. Section~\ref{sec:background} introduces background, and
-details the motivation behind our proposal.
-Section~\ref{sec:adaptive} describes the protocol behavior, as well
-as the formal definition of the underlying
-algorithms. Section~\ref{sec:experimentation} presents the Peersim
-evaluations.  Related work is discussed in
-Section~\ref{sec:related_work} and finally
-Section~\ref{sec:conclusion} concludes this article and highlights a
-few future works.
+follows. Section~\ref{sec:background} illustrates the motivation and
+problem behind our proposal.  Section~\ref{sec:adaptive} describes
+dynamic consistent partitioning and its implementation along with its
+complexity. Section~\ref{sec:experimentation} presents our
+evaluations.  Section~\ref{sec:related_work} reviews related
+work. Finally, Section~\ref{sec:conclusion} concludes and discusses
+future work.
   
 
 %%% Local Variables: 
