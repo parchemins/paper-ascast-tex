@@ -3,7 +3,7 @@
 
 Numerous studies addressed content indexing in geo-distributed
 infrastructures ranging from centralized services to fully
-decentralized approaches~\REF. We advocate for the latter where
+decentralized approaches~\cite{squirrel}. We advocate for the latter where
 \processes host the service themselves so they do not need to request
 remote -- possibly far away third-party -- entities to retrieve their
 content location.  In this paper, we tackle the content indexing issue
@@ -31,7 +31,7 @@ Figure~\ref{fig:partition_intuitionA}, a single \Process~$R$ hosts the
 content, so every other \process downloads from this \process when it
 needs it. In that regard, \Process~$R$ only needs to disseminate a
 message notifying all other \processes of its new content. \Process~$R$
-can use uniform reliable broadcast~\REF and epidemic propagation~\REF
+can use uniform reliable broadcast~\cite{hadzilacos1994modular} and epidemic propagation~\cite{epidemic-protocol}
 to guarantee that
 \begin{inparaenum}[(i)]
 \item every \process eventually knows the content location
@@ -75,7 +75,7 @@ Every \process ends up with at least one known replica that is its
 closest. The set of interconnected \processes with the same closest
 replica is a \emph{partition}. Every \process belongs to one, and only
 one, partition. Contrarily to membership protocols that choose
-neighboring \processes to communicate with based on metrics~\REF,
+neighboring \processes to communicate with based on metrics~\cite{t-man},
 \processes in our context have no control over their neighboring
 \processes: they cannot add nor remove communication links.
 
