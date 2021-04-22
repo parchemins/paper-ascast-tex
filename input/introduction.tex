@@ -34,14 +34,14 @@ actually take more time than retrieving the content itself.
 %% itself.
 %
 Indeed, these systems, when not using a centralized index hosted in a
-Cloud~\REF, rely on distributed hash
-tables~\cite{maymounkov2002kademlia} spread across the different
-\processes composing the infrastructure. When a client wants to access
-specific content, it requests a remote \process to provide at least
-one \process identity to retrieve this content from. After it
-retrieved the content, the client can create another replica to
-improve the performance of future accesses, but it must contact the
-content indexing service again to notify of such change.
+Cloud, rely on distributed hash tables~\cite{maymounkov2002kademlia}
+spread across the different \processes composing the
+infrastructure. When a client wants to access specific content, it
+requests a remote \process to provide at least one \process identity
+to retrieve this content from. After it retrieved the content, the
+client can create another replica to improve the performance of future
+accesses, but it must contact the content indexing service again to
+notify of such change.
 %% a local replica is created to improve the performance for future
 %% accesses and the process in charge of maintaining the index is
 %% contacted once again to reflect this new location.
@@ -64,14 +64,14 @@ the volume of data passing through the network.
 %
 First, accessing a remote \node to request content location(s) raises
 hot spots and availability issues. But most importantly, it results in
-additional delays that occur even before the actual download
-started~\cite{asrese2019measuring, doan2019tracing}.
+additional delays~\cite{asrese2019measuring, doan2019tracing} that
+occur even before the actual download started.
 %
 Second, the client gets a list of content locations at the discretion
 of content indexing services. Without information about these
 locations, it often ends up downloading from multiple replica hosts,
-yet only keeping the fastest answer~\REF. In turns, clients either
-waste network resources, or face lower response time.
+yet only keeping the fastest answer. In turns, clients either waste
+network resources, or face lower response time.
 %% there is no information to select the ``best'' node among the
 %% possible candidates from which the content could be retrieved. In
 %% most cases, this results in parallel requests performed by the
@@ -91,7 +91,7 @@ operation~\cite{birman1999bimodal, hadzilacos1994modular,
 Edge infrastructure objectives, for such protocol does not confine the
 traffic generated to maintain its indexes. A \process may acknowledge
 the existence of replicas at the other side of the network while there
-already exists a replica next to it.
+already exists a replica next to it. 
 
 Instead, a \process creating a replica should notify all and only
 \processes that have no closer replica in the system. This would
@@ -126,7 +126,7 @@ functioning requires
 %% by nodes (replica creation/removal) as well as dynamic changes in the
 %% infrastructure (network failures, node apparitions/leaves).
 
-In this paper, we first define scoped broadcast has a communication
+In this paper, we first define scoped broadcast as a communication
 primitive that allows epidemic dissemination of messages as long as
 receiving \processes verify an application-dependant predicate.
 
