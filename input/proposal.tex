@@ -136,7 +136,7 @@ At any time, a \process can decide to become a source, hence creating
 a new partition in the system by executing an \texttt{Add}
 operation. This partition includes at least its source plus
 neighboring \processes that estimate they are closer to this source
-than any other source. Such distance (or \emph{weight}) is
+than any other one. Such distance (or \emph{weight}) is
 application-dependant: in the context of maintaining distributed
 indexes, weights would be link latency.
 
@@ -260,9 +260,9 @@ straightforward, removing them introduces additional complexity.
 %% forwarded messages.
 
 At any time, a source can revoke its self-appointed status of source,
-hence deleting its partition from the system, by executing a
-\texttt{Del} operation. All \processes that belong to this partition
-must eventually choose another partition to belong to. In
+by executing a \texttt{Del} operation, hence deleting its partition
+from the system. All \processes that belong to this partition must
+eventually choose another partition to belong to. In
 Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_d$
 that respectively include $\{a\}$, and $\{b, c, d\}$. In
 Figure~\ref{fig:delA}, \Process $a$ deletes its partition. It notifies
