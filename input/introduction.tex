@@ -70,32 +70,61 @@ started~\cite{asrese2019measuring, doan2019tracing}.
 Second, the client gets a list of content locations at the discretion
 of content indexing services. Without information about these
 locations, it often ends up downloading from multiple replica hosts,
-yet only keeping the fastest answer~\REF. In turns, either a client wastes
-network resources, or faces lower response time.
-%% there is no information to select the ``best'' node among the possible
-%% candidates from which the content could be retrieved. In most cases,
-%% this results in parallel requests performed by the client node to each
-%% candidate with the goal of retrieving the content as efficient as
-%% possible.
+yet only keeping the fastest answer~\REF. In turns, either clients
+waste network resources, or face lower response time. 
+%% there is no information to select the ``best'' node among the
+%% possible candidates from which the content could be retrieved. In
+%% most cases, this results in parallel requests performed by the
+%% client node to each candidate with the goal of retrieving the
+%% content as efficient as possible.
 
+To tackle aforementioned limitations, every \process that might
+request or replicate content must also host its own content indexing
+service in a fully decentralized fashion~\cite{kermarrec2015want}. At
+any time, it can immediately locate the closest replica of specific
+content.  A naive approach would be that every \process indexes and
+ranks \emph{every live} replica along with its \emph{location}
+information. When creating or destroying a replica, a \process would
+notify all other \processes by efficiently broadcasting its
+operation~\cite{birman1999bimodal, hadzilacos1994modular,
+  raynal2013distributed}. Unfortunately, this also contradicts with
+Edge infrastructure objectives, for such protocol does not confine the
+traffic generated to maintain its indexes. A \process may acknowledge
+the existence of replicas at the other side of the network while there
+already exists a replica right next to it.
 
-A ``simple'' way to tackle the aforementioned limitations would be to
-maintain on each node composing the infrastructure and for each
-content, an index of all replicas (and their ``distance'').  In such
-an approach, each time a new replica is created or deleted, a message
-is broadcasted from the node that performed the operation (\ie the
-source) to all nodes, increasing the distance information at each hop.
-%
-In addition to being complicated for large-scale systems, maintaining
-a global view on each node is useless as there is no interest to
-inform a node of the creation/removal of a replica at the opposite of
-the network (each node trying to get content from the ``closest''
-one).  In other words, the broadcast should be limited to a partition
-of the infrastructure, (\ie the subset of nodes that has to update the
-current location for this particular content). Obviously, these
-partitions depend and evolve according to concurrent operations made
-by nodes (replica creation/removal) as well as dynamic changes in the
-infrastructure (network failures, node apparitions/leaves).
+Instead, a \process creating a replica should notify all and only
+\processes that have no closer replica. This would create
+interconnected sets of \processes, or \emph{partitions}, gathered
+around a \emph{source} being their respective replica. A \process
+deleting its replica should notify all members of its partition so
+they can rally their current closest partition. A periodic
+advertisement protocol already provides both these operations for
+routing purposes~\cite{hemmati2015namebased}. However, its functioning
+requires
+\begin{inparaenum}[(i)]
+\item to generate traffic even when the system is quiescent, and
+\item to finely tune physical-time-based intervals that depend on
+  network topology parameters such as network diameter.
+\end{inparaenum}
+
+%% A ``simple'' way to tackle the aforementioned limitations would be to
+%% maintain on each node composing the infrastructure and for each
+%% content, an index of all replicas (and their ``distance'').  In such
+%% an approach, each time a new replica is created or deleted, a message
+%% is broadcasted from the node that performed the operation (\ie the
+%% source) to all nodes, increasing the distance information at each hop.
+%% %
+%% In addition to being complicated for large-scale systems, maintaining
+%% a global view on each node is useless as there is no interest to
+%% inform a node of the creation/removal of a replica at the opposite of
+%% the network (each node trying to get content from the ``closest''
+%% one).  In other words, the broadcast should be limited to a partition
+%% of the infrastructure, (\ie the subset of nodes that has to update the
+%% current location for this particular content). Obviously, these
+%% partitions depend and evolve according to concurrent operations made
+%% by nodes (replica creation/removal) as well as dynamic changes in the
+%% infrastructure (network failures, node apparitions/leaves).
 
 In this paper, we propose a first implementation of such a protocol.
 Entitled Adaptive Scoped broadcast (\NAME), 
