@@ -30,11 +30,11 @@ comprising 17 interconnected \processes spread across France. In
 Figure~\ref{fig:partition_intuitionA}, a single \Process~$R$ hosts the
 content, so every other \process downloads from this \process when it
 needs it. In that regard, \Process~$R$ only needs to disseminate a
-message notifying all other processes of its new content. \Process~$R$
+message notifying all other \processes of its new content. \Process~$R$
 can use uniform reliable broadcast~\REF and epidemic propagation~\REF
 to guarantee that
 \begin{inparaenum}[(i)]
-\item every process eventually knows the content location
+\item every \process eventually knows the content location
 \item efficiently using neighbor-to-neighbor communication.
 \end{inparaenum}
 
@@ -75,7 +75,7 @@ closest. The set of interconnected \processes with the same closest
 replica is a \emph{partition}. Every \process belongs to one, and only
 one, partition. Contrarily to membership protocols that choose
 \processes to communicate with based on metrics~\REF, \processes in
-our context have no control over their neighboring processes.
+our context have no control over their neighboring \processes.
 
 \item [Dynamic partitioning and adaptive scoped broadcast:]
 
@@ -87,7 +87,7 @@ for \Process~$G$ to scoped broadcast its removal, \Process~$B$ and
 fill the gap left open by \Process~$G$. Instead, we want to trigger
 scoped broadcast at bordering \processes of red and blue
 partitions. The scope of scoped broadcast changes over receipts by
-processes. Dynamic partitioning raises additional challenges related
+\processes. Dynamic partitioning raises additional challenges related
 to concurrent operations where removed partition would block the
 propagation of other partitions.
 \end{asparadesc}

@@ -3,31 +3,48 @@
 
 \input{input/figpartitionintuition.tex} %% positioning
 
-There is an ongoing evolution of storing data from the cloud to the
-edges of the network. Either because it is where it has been created
-and it is too expensive to be transmitted through the network, or
-because it has been replicated to bring data closer to the end users
-~\cite{shi2016edge, foggy_cache, cachier}.
+In recent years, the data storage paradigm shifted from centralized in
+the cloud to distributed at the edges of the network. 
+% There is an ongoing evolution of storing data from the cloud to the
+% edges of the network.
+This shift aims at keeping the data close to
+\begin{inparaenum}[(i)]
+\item its producers since data may be too expensive or sensitive to be
+  transmitted through the network; and
+\item its consumers so data may quickly and efficiently reach
+  them~\cite{cachier, foggy_cache, shi2016edge}.
+\end{inparaenum}
+%% It avoids transmitting Either because it is where it has been
+%% created and it is too expensive to be transmitted through the
+%% network, or because it has been replicated to bring data closer to
+%% the end users ~\cite{shi2016edge, foggy_cache, cachier}.
 %
-To favour this transition, the design and the development of building
-blocks to manage data sets across Edge infrastructures have been
-investigated for the last few years \cite{confais2017performance,
-  confais2017object, fogstore, hasenburg2020towards}.  Although these
-systems, provide good properties such as favouring network traffic
-confinement by writting data locally and replicating contents
-according to the effective needs, determining the location where to
-get the content might be more expensive than retrieving the content
-itself.
+To favour this transition, new designs for data management across Edge
+infrastructures have been investigated~\cite{confais2017object,
+  confais2017performance, fogstore, hasenburg2020towards}.  They
+enable strategies to confine traffic by writing data locally and
+replicating content according to effective needs. However, locating
+content remains challenging. Retrieving a content location may
+actually take more time than retrieving the content itself.
+%% Although
+%% these systems, provide good properties such as favouring network
+%% traffic confinement by writting data locally and replicating contents
+%% according to the effective needs, determining the location where to
+%% get the content might be more expensive than retrieving the content
+%% itself.
 %
-Indeed, those systems, when not using a centralized index stored in a
-Cloud, rely on a Distributed Hash Table (DHT) across the different
-nodes composing the infrastructure: When a client wants to access a
-specific content, it has to perform a request to a remote process to
-determine from which node(s) it will retrieve the content.  Once it has
-retrieved the content, a local replica
-is created to improve the performance for future accesses and the
-process in charge of maintaining the index is contacted once again to reflect this
-new location.
+Indeed, these systems, when not using a centralized index hosted in a
+Cloud~\REF, rely on distributed hash
+tables~\cite{maymounkov2002kademlia} spread across the different
+\processes composing the infrastructure. When a client wants to access
+specific content, it requests a remote \process to provide at least
+one \process identity to retrieve this content from. After it
+retrieved the content, the client can create another replica to
+improve the performance of future accesses, but it must contact the
+content indexing service again to notify of such change.
+%% a local replica is created to improve the performance for future
+%% accesses and the process in charge of maintaining the index is
+%% contacted once again to reflect this new location.
 %
 
 %This strategy has two majors drawbacks :
@@ -41,20 +58,26 @@ new location.
 %%    replica is perfomed in
 %\end{itemize}
 
-Such a protocol contradicts with the objective of Edge
-infrastructures that aims at reducing the impact of the
-latency as well as the volume of data passing through the network:
-\begin{itemize}
-  \item In addition to hot spot and partitioning issues, accessing a
-    remote node to find the location(s) of a content incurs an
-    additional delay~\cite{asrese2019measuring, doan2019tracing} to
-    get the object, before being able to start its downloading.
-  \item There is no information to select the ``best'' node among the
-     possible candidates from which the content  could be
-     retrieved. In most cases, this results in parallel requests performed by the client node to
-     each candidate with the goal of retrieving the content as efficient
-     as possible.
-\end{itemize}    
+These approaches directly contradict with the objectives of Edge
+infrastructures that aim at reducing the impact of latency as well as
+the volume of data passing through the network.
+%
+First, accessing a remote \node to request content location(s) raises
+hot spots and availability issues. But most importantly, it results in
+additional delays that occur even before the actual download
+started~\cite{asrese2019measuring, doan2019tracing}.
+%
+Second, the client gets a list of content locations at the discretion
+of content indexing services. Without information about these
+locations, it often ends up downloading from multiple replica hosts,
+yet only keeping the fastest answer~\REF. In turns, either a client wastes
+network resources, or faces lower response time.
+%% there is no information to select the ``best'' node among the possible
+%% candidates from which the content could be retrieved. In most cases,
+%% this results in parallel requests performed by the client node to each
+%% candidate with the goal of retrieving the content as efficient as
+%% possible.
+
 
 A ``simple'' way to tackle the aforementioned limitations would be to
 maintain on each node composing the infrastructure and for each
