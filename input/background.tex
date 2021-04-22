@@ -61,13 +61,13 @@ new replica is actually much smaller than the network size. Uniform
 reliable broadcast is not designed for such context and would generate
 a lot of unnecessary traffic. Instead, \processes need a communication
 primitive that propagates notifications within a scope by evaluating a
-predicate, starting at its broadcaster (the \emph{source}).
-In other terms, \processes propagate these notifications as long as they
-consider them useful based on location information they carry. We call
-such primitive \emph{scoped broadcast}, for messages transitively
-reach a subset of interconnected \processes (the \emph{scope})
-Using this primitive, \processes can lock down the traffic of content
-indexing to relevant \processes.
+predicate, starting at its broadcaster (the \emph{source}).  In other
+terms, \processes propagate notifications as long as they consider
+them useful based on location information they carry. We call such
+primitive \emph{scoped broadcast}, for messages transitively reach a
+subset of interconnected \processes (the \emph{scope}). Using this
+primitive, \processes can lock down the traffic of content indexing to
+relevant \processes.
 
 \item [Logical partitioning:]
 
@@ -95,7 +95,7 @@ propagation of other partitions.
 \end{asparadesc}
 
 Next Section details the properties of adaptive scoped broadcast in
-dynamic networks, and provides an implementation along with its
+dynamic networks, and provides an implementation called \NAME along with its
 complexity.
 
 %% \subsection*{Disseminate localization information}

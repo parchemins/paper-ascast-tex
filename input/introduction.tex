@@ -128,16 +128,15 @@ functioning requires
 
 In this paper, we first define scoped broadcast as a communication
 primitive that allows epidemic dissemination of messages as long as
-receiving \processes verify an application-dependant predicate.
-
-\noindent Then, we propose \NAME, a logical partitioning protocol that
-uses \underline{s}coped broad\underline{cast} to \underline{a}dapt its
+receiving \processes verify an application-dependant predicate.  Then,
+we propose \emph{\NAME}, a logical partitioning protocol that uses
+\underline{s}coped broad\underline{cast} to \underline{a}dapt its
 partitions, \ie scopes, to creations and deletions of partitions in
 the system. Each source advertises its existence to all possibly
 interested \processes, \ie only interconnected \processes of its
 partition plus \processes bordering its partition. In turns, \NAME
 scales well to the number of sources since the higher the number of
-partitions, the earlier the dissemination of notifications stops.
+partitions, the earlier the dissemination stops.
 %
 %% In this paper, we propose a first implementation of such a protocol.
 %% Entitled Adaptive Scoped broadcast (\NAME), 

@@ -1,8 +1,8 @@
 %% to better adapt positioning (I expect 2.5 pages
 %% intro+related work)
 
-\vfill \TODO{spacing for intro and related work: 2.5 pages}
-\newpage
+% \vfill \TODO{spacing for intro and related work: 2.5 pages}
+% \newpage
 
 
 \section{Adaptive scoped broadcast}
@@ -71,10 +71,10 @@ A more formal definition of our system is given below:
 \begin{definition}[Edge infrastructure]
   An edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
   \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
-  \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from \Process
-  $i$ to \Process $j$ is a sequence of vertices $[i, k_1, k_2, \ldots
-    k_n, j]$ with $\forall m: 0\leq m \leq n, \langle \pi_{ij}[m],
-  \pi_{ij}[m+1] \rangle \in E$.
+  \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from
+  \Process~$i$ to \Process~$j$ is a sequence of vertices $[i, k_1,
+    k_2, \ldots k_n, j]$ with $\forall m: 0\leq m \leq n, \langle
+  \pi_{ij}[m], \pi_{ij}[m+1] \rangle \in E$.
 \end{definition}
 
 
@@ -97,7 +97,7 @@ message around its broadcaster within an application-dependant scope :
 
 
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
-  When \Process $x$ scoped \underline{b}roadcasts $b_x(m)$ a
+  When \Process~$x$ scoped \underline{b}roadcasts $b_x(m)$ a
   \underline{m}essage $m$, every correct \process $y$ within a scope
   \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
   $d_y(m)$. The scope depends on the \underline{s}tate $\sigma$ of
@@ -142,10 +142,10 @@ indexes, weights would be link latency.
 
 \begin{definition}[\label{def:partitioning}Partitioning]
   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
-  the \underline{p}artition including at least \Process $s$, each
-  \process belongs to at most one partition $\forall p,q \in V, \forall
+  the \underline{p}artition including at least \Process~$s$, each
+  \process belongs to at most one partition \smash{\small$\forall p,q \in V, \forall
   s_1,s_2 \in S: p \in P_{s_1} \wedge q \in P_{s_2} \implies p \neq q
-  \vee s_1 = s_2$, and there exists at least one path $\pi_{ps}$ of
+  \vee s_1 = s_2$}, and there exists at least one path $\pi_{ps}$ of
   \processes that belong to this partition $\forall q \in \pi_{ps}: q
   \in P_s$.
 \end{definition}
@@ -169,21 +169,22 @@ to.
 Unfortunately, \processes do not share a common global knowledge of
 the network state. For \processes to reach consistent partitioning
 together, a \process becoming a source must notify every \process that
-is closer to it than any other source. As stated in
-Section~\ref{sec:scoped}, since epidemic dissemination and scoped
-broadcast have well-aligned preoccupations, we assume implementations
-relying on forwarding of messages from neighbor to neighbor. 
+is closer to it than any other source. Since epidemic dissemination
+and scoped broadcast have well-aligned preoccupations, we assume
+implementations relying on forwarding of messages from neighbor to
+neighbor.
 
 \begin{theorem}[\label{theo:bef}\underline{B}est \underline{e}ventual
     \underline{f}orwarding $(BEF) \implies CP$]
 %
 Assuming reliable communication links where a correct \process $q$
 eventually receives the message $m$ \underline{s}ent to it by a
-\process $p$ ($s_{pq}(m) \implies r_{q}(m)$); a monotonically growing
-system ($G^t \subseteq G^{t+1}$); \processes eventually reach
-consistent partitioning if each \process eventually forwards its best
-known partition.
+\process $p$ ($s_{pq}(m) \implies r_{q}(m)$), \processes eventually
+reach consistent partitioning if each \process eventually forwards its
+best known partition.
 \end{theorem}
+
+\input{input/figadd.tex} 
 
 \begin{proof}
   % \begin{asparadesc}
@@ -191,22 +192,21 @@ known partition.
   When a \process $s_1$ becomes a source, it belongs to its own
   partition, for there exists no better partition than its own:
   $\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1 p}|$. It delivers,
-  hence forwards such $\alpha$ message to its -- current or future --
-  neighbors. Since communication links are reliable, neighboring
-  \processes eventually receive such notification $\forall \langle
-  s_1, q \rangle \in E, s_1 \in S \iff \eventually
-  r_q(\alpha_{s_1}^{w_{s_1 q}})$. Most importantly, whatever the order
-  of received messages, every \process $q'$ in this neighborhood --
-  such that there exists no better partition $s_2$ than the received
-  one -- delivers and forwards it: $\forall s_2 \in S: |\Pi_{q' s_1}|
-  < |\Pi_{q' s_2}| \implies \eventually d_{q'}(\alpha_{s_1}^{w_{s_1
-      q'}})$. By transitivity, the message originating from $s_1$
-  reaches all such \processes through their shortest paths: $\forall
-  q'' \in V, s_1, s_2 \in S: |\Pi_{q'' s_1}| < |\Pi_{q'' s_2}|
-  \implies \eventually d_{q''}(\alpha_{s_1}^{|\Pi_{s_1 q''}|})$.
-  Since there exists only one best sum of weights per \process that
-  can never be retracted, \processes eventually reach consistent
-  partitioning.
+  hence forwards such $\alpha$ message to its neighbors. Since
+  communication links are reliable, neighboring \processes eventually
+  receive such notification $\forall \langle s_1, q \rangle \in E, s_1
+  \in S \iff \eventually r_q(\alpha_{s_1}^{w_{s_1 q}})$. Most
+  importantly, whatever the order of received messages, every \process
+  $q'$ in this neighborhood -- such that there exists no better
+  partition $s_2$ than the received one -- delivers and forwards it:
+  $\forall s_2 \in S: |\Pi_{q' s_1}| < |\Pi_{q' s_2}| \implies
+  \eventually d_{q'}(\alpha_{s_1}^{w_{s_1 q'}})$. By transitivity, the
+  message originating from $s_1$ reaches all such \processes through
+  their shortest paths: $\forall q'' \in V, s_1, s_2 \in S: |\Pi_{q''
+    s_1}| < |\Pi_{q'' s_2}| \implies \eventually
+  d_{q''}(\alpha_{s_1}^{|\Pi_{s_1 q''}|})$.  Since there exists only
+  one best sum of weights per \process that can never be retracted,
+  \processes eventually reach consistent partitioning.
   %% /!\ not equivalence for there exists other implementations.
   %% \item [$CP \implies BEF$:] By contradiction, if a \process $q \in
   %%   \Pi_{sp} = [s, \ldots, q, q', \ldots, p]$ with $s, q, p \in P_s$
@@ -218,10 +218,8 @@ known partition.
 
 \begin{algorithm}
   \input{input/algoadd.tex}
-  \caption{\label{algo:add}Adding a partition by \Process $p$.}
+  \caption{\label{algo:add}Adding a partition by \Process~$p$.}
 \end{algorithm}
-
-\input{input/figadd.tex} 
 
 Algorithm~\ref{algo:add} shows the instructions that implement such
 consistent partitioning when
@@ -259,20 +257,20 @@ straightforward, removing them introduces additional complexity.
 %% partition by only piggybacking a monotonically increasing distance in
 %% forwarded messages.
 
-At any time, a source can revoke its self-appointed status of source,
+At any time, a source can revoke its self-appointed status of source
 by executing a \texttt{Del} operation, hence deleting its partition
 from the system. All \processes that belong to this partition must
 eventually choose another partition to belong to. In
 Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_d$
 that respectively include $\{a\}$, and $\{b, c, d\}$. In
-Figure~\ref{fig:delA}, \Process $a$ deletes its partition. It notifies
-all neighboring \processes -- here only \Process $b$ -- that may
-belong to its partition using \NAMEB. Upon receipt, \Process $b$
+Figure~\ref{fig:delA}, \Process~$a$ deletes its partition. It notifies
+all neighboring \processes -- here only \Process~$b$ -- that may
+belong to its partition using \NAMEB. Upon receipt, \Process~$b$
 discards the message $\delta_a$, for the latter does not target the
-former's partition. \Process $b$ sends its own knowledge of best
-partition $\alpha_d^3$ that may prove to be the best for \Process
-$a$. Eventually, every \processes belong to the same partition
-$P_d$. In this scenario, they reach consistent partitioning.
+former's partition. \Process~$b$ sends its own knowledge of best
+partition $\alpha_d^3$ that may prove to be the best for
+\Process~$a$. Eventually, every \processes belong to the same
+partition $P_d$. In this scenario, they reach consistent partitioning.
 
 Delete operations add a new notion of order between events, and most
 importantly between message deliveries. Delete operations implicitly
@@ -294,6 +292,9 @@ information.
 \end{definition}
 
 \input{input/figdel.tex}
+
+\input{input/figproblem.tex}
+
 
 Unfortunately, stale control information as stated in
 Definition~\ref{def:lwo} may impair the propagation of both
@@ -323,7 +324,6 @@ partitioning when each \process can add or delete its partition at any
 time. \Processes need to exploit their local knowledge gathered over
 message receipts.
 
-\input{input/figproblem.tex}
 
 One could guarantee consistent partitioning by always propagating the
 $\delta$ messages corresponding to the $\alpha$ messages it propagated
@@ -335,12 +335,11 @@ $\delta_a$ if it exists. However, such solution also implies that
 partition, but also related to partitions they belong to in the
 past. This would prove overly expensive in dynamic systems where
 \processes join or leave the system, create or delete partitions, at
-any time.  \TODO{Another paragraph with JJ approach?}  Instead, we
-propose to use the delivery order at each \process to detect possible
-inconsistencies and solve them. Together, \processes eventually remove
-all stale control information (transiting messages and local states)
-of the system leaving room for propagation of messages about
-up-to-date partitions.
+any time.  Instead, we propose to use the delivery order at each
+\process to detect possible inconsistencies and solve them. Together,
+\processes eventually remove all stale control information (transiting
+messages and local states) of the system leaving room for propagation
+of messages about up-to-date partitions.
 
 \begin{corollary}[\label{theo:dcp}purge + BEF $\implies$
     \underline{D}ynamic \underline{c}onsistent
@@ -464,6 +463,12 @@ at any time, consistent partitioning requires
 
 
 
+\vfill
+
+\TODO{spacing.}
+
+\newpage
+
 \subsection{Implementation and complexity}
 
 Algorithm~\ref{algo:ascast} provides the few instructions of \NAME
@@ -490,7 +495,7 @@ enable dynamic consistent partitioning.
 
 \begin{algorithm}
   \input{input/algoascast.tex}
-  \caption{\label{algo:ascast}\NAME at \Process $p$ in static networks.}
+  \caption{\label{algo:ascast}\NAME at \Process~$p$ in static networks.}
 \end{algorithm}
 
 To implement last win order as stated in Definition~\ref{def:lwo},
@@ -578,7 +583,7 @@ corresponding partition creation.
 
 \begin{algorithm}
   \input{input/algoedges.tex}
-  \caption{\label{algo:edges}\NAME at \Process $p$ in dynamic networks.}
+  \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
 \end{algorithm}
 
 Algorithm~\ref{algo:edges} extends the instructions of \NAME that
