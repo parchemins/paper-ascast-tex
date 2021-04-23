@@ -6,47 +6,46 @@ Content indexing in geo-distributed infrastructures has been studied
 through various approaches.  Offering an indexing service which is
 either hosted by a centralized entity or distributed through nodes of
 the network has long been the predominant one. This mainly requires
-(i) to have access to the list of current replica locations and (ii)
-to be aware of the topology to compute which replica is the closest
-for a given location.
+\begin{inparaenum}[(i)]
+\item to have access to the list of current replica locations and
+\item to be aware of the topology to compute which replica is the
+  closest for a given location.
+\end{inparaenum}
 
-(i) Deploying a centralized server that maintains an index of all
-replica locations has been proposed in~\cite{snamp, p2p-oracle,
-  fogstore, p2p-alto}. These solutions suffer from well-known
-disadvantages inherent to centralized solutions (load balancing,
-robustness, locality, etc.) that are even magnified in an Edge
-context.  Distributing this index among nodes in the network
-circumvent some of these issues, either using coordinate-based
-overlays~\cite{voronet, coin_19} or \underline{D}istributed
-\underline{H}ash \underline{T}ables (DHT)~\cite{ipfs, mdht, squirrel}
-for example. In the latter, each node stores a part of the index,
-defined by an interval between hash values.  Before downloading any
-object, a node first hashes the content to obtain the address of the
-node that stores the replica locations of this given object. After
-obtaining from the remote node the list of available replicas, it can
-select the closest copy to download from. We emphasize that, in this
-setting, the DHT only stores information about replicas locations, not
-the content itself. DHT-based approaches are well-studied and easy to
-deploy in order to offer such a localization service.
+Deploying a centralized server that maintains an index of all replica
+locations has been proposed in~\cite{snamp, p2p-oracle, fogstore,
+  p2p-alto}. These solutions suffer from well-known disadvantages
+inherent to centralized solutions (load balancing, robustness,
+locality, etc.) that are even magnified in an Edge context.
+Distributing this index among nodes in the network circumvent some of
+these issues, either using coordinate-based overlays~\cite{voronet,
+  coin_19} or \underline{D}istributed \underline{H}ash
+\underline{T}ables (DHT)~\cite{ipfs, mdht, squirrel} for example. In
+the latter, each node stores a part of the index, defined by an
+interval between hash values.  Before downloading any object, a node
+first hashes the content to obtain the address of the node that stores
+the replica locations of this given object. After obtaining from the
+remote node the list of available replicas, it can select the closest
+copy to download from. We emphasize that, in this setting, the DHT
+only stores information about replicas locations, not the content
+itself. DHT-based approaches are well-studied and easy to deploy in
+order to offer such a localization service.
 
-
-(ii) Being centralized or distributed, this index should be enhanced
-with the topology knowledge in order to be able to decide where
-resides the closest replica. Maintaining a consistent view of an ever
-changing topology across a network is inherently complicated,
-especially in asynchronous settings. This is a well-studied problem in
-the network community and numerous protocols have been proposed. As
-for the index, this knowledge about the topology can be either
+Being centralized or distributed, this index should be enhanced with
+the topology knowledge in order to be able to decide where resides the
+closest replica. Maintaining a consistent view of an ever changing
+topology across a network is inherently complicated, especially in
+asynchronous settings. This is a well-studied problem in the network
+community and numerous protocols have been proposed. As for the index,
+this knowledge about the topology can be either
 centralized~\cite{topology-discovery} or distributed like in routing
 protocols such as \underline{O}pen \underline{S}hortest
 \underline{P}ath \underline{F}irst (OSPF).
-
 
 All these solutions require to contact a remote node (either a server
 or a DHT node) to request this index which is costly in terms of
 latency while in contradiction with Edge infrastructure constraints,
 as previously explained.
-
 
 The opposite approach consists in hosting the index directly on the
 nodes, avoiding any prior request to access a content.
@@ -85,7 +84,9 @@ incur an overhead even in quiet contexts without any update.
 Moreover, such solutions necessarily rely on physical timeouts that
 could lead to either premature removals of partitions when they are
 still operating; or slow convergence where processes wrongly believe
-they belong to a partition that was removed.
+they belong to a partition that was removed. On the opposite
+Section~\ref{sec:experimentation} shows that \NAME quickly converges
+to consistent partitioning even in large scale networks.
 
 
 %Finally, we emphasize that consistency is at the core of our design,
