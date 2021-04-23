@@ -526,26 +526,28 @@ Figure~\ref{fig:proofB}. A detecting \process then propagates a
 $\delta$ message conveying the unique identifier $s$ and version $c$
 of the partition along with a path $\pi$ comprising the identity of
 \processes that forwarded the corresponding $\alpha$ message. Such
-$\delta_{s, c}^{\pi}$ message implements the uncertain $\delta?$ message
-of Figure~\ref{fig:proofB}. It fulfils the double role of removing
-stale control information without modifying the local counter of the
-source (since the partition may still exist), and removing loops to
-ensure termination (since \processes do not modify their local state
-to reflect such delivery, messages piggyback monotonically such
-increasing control information). Thus, $\delta$ messages used in
-Propagation~I' are more efficient both in propagation time and
-traffic, for they propagate using every communication link available
-in the partition, and they do not need to carry their path.
-Fortunately, Propagation~I' happens more often than Propagation~IV.
-Yet, \processes that belong to a partition need to save the path taken
-by the corresponding $\alpha$ messages to enable Propagation~IV.  In
-the worst case, the path includes every \processes in the system but
-converges in average to the average diameter of partitions. Thus,
-message paths and \NAME have an interesting synergy: Paths tend to be
-smaller as the number of sources in the system increases. Bloom
-filters could introduce another trade-off by further decreasing the
-size of path data structures at the cost of premature stopped
-propagation that could impair consistent
+$\delta_{s, c}^{\pi}$ message implements the uncertain $\delta?$
+message of Figure~\ref{fig:proofB}. It fulfils the double role of
+removing stale control information without modifying the local counter
+of the source (since the partition may still exist), and removing
+loops to ensure termination (since \processes do not modify their
+local state to reflect such delivery, messages piggyback monotonically
+such increasing control information).
+
+$\delta_{s, c}$ messages used in Propagation~I' are more efficient
+than $\delta_{s, c}^\pi$ messages used in Propagation~IV, both in
+propagation time and traffic. First, the former propagate using every
+communication link available in the partition, while the latter
+propagate following the dissemination tree of the corresponding
+$\alpha$ to purge. Second, the former only piggyback source and
+counter while the latter piggyback the path taken by the corresponding
+$\alpha$ to purge.  In the worst case, a path includes every
+\processes in the system but converges on average to the average
+diameter of partitions. Nevertheless, message paths and \NAME
+synergyze with each other: Paths tend to be smaller as the number of
+sources in the system increases. Bloom filters could introduce another
+trade-off by further decreasing the size of path data structures at
+the cost of premature stopped propagation that could impair consistent
 partitioning~\cite{whitaker2002forwarding}.
 
 As stated in Theorem~\ref{theo:dcp}, dynamic consistent partitioning

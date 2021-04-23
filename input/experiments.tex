@@ -132,8 +132,8 @@ link again.
 \item [Results:]
 
 Figure~\ref{fig:geant} shows the results of this experimentation. The
-top part corresponds to the one source experiment, while the bottom
-part corresponds to the one source per cluster experiment.
+top part displays the one source experiment while the bottom part
+displays the one source per cluster experiment.
 
 \noindent Figure~\ref{fig:geant} confirms that concurrent
 \texttt{Add}s may reach consistent partitioning faster. In particular,
@@ -156,7 +156,7 @@ from the cluster without source do not belong to any partition while
 \noindent Figure~\ref{fig:geant} shows that, when adding the
 inter-continental link again, the two clusters can communicate
 again. In the experiment involving one source for two clusters, it
-generates traffic. After a $200$ milliseconds delay corresponding to
+generates traffic. After a $200$ ms delay corresponding to
 the new link latency, the cut off cluster starts to communicate
 $\alpha$ messages again. Eventually, all \processes belong to the same
 partition. However, in the experiment involving one source \emph{per}
@@ -173,6 +173,10 @@ locking down the traffic of replica indexing, while providing every
 \process with quick access to replicated content.
 
 \end{asparadesc}
+
+Next Section reviews state-of-the-art approaches for content indexing
+in geo-distributed infrastructures and explains their shortcomings in
+such context.
 
 % \subsection{Use case: caching}
 % \subsection{Use case: routing}
