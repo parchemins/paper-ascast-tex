@@ -1,135 +1,129 @@
 
 \section{Related Work}
 \label{sec:related_work}
-Content indexing in geo-distributed infrastructures has been studied through various approaches. 
-Offering an indexing service which is either hosted by a centralized entity or distributed through nodes of the network has long been the predominant one. This mainly requires (i) to have access to the list of current replica locations and (ii) to be aware of the topology to compute which replica is the closest for a given location. 
 
-(i) Deploying a centralized server that maintains an index of all replica locations has been proposed in~\cite{snamp, p2p-oracle, fogstore, p2p-alto}. These solutions suffer from well-known disadvantages inherent to centralized solutions (load balancing, robustness, locality, etc.) that are even magnified in an Edge context.
-Distributing this index among nodes in the network circumvent some of these issues, either using coordinate-based overlays~\cite{voronet, coin_19} or \underline{D}istributed \underline{H}ash \underline{T}ables (DHT)~\cite{ipfs, mdht, squirrel} for example. In the latter, each node stores a part of the index, defined by an interval between hash values. 
-Before downloading any object, a node first
-hashes the content to obtain the address of the node that stores the replica locations of this given object. After obtaining from the remote node the list of available replicas, it can select the closest copy to download from. We emphasize that, in this setting, the DHT only stores information about replicas locations, not the content itself. DHT-based approaches are well-studied and easy to deploy in order to offer such a localization service. 
+Content indexing in geo-distributed infrastructures has been studied
+through various approaches.  Offering an indexing service which is
+either hosted by a centralized entity or distributed through nodes of
+the network has long been the predominant one. This mainly requires
+(i) to have access to the list of current replica locations and (ii)
+to be aware of the topology to compute which replica is the closest
+for a given location.
 
-
-(ii) Being centralized or distributed, this index should be enhanced with the topology knowledge in order to be able to decide where resides the closest replica. Maintaining a consistent view of an ever changing topology accross a network is ihnerently complicated, especially in asynchronous settings. This is a well-studied problem in the network community and numerous protocols have been proposed. As for the index, this knowledge about the topology can be either centralized~\cite{topology-discovery} or distributed like in routing protocols such as \underline{O}pen \underline{S}hortest \underline{P}ath \underline{F}irst (OSPF).
-
-
-All these solutions require to contact a remote node (either a server or a DHT node) to request this index 
-which is costly in terms of latency while in contradiction with Edge infrastructure constraints, as previsouly explained.
-
-
-The opposite approach consists in hosting the index directly on the nodes, avoiding any prior request to access a content.   
-%This requires notifying nodes of replica creations and removals along with information about the evolving topology. 
-Broadcasting information about cache updates to all nodes in the system is a straightforward way to maintain consistent information about replica locations for all nodes, as usually implemented in \underline{N}amed \underline{D}ata \underline{N}etworking (NDN)~\cite{nlsr}.  Indeed, having the entire knowledge of all the replica localizations along with distance information carried into messages, each node can easily determine where the closest copy of a given object resides, without contacting any remote node.
-Similarly, one could solve this issue by using a \underline{C}onflict-\underline{F}ree \underline{R}eplicated \underline{D}atatype (CRDT) for set data structures, for example~\cite{shapiro2011crdts}. Yet both solutions inherently imply that every node will eventually receive all messages. 
-
-
-At first glance, membership protocols as proposed in~\cite{t-man} would appear to provide suitable abstractions to create a scope-related partioning, as proposed in this paper. Such protocols usually rely on gossip mechanims, implying contacts with random nodes that can be very far away in the physical topology. Moreover, membership protocols are usually implemented  by modifying the neighboring of a given node according to a certain metric in a logical overlay.
-On the contrary, we do not aim at building any overlay, as we only rely on the physical topology so the neighbors of a given node are not continusously modifed. Lastly, these protocols are usually cycle-based, meaning that they impose a constant load on the network traffic, even when the system state does not change. Likewise, this also prevents from using solutions that periodically advertise their cache content~\cite{garcia-lopez, hemmati2015namebased} as they also inccur an overhead even in quiet contexts without any update. 
-Moreoever, such solutions necessarily rely on physical timeouts that could lead to either premature removals of partitions when they are still operating; or slow convergence where processes wrongly believe they belong to a partition that was removed. 
-
-
-%Finally, we emphasize that consistency is at the core of our design, as \NAME provides the same guarantees for all nodes.
-%On the contrary, to avoid flooding, authors in~\cite{opnl} propose to propagate information about cache updates only towards the original replica. This enables for a request to be caught \textit{on-path}, and be redirected to the closest replica. However, the announcement is only performed towards this original replica, that is requests can miss closer replicas that are not on this path, thus decreasing the efficiency of the cache sharing mechanism. 
-
-%AVK: This should go where we explain the DEL, as this is really specific...
-%One could also solve this issue by removing partitions that were not advertised for a defined time~\cite{hemmati2015namebased, garcia-lopez}. 
-%However, relying on physical timeout could lead to either premature removals of partitions when they are still operating; or slow convergence where processes believe they belong to a partition that was removed (\TODO{plot ?}). In addition, since timeouts imply a
-%continuous maintenance of partitions, such partitioning protocol
-%incurs an overhead even in quiet contexts without dynamic partitions.
+(i) Deploying a centralized server that maintains an index of all
+replica locations has been proposed in~\cite{snamp, p2p-oracle,
+  fogstore, p2p-alto}. These solutions suffer from well-known
+disadvantages inherent to centralized solutions (load balancing,
+robustness, locality, etc.) that are even magnified in an Edge
+context.  Distributing this index among nodes in the network
+circumvent some of these issues, either using coordinate-based
+overlays~\cite{voronet, coin_19} or \underline{D}istributed
+\underline{H}ash \underline{T}ables (DHT)~\cite{ipfs, mdht, squirrel}
+for example. In the latter, each node stores a part of the index,
+defined by an interval between hash values.  Before downloading any
+object, a node first hashes the content to obtain the address of the
+node that stores the replica locations of this given object. After
+obtaining from the remote node the list of available replicas, it can
+select the closest copy to download from. We emphasize that, in this
+setting, the DHT only stores information about replicas locations, not
+the content itself. DHT-based approaches are well-studied and easy to
+deploy in order to offer such a localization service.
 
 
-% AVK
-% t-man: T-Man: Gossip-Based Overlay Topology Management5doat a random time 
-% at a random time once in eachconsecutive interval of T time unit
-% This buffer contains a random sample of the nodes from the entirenetwork. It is provided by apeer sampling service
-% 
-% We do not try to to create a topology aware overlay ! Because locality.
-% We do not provide routing ! routing is two determine path between any pair of nodes. We only provide path to objects 
-% 
-% Koala locality aware routing. Long links. Lazzy (nothing happens)
-% Koala  shares  many  core  aspectswith similar overlays, such as Chord and Symphony.
-% 
-% VoroNet: overlay and routing. i.e. long links 
-% It links application objects rathen than physical nodes so that objects with similar characteristic are neighbors. 
-% are logigal overlay, that are not correlated to the physical infrstructure. 
-% Usually rely on long links...
-% AVK
+(ii) Being centralized or distributed, this index should be enhanced
+with the topology knowledge in order to be able to decide where
+resides the closest replica. Maintaining a consistent view of an ever
+changing topology across a network is inherently complicated,
+especially in asynchronous settings. This is a well-studied problem in
+the network community and numerous protocols have been proposed. As
+for the index, this knowledge about the topology can be either
+centralized~\cite{topology-discovery} or distributed like in routing
+protocols such as \underline{O}pen \underline{S}hortest
+\underline{P}ath \underline{F}irst (OSPF).
 
-%% \begin{definition}[Dynamic optimal partitioning]
-%%   A dynamic optimal partitioning is an optimal partitioning where the
-%%   set of sources $S$ does not monotonically increase. We suffix this
-%%   set with \underline{t}ime $t$ : $S(t)$.  Process $i$ joins the set
-%%   of sources by \underline{a}dding its partition with messages
-%%   $\alpha_i^{0}$: $Add(i \not\in S(t)) \implies i \in S(t+1)$; and
-%%   leaves the set of sources by \underline{d}eleting its partition with
-%%   messages $\delta_i$: $Del(i \in S(t)) \implies i \not\in S(t+1)$.
-%% \end{definition}
 
-%% Unfortunately, due to differences in receipt order of messages between
-%% processes, stale information may stop prematurely the propagation of
-%% relevant messages leading to inconsistent partitioning.
-%% \TODO{Figure~\ref{fig:del} shows that.}
-% 
-% One could solve this issue by using a conflict-free replicated data
-% type (CRDT) for set data structures~\cite{shapiro2011crdts}. CRDTs
-% require eventual delivery of messages to ensure convergence. All
-% processes need to receive, deliver, hence broadcast all
-% operations. Some processes may receive operations unnecessary to their
-% correct functioning, for these operations did not happen in their
-% locality.  One could also solve this issue by removing partitions that
-% were not advertised for a defined
-% time~\cite{hemmati2015namebased}. \TODO{check distance-vector
-%   protocols.} However, relying on physical timeout could lead to
-% either premature removals of partitions when they are still operating;
-% or slow convergence where processes believe they belong to a partition
-% that was removed (\TODO{plot ?}). In addition, since timeouts imply a
-% continuous maintenance of partitions, such partitioning protocol
-% incurs an overhead even in quiet contexts without dynamic partitions.
+All these solutions require to contact a remote node (either a server
+or a DHT node) to request this index which is costly in terms of
+latency while in contradiction with Edge infrastructure constraints,
+as previously explained.
 
-%% \begin{problem}[\label{prob:intra}Consistent partitioning]
-%%   How to enable \emph{consistent} dynamic optimal partitioning in
-%%   dynamic network using scoped flooding?
-%% \end{problem}
 
-% \TODO{Dynamic Multiple-sources All-destinations shortest path on
-%  dynamic graphs?}
+The opposite approach consists in hosting the index directly on the
+nodes, avoiding any prior request to access a content.
+%This requires notifying nodes of replica creations and removals along
+%with information about the evolving topology.
+Broadcasting information about cache updates to all nodes in the
+system is a straightforward way to maintain consistent information
+about replica locations for all nodes, as usually implemented in
+\underline{N}amed \underline{D}ata \underline{N}etworking
+(NDN)~\cite{nlsr}.  Indeed, having the entire knowledge of all the
+replica localization along with distance information carried into
+messages, each node can easily determine where the closest copy of a
+given object resides, without contacting any remote node.  Similarly,
+one could solve this issue by using a
+\underline{C}onflict-\underline{F}ree \underline{R}eplicated
+\underline{D}atatype (CRDT) for set data structures, for
+example~\cite{shapiro2011crdts}. Yet both solutions inherently imply
+that every node will eventually receive all messages.
 
-%% \begin{figure}
-%%   \begin{center}
-%%     \input{input/figASmotivation.tex}
-%%     \caption{\label{fig:ASmotivation}Scoped flooding extended to
-%%       objects, processes do not know about all partitions that exist
-%%       in the whole distributed system.}
-%%   \end{center}
-%% \end{figure}
 
-%% To further improve scoped flooding in autonomous systems, processes
-%% may belong to multiple partitions representing the objects they are
-%% aware of. Figure~\ref{fig:ASmotivation} highlights the geo-distributed
-%% nature of autonomous systems. Autonomous systems have topological
-%% properties~\cite{nur2018geography} that processes can leverage to
-%% avoid flooding the whole systems with control information about all
-%% partitions. In Figure~\ref{fig:ASmotivation}, Process $e$ creates a
-%% partition about a specific object, flooding Paris's AS to notify
-%% neighboring processes of the object. However, it does not flood the
-%% whole network, for control information stops at Process $b$. It
-%% significantly saves bandwidth compared to broadcast since processes
-%% below entrypoints of autonomous systems are order of magnitude more
-%% numerous. Yet, Processes $c$ and $d$ know whom to ask when they need
-%% to return an object they are unaware of. Processes remain efficient in
-%% answering requests. \TODO{which is important for end users \REF.}
+At first glance, membership protocols as proposed in~\cite{t-man}
+would appear to provide suitable abstractions to create a
+scope-related partitioning, as proposed in this paper. Such protocols
+usually rely on gossip mechanism, implying contacts with random nodes
+that can be very far away in the physical topology. Moreover,
+membership protocols are usually implemented by modifying the
+neighboring of a given node according to a certain metric in a logical
+overlay.  On the contrary, we do not aim at building any overlay, as
+we only rely on the physical topology so the neighbors of a given node
+are not continuously modified. Lastly, these protocols are usually
+cycle-based, meaning that they impose a constant load on the network
+traffic, even when the system state does not change. Likewise, this
+also prevents from using solutions that periodically advertise their
+cache content~\cite{garcia-lopez, hemmati2015namebased} as they also
+incur an overhead even in quiet contexts without any update.
+Moreover, such solutions necessarily rely on physical timeouts that
+could lead to either premature removals of partitions when they are
+still operating; or slow convergence where processes wrongly believe
+they belong to a partition that was removed.
 
-%% \begin{definition}[Partitions in asynchronous systems]
-%%   Processes may hold multiple partitions \TODO{Use $\mathcal{P}$}
-%%   \TODO{TODO} \TODO{or multi-partitioning?}
-%% \end{definition}
 
-%% \begin{problem}[\label{prob:inter}Inter-AS consistent partitioning]
-%%   How to enable scoped flooding of objects in autonomous systems?
-%% \end{problem}
+%Finally, we emphasize that consistency is at the core of our design,
+%as \NAME provides the same guarantees for all nodes.  On the
+%contrary, to avoid flooding, authors in~\cite{opnl} propose to
+%propagate information about cache updates only towards the original
+%replica. This enables for a request to be caught \textit{on-path},
+%and be redirected to the closest replica. However, the announcement
+%is only performed towards this original replica, that is requests can
+%miss closer replicas that are not on this path, thus decreasing the
+%efficiency of the cache sharing mechanism.
 
-%% Next Section presents our approach that solves these scientific
-%% problems by relying on logical control information only.
+%AVK: This should go where we explain the DEL, as this is really
+%specific...  One could also solve this issue by removing partitions
+%that were not advertised for a defined
+%time~\cite{hemmati2015namebased, garcia-lopez}.  However, relying on
+%physical timeout could lead to either premature removals of
+%partitions when they are still operating; or slow convergence where
+%processes believe they belong to a partition that was removed
+%(\TODO{plot ?}). In addition, since timeouts imply a continuous
+%maintenance of partitions, such partitioning protocol incurs an
+%overhead even in quiet contexts without dynamic partitions.
+
+
+% AVK t-man: T-Man: Gossip-Based Overlay Topology Management5doat a
+% random time at a random time once in eachconsecutive interval of T
+% time unit This buffer contains a random sample of the nodes from the
+% entirenetwork. It is provided by apeer sampling service We do not
+% try to to create a topology aware overlay ! Because locality.  We do
+% not provide routing ! routing is two determine path between any pair
+% of nodes. We only provide path to objects Koala locality aware
+% routing. Long links. Lazzy (nothing happens) Koala shares many core
+% aspectswith similar overlays, such as Chord and Symphony.  VoroNet:
+% overlay and routing. i.e. long links It links application objects
+% rathen than physical nodes so that objects with similar
+% characteristic are neighbors.  are logigal overlay, that are not
+% correlated to the physical infrstructure.  Usually rely on long
+% links...  AVK
 
 %%% Local Variables: 
 %%% mode: latex

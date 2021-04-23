@@ -168,11 +168,11 @@ to.
 
 Unfortunately, \processes do not share a common global knowledge of
 the network state. For \processes to reach consistent partitioning
-together, a \process becoming a source must notify every \process that
-is closer to it than any other source. Since epidemic dissemination
-and scoped broadcast have well-aligned preoccupations, we assume
-implementations relying on forwarding of messages from
-neighbor-to-neighbor.
+together, a \Process $s$ becoming a source must send a notification
+$\alpha_s$ to every \process that is closer to it than any other
+source. Since epidemic dissemination and scoped broadcast have
+well-aligned preoccupations, we assume implementations relying on
+forwarding of messages from neighbor-to-neighbor.
 
 \begin{theorem}[\label{theo:bef}\underline{B}est \underline{e}ventual
     \underline{f}orwarding $(BEF) \implies CP$]

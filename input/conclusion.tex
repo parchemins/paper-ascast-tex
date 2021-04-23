@@ -1,32 +1,47 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-With the advent of the edge and IoT era, major distributed services
+With the advent of the Edge and IoT era, major distributed services
 proposed by our community should be revised in order to mitigate as
-much as possible trafic between \processes.  In this paper, we tackled
-the problem of content indexing, a key service for storage systems.
+much as possible traffic between \processes.  In this paper, we
+tackled the problem of content indexing, a key service for storage
+systems.
 %
-More precisely, we proposed to address it as a dynamic logical partitioning of the infrastructure
-that should be maintained according to replicas creations/removals and
-infrastructure changes. Through an efficient scoped broadcast, each
-\process composing the infrastructure knows eventually where the best
-replica for a particular content is. The major difficulty is to handle
-concurrent operations, each having a different scope, and ensure the
-correct convergence of the system.
-We defined, in particular,  multiple properties that highlight this complexity.
+We proposed to address this problem as a dynamic logical partitioning
+in dynamic networks where partitions grow and shrink to reflect
+content and replicas locations, as well as infrastructure
+changes. Using an efficient communication primitive called scoped
+broadcast, each \process composing the infrastructure eventually knows
+the \process hosting the best replica of specific content.  The
+challenge resides in handling concurrent operations that may impair
+the propagation of messages, and in turns, lead to inconsistent
+partitioning. 
+%% The major difficulty lies in concurrent operations, each having a
+%% different scope, and ensure the correct convergence of the system.  We
+%% defined, in particular, multiple properties that highlight this
+%% complexity.
 %
-We proposed an implementation of this protocol called \NAME and
-evaluated through simulations. Observations confirmed the
-correctness of our protocol as well as the confinement of the traffic
-only where it is needed.
+We highlighted the properties that solve this problem and proposed an
+implementation called \NAME.  Our simulations confirmed that
+\processes quickly reach consistent partitioning together, and that
+the generated traffic remains locked down to partitions.
+%% correctness of our protocol as well as the confinement of
+%% the traffic only where it is needed.
 
-As ongoing and future work, we are currently studying how it might be
-possible to limit the scope of a partition to one autonomous system at
-most. Indeed, the gain of propagating changes to \processes belonging to
-another autonomous system might be negligible as the latency penalty
-is mainly due to inter autonomous systems' links (\eg trans-continental
-links).  Excatly, we are investigating how such a change can be
-formalized and its impact on the current protocol.
+As future work, we plan on extending the logical partitioning protocol
+to enable lazy retrieval of partitions. Indeed, using \NAME, every
+\process partakes in the propagation of indexes of content and
+replicas. We would like to leverage the hierarchical properties of
+interconnected autonomous systems to limit the propagation of such
+indexes only to interested systems.
+%
+%% As ongoing and future work, we are currently studying how it might be
+%% possible to limit the scope of a partition to one autonomous system at
+%% most. Indeed, the gain of propagating changes to \processes belonging to
+%% another autonomous system might be negligible as the latency penalty
+%% is mainly due to inter autonomous systems' links (\eg trans-continental
+%% links).  Exactly, we are investigating how such a change can be
+%% formalized and its impact on the current protocol.
 %
 %autonomous systems. Indeed, \processes could leverage the hierarchical
 %properties of the Internet topology~\cite{nur2018geography} to avoid
@@ -34,13 +49,26 @@ formalized and its impact on the current protocol.
 %partitions.
 %\TODO{should we highlight this at the end of the experiment}
 %
-In addition to this action, it would make sense to evaluate the use of \NAME
-within a concrete storage systems, such as
-\underline{I}nter\underline{P}lanetary \underline{F}ile
-\underline{S}ystem (IPFS)~\cite{henningsen2020mapping}.  Such an
-integration would enabe us to to perform additional experiments and
-observe the gain with respect to the DHT-based approach that is
-currently used.
+
+\noindent We also would like to evaluate \NAME within a concrete
+storage systems such as \underline{I}nter\underline{P}lanetary
+\underline{F}ile \underline{S}ystem
+(IPFS)~\cite{henningsen2020mapping}. This would allow us to assess the
+relevance of \NAME in a real system subject to high dynamicity, and
+compare it against its current DHT-based indexing system that does not
+include distance in its operation.
+
+%% Such an integration would enable us to to perform additional
+%% experiments and observe the gain with respect to the DHT-based
+%% approach that is currently used.
+
+%% In addition to this action, it would make sense to evaluate
+%% the use of \NAME within a concrete storage systems, such as
+%% \underline{I}nter\underline{P}lanetary \underline{F}ile
+%% \underline{S}ystem (IPFS)~\cite{henningsen2020mapping}.  Such an
+%% integration would enable us to to perform additional experiments and
+%% observe the gain with respect to the DHT-based approach that is
+%% currently used.
 
 %
 %% More generally, it can be used in other services in order to share information while mitigating the traffic.
