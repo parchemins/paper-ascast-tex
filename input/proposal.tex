@@ -315,14 +315,13 @@ partition at receipt time. On the contrary, \Process~$b$ delivers
 $\alpha_d^1$, for it improves its distance to a known
 source. \Process~$b$ then blocks \Process~$a$'s removal notification
 $\delta_a$. It never reaches \Process~$c$ nor \Process~$d$. Also,
-\Process~$c$ and \Process~$d$ do not deliver any $\alpha_d$ or
-$\delta_d$ since they already delivered it. The system converges to an
-inconsistent state where some \processes assume they belong to a
-partition while it does not exist anymore. Naive propagation of
-$\alpha$ and $\delta$ messages is insufficient to guarantee consistent
-partitioning when each \process can add or delete its partition at any
-time. \Processes need to exploit their local knowledge gathered over
-message receipts.
+\Process~$c$ does not deliver $\alpha_d$ and $\delta_d$ since it
+already delivered it. The system converges to an inconsistent state
+where some \processes assume they belong to a partition while it does
+not exist anymore. Naive propagation of $\alpha$ and $\delta$ messages
+is insufficient to guarantee consistent partitioning when any \process
+can add or delete its partition at any time. \Processes need to
+exploit their local knowledge gathered over message receipts.
 
 
 One could guarantee consistent partitioning by always propagating the
