@@ -8,14 +8,14 @@ much as possible trafic between \processes.  In this paper, we tackled
 the problem of content indexing, a key service for storage systems.
 \TODO{pas vraiment du content indexing}
 %
-Our proposal relies on a logical partitioning of the infrastructure
-that is maintained according to replicas creations/removals and
+More precisely, we proposed to address it as a dynamic logical partitioning of the infrastructure
+that should be maintained according to replicas creations/removals and
 infrastructure changes. Through an efficient scoped broadcast, each
 \process composing the infrastructure knows eventually where the best
 replica for a particular content is. The major difficulty is to handle
 concurrent operations, each having a different scope and ensure the
-correct convergence of the system.
-%
+correct convergence of the system. We defined multiple properties that highlight this complexity.
+
 We proposed an implementation of this protocol called \NAME and
 evaluated it on top of Peersim. The simulations confirmed the
 correctness of our protocol as well as the confinement of the traffic
