@@ -1,4 +1,3 @@
-
 \section{Conclusion}
 \label{sec:conclusion}
 
@@ -6,28 +5,42 @@ With the advent of the edge and IoT era, major distributed services
 proposed by our community should be revised in order to mitigate as
 much as possible trafic between \processes.  In this paper, we tackled
 the problem of content indexing, a key service for storage systems.
-\TODO{pas vraiment du content indexing}
 %
 More precisely, we proposed to address it as a dynamic logical partitioning of the infrastructure
 that should be maintained according to replicas creations/removals and
 infrastructure changes. Through an efficient scoped broadcast, each
 \process composing the infrastructure knows eventually where the best
 replica for a particular content is. The major difficulty is to handle
-concurrent operations, each having a different scope and ensure the
-correct convergence of the system. We defined multiple properties that highlight this complexity.
-
+concurrent operations, each having a different scope, and ensure the
+correct convergence of the system.
+We defined, in particular,  multiple properties that highlight this complexity.
+%
 We proposed an implementation of this protocol called \NAME and
-evaluated it on top of Peersim. The simulations confirmed the
+evaluated through simulations. Observations confirmed the
 correctness of our protocol as well as the confinement of the traffic
 only where it is needed.
 
-% 
-From the technical viewpoint, this new service can easily be
-integrated in storage services such as
+As ongoing and future work, we are currently studying how it might be
+possible to limit the scope of a partition to one autonomous system at
+most. Indeed, the gain of propagating changes to \processes belonging to
+another autonomous system might be negligible as the latency penalty
+is mainly due to inter autonomous systems' links (\eg trans-continental
+links).  Excatly, we are investigating how such a change can be
+formalized and its impact on the current protocol.
+%
+%autonomous systems. Indeed, \processes could leverage the hierarchical
+%properties of the Internet topology~\cite{nur2018geography} to avoid
+%flooding the whole systems with control information about all
+%partitions.
+%\TODO{should we highlight this at the end of the experiment}
+%
+In addition to this action, it would make sense to evaluate the use of \NAME
+within a concrete storage systems, such as
 \underline{I}nter\underline{P}lanetary \underline{F}ile
-\underline{S}ystem (IPFS)~\cite{henningsen2020mapping}.  Such an integration would enabe us to
-to perform additional experiments and observe the gain with 
-respect to the DHT-based approach that is currently used.
+\underline{S}ystem (IPFS)~\cite{henningsen2020mapping}.  Such an
+integration would enabe us to to perform additional experiments and
+observe the gain with respect to the DHT-based approach that is
+currently used.
 
 %
 %% More generally, it can be used in other services in order to share information while mitigating the traffic.
@@ -46,13 +59,6 @@ respect to the DHT-based approach that is currently used.
 %% message.\TODO{Complete the use-cases}
 
 
-From the scientific viewpoint, we are currently investigating how our
-proposal can be extended in orer to take into account multiple
-autonomous systems. Indeed, \processes could leverage the hierarchical
-properties of the Internet topology~\cite{nur2018geography} to avoid
-flooding the whole systems with control information about all
-partitions.
-\TODO{should we highlight this at the end of the experiment}
 
 
 
