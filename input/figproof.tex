@@ -14,11 +14,13 @@
       when parents' $\alpha$ messages contradict history or state (III); notify
       processes of possible inconsistencies (IV).]
     {\input{input/figproofB.tex}}
-    \caption{\label{fig:proof}Concurrent operations,
-      delivery orders, and stale control information may impair
-      consistent partitioning. Dynamic consistent partitioning
-      requires eventual purging of stale messages, and best eventual
-      forwarding.}
+    \caption{\label{fig:proof}Concurrent operations, delivery orders,
+      and stale control information may impair consistent
+      partitioning. Dynamic consistent partitioning requires eventual
+      purging of stale messages, and best eventual forwarding.
+      $before$, $last$, and $expect$ respectively refer to the
+      delivery history, the last delivered $\alpha$ message, and
+      the message expected to reach consistent partitioning.}
   \end{center}
 \end{figure*}
 

@@ -19,7 +19,7 @@
   \draw (5pt + 2*\X, 0) -- (2.15*\X, 0); \draw[dotted,->] (2.15*\X, 0) -- (2.25*\X, 0);
   
   \draw[<->] (5pt - \X, 0.4*\Y) --
-  node[below, font=\small]{\textbf{I': propagation}}
+  node[below, font=\small, align=center]{\textbf{I': propagation}\\\textbf{of $\delta$ messages}}
   (-5pt, 0.4*\Y); %% I as well
   
   \draw[->] (-\X + 5pt, 0)
@@ -29,7 +29,7 @@
   ; %% d - e
 
   \draw[<->] (5pt , 0.4*\Y) --
-  node[below, font=\small]{\textbf{III: detection}}
+  node[below, font=\small, align=center]{\textbf{III: detection}}
   (-5pt + \X, 0.4*\Y); %% IV
   
   \draw[->] (0 +5pt, 0)
@@ -40,7 +40,7 @@
   ; %% e - f
   
   \draw[<->] (5pt +\X , 0.4*\Y) --
-  node[below, font=\small]{\textbf{IV: propagation}}
+  node[below, font=\small, align=center]{\textbf{IV: propagation}\\\textbf{of $\delta?$ messages}}
   (-5pt + 2*\X, 0.4*\Y); %% V
   
   \draw[->] ( \X +5pt, 0) -- (2*\X -5pt, 0); %% b - g

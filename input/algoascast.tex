@@ -1,4 +1,7 @@
 
+\newcommand{\algoAnd}{~\textbf{\textup{and}}~}
+\newcommand{\algoOr}{~\textbf{\textup{or}}~}
+
 \SetKwProg{Function}{func}{}{}
 
 \small
@@ -26,18 +29,20 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 \BlankLine
 
-\Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}
-\tcp*[f]{\footnotesize{receive $\alpha$ from $q$}}} {
-    \uIf(\tcp*[f]{\footnotesize{or state}}) {\hphantom{$($}$q = \pi[|\pi| - 1] \, \wedge$\tcp*[f]{{\footnotesize{from parent: III detect}}}\\
-    \hphantom{\textbf{if}} $(c' < V[s'] \,  \vee$\tcp*[f]{\footnotesize{inconsistent version}\label{line:ascast_version}}\\
-    \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} < A_{s, c}^{d, \pi} \wedge p\not\in \pi'))$}\label{line:detectA}} {
-        \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{IV propagate}}
+\Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}}
+  %\tcp*[f]{\footnotesize{receive $\alpha$ from $q$}}}
+  {
+    \uIf(\tcp*[f]{\footnotesize{state?}}) {\hphantom{$($}$q = \pi[|\pi| - 1] \algoAnd$\tcp*[f]{{\footnotesize{$\alpha$ and $A$ come from $q$?}}}\\
+    \hphantom{\textbf{if}} $(c' < V[s'] \,\, \algoOr$\tcp*[f]{\footnotesize{history?}\label{line:ascast_version}}\\
+    \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} > A_{s, c}^{d, \pi} \algoAnd  p\not\in \pi'))$}\label{line:detectA}} {
+        \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{III detect}}
     }
-    \uElseIf (\tcp*[f]{\footnotesize{I propagate}\label{line:ascast_better}}) {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \wedge p \not\in \pi'$  } {
+    \uElseIf {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \algoAnd p \not\in \pi'$  } {
           $V[s'] \leftarrow c'$ \;
           $A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}$ \;
-              \lForEach{$n \in O_p$}
-                  {\smash{send$_n$($\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$)}}
+          \ForEach{$n \in O_p$} {
+            send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$)}\tcp*[r]{\footnotesize{I propagate}\label{line:ascast_better}}
+          }
 
      }
 }
@@ -47,22 +52,25 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 
 \Function{\textup{receiveDel($q$, $\delta_{s', c'}^{\pi'}$)}
-\tcp*[f]{\footnotesize \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}} {
-  \uIf {$((\delta_{s', c'} \wedge \alpha_{s', c'-1} = A_{s, c}) \, \vee$\tcp*[f]{\footnotesize{I' propagate}}\\
-    \hphantom{\textbf{if} } $(\delta_{s',c'}^{\pi'} \wedge \alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi})) \, \wedge$\tcp*[f]{\footnotesize{IV propagate}}\\
+%  \tcp*[f]{\footnotesize \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}
+} {
+  \uIf {$((\delta_{s', c'} \algoAnd \alpha_{s', c'-1} = A_{s, c})  \algoOr$
+    \tcp*[f]{\footnotesize{$\delta$ received}}\\
+    \hphantom{\textbf{if} } $(\delta_{s',c'}^{\pi'}  \algoAnd  \alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi}))  \algoAnd$ \tcp*[f]{\footnotesize{$\delta?$ received}}\\
     \hphantom{\textbf{if} $($} $p \not\in \pi'$ \label{line:notloopingB}} {
      $V[s'] \leftarrow \max(V[s'], c')$ \;
      $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing}$ \;
 
-
-     \ForEach{$n \in O_p$}{
-       \lIf {\smash{$\delta_{s', c'}^{\pi'}$}} {send$_n$(\smash{$\delta_{s', c'}^{\pi' \cup p}$)}
-       \textbf{else} send$_n$(\smash{$\delta_{s', c'}$)} }
-     }
+    \ForEach{$n \in O_p$}{
+      \lIf(\tcp*[f]{\footnotesize{I' propagate}}) {\smash{$\delta_{s', c'}$}} {
+        send$_n$(\smash{$\delta_{s', c'}$)}
+      } 
+      \hphantom{\textbf{if} $\delta_{s', c'}^{\pi'}$}~\textbf{else} send$_n$(\smash{$\delta_{s', c'}^{\pi'\cup p}$)} \tcp*[f]{\footnotesize{IV propagate}}
+    }
 
   }\uElseIf{$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
      \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
-     \tcp*[r]{\label{line:ascast_compete}\footnotesize{compete}}
+     \tcp*[r]{\label{line:ascast_compete}\footnotesize{compete using $A$}}
   }
 }
 

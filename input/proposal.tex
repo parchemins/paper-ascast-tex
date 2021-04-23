@@ -171,8 +171,8 @@ the network state. For \processes to reach consistent partitioning
 together, a \process becoming a source must notify every \process that
 is closer to it than any other source. Since epidemic dissemination
 and scoped broadcast have well-aligned preoccupations, we assume
-implementations relying on forwarding of messages from neighbor to
-neighbor.
+implementations relying on forwarding of messages from
+neighbor-to-neighbor.
 
 \begin{theorem}[\label{theo:bef}\underline{B}est \underline{e}ventual
     \underline{f}orwarding $(BEF) \implies CP$]
@@ -430,9 +430,11 @@ at any time, consistent partitioning requires
     contradicts their history or state. In such case, the detecting
     \processes purge their own $\alpha_d$. The detecting \processes
     must also notify subsequent \processes that their current
-    partition \emph{may be} deleted, for their parent may have blocked
-    the corresponding $\delta$ messages. We note such notification
-    $\delta_d?$ to emphasize the uncertainty of a $\delta$ message.
+    partition \emph{may be} deleted. Indeed their parent may have
+    blocked the corresponding $\delta$ messages and subsequent
+    \processes must purge their possibly stale state, for the sake of
+    consistency.  We note such notification $\delta_d?$ to emphasize
+    the uncertainty of a $\delta$ message.
   \item [\processes with last $\alpha_d$ receiving $\delta_d?$ from
     their parent:] \Processes such as \Process~$g$ have $\alpha_d$ and
     preceding delivered messages have not importance. Such \processes
@@ -462,11 +464,11 @@ at any time, consistent partitioning requires
 
 
 
-\vfill
+% \vfill
 
-\TODO{spacing.}
+% \TODO{spacing.}
 
-\newpage
+% \newpage
 
 \subsection{Implementation and complexity}
 
@@ -500,7 +502,8 @@ enable dynamic consistent partitioning.
 To implement last win order as stated in Definition~\ref{def:lwo},
 each \process maintains a vector of versions that associates the
 respective known local counter of each known source, or has-been
-source.  Each \process delivers and forwards
+source. Each message $m$ carries its source $s$ along with its version
+$c$ that we subscript $m_{s, c}$.  Each \process delivers and forwards
 \begin{inparaenum}[(i)]
 \item only newest messages (see Line~\ref{line:ascast_version}) that
 \item improve their best known partition (see
@@ -509,12 +512,13 @@ source.  Each \process delivers and forwards
 This vector enables both Propagation~I and Propagation~I'.  The size
 of such vector increases linearly with the number of sources that the
 \process ever known which is the number of \processes in the system
-$\mathcal{O}(V)$ in the worst case. Unfortunately, \processes cannot
-remove any entry from this vector without running a costly distributed
-consensus protocol to ensure that no \process can mistake an old but
-removed entry for a new one. However, following the principles of
-scoped broadcast, we expect that every \process knows only a small
-subset of sources.
+$\mathcal{O}(V)$ in the worst case.
+%% Unfortunately, \processes cannot
+%% remove any entry from this vector without running a costly distributed
+%% consensus protocol to ensure that no \process can mistake an old but
+%% removed entry for a new one.
+Nevertheless, following the principles of scoped broadcast, we expect
+that every \process only acknowledges a small subset of sources.
 
 This vector of versions constitutes a summary of deliveries. \NAME
 uses it to detect possible inconsistent partitioning as depicted in
@@ -522,12 +526,12 @@ Figure~\ref{fig:proofB}. A detecting \process then propagates a
 $\delta$ message conveying the unique identifier $s$ and version $c$
 of the partition along with a path $\pi$ comprising the identity of
 \processes that forwarded the corresponding $\alpha$ message. Such
-$\delta$ message implements the uncertain $\delta?$ message of
-Figure~\ref{fig:proofB}. It fulfils the double role of removing stale
-control information without modifying the local counter of the source
-(since the partition may still exist), and removing loops to ensure
-termination (since \processes do not modify their local state to
-reflect such delivery, messages piggyback monotonically such
+$\delta_{s, c}^{\pi}$ message implements the uncertain $\delta?$ message
+of Figure~\ref{fig:proofB}. It fulfils the double role of removing
+stale control information without modifying the local counter of the
+source (since the partition may still exist), and removing loops to
+ensure termination (since \processes do not modify their local state
+to reflect such delivery, messages piggyback monotonically such
 increasing control information). Thus, $\delta$ messages used in
 Propagation~I' are more efficient both in propagation time and
 traffic, for they propagate using every communication link available
