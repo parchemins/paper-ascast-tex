@@ -554,31 +554,41 @@ bordering \processes (see Line~\ref{line:ascast_compete}). This simply
 consists in sending the current partition through the communication
 link from which the \process received the $\delta$. Upon receipt of
 this answer, \processes act normally by propagating their changes when
-they improve. \TODO{Exemple with figure for detection?}
+they improve.
 
-\TODO{Rework this.}\NAME guarantees dynamic consistent partitioning by
-making extensive use of \process to \process communications. In terms
-of number of messages, in the average-case, a \process $i$ chosen
-uniformly at random among all \processes creates a logical
+\NAME guarantees dynamic consistent partitioning by making extensive
+use of \process-to-\process communications. It requires
+\begin{inparaenum}[(i)]
+\item purging stale control information, hence propagating $\delta$
+  messages; and
+\item retrieving the closest source, hence propagating $\alpha$
+  messages.
+\end{inparaenum}
+In terms of number of messages, in the average-case, a \process $i$
+chosen uniformly at random among all \processes creates a logical
 partition. Its messages $\alpha_i$ propagate through the network until
 reaching \processes that belong to another partition closer to
 them. This splits partitions in half in average. Overall, the $a^{th}$
 new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
       \log_2 a \rfloor}})$} \processes. This decreases every new
-partition until reaching $0$ \processes per new partition: even the
-chosen \process already belongs to its optimal partition. The average
-number of messages per \process is
+partition until reaching one \process per new partition: its
+source. The average number of messages per \process is
 \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
-      \rfloor}})$}. \TODO{Multiple receipt and multiple delivery imply
-  more messages (receipt bounded by $|O|$ as well).} Deleting the
-$a^{th}$ partition generates the exact same number of messages than
-the $a^{th}$ partition creation. \TODO{But what about echos?} In the
-worst-case, every new partition includes all but one \process
-belonging to the previous partition. The total number of messages
-after the $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot
-a^2)$. As for the average-case, the number of messages for the
-partition deletion is identical to the number of messages of the
-corresponding partition creation.
+      \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
+number of neighbors per \process. % \TODO{Multiple receipt and multiple
+%  delivery imply more messages (receipt bounded by $|O|$ as well).}
+Deleting the $a^{th}$ partition generates twice as many messages as
+creating the $a^{th}$ partition: $\delta$ messages travel through the
+partition, then $\alpha$ messages compete to fill the gap.  Overall,
+the communication complexity shows that \NAME scales well to the
+number of partitions.
+%% In the
+%% worst-case, every new partition includes all but one \process
+%% belonging to the previous partition. The total number of messages
+%% after the $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot
+%% a^2)$. As for the average-case, the number of messages for the
+%% partition deletion is identical to the number of messages of the
+%% corresponding partition creation.
 
 \begin{algorithm}
   \input{input/algoedges.tex}
@@ -594,13 +604,19 @@ necessary.
 
 Adding an edge between two \processes may only improve the shortest
 path of one of these \processes. Therefore, it triggers a competition
-between the two \processes only. Removing an edge between two
-\processes may invalidate the shortest path of one of involved
-\processes plus downstream \processes. To implement this behavior,
-\NAME uses the implementation of $\delta?$ messages. This prove costly
-but enables \NAME even in dynamic networks subject to physical
+between the two \processes only. If one or the other \process
+improves, the propagation of $\alpha$ messages operates normally.
+Removing an edge between two \processes may invalidate the shortest
+path of one of involved \processes plus downstream \processes. As a
+side effect, removing an edge may also impair the propagation of a
+partition delete. To implement this behavior, \NAME uses its
+implementation of $\delta?$ messages. This prove costly but
+enables \NAME even in dynamic networks subject to physical
 partitioning.
 
+Next Section provides the details of our experimentation that aim to
+evaluate the proposed implementation of logical dynamic partitioning
+in dynamic networks.
 
 %%% Local Variables: 
 %%% mode: latex
