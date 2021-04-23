@@ -2,62 +2,59 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-How to design distributed system in order to deal with consistency,
-availability and partitioning is something our community has been
-working on for a long time.  Though important achievements have been
-with now building blocks have been proposed to help developers deal
-with these concerns, the advent of the Edge and IoT era raises a new
-complexity: how can we lock down the trafic only where it is
-essential!
+With the advent of the edge and IoT era, major distributed services
+proposed by our community should be revised in order to mitigate as
+much as possible trafic between \processes.  In this paper, we tackled
+the problem of content indexing, a key service for storage systems.
+\TODO{pas vraiment du content indexing}
+%
+Our proposal relies on a logical partitioning of the infrastructure
+that is maintained according to replicas creations/removals and
+infrastructure changes. Through an efficient scoped broadcast, each
+\process composing the infrastructure knows eventually where the best
+replica for a particular content is. The major difficulty is to handle
+concurrent operations, each having a different scope and ensure the
+correct convergence of the system.
+%
+We proposed an implementation of this protocol called \NAME and
+evaluated it on top of Peersim. The simulations confirmed the
+correctness of our protocol as well as the confinement of the traffic
+only where it is needed.
 
-In this paper, we proposed a general purpose definition of scoped
-broadcast, and an extension to automatically adapt the scope of scoped
-broadcast in contexts where each process can decide whether or not it
-decide to be a source. We proposed an implementation called \NAME.
-
-As future work, we plan on enhancing the
+% 
+From the technical viewpoint, this new service can easily be
+integrated in storage services such as
 \underline{I}nter\underline{P}lanetary \underline{F}ile
-\underline{S}ystem (IPFS)~\cite{henningsen2020mapping} with dynamic
-logical partitioning capabilities in order to improve its caching
-policy of popular contents at marginal cost.
+\underline{S}ystem (IPFS)~\cite{henningsen2020mapping}.  Such an integration would enabe us to
+to perform additional experiments and observe the gain with 
+respect to the DHT-based approach that is currently used.
 
-%% \noindent We propose an implementation that further decreases
-%% generated traffic and improves on
-%% anonymity~\cite{whitaker2002forwarding}.  \NAME makes extensive use of
-%% paths to enable deleting messages without incrementing local
-%% counters. Messages carry their respective path and processes detect
-%% when such messages have been looping when they carry their identity
-%% (see Lines~\ref{line:notloopingA} and \ref{line:notloopingB} of
-%% Algorithm~\ref{algo:adddelundo}). Since membership is all that
-%% matters, we propose to trade vectors of identities for Bloom
-%% filters~\cite{almeida2007scalable}. Processes know with high
-%% probability if they already received and forwarded each message
-%% without knowing the identity of all processes that received it.  False
-%% positive probability only incurs premature stopping of broadcast
-%% messages and does not invalidate the delete of specific
-%% messages. \TODO{Rework.}
+%
+%% More generally, it can be used in other services in order to share information while mitigating the traffic.
+%% MWhile we use the distance to the closest copy in this paper, It is
+%% notewothy that other scopes can be envisioned according to the
+%% use-cases.  For instance, the location of a city in order to broadcast
+%% message to all nodes in the city.  This requires nodes to store and
+%% maintain their city location in their local state. Nodes stop
+%% delivering and forwarding their received messages when they come from
+%% a different city. Such a predicate can be complexified in order to
+%% broadcast messages to all nodes in the city plus neighboring
+%% cities. This requires nodes to overload forwarded messages the first
+%% time they reach another city. The predicate checks if messages already
+%% reached two distinct cities before delivery.  The predicate can even
+%% be piggypack within the message and so be different for each
+%% message.\TODO{Complete the use-cases}
 
-\noindent We also plan on further improving scoped broadcast between
-multiple autonomous systems. Indeed, processes could leverage the
-hierarchical properties of such topology~\cite{nur2018geography} to
-avoid flooding the whole systems with control information about all
+
+From the scientific viewpoint, we are currently investigating how our
+proposal can be extended in orer to take into account multiple
+autonomous systems. Indeed, \processes could leverage the hierarchical
+properties of the Internet topology~\cite{nur2018geography} to avoid
+flooding the whole systems with control information about all
 partitions.
+\TODO{should we highlight this at the end of the experiment}
 
 
-% TODO : Use cases
-While we use the distance to the closest copy in this paper, It is
-notewothy that other scopes can be envisioned according to the
-use-cases.  For instance, the location of a city in order to broadcast
-message to all nodes in the city.  This requires nodes to store and
-maintain their city location in their local state. Nodes stop
-delivering and forwarding their received messages when they come from
-a different city. Such a predicate can be complexified in order to
-broadcast messages to all nodes in the city plus neighboring
-cities. This requires nodes to overload forwarded messages the first
-time they reach another city. The predicate checks if messages already
-reached two distinct cities before delivery.  The predicate can even
-be piggypack within the message and so be different for each
-message.\TODO{Complete the use-cases}
 
 %%% Local Variables: 
 %%% mode: latex
