@@ -2,25 +2,25 @@
 \section{Related Work}
 \label{sec:related_work}
 
-Content indexing in geo-distributed infrastructures has been studied
-through various approaches.  Offering an indexing service which is
-either hosted by a centralized entity or distributed through nodes of
-the network has long been the predominant one. This mainly requires
+
+\begin{asparadesc}
+\item [Remote third-party:]
+Relying on a remote third party service is a popular approach to offer content indexing in geo-distributed infrastructures. 
+Such a remote service should
 \begin{inparaenum}[(i)]
-\item to have access to the list of current replica locations and
-\item to be aware of the topology to compute which replica is the
+\item have access to the list of current replica locations and
+\item be aware of the topology to decide which replica is the
   closest for a given location.
 \end{inparaenum}
 
-Deploying a centralized server that maintains an index of all replica
-locations has been proposed in~\cite{snamp, p2p-oracle, fogstore,
-  p2p-alto}. These solutions suffer from well-known disadvantages
-inherent to centralized solutions (load balancing, robustness,
-locality, etc.) that are even magnified in an Edge context.
+\begin{inparaenum}[(i)]
+\item Numerous solutions~\cite{snamp, p2p-oracle, fogstore, p2p-alto} maintain an index of all replica
+locations on a centralized server. This comes with well-known disadvantages
+inherent to centralized solutions such as load balancing, robustness or locality that are even magnified in an Edge context.
 Distributing this index among nodes in the network circumvent some of
 these issues, either using coordinate-based overlays~\cite{voronet,
   coin_19} or \underline{D}istributed \underline{H}ash
-\underline{T}ables (DHT)~\cite{ipfs, mdht, squirrel} for example. In
+\underline{T}ables (DHTs)~\cite{ipfs, mdht, squirrel}. In
 the latter, each node stores a part of the index, defined by an
 interval between hash values.  Before downloading any object, a node
 first hashes the content to obtain the address of the node that stores
@@ -28,65 +28,66 @@ the replica locations of this given object. After obtaining from the
 remote node the list of available replicas, it can select the closest
 copy to download from. We emphasize that, in this setting, the DHT
 only stores information about replicas locations, not the content
-itself. DHT-based approaches are well-studied and easy to deploy in
-order to offer such a localization service.
+itself. 
 
-Being centralized or distributed, this index should be enhanced with
-the topology knowledge in order to be able to decide where resides the
-closest replica. Maintaining a consistent view of an ever changing
+
+\item Determining where resides the closest replica necessarily involves some knowledge about the current topology.
+Maintaining a consistent view of an ever changing
 topology across a network is inherently complicated, especially in
-asynchronous settings. This is a well-studied problem in the network
-community and numerous protocols have been proposed. As for the index,
+asynchronous settings. As for the index,
 this knowledge about the topology can be either
 centralized~\cite{topology-discovery} or distributed like in routing
 protocols such as \underline{O}pen \underline{S}hortest
-\underline{P}ath \underline{F}irst (OSPF).
+\underline{P}ath \underline{F}irst (OSPF)~\cite{ospf}.
+\end{inparaenum}
 
-All these solutions require to contact a remote node (either a server
-or a DHT node) to request this index which is costly in terms of
-latency while in contradiction with Edge infrastructure constraints,
-as previously explained.
 
+All the aforementionned solutions require to contact a remote node to request this index which is costly in terms of
+latency while in contradiction with Edge infrastructure constraints, as previously explained.
+
+
+\item [Broadcast:]
 The opposite approach consists in hosting the index directly on the
 nodes, avoiding any prior request to access a content.
-%This requires notifying nodes of replica creations and removals along
-%with information about the evolving topology.
-Broadcasting information about cache updates to all nodes in the
-system is a straightforward way to maintain consistent information
-about replica locations for all nodes, as usually implemented in
 \underline{N}amed \underline{D}ata \underline{N}etworking
-(NDN)~\cite{nlsr}.  Indeed, having the entire knowledge of all the
-replica localization along with distance information carried into
+(NDN)~\cite{nlsr} broadcasts information about cache updates to all nodes in the
+system. Having the entire knowledge of all the
+replica locations along with distance information carried into
 messages, each node can easily determine where the closest copy of a
 given object resides, without contacting any remote node.  Similarly,
-one could solve this issue by using a
+one could use a
 \underline{C}onflict-\underline{F}ree \underline{R}eplicated
 \underline{D}atatype (CRDT) for set data structures, for
 example~\cite{shapiro2011crdts}. Yet both solutions inherently imply
-that every node will eventually receive all messages.
+that every node will eventually receive all messages, contrary to \NAME.
 
 
-At first glance, membership protocols as proposed in~\cite{t-man}
+\item [Membership protocols:]
+At first glance, membership protocols~\cite{t-man}
 would appear to provide suitable abstractions to create a
 scope-related partitioning, as proposed in this paper. Such protocols
-usually rely on gossip mechanism, implying contacts with random nodes
-that can be very far away in the physical topology. Moreover,
-membership protocols are usually implemented by modifying the
+usually rely on gossip mechanisms, implying contacts with random nodes
+that can be far away in the physical topology. 
+They are mostly implemented by modifying the
 neighboring of a given node according to a certain metric in a logical
-overlay.  On the contrary, we do not aim at building any overlay, as
-we only rely on the physical topology so the neighbors of a given node
-are not continuously modified. Lastly, these protocols are usually
+overlay. On the contrary,  \NAME  does not aim at building any overlay, as
+it only relies on the physical topology so the neighbors of a given node
+are not continuously modified. These protocols are usually
 cycle-based, meaning that they impose a constant load on the network
-traffic, even when the system state does not change. Likewise, this
-also prevents from using solutions that periodically advertise their
-cache content~\cite{garcia-lopez, hemmati2015namebased} as they also
+traffic, even when the system state does not change. \NAME only generates traffic upon system changes.
+
+\item [Timeouts:]
+Solutions that periodically advertise their
+cache content~\cite{garcia-lopez, hemmati2015namebased} also
 incur an overhead even in quiet contexts without any update.
-Moreover, such solutions necessarily rely on physical timeouts that
+Moreover, they necessarily rely on physical timeouts that
 could lead to either premature removals of partitions when they are
 still operating; or slow convergence where processes wrongly believe
-they belong to a partition that was removed. On the opposite
+they belong to a partition that was removed. On the opposite,
 Section~\ref{sec:experimentation} shows that \NAME quickly converges
 to consistent partitioning even in large scale networks.
+
+\end{asparadesc}
 
 %Finally, we emphasize that consistency is at the core of our design,
 %as \NAME provides the same guarantees for all nodes.  On the
