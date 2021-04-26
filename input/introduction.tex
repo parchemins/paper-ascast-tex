@@ -7,7 +7,7 @@ In recent years, the data storage paradigm shifted from centralized in
 the cloud to distributed at the edges of the network. 
 % There is an ongoing evolution of storing data from the cloud to the
 % edges of the network.
-This shift aims at keeping the data close to
+This change aims at keeping the data close to
 \begin{inparaenum}[(i)]
 \item its producers since data may be too expensive or sensitive to be
   transmitted through the network; and
@@ -34,14 +34,14 @@ actually take more time than retrieving the content itself.
 %% itself.
 %
 Indeed, these systems, when not using a centralized index hosted in a
-Cloud, rely on distributed hash tables~\cite{maymounkov2002kademlia}
-spread across the different \processes composing the
-infrastructure. When a client wants to access specific content, it
-requests a remote \process to provide at least one \process identity
-to retrieve this content from. After it retrieved the content, the
-client can create another replica to improve the performance of future
-accesses, but it must contact the content indexing service again to
-notify of such change.
+Cloud, rely on \underline{d}istributed \underline{h}ash
+\underline{t}ables (DHT)~\cite{maymounkov2002kademlia} spread across
+the different \processes composing the infrastructure. When a client
+wants to access specific content, it requests a remote \process to
+provide at least one \process identity to retrieve this content
+from. After it retrieved the content, the client can create another
+replica to improve the performance of future accesses, but it must
+contact the content indexing service again to notify of such a change.
 %% a local replica is created to improve the performance for future
 %% accesses and the process in charge of maintaining the index is
 %% contacted once again to reflect this new location.
@@ -58,7 +58,7 @@ notify of such change.
 %%    replica is perfomed in
 %\end{itemize}
 
-These approaches directly contradict with the objectives of Edge
+These approaches contradict with the objectives of Edge
 infrastructures that aim at reducing the impact of latency as well as
 the volume of data passing through the network.
 %
@@ -98,10 +98,10 @@ Instead, a \process creating a replica should notify all and only
 create interconnected sets of \processes, or \emph{partitions},
 gathered around a \emph{source} being their respective replica. A
 \process deleting its replica should notify all members of its
-partition so they can rally their current closest partition. A
-periodic advertisement protocol already provides both these operations
-for routing purposes~\cite{hemmati2015namebased}. However, its
-functioning requires
+partition so they can identify and rally their new closest
+partition. A periodic advertisement protocol already provides both
+operations for routing purposes~\cite{hemmati2015namebased}. However,
+its functioning requires
 \begin{inparaenum}[(i)]
 \item to generate traffic even when the system is quiescent, and
 \item to finely tune physical-time-based intervals that depend on

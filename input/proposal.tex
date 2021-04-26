@@ -29,7 +29,7 @@ complexity.
 %
 
 % \TODO{dynamic graph: superscript with $t$?}
-In this paper, we consider edge infrastructures with heterogeneous
+In this paper, we consider Edge infrastructures with heterogeneous
 \nodes interconnected by communication links. \Processes involved in
 the management of content may crash but are not byzantine.  Finally,
 \processes can reliably communicate through asynchronous message
@@ -37,7 +37,7 @@ passing to other known \processes called neighbors.  % A more formal
 %definition of our system is given below:
 
 \begin{definition}[Edge infrastructure]
-  An edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
+  An Edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
   \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
   \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from
   \Process~$i$ to \Process~$j$ is a sequence of vertices $[i, k_1,
@@ -101,6 +101,7 @@ We use \NAMEB to dynamically and efficiently modify the state of each
 
 
 \subsection{Consistent partitioning}
+\label{subsec:consistent}
 
 At any time, a \process can decide to become a \emph{source}, hence
 creating a new partition in the system by executing an \texttt{Add}
@@ -108,7 +109,7 @@ operation. This partition includes at least its source plus
 neighboring \processes that estimate they are closer to this source
 than any other one. Such distance (or \emph{weight}) is
 application-dependant: in the context of maintaining distributed
-indexes, weights would be link latency.
+indexes, this would be about link latency.
 
 \begin{definition}[\label{def:partitioning}Partitioning]
   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
@@ -162,10 +163,10 @@ best known partition.
   When a \process $s_1$ becomes a source, it belongs to its own
   partition, for there exists no better partition than its own:
   $\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1 p}|$. It delivers,
-  hence forwards such $\alpha$ message to its neighbors. Since
+  hence forwards such an $\alpha$ message to its neighbors. Since
   communication links are reliable, neighboring \processes eventually
-  receive such notification $\forall \langle s_1, q \rangle \in E, s_1
-  \in S \iff \eventually r_q(\alpha_{s_1}^{w_{s_1 q}})$. Most
+  receive such a notification $\forall \langle s_1, q \rangle \in E,
+  s_1 \in S \iff \eventually r_q(\alpha_{s_1}^{w_{s_1 q}})$. Most
   importantly, whatever the order of received messages, every \process
   $q'$ in this neighborhood -- such that there exists no better
   partition $s_2$ than the received one -- delivers and forwards it:
@@ -191,7 +192,7 @@ best known partition.
   \caption{\label{algo:add}Adding a partition by \Process~$p$.}
 \end{algorithm}
 
-Algorithm~\ref{algo:add} shows the instructions that implement such
+Algorithm~\ref{algo:add} shows the instructions that implement
 consistent partitioning when
 \begin{inparaenum}[(i)]
 \item weights are scalar values,
@@ -212,7 +213,7 @@ Figure~\ref{fig:addD}, \Process~$b$ discards $\alpha_{a}^{2}$, for it
 does not improve its partition distance. \Processes $c$ and $d$ will
 never acknowledge that Source~$a$ exists. Ultimately, \processes
 discard last transiting messages. Despite the obvious lack of traffic
-optimization, the system reach consistent partitioning.
+optimization, the system reaches consistent partitioning.
 
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity.
@@ -272,7 +273,7 @@ Definition~\ref{def:lwo} may impair the propagation of both
 \item notifications about actual sources, and
 \item notifications about deleted partitions.
 \end{inparaenum}
-Figure~\ref{fig:problem} highlights such consistency issue with
+Figure~\ref{fig:problem} highlights such consistency issues with
 dynamic partitions, even in contexts where \processes have FIFO links,
 \ie where \processes receive the messages in the order of their
 sending. Both \Process~$a$ and \Process~$d$ add then delete their
@@ -299,11 +300,11 @@ $\delta$ messages corresponding to the $\alpha$ messages it propagated
 before. In Figure~\ref{fig:problem}, it means that as soon as
 \Process~$b$ forwards $\alpha_a^2$, it assumes that its neighbors
 \Process~$c$ and \Process~$d$ may need the notification of removal
-$\delta_a$ if it exists. However, such solution also implies that
+$\delta_a$ if it exists. However, such a solution also implies that
 \processes generate traffic not only related to their current
 partition, but also related to partitions they belong to in the
 past. This would prove overly expensive in dynamic systems where
-\processes join or leave the system, create or delete partitions, at
+\processes join and leave the system, create and delete partitions, at
 any time.  Instead, we propose to use the delivery order at each
 \process to detect possible inconsistencies and solve them. Together,
 \processes eventually remove all stale control information (transiting
@@ -327,14 +328,14 @@ at any time, consistent partitioning requires
 \begin{proof}
   \Processes deliver and forward the best sum of weights they
   received. Figure~\ref{fig:proofA} depicts the only case where a
-  \process would block such epidemic propagation: the \process
-  received and delivered a message from a partition that has since
-  then been deleted but with a better sum of weights than newly
-  received ones (in the example $\alpha_d^y <
-  \alpha_a^{x'}$). Removing \emph{forever} all such stale messages
-  about deleted partitions would allow \processes to propagate their
-  best up-to-date partition again, eventually reaching consistent
-  partitioning together, as stated by Theorem~\ref{theo:bef}.
+  \process would block the epidemic propagation: the \process received
+  and delivered a message from a partition that has since then been
+  deleted but with a better sum of weights than newly received ones
+  (in the example $\alpha_d^y < \alpha_a^{x'}$). Removing
+  \emph{forever} all such stale messages about deleted partitions
+  would allow \processes to propagate their best up-to-date partition
+  again, eventually reaching consistent partitioning together, as
+  stated by Theorem~\ref{theo:bef}.
 \end{proof}
 
 \input{input/figproof.tex}
@@ -389,15 +390,15 @@ at any time, consistent partitioning requires
     message, these \processes purge $\alpha_d$.
   \item [\processes with $\alpha_d^y \rightarrow \alpha_h^z$ with last
     $\alpha_h^z$, for $\alpha_h^z < \alpha_d^y$:] \Processes such as
-    \Process~$e$ do not directly suffer from the non-delivery of
+    \Process~$e$ that do not directly suffer from the non-delivery of
     $\delta_d$. They need to purge their own $P_h$ if need
     be. Nonetheless, they deliver and forward $\alpha_h$ that at least
     one following \process will receive:
   \item [\processes with $\delta_h \rightarrow \alpha_d$:] \Processes
-    such as \Process~$f$ do not belong to the preceding category, for
-    they already delivered $\delta_h$. However, best eventual
-    forwarding guarantees that they receive $\alpha_h$ that
-    contradicts their history or state. In such case, the detecting
+    such as \Process~$f$ that do not belong to the preceding category,
+    for they already delivered $\delta_h$. Nevertheless, best eventual
+    forwarding guarantees that they receive $\alpha_h$, which
+    contradicts their history or state. In such a case, the detecting
     \processes purge their own $\alpha_d$. The detecting \processes
     must also notify subsequent \processes that their current
     partition \emph{may be} deleted. Indeed their parent may have
@@ -406,16 +407,17 @@ at any time, consistent partitioning requires
     consistency.  We note such notification $\delta_d?$ to emphasize
     the uncertainty of a $\delta$ message.
   \item [\processes with last $\alpha_d$ receiving $\delta_d?$ from
-    their parent:] \Processes such as \Process~$g$ have $\alpha_d$ and
-    preceding delivered messages have not importance. Such \processes
-    must trust detecting \processes by delivering and forwarding
-    $\delta_d?$. Messages are subject to all aforementioned blocking
+    their parent:] \Processes such as \Process~$g$ that have
+    $\alpha_d$ but preceding delivered messages are not
+    important. Such \processes must trust detecting \processes by
+    delivering and forwarding $\delta_d?$. It is worth noting that
+    these messages are subject to all aforementioned blocking
     conditions, but are also solved by aforementioned mechanisms.
   \end{asparadesc}
 
-  Propagation~I' terminates: a \process do not deliver a $\delta$
+  Propagation~I' terminates: a \process does not deliver a $\delta$
   message if it has already delivered it. Propagation~IV terminates: a
-  \process do not deliver a looping message.
+  \process does not deliver a looping message.
   % ; and since \processes forward the messages they deliver, upstream
   % \processes eventually receive and may deliver messages detected as
   % issue. In Figure~\ref{fig:proofB}, \Process~$e$ eventually
@@ -479,9 +481,9 @@ $c$ that we subscript $m_{s, c}$.  Each \process delivers and forwards
 \item improve their best known partition (see
   Line~\ref{line:ascast_better}).
 \end{inparaenum}
-This vector enables both Propagation~I and Propagation~I'.  The size
-of such vector increases linearly with the number of sources that the
-\process ever known which is the number of \processes in the system
+This vector enables both Propagation~I and Propagation~I'.  Its size
+increases linearly with the number of sources that the \process ever
+known, which is the number of \processes in the system
 $\mathcal{O}(V)$ in the worst case.
 %% Unfortunately, \processes cannot
 %% remove any entry from this vector without running a costly distributed
@@ -501,8 +503,8 @@ message of Figure~\ref{fig:proofB}. It fulfils the double role of
 removing stale control information without modifying the local counter
 of the source (since the partition may still exist), and removing
 loops to ensure termination (since \processes do not modify their
-local state to reflect such delivery, messages piggyback monotonically
-such increasing control information).
+local state to reflect such a delivery, messages piggyback
+monotonically such increasing control information).
 
 $\delta_{s, c}$ messages used in Propagation~I' are more efficient
 than $\delta_{s, c}^\pi$ messages used in Propagation~IV, both in
@@ -511,13 +513,13 @@ communication link available in the partition, while the latter
 propagate following the dissemination tree of the corresponding
 $\alpha$ to purge. Second, the former only piggyback source and
 counter while the latter piggyback the path taken by the corresponding
-$\alpha$ to purge.  In the worst case, a path includes every
-\processes in the system but converges on average to the average
-diameter of partitions. Nevertheless, message paths and \NAME
-synergyze with each other: Paths tend to be smaller as the number of
-sources in the system increases. Bloom filters could introduce another
-trade-off by further decreasing the size of path data structures at
-the cost of premature stopped propagation that could impair consistent
+$\alpha$ to purge.  In the worst case, a path includes every \process
+in the system but converges to the average diameter of
+partitions. Nevertheless, message paths and \NAME synergyze with each
+other: Paths tend to be smaller as the number of sources in the system
+increases. Bloom filters could introduce another trade-off by further
+decreasing the size of path data structures at the cost of premature
+stopped propagation that could impair consistent
 partitioning~\cite{whitaker2002forwarding}.
 
 As stated in Theorem~\ref{theo:dcp}, dynamic consistent partitioning
@@ -542,7 +544,7 @@ use of \process-to-\process communications. It requires
 \end{inparaenum}
 In terms of number of messages, in the average-case, a \process $i$
 chosen uniformly at random among all \processes creates a logical
-partition. Its messages $\alpha_i$ propagate through the network until
+partition. Its messages $\alpha_i$ spread through the network until
 reaching \processes that belong to another partition closer to
 them. This splits partitions in half in average. Overall, the $a^{th}$
 new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
@@ -551,7 +553,8 @@ partition until reaching one \process per new partition: its
 source. The average number of messages per \process is
 \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
       \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
-number of neighbors per \process. % \TODO{Multiple receipt and multiple
+number of neighbors per \process. % \TODO{Multiple receipt and
+multiple
 %  delivery imply more messages (receipt bounded by $|O|$ as well).}
 Deleting the $a^{th}$ partition generates twice as many messages as
 creating the $a^{th}$ partition: $\delta$ messages travel through the
@@ -591,9 +594,8 @@ uses its implementation of $\delta?$ messages. This prove costly but
 enables \NAME even in dynamic networks subject to physical
 partitioning.
 
-Next Section provides the details of our experimentation that aim to
-evaluate the proposed implementation of logical dynamic partitioning
-in dynamic networks.
+Next Section provides the details of our simulations that assess the
+proposed implementation.
 
 %%% Local Variables: 
 %%% mode: latex
