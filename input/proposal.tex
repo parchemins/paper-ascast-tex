@@ -1,53 +1,21 @@
-%% to better adapt positioning (I expect 2.5 pages
-%% intro+related work)
-
-% \vfill \TODO{spacing for intro and related work: 2.5 pages}
-% \newpage
-
 
 \section{Adaptive scoped broadcast}
 \label{sec:adaptive}
 
-%% In this section, we propose to dynamically adapt the scopes of \NAMEB
-%% using \NAMEB itself for the sake of efficiency: a \NAMEB message may
-%% modify the state of a \process, consequently changing predicate
-%% evaluations over deliveries.  At any time, a \process decides whether
-%% or not it becomes the center (or \emph{source}) of a scope (or
-%% \emph{partition}). \Processes must eventually rally the partition
-%% corresponding to their closest source despite concurrent operations,
-%% and dynamic changes in the network.
-
-%% \noindent In that regard, we introduce \NAME (stands for
-%% \underline{A}daptive \underline{S}coped broad\underline{cast}), a
-%% wait-free reactive protocol for dynamic logical partitioning that
-%% enables adaptive scoped broadcast in dynamic distributed
-%% systems. \NAME's operation guarantees that \processes eventually reach
-%% consistent partitioning by efficiently propagating their state
-%% changes. \NAME's overhead actually depends on its operations and
-%% current partitions in the system. When the system becomes quiescent,
-%% \processes eventually converge to their respective partition and do not
-%% require further communication afterward.
-
-%% \noindent This section starts by introducing consistent partitioning
-%% and its implementation when a \process can only become a new source to
-%% create a new partition, i.e., it cannot revoke its self-appointed
-%% status of source. Then, it extends to include the latter behavior: it
-%% introduces the properties that guarantee consistent partitioning in
-%% such context, and it details our implementation called \NAME along
-%% with its complexity analysis.
-
 To assign and maintain \processes to their best partition according to
-replica creations/removals as well as dynamic infrastructure changes,
-we designed and implemented \NAME (\NAME stands for
-\underline{A}daptive \underline{S}coped broad\underline{cast}).  \NAME
+replica creations and removals, as well as dynamic infrastructure
+changes, we designed and implemented \NAME.  \NAME stands for
+\underline{A}daptive \underline{S}coped broad\underline{cast}. It
 relies on a primitive that allows a \process to broadcast a message
-within a limited scope.  This primitive is used in a first algorithm
-to deliver consistent partitioning each time \process creates a new
-replica within the system. This algorithm is then extended to include
-replica removals as well as dynamic changes of the infrastructure.
-This section discussed the different properties that guarantee
-consistent partitioning in such a context and details the \NAME
-implementation along with its complexity analysis.
+within a limited scope. We first use this primitive to guarantee
+consistent partitioning when a \process can only create a new replica
+within the system. We highlight the issue when a process can also
+destroy a replica, and provide a second algorithm that handles replica
+removals as well as dynamic changes of the infrastructure.  This
+section describes the communication primitive called scoped broadcast,
+then discusses the properties that guarantee consistent partitioning
+in our context, and finally details our implementation \NAME and its
+complexity.
 
 
 \subsection{Scoped broadcast}
@@ -61,12 +29,12 @@ implementation along with its complexity analysis.
 %
 
 % \TODO{dynamic graph: superscript with $t$?}
-In the edge infrastructure we consider, nodes are heterogeneous and
-interconnected by communication links. \Processes involved in the
-management of the data sets may crash but are not byzantine.  Finally,
+In this paper, we consider edge infrastructures with heterogeneous
+\nodes interconnected by communication links. \Processes involved in
+the management of content may crash but are not byzantine.  Finally,
 \processes can reliably communicate through asynchronous message
-passing to other known \processes called neighbors.
-A more formal definition of our system is given below:
+passing to other known \processes called neighbors.  % A more formal
+%definition of our system is given below:
 
 \begin{definition}[Edge infrastructure]
   An edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
@@ -92,8 +60,9 @@ A more formal definition of our system is given below:
 %of connected \processes, thus significantly reducing the generated
 %traffic of broadcast.
 
-We define the Scoped broadcast (\NAMEB) as a communication primitive that propagates a
-message around its broadcaster within an application-dependant scope :
+We define scoped broadcast as a communication primitive that
+propagates a message around its broadcaster within an
+application-dependant scope:
 
 
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
@@ -125,15 +94,16 @@ corresponding predicate becomes unverified.
 %already reached two distinct cities before delivery. Similarly to
 %uniform reliable broadcast, scoped broadcast implementations expose
 %different trade-offs on space, time, and communication.
-
-\NAMEB is used to change the state of each \process dynamically, depending on all partitions that exist in the system.
+%
+We use \NAMEB to dynamically and efficiently modify the state of each
+\process depending on all partitions that exist in the system.
 
 
 
 \subsection{Consistent partitioning}
 
-At any time, a \process can decide to become a source, hence creating
-a new partition in the system by executing an \texttt{Add}
+At any time, a \process can decide to become a \emph{source}, hence
+creating a new partition in the system by executing an \texttt{Add}
 operation. This partition includes at least its source plus
 neighboring \processes that estimate they are closer to this source
 than any other one. Such distance (or \emph{weight}) is
@@ -163,16 +133,16 @@ to.
   other path weight, the only consistent partitioning $\mathcal{P}$ is
   a set of partitions $P_{s\in S}$ such that each \process belongs to
   a logical partition comprising its closest source: $\forall p \in
-  P_{s_1}, \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
+  P_{s_1}: \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
 \end{definition}
 
 Unfortunately, \processes do not share a common global knowledge of
 the network state. For \processes to reach consistent partitioning
-together, a \Process $s$ becoming a source must send a notification
-$\alpha_s$ to every \process that is closer to it than any other
-source. Since epidemic dissemination and scoped broadcast have
-well-aligned preoccupations, we assume implementations relying on
-forwarding of messages from neighbor-to-neighbor.
+together, a \Process $s$ \underline{a}dding a partition must send a
+notification $\alpha_s$ to every \process that is closer to it than
+any other source. Since epidemic dissemination and scoped broadcast
+have well-aligned preoccupations, we assume implementations relying on
+message forwarding from neighbor-to-neighbor.
 
 \begin{theorem}[\label{theo:bef}\underline{B}est \underline{e}ventual
     \underline{f}orwarding $(BEF) \implies CP$]
@@ -264,13 +234,13 @@ eventually choose another partition to belong to. In
 Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_d$
 that respectively include $\{a\}$, and $\{b, c, d\}$. In
 Figure~\ref{fig:delA}, \Process~$a$ deletes its partition. It notifies
-all neighboring \processes -- here only \Process~$b$ -- that may
+all neighboring \processes~--~here only \Process~$b$~-- that may
 belong to its partition using \NAMEB. Upon receipt, \Process~$b$
-discards the message $\delta_a$, for the latter does not target the
-former's partition. \Process~$b$ sends its own knowledge of best
-partition $\alpha_d^3$ that may prove to be the best for
-\Process~$a$. Eventually, every \processes belong to the same
-partition $P_d$. In this scenario, they reach consistent partitioning.
+discards the \underline{d}elete notification $\delta_a$ since
+$\delta_a$ does not target the former's partition $P_d$. \Process~$b$
+sends its own best partition $\alpha_d^3$ that may be the best for
+\Process~$a$. Eventually, every \process belongs to Partition
+$P_d$. In this scenario, they reach consistent partitioning.
 
 Delete operations add a new notion of order between events, and most
 importantly between message deliveries. Delete operations implicitly
@@ -612,11 +582,12 @@ Adding an edge between two \processes may only improve the shortest
 path of one of these \processes. Therefore, it triggers a competition
 between the two \processes only. If one or the other \process
 improves, the propagation of $\alpha$ messages operates normally.
-Removing an edge between two \processes may invalidate the shortest
-path of one of involved \processes plus downstream \processes. As a
-side effect, removing an edge may also impair the propagation of a
-partition delete. To implement this behavior, \NAME uses its
-implementation of $\delta?$ messages. This prove costly but
+
+\noindent Removing an edge between two \processes may invalidate the
+shortest path of one of involved \processes plus downstream
+\processes. As a side effect, removing an edge may also impair the
+propagation of a partition delete. To implement this behavior, \NAME
+uses its implementation of $\delta?$ messages. This prove costly but
 enables \NAME even in dynamic networks subject to physical
 partitioning.
 
