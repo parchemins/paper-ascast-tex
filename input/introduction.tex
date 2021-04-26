@@ -126,17 +126,39 @@ functioning requires
 %% by nodes (replica creation/removal) as well as dynamic changes in the
 %% infrastructure (network failures, node apparitions/leaves).
 
-In this paper, we first define scoped broadcast as a communication
-primitive that allows epidemic dissemination of messages as long as
-receiving \processes verify an application-dependant predicate.  Then,
-we propose \emph{\NAME}, a logical partitioning protocol that uses
-\underline{s}coped broad\underline{cast} to \underline{a}dapt its
-partitions, \ie scopes, to creations and deletions of partitions in
-the system. Each source advertises its existence to all possibly
-interested \processes, \ie only interconnected \processes of its
-partition plus \processes bordering its partition. In turns, \NAME
-scales well to the number of sources since the higher the number of
-partitions, the earlier the dissemination stops.
+\noindent The contribution of this paper is threefold:
+
+\begin{asparadesc} %% to remove left-margin :p
+\item [$\bullet$] We highlight the properties that guarantee
+  decentralized consistent partitioning in dynamic infrastructures. We
+  demonstrate that concurrent creation and removal of partitions may
+  impair the propagation of control information crucial for consistent
+  partitioning. Yet, \processes are able to purge stale information
+  forever using only neighbor-to-neighbor communication, hence leaving
+  room for up-to-date information propagation, and eventually
+  consistent partitioning.
+\item [$\bullet$] We provide an implementation entitled \NAME that
+  uses aforementioned principles to \underline{a}dapt its
+  partitioning, \ie \underline{s}copes, to creations and deletions of
+  partitions in the system. \NAME relies on a communication primitive
+  \underline{s}coped-broad\underline{cast} as \TODO{a communication
+    primitive that allows epidemic dissemination of messages as long
+    as receiving \processes verify an application-dependant
+    predicate.}
+
+  
+\end{asparadesc}
+
+
+%% Then, we propose \emph{\NAME}, a logical partitioning protocol that
+%% uses \underline{s}coped broad\underline{cast} to \underline{a}dapt its
+%% partitions, \ie scopes, to creations and deletions of partitions in
+%% the system. Each source advertises its existence to all possibly
+%% interested \processes, \ie only interconnected \processes of its
+%% partition plus \processes bordering its partition. In turns, \NAME
+%% scales well to the number of sources since the higher the number of
+%% partitions, the earlier the dissemination stops.
+
 %
 %% In this paper, we propose a first implementation of such a protocol.
 %% Entitled Adaptive Scoped broadcast (\NAME), 
