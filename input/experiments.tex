@@ -32,11 +32,11 @@ hence the first $\alpha$ received by a \process may not be that of its
 shortest path. It implies more concurrent operations, hence more
 traffic to reach consistent partitioning.
 
-\noindent We evaluate dynamic scoped broadcast. First, we create 100
-partitions one at a time: \processes reach consistent partitioning
-before we create each new partition. Second, we remove every partition
-one at a time, in the order of their creation, hence starting from the
-first and oldest partition that had been added.
+\noindent We evaluate dynamic consistent partitioning. First, we
+create 100 partitions one at a time: \processes reach consistent
+partitioning before we create each new partition. Second, we remove
+every partition one at a time, in the order of their creation, hence
+starting from the first and oldest partition that had been added.
 
 \noindent We focus on the complexity of \NAME. We measure the average
 number of messages generated per \process per second during the
@@ -66,10 +66,10 @@ experiment involves removals, traffic includes both $\alpha$'s and
 $\delta$'s. The latter aims at removing stale information and
 triggering competition while the former aims at updating shortest
 paths. As corollary, the convergence time increases, for $\delta$
-messages must reach every partition border before any sound
-competitors propagate their partition. It is worth noting that this
-delete operation involves concurrency: removals continue to propagate
-while the competition is already partially triggered and propagating.
+messages must reach the partition borders before sound competitors
+propagate their partition. It is worth noting that this delete
+operation involves concurrency: removals continue to propagate while
+the competition is already partially triggered and propagating.
 
 \begin{figure}
   \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_complexity.eps}
@@ -121,8 +121,8 @@ experiment, at $50$~ms, only one \process becomes source, hence there
 is only one partition for the whole distributed system. In the second
 experiment, at $50$~ms, two \processes become sources, one per
 cluster. Afterwards both scenarios are identical. At $850$~ms, we
-remove the link between the two clusters. At $1.7$~s, we insert this
-link again.
+remove the link between the two clusters. At $1.7$~s, we insert back this
+link.
 
 \begin{figure}
   \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_geant.eps}
@@ -153,12 +153,12 @@ still operates well when \emph{physical} partitions appear. \Processes
 from the cluster without source do not belong to any partition while
 \processes from the other cluster belong to the same partition. 
 
-\noindent Figure~\ref{fig:geant} shows that, when adding the
-inter-continental link again, the two clusters can communicate
-again. In the experiment involving one source for two clusters, it
-generates traffic. After a $200$ ms delay corresponding to
-the new link latency, the cut off cluster starts to communicate
-$\alpha$ messages again. Eventually, all \processes belong to the same
+\noindent Figure~\ref{fig:geant} shows that, when adding back the
+inter-continental link, the two clusters can communicate again. In the
+experiment involving one source for two clusters, it generates
+traffic. After a $200$ ms delay corresponding to the link latency, the
+cut off cluster starts to communicate $\alpha$ messages
+again. Eventually, all \processes belong to the same
 partition. However, in the experiment involving one source \emph{per}
 cluster, the new link does not trigger noticeable traffic, for
 \processes already know their closest source located in their
@@ -166,17 +166,16 @@ respective cluster.
 
 \noindent Overall, this experimentation empirically demonstrates the
 benefits of \NAME in the context of geo-distributed infrastructures,
-e.g., inter-connected autonomous systems where \processes may join or
-leave or crash, communications links may be added or removed. \NAME
-coupled with replication strategies designed for the Edge would allow
-locking down the traffic of replica indexing, while providing every
-\process with quick access to replicated content.
+e.g., inter-connected autonomous systems where \processes and
+communications links may be added and removed at any time. \NAME
+coupled with replication strategies designed for Edge infrastructures
+would allow locking down the traffic of replica indexing, while
+providing every \process with quick access to replicated content.
 
 \end{asparadesc}
 
 Next Section reviews state-of-the-art approaches for content indexing
-in geo-distributed infrastructures and explains their shortcomings in
-such context.
+in geo-distributed infrastructures and explains their shortcomings.
 
 % \subsection{Use case: caching}
 % \subsection{Use case: routing}
