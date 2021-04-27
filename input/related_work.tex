@@ -2,48 +2,92 @@
 \section{Related Work}
 \label{sec:related_work}
 
+Content indexing services in geo-distributed infrastructures allow
+\processes to retrieve specific content while leveraging the
+advantages of replication. These systems mostly rely on dedicated
+location services host by possibly remote third-party \processes~\REF;
+and cutting the middleman requires that each \process maintains its
+own index in a decentralized fashion~\REF. This section reviews these
+approaches. 
 
 \begin{asparadesc}
-\item [Remote third-party:]
-Relying on a remote third party service is a popular approach to offer content indexing in geo-distributed infrastructures. 
-Such a remote service should
+\item [Third-party:]
+
+Dedicated services possibly hosted by remote third-party \processes
+are popular, for they propose the simplest mean to deploy such
+service. They must maintain
 \begin{inparaenum}[(i)]
-\item have access to the list of current replica locations and
-\item be aware of the topology to decide which replica is the
-  closest for a given location.
+\item the list of current replicas along with their respective
+  location; and
+\item the network topology to determine the closest replica for every
+  requesting \process.
 \end{inparaenum}
 
+\noindent A central server that registers both these
+information~\cite{snamp, p2p-oracle, fogstore, p2p-alto} facilitates
+the computation, for it gathers all knowledge in one place. However,
+it comes with well-known issues inherent to its distribution paradigm
+such as load balancing, or single point of failure.
+%% Numerous solutions
+%% maintain an index of all replica locations on a centralized
+%% server. This comes with well-known disadvantages inherent to
+%% centralized solutions such as load balancing, robustness or locality
+%% that are even magnified in an Edge context.
+
+\noindent Distributing this index among \processes circumvents these
+issues~\cite{voronet, ipfs, mdht, squirrel, coin_19}, but still raises
+locality issues where \processes
 \begin{inparaenum}[(i)]
-\item Numerous solutions~\cite{snamp, p2p-oracle, fogstore, p2p-alto} maintain an index of all replica
-locations on a centralized server. This comes with well-known disadvantages
-inherent to centralized solutions such as load balancing, robustness or locality that are even magnified in an Edge context.
-Distributing this index among nodes in the network circumvent some of
-these issues, either using coordinate-based overlays~\cite{voronet,
-  coin_19} or \underline{D}istributed \underline{H}ash
-\underline{T}ables (DHTs)~\cite{ipfs, mdht, squirrel}. In
-the latter, each node stores a part of the index, defined by an
-interval between hash values.  Before downloading any object, a node
-first hashes the content to obtain the address of the node that stores
-the replica locations of this given object. After obtaining from the
-remote node the list of available replicas, it can select the closest
-copy to download from. We emphasize that, in this setting, the DHT
-only stores information about replicas locations, not the content
-itself. 
-
-
-\item Determining where resides the closest replica necessarily involves some knowledge about the current topology.
-Maintaining a consistent view of an ever changing
-topology across a network is inherently complicated, especially in
-asynchronous settings. As for the index,
-this knowledge about the topology can be either
-centralized~\cite{topology-discovery} or distributed like in routing
-protocols such as \underline{O}pen \underline{S}hortest
-\underline{P}ath \underline{F}irst (OSPF)~\cite{ospf}.
+\item request to a possibly far away location service the content
+  location, and then
+\item request the actual content from far away replicas.
 \end{inparaenum}
+For instance, using \underline{d}istributed \underline{h}ash
+\underline{t}ables (DHT)~\cite{ipfs, mdht, squirrel}, each \process
+stores a part of the index defined by an interval between hash values.
+The hash values are the keys to retrieve the associated content
+location.  Before downloading any content, a \node asks for its
+location using its key. After a series of round-trips between DHT
+servers possibly distant from each others, the \node gets a list of
+available replicas. Contrarily to \NAME, such services do not ensure
+to include the closest replica.
+
+\noindent In addition, they often do not include distance information
+along with replica location. Determining where resides the closest
+replica for every requesting \process necessarily involves some
+knowledge about the \emph{current} topology.  Maintaining a consistent
+view of an ever changing topology across a network is inherently
+complicated~\cite{topology-discovery, ospf}.
+%%  As for the index, this knowledge about the topology can be either
+%% centralized~\cite{topology-discovery} or distributed like in
+%% routing protocols such as \underline{O}pen \underline{S}hortest
+%% \underline{P}ath \underline{F}irst (OSPF)~\cite{ospf}.
+As consequence, the requesting \node ends up downloading from multiple
+replica hosts, yet only keeping the fastest answer. \Processes either
+waste network resources, or face lower response time.
+
+% We emphasize that, in this setting, the DHT only stores information
+% about replicas locations, not the content itself.
+
+%% Distributing this index among \processes in the network circumvent
+%% some of these issues, either using coordinate-based
+%% overlays~\cite{voronet, coin_19} or \underline{D}istributed
+%% \underline{H}ash \underline{T}ables (DHTs)~\cite{ipfs, mdht,
+%%   squirrel}. In the latter, each node stores a part of the index,
+%% defined by an interval between hash values.  Before downloading any
+%% object, a node first hashes the content to obtain the address of the
+%% node that stores the replica locations of this given object. After
+%% obtaining from the remote node the list of available replicas, it can
+%% select the closest copy to download from. We emphasize that, in this
+%% setting, the DHT only stores information about replicas locations, not
+%% the content itself.
 
 
-All the aforementionned solutions require to contact a remote node to request this index which is costly in terms of
-latency while in contradiction with Edge infrastructure constraints, as previously explained.
+
+%% \noindent All the aforementionned solutions require to contact a remote node to
+%% request this index which is costly in terms of latency while in
+%% contradiction with Edge infrastructure constraints, as previously
+%% explained.
 
 
 \item [Broadcast:]
