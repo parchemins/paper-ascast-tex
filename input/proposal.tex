@@ -72,8 +72,8 @@ application-dependant scope:
   $d_y(m)$. The scope depends on the \underline{s}tate $\sigma$ of
   each \process, the \underline{m}etadata $\mu$ piggybacked by each
   message, and a \underline{p}redicate $\phi$ verified from \process to
-  \process: {\small{$b_x(m) \wedge r_y(m) \implies \exists \pi_{xy}: \forall z
-  \in \pi_{xy}, \phi(\mu_z, \sigma_z)$}}.
+  \process: {$b_x(m) \wedge r_y(m) \implies \exists \pi_{xy}: \forall z
+  \in \pi_{xy}, \phi(\mu_z, \sigma_z)$}.
 \end{definition}
 
 This definition encompasses more specific definitions of related
@@ -114,8 +114,8 @@ indexes, this would be about link latency.
 \begin{definition}[\label{def:partitioning}Partitioning]
   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
   the \underline{p}artition including at least \Process~$s$, each
-  \process belongs to at most one partition \smash{\small$\forall p,q \in V, \forall
-  s_1,s_2 \in S: p \in P_{s_1} \wedge q \in P_{s_2} \implies p \neq q
+  \process belongs to at most one partition \smash{$\forall p,q \in V, \forall
+  s_1,s_2 \in S: p \in P_{s_1} \wedge q \in P_{s_2} \implies$} \smash{$p \neq q
   \vee s_1 = s_2$}, and there exists at least one path $\pi_{ps}$ of
   \processes that belong to this partition $\forall q \in \pi_{ps}: q
   \in P_s$.
