@@ -1,0 +1,209 @@
+\documentclass[twoside]{article}
+
+\usepackage[a4paper]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{RR}
+\usepackage{hyperref}
+\usepackage[frenchb, british]{babel}
+
+%% url
+\usepackage{url}
+%% maths
+\usepackage{amsmath,amssymb,amsthm,bm}
+%% \usepackage{amsfonts}
+
+%% algorithms
+\usepackage{algorithmicx}
+\usepackage[ruled, linesnumbered, noend]{algorithm2e}
+
+%% images
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+%% inparaenum
+\usepackage{paralist}
+
+%% tables
+\usepackage{booktabs}
+\usepackage{multirow}
+%% figures
+%\usepackage{caption}
+\usepackage{subfig}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,plotmarks,shapes,matrix}
+%% transform eps in pdf crossplateform
+\usepackage{epstopdf}
+\usepackage{epsfig}
+
+\usepackage{xspace}
+
+\newcommand{\NAME}[0]{\mbox{AS-cast}\xspace}
+\newcommand{\NAMEB}[0]{\mbox{S-cast}\xspace}
+\newcommand{\TODO}[1]{\textcolor{red}{#1}}
+\newcommand{\REF}[0]{\textcolor{purple}{REF}\xspace}
+
+\newcommand{\PA}[0]{SkyBlue}
+\newcommand{\PB}[0]{BurntOrange}
+\newcommand{\PC}[0]{YellowGreen}
+\newcommand{\PD}[0]{YellowGreen}
+\newcommand{\PH}[0]{Orchid}
+\newcommand{\WRONG}[0]{red!75}
+
+\newtheorem{problem}{Problem Statement}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newcommand{\eventually}{\square\,}
+\newcommand{\ie}{{i.e.,}\xspace}
+\newcommand{\eg}{{e.g.,}\xspace}
+
+\newcommand{\process}{node\xspace}
+\newcommand{\processes}{nodes\xspace}
+\newcommand{\Process}{Node\xspace}
+\newcommand{\Processes}{Nodes\xspace}
+\newcommand{\node}{\process}
+\newcommand{\nodes}{\processes}
+\newcommand{\Node}{\Process}
+\newcommand{\Nodes}{\Processes}
+
+%% RR %%
+
+\RRNo{XXXX}
+\RRdate{September 2021}
+% \RRVersion{2}
+% \RRdater{<Another date for version 2>}
+\RRauthor{
+  Adrien L{\`e}bre
+  \thanks[aff1]{Inria}
+  \and
+  Brice N{\'e}delec
+  \thanksref{aff1}
+  \and
+  Alexandre Van Kempen
+  \thanksref{aff1}
+}
+\authorhead{L{\`e}bre, N{\'e}delec, Van Kempen}
+\RRtitle{\NAME : Confiner le trafic de l'indexation de contenu décentralisée au niveau du Edge} %% titre français long
+\titlehead{\RRtitle{} } %% titre français court
+\RRetitle{\NAME: Lock Down the Traffic of Decentralized Content Indexing at the Edge}
+
+\RRresume{%
+  \begin{otherlanguage}{french}
+  Bien qu'une solution parfaite pour le stockage et la manipulation de
+  données au niveau des infrastructures Edge reste encore à
+  déterminer, les approches de l'état de l'art ont d'ors et déjà
+  démontré la pertinence des stratégies de réplication qui rapprochent
+  le contenu des consommateurs : ces derniers bénéficient de meilleurs
+  temps de réponse et le volume de données transitant par le réseau
+  diminue globalement.
+  %
+  Malheureusement, localiser la réplique la plus proche d'un contenu
+  spécifique nécessite d'indexer \emph{chacune} des répliques
+  \emph{existantes} avec leurs informations de \emph{localisation}.
+  %
+  Se fier à des services distants entre en contradiction avec les
+  propriétés des infrastructures Edge de telle sorte que localiser des
+  répliques prend davantage de temps que de télécharger le contenu.  À
+  l'opposé, chaque nœud ne peut maintenir l'index des toutes les
+  répliques existantes car cela s'avèrerait extrêmement coûteux en
+  termes de mémoire et de trafic, en particulier lorsque les nœuds
+  sont libres de créer ou détruire des répliques à n'importe quel
+  moment.
+  %
+  Dans cet article, nous abstrayons l'indexation de contenu par un
+  problème de partitionnement réparti : chacun des nœuds maintient
+  l'index de sa réplique la plus proche, et les nœuds connectés
+  possédant un index similaire font partie d'une même partition. Notre
+  implémentation décentralisée nommée \NAME est
+  \begin{inparaenum}[(i)]
+  \item efficace, car elle utilise les partitions afin de confiner
+    le trafic généré par son fonctionnement aux seuls nœuds
+    concernés, tout en
+  \item garantissant le fait que chaque nœud finisse par identifier
+    la partition à laquelle il appartient, et ce malgré les
+    opérations concurrentes.
+  \end{inparaenum}
+  Notre analyse en complexité appuyée par des simulations montre que
+  \NAME passe à l'échelle en termes de trafic généré et de temps de
+  terminaison. De ce fait, \NAME peut constituer les nouvelles
+  fondations pour construire des services géo-distribués.
+  \end{otherlanguage}
+}
+
+\RRabstract{
+  Although the holy grail to store and manipulate data in Edge
+  infrastructures is yet to be found, state-of-the-art approaches
+  demonstrated the relevance of replication strategies that bring
+  contents closer to consumers: The latter enjoy better response time
+  while the volume of data passing through the network decreases
+  overall. Unfortunately, locating the closest replica of a specific
+  content requires indexing \emph{every live} replica along with its
+  \emph{location}.
+  %
+  Relying on remote services contradicts with the properties of Edge
+  infrastructures as locating replicas may effectively take more time
+  than actually downloading contents.  At the opposite, maintaining
+  such an index at every \process would prove overly costly in terms
+  of memory and traffic, especially since \processes can create and
+  destroy replicas at any time.
+
+  \noindent In this paper, we abstract content indexing as distributed
+  partitioning:
+  every \process only indexes its closest replica, and
+  connected \processes with a similar index compose a partition. Our
+  decentralized implementation \NAME is
+  \begin{inparaenum}[(i)]
+  \item efficient, for it uses partitions to lock down the traffic
+    generated by its operations to relevant \processes, yet it
+  \item guarantees that every \process eventually acknowledges its
+    partition despite concurrent operations.
+  \end{inparaenum}
+  %
+  Our complexity analysis supported by simulations shows that \NAME
+  scales well in terms of generated traffic and termination time. As
+  such, \NAME can constitute a new building block for geo-distributed
+  services.
+}
+
+\RRmotcle{Indexation de contenu, partitionnement logique, algorithme décentralisé}
+\RRkeyword{Content indexing, logical partitioning, decentralized algorithm}
+
+\RCRennes
+
+\RRequipe{STACK}
+
+
+% \title{\NAME: Lock Down the Traffic\\of Decentralized Content Indexing at the Edge}
+%% \NAME: Adaptive scoped broadcast for the edge
+
+%\author{Adrien L{\`e}bre, Brice N{\'e}delec, Alexandre Van Kempen
+%% \author{\IEEEauthorblockN{Anonymous}
+%%  \IEEEauthorblockA{\textit{Affiliation}, City, Country\\email address or ORCID}
+%% }
+
+\begin{document}
+% \proceedings{}
+%\copyright{Adrien l{\'ebre}, Brice N{\'e}delec, Alexandre Van Kempen}
+
+\makeRR
+\RRNo{XXXX}
+
+%% \input{input/abstract.tex}
+
+\input{input/introduction.tex}
+\input{input/background.tex}
+\input{input/proposal.tex}
+\input{input/experiments.tex}
+\input{input/related_work.tex}
+\input{input/conclusion.tex}
+%% \input{input/acknowledgment.tex}
+
+\bibliographystyle{plainurl}
+\bibliography{bibliographie}
+  
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% ispell-local-dictionary: "english"
+%%% End:
