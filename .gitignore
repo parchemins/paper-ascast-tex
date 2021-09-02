@@ -1,4 +1,5 @@
 *~
+*.vtc
 *.aux
 *.out
 *.log

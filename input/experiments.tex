@@ -14,11 +14,15 @@ scale networks~\cite{montresor2009peersim}. The code is available on
 the Github platform at
 \url{https://anonymous.4open.science/r/peersim-partition-5592}.
 
-\subsection{Confirm the complexity analysis stating that
-  communication and time overheads depend on the current partitioning
-  of the system.}
+%% \subsection{Confirm the complexity analysis stating that
+%%   communication and time overheads depend on the current partitioning
+%%   of the system.}
 
 \begin{asparadesc}
+\item [Objective:] Confirm the complexity analysis stating that
+  communication and time overheads depend on the current partitioning
+  of the system.
+  
 \item [Description:]
 
 We build a network comprising 10k \processes. First, we chain
@@ -72,7 +76,7 @@ operation involves concurrency: removals continue to propagate while
 the competition is already partially triggered and propagating.
 
 \begin{figure}
-  \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_complexity.eps}
+  \centering\includegraphics[width=0.8\columnwidth]{img/as_cast_complexity.eps}
   \caption{\label{fig:complexity}Overhead of consistent partitioning
     using \NAME.}
   %% \caption{\label{fig:complexity}Cumulative average number of messages
@@ -98,13 +102,16 @@ overhead actually depends on its usage.
 
 %% \subsection{Distribution and hotspots}
 
-% \subsection{Confirm the relevance of \NAME in the context of dynamic inter-autonomous
-%   system communications.}
-\subsection{Confirm that \NAME locks down the traffic of decentralized content
-  indexing in the context of dynamic inter-autonomous system
-  communications.}
+%% \subsection{Confirm that \NAME locks down the traffic of decentralized content
+%%   indexing in the context of dynamic inter-autonomous system
+%%   communications.}
 
 \begin{asparadesc}
+
+\item [Objective:] Confirm that \NAME locks down the traffic of decentralized content
+  indexing in the context of dynamic inter-autonomous system
+  communications.
+  
 \item [Description:]
 
 We build a network by duplicating the G{\'E}ANT
@@ -125,7 +132,7 @@ remove the link between the two clusters. At $1.7$~s, we insert back this
 link.
 
 \begin{figure}
-  \centering\includegraphics[width=0.99\columnwidth]{img/as_cast_geant.eps}
+  \centering\includegraphics[width=0.8\columnwidth]{img/as_cast_geant.eps}
   \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters.}
 \end{figure}
 
