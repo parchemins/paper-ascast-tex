@@ -49,7 +49,7 @@ creates a replica of this content. Similarly to \Process~$R$, it
 notifies other \processes of this new replica. However, to avoid that
 north \processes request its replica, and south \processes request the
 northern one, \processes hosting a replica must add \emph{location
-information} along with their notifications. As consequence, every
+information} along with their notifications. As a consequence, every
 \process eventually knows every replica location and can download from
 its closest host. \underline{R}ed \processes would request
 \Process~$R$ while \underline{g}reen \processes would request
@@ -68,7 +68,7 @@ communication primitive that propagates notifications within a scope
 by evaluating a predicate, starting at its broadcaster (the
 \emph{source}).  In other terms, \processes propagate notifications as
 long as they consider them useful based on location information they
-carry. We call such primitive \emph{scoped broadcast} (see
+carry. We call such a primitive \emph{scoped broadcast} (see
 Section~\ref{subsec:scoped}), for messages transitively reach a subset
 of interconnected \processes (the \emph{scope}). Using this primitive,
 \processes can lock down the traffic of content indexing to relevant
@@ -90,7 +90,7 @@ one, partition (see Section~\ref{subsec:consistent}).
 \item [Dynamic partitioning and adaptive scoped broadcast:]
 
 Finally, in Figure~\ref{fig:partition_intuitionD}, \Process~$G$
-destroys its replica. Every \processes that belonged to its green
+destroys its replica. Every \process that belonged to its green
 partition must choose another partition to be in. While it makes sense
 for \Process~$G$ to scoped broadcast its removal, \Process~$B$ and
 \Process~$R$ cannot afford to continuously advertise their replica to

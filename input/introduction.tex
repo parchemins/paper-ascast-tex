@@ -56,7 +56,7 @@ contact the content indexing service again to notify of such a change.
 %%    replica is perfomed in
 %\end{itemize}
 
-These approaches contradict with the objectives of Edge
+These approaches are in contradiction with the objectives of Edge
 infrastructures that aim at reducing the impact of latency as well as
 the volume of data passing through the network.
 %
@@ -68,7 +68,7 @@ occur even before the actual download started.
 Second, the client gets a list of content locations at the discretion
 of content indexing services. Without information about these
 locations, it often ends up downloading from multiple replica hosts,
-yet only keeping the fastest answer. In turns, clients either waste
+yet only keeping the fastest answer. In turn, clients either waste
 network resources, or face lower response time.
 %% there is no information to select the ``best'' node among the
 %% possible candidates from which the content could be retrieved. In
@@ -76,7 +76,7 @@ network resources, or face lower response time.
 %% client node to each candidate with the goal of retrieving the
 %% content as efficient as possible.
 
-To tackle aforementioned limitations, every \process that might
+To address the aforementioned limitations, every \process that might
 request or replicate content must also host its own content indexing
 service in a fully decentralized fashion~\cite{kermarrec2015want}. At
 any time, it can immediately locate the closest replica of specific
@@ -85,11 +85,11 @@ ranks \emph{every live} replica along with its \emph{location}
 information. When creating or destroying a replica, a \process would
 notify all other \processes by efficiently broadcasting its
 operation~\cite{birman1999bimodal, hadzilacos1994modular,
-  raynal2013distributed}. Unfortunately, this also contradicts with
-Edge infrastructure objectives, for such protocol does not confine the
+  raynal2013distributed}. Unfortunately, this also contradicts Edge
+infrastructure objectives, for such a protocol does not confine the
 traffic generated to maintain its indexes. A \process may acknowledge
 the existence of replicas at the other side of the network while there
-already exists a replica next to it. 
+already exists a replica next to it.
 
 Instead, a \process creating a replica should notify all and only
 \processes that have no closer replica in the system. This would
@@ -210,9 +210,9 @@ its functioning requires
 The rest of this paper is organized as
 follows. Section~\ref{sec:background} illustrates the motivation and
 problem behind our proposal.  Section~\ref{sec:adaptive} describes
-dynamic consistent partitioning and its implementation along with its
-complexity. Section~\ref{sec:experimentation} presents our
-evaluations.  Section~\ref{sec:related_work} reviews related
+dynamic consistent partitioning and its implementation along with an
+analysis of its complexity. Section~\ref{sec:experimentation} presents
+our evaluations.  Section~\ref{sec:related_work} reviews related
 work. Finally, Section~\ref{sec:conclusion} concludes and discusses
 future work.
   
