@@ -16,13 +16,13 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 \BlankLine
 
-\Function{\textup{Add ( )}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
+\Function{\textup{\texttt{Add ( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
   \textup{\smash{receiveAdd($p$, $\alpha_{p, V[p] + 1}^{0, \varnothing}$)}}\label{line:ascast_add}
 }
 
 \BlankLine
 
-\Function{\textup{Del ( )}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
+\Function{\textup{\texttt{Del ( )}}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
   \textup{\smash{receiveDel($p$, $\delta_{p, V[p] + 1}$)}}\label{line:ascast_del}
 }
 

@@ -6,21 +6,21 @@
       $w_{ab} = 2$; $w_{bc} = w_{bd} = 1$; $w_{cd} =
       3$.]{\input{input/figproblemA.tex}}
     \hspace{0pt}
-    \subfloat[Part B][\label{fig:problemB}\Process~$b$
+    \subfloat[Part B][\label{fig:problemB}$b$
       delivers and forwards the $\alpha$ message about $P_a$ while
       \Process~$c$ delivers and forwards both $\alpha$ and $\delta$
       messages about $P_d$.]  {\input{input/figproblemB.tex}}
     \hspace{0pt}
-    \subfloat[Part C][\label{fig:problemC}\Process~$b$
+    \subfloat[Part C][\label{fig:problemC}$b$
       already blocks the propagation of $\delta_a$ despite it
-      propagated $\alpha_a$ before. \Process~$c$ does not deliver
+      propagated $\alpha_a$ before; and $c$ does not deliver
       $\alpha_d$, for it already deleted it
       before.]{\input{input/figproblemC.tex}}
     \hspace{0pt}
     \subfloat[Part D][\label{fig:problemD}\Processes
-      discard remaining messages. Since \Process~$b$ cannot deliver
-      $\delta_a$, $c$ and $d$ remain in the deleted partition
-      $P_a$.]{\input{input/figproblemD.tex}}
+      discard remaining messages. Since $b$ cannot deliver
+      $\delta_a$, $c$ and $d$ remain in the deleted $P_a$.]
+             {\input{input/figproblemD.tex}}
   \end{center}
   \caption{\label{fig:problem}Naive propagation of $\alpha$ and
     $\delta$ messages is insufficient to guarantee consistent partitioning.}

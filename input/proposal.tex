@@ -72,8 +72,8 @@ application-dependant scope:
   $d_y(m)$. The scope depends on the \underline{s}tate $\sigma$ of
   each \process, the \underline{m}etadata $\mu$ piggybacked by each
   message, and a \underline{p}redicate $\phi$ verified from \process to
-  \process: {\small{$b_x(m) \wedge r_y(m) \implies \exists \pi_{xy}: \forall z
-  \in \pi_{xy}, \phi(\mu_z, \sigma_z)$}}.
+  \process: $b_x(m) \wedge r_y(m) \implies \exists \pi_{xy}: \forall z
+  \in \pi_{xy}, \phi(\mu_z, \sigma_z)$.
 \end{definition}
 
 This definition encompasses more specific definitions of related
@@ -259,11 +259,15 @@ information.
   messages are concurrent if none happens before the other.
 \end{definition}
 
-\begin{definition}[\label{def:lwo}Last win order and staleness]
-  When a \process $p$ broadcasts two messages $b_p(m) \rightarrow
-  b_p(m')$, no \process $q$ can deliver $m$ if it has delivered $m'$:
-  $\nexists q \in V$ with $d_q(m') \rightarrow d_q(m)$, for $m$
-  convey \emph{stale} control information.
+\begin{definition}[\label{def:lwo}Message staleness]
+  A message $m$ conveys \underline{s}tale control information if the
+  process that broadcast $m$ later broadcast another message $m'$:
+  $S(m) = \exists m': b_p(m) \rightarrow b_p(m')$.
+
+  %% When a \process $p$ broadcasts two messages $b_p(m) \rightarrow
+  %% b_p(m')$, no \process $q$ can deliver $m$ if it has delivered $m'$:
+  %% $\nexists q \in V$ with $d_q(m') \rightarrow d_q(m)$, for $m$
+  %% convey \emph{\underline{s}tale} control information: $S(m)$.
 \end{definition}
 
 \input{input/figdel.tex}
@@ -280,7 +284,8 @@ Definition~\ref{def:lwo} may impair the propagation of both
 Figure~\ref{fig:problem} highlights such consistency issues with
 dynamic partitions, even in contexts where \processes have FIFO links,
 \ie where \processes receive the messages in the order of their
-sending. Both \Process~$a$ and \Process~$d$ add then delete their
+sending ($s_{pq}(m) \rightarrow s_{pq}(m') \implies r_q(m) \rightarrow
+r_q(m')$). Both \Process~$a$ and \Process~$d$ add then delete their
 partition concurrently. \Process~$c$ receives, delivers, and forwards
 $\alpha_d^3$ followed by $\delta_d$. In the meantime, \Process~$b$
 receives, delivers, and forwards $\alpha_a^2$. In
@@ -315,23 +320,31 @@ any time.  Instead, we propose to use the delivery order at each
 messages and local states) of the system leaving room for propagation
 of messages about up-to-date partitions.
 
-\begin{theorem}[\label{theo:dcp}purge + BEF $\implies$
+\begin{theorem}[\label{theo:dcp}Purge + BEF $\implies$
     \underline{D}ynamic \underline{c}onsistent
     \underline{p}artitioning (DCP)]
 %
 When each \process can \texttt{Add} and \texttt{Del}ete its partition
 at any time, consistent partitioning requires
 \begin{inparaenum}[(i)]
-\item eventual purging of stale messages ($b_p(m) \rightarrow b_p(m')
-  \implies \eventually (d_q(m) \implies d_q(m) \rightarrow
-  d_q(m''))$);
-\item and best eventual forwarding.
+\item eventual purging of stale messages ($S(m)
+  \implies (d_q(m) \implies \eventually d_q(m) \rightarrow
+  d_q(m'))$);
+\item and best eventual forwarding so such an $m'$ ends up originating from 
+  the best up-to-date source for $q$.
 \end{inparaenum}
 \end{theorem}
 
 \begin{proof}
-  \Processes deliver and forward the best sum of weights they
-  received. Figure~\ref{fig:proofA} depicts the only case where a
+  %% To reach consistent partitioning, the last message delivered by
+  %% every process is not stale and comes from its respective best
+  %% source: $d(m)$
+  % As for CP, DCP requires that every process' last delivery 
+
+
+  
+  \processes deliver and forward the best sum of weights they
+  received. Figure~\ref{fig:proofA} depicts the generic case where a
   \process would block the epidemic propagation: the \process received
   and delivered a message from a partition that has since then been
   deleted but with a better sum of weights than newly received ones
@@ -370,7 +383,7 @@ at any time, consistent partitioning requires
 %% corollary issue: \Process $b''$ delivered a message from a \process that
 %% may be inconsistent without knowing it.
 
-\begin{theorem}[three-phase purge] % Propagations $+$ detection $\implies$ purge]
+\begin{theorem}[Three-phase purge] % Propagations $+$ detection $\implies$ purge]
   Purging stale control information from its source to every \process
   that may have delivered it last requires three
   phases:
@@ -475,11 +488,12 @@ enable dynamic consistent partitioning.
   \caption{\label{algo:ascast}\NAME at \Process~$p$ in static networks.}
 \end{algorithm}
 
-To implement last win order as stated in Definition~\ref{def:lwo},
-each \process maintains a vector of versions that associates the
-respective known local counter of each known source, or has-been
-source. Each message $m$ carries its source $s$ along with its version
-$c$ that we subscript $m_{s, c}$.  Each \process delivers and forwards
+To implement the removal of stale messages as stated in
+Definition~\ref{def:lwo}, each \process maintains a vector of versions
+that associates the respective known local counter of each known
+source, or has-been source. Each message $m$ carries its source $s$
+along with its version $c$ that we subscript $m_{s, c}$.  Each
+\process delivers and forwards
 \begin{inparaenum}[(i)]
 \item only newest messages (see Line~\ref{line:ascast_version}) that
 \item improve their best known partition (see
