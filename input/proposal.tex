@@ -311,7 +311,7 @@ any time.  Instead, we propose to use the delivery order at each
 messages and local states) of the system leaving room for propagation
 of messages about up-to-date partitions.
 
-\begin{corollary}[\label{theo:dcp}purge + BEF $\implies$
+\begin{theorem}[\label{theo:dcp}purge + BEF $\implies$
     \underline{D}ynamic \underline{c}onsistent
     \underline{p}artitioning (DCP)]
 %
@@ -323,7 +323,7 @@ at any time, consistent partitioning requires
   d_q(m''))$);
 \item and best eventual forwarding.
 \end{inparaenum}
-\end{corollary}
+\end{theorem}
 
 \begin{proof}
   \Processes deliver and forward the best sum of weights they
