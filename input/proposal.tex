@@ -320,18 +320,18 @@ any time.  Instead, we propose to use the delivery order at each
 messages and local states) of the system leaving room for propagation
 of messages about up-to-date partitions.
 
-\begin{theorem}[\label{theo:dcp}Purge + BEF $\implies$
+\begin{theorem}[\label{theo:dcp}BEF $\wedge$ (Purge $\rightarrow$ BEF) $\implies$
     \underline{D}ynamic \underline{c}onsistent
     \underline{p}artitioning (DCP)]
 %
-When each \process can \texttt{Add} and \texttt{Del}ete its partition
-at any time, consistent partitioning requires
+When a \process can \texttt{Add} and \texttt{Del}ete its partition,
+consistent partitioning additionally requires
 \begin{inparaenum}[(i)]
 \item eventual purging of stale messages ($S(m)
   \implies (d_q(m) \implies \eventually d_q(m) \rightarrow
   d_q(m'))$);
-\item and best eventual forwarding so such an $m'$ ends up originating from 
-  the best up-to-date source for $q$.
+\item then best eventual forwarding so such an $m'$ ends up
+  originating from the best up-to-date source for $q$.
 \end{inparaenum}
 \end{theorem}
 
@@ -339,20 +339,33 @@ at any time, consistent partitioning requires
   %% To reach consistent partitioning, the last message delivered by
   %% every process is not stale and comes from its respective best
   %% source: $d(m)$
-  % As for CP, DCP requires that every process' last delivery 
-
-
-  
-  \processes deliver and forward the best sum of weights they
-  received. Figure~\ref{fig:proofA} depicts the generic case where a
-  \process would block the epidemic propagation: the \process received
-  and delivered a message from a partition that has since then been
-  deleted but with a better sum of weights than newly received ones
-  (in the example $\alpha_d^y < \alpha_a^{x'}$). Removing
-  \emph{forever} all such stale messages about deleted partitions
-  would allow \processes to propagate their best up-to-date partition
-  again, eventually reaching consistent partitioning together, as
-  stated by Theorem~\ref{theo:bef}.
+  Assuming BEF as default propagation behavior where \processes
+  deliver and forward the best sum of weights they received. We need
+  to prove that despite stale messages, the last delivery of every
+  process is the message that followed the shortest path to its
+  closest source.
+  \begin{asparadesc}
+  \item [BEF without Purge:] Figure~\ref{fig:proofA} depicts the
+    generic case where a \process $b$ precludes itself and subsequent
+    \processes such as $c$ of delivering the message from their
+    respective best source $a$. \Process $b$ received and delivered a
+    message from a partition that has since then been deleted but with
+    a better sum of weights than newly received ones ($\alpha_d^y <
+    \alpha_a^{x'}$). It forever discards such a message
+    $\alpha_a^{x'}$.
+  \item [Purge not followed by BEF:] Even assuming that every process
+    immediately removes stale control information $S(\alpha_d^y)
+    \implies d_b(\alpha_d^y) \rightarrow d_b(\delta_d)$, but received
+    $\alpha^{x'}_a$ earlier $d_b(\alpha^{x'}_a) \rightarrow
+    d_b(\alpha^y_d)$, it may never receive it again, hence staying
+    with an empty state or another message that did not follow its
+    shortest path to its best source.
+  \item [Purge then BEF:] Removing \emph{forever} all such stale
+    messages about deleted partitions would allow \processes to
+    propagate their best up-to-date partition again, eventually
+    reaching consistent partitioning together, as stated by
+    Theorem~\ref{theo:bef}.
+  \end{asparadesc}
 \end{proof}
 
 \input{input/figproof.tex}
