@@ -104,19 +104,20 @@ We use \NAMEB to dynamically and efficiently modify the state of each
 \label{subsec:consistent}
 
 At any time, a \process can decide to become a \emph{source}, hence
-creating a new partition in the system by executing an exttt{Add}
+creating a new partition in the system by executing an \texttt{Add}
 operation. This partition includes at least its source plus
 neighboring \processes that estimate they are closer to this source
 than any other one. Such a distance (or \emph{weight}) is
 application-dependant: in the context of maintaining distributed
-indexes, this would be about link latency.
+indexes, this would be about link latency that \nodes could monitor
+by aggregating \texttt{ping}s.
 
 \begin{definition}[\label{def:partitioning}Partitioning]
   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
   the \underline{p}artition including at least \Process~$s$, each
-  \process belongs to at most one partition \smash{\small$\forall p,q \in V, \forall
+  \process belongs to at most one partition $\forall p,q \in V, \forall
   s_1,s_2 \in S: p \in P_{s_1} \wedge q \in P_{s_2} \implies p \neq q
-  \vee s_1 = s_2$}, and there exists at least one path $\pi_{ps}$ of
+  \vee s_1 = s_2$, and there exists at least one path $\pi_{ps}$ of
   \processes that belong to this partition $\forall q \in \pi_{ps}: q
   \in P_s$.
 \end{definition}
@@ -131,10 +132,11 @@ to.
   Let $W_{xy} = W_{yx}$ be the positive symmetric \underline{w}eight
   between $x$ and $y$, $\Pi_{xz}$ be the shortest \underline{p}ath
   from $x$ to $z$ the weight of which $|\Pi_{xz}|$ is lower than any
-  other path weight, the only consistent partitioning $\mathcal{P}$ is
-  a set of partitions $P_{s\in S}$ such that each \process belongs to
-  a logical partition comprising its closest source: $\forall p \in
-  P_{s_1}: \nexists P_{s_2}$ such that $|\Pi_{s_1p}| > |\Pi_{s_2p}|$.
+  other path weight, with $|\Pi_{xx}|$ being the greatest lower bound
+  of $x$, the only consistent partitioning $\mathcal{P}$ is a set of
+  partitions $P_{s\in S}$ such that each \process belongs to a logical
+  partition comprising its closest source: $\forall p \in P_{s_1}:
+  \nexists P_{s_2}$ such that $|\Pi_{s_2p}| < |\Pi_{s_1p}|$.
 \end{definition}
 
 Unfortunately, \processes do not share a common global knowledge of
@@ -151,8 +153,9 @@ message forwarding from neighbor-to-neighbor.
 Assuming reliable communication links where a correct \process $q$
 eventually receives the message $m$ \underline{s}ent to it by a
 \process $p$ ($s_{pq}(m) \implies r_{q}(m)$), \processes eventually
-reach consistent partitioning if each \process eventually forwards its
-best known partition.
+reach consistent partitioning if each \process eventually
+\underline{f}orwards ($f_p(m) \implies \forall \langle p, q\rangle \in
+E: s_{pq}(m)$) its best known partition.
 \end{theorem}
 
 \input{input/figadd.tex} 
@@ -216,7 +219,8 @@ discard last transiting messages. Despite the obvious lack of traffic
 optimization, the system reaches consistent partitioning.
 
 While only adding logical partitions to the distributed system is
-straightforward, removing them introduces additional complexity.
+straightforward, removing them introduces additional complexity caused
+by concurrent operations.
 
 \subsection{Dynamic consistent partitioning}
 \label{subsec:dynamic}

@@ -12,20 +12,20 @@ $d \leftarrow \infty$ \tcp*[r]{smallest distance to $s$ ($\sigma$ and $\mu$)}
 
 \BlankLine
 
-\Function{\textup{Add ( )} \tcp*[f]{$\alpha_p^0$}} {
+\Function{\textup{Add ( )} \tcp*[f]{generates notification message: $\alpha_p^0$}} {
   \textup{receiveAdd($\varnothing$, $p$, $0$)} \label{line:lowestbound} \tcp*[f]{$b_p(\alpha_p^0)$}
 }
 
 \BlankLine
 
 \Function{\textup{receiveAdd($q$, $s'$, $d'$)} \tcp*[f]{$r_p(\alpha_{s'}^{d'})$ from $q$}} {
-  \If (\tcp*[f]{($\phi$)}){$d' < d$} {
+  \If (\tcp*[f]{distance predicate ($\phi$)}){$d' < d$} {
       $s \leftarrow s'$ \tcp*[r]{\smash{$d_p(\alpha_{s'}^{d'})$}}
-      $d \leftarrow d'$ \;
+      $d \leftarrow d'$ \tcp*[r]{update local state ($\sigma$)}
 
-      \ForEach(\tcp*[f]{\smash{$f_p(\alpha_{s'}^{d'})$}}) {$n \in O_p \setminus q$} {
+      \ForEach(\tcp*[f]{\smash{forward to neighbors $f_p(\alpha_{s'}^{d'})$}}) {$n \in O_p \setminus q$} {
           \textup{send$_n$($s', d' + W_{pn}$)} \label{line:accumulator}
-          \tcp*[r]{\smash{$s_{pn}(\alpha_{s'}^{d'+w_{pn}})$}}
+          \tcp*[r]{with updated metadata ($\mu$) \smash{$s_{pn}(\alpha_{s'}^{d'+w_{pn}})$}}
        }      
   }
 }
