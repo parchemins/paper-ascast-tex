@@ -37,16 +37,16 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}}
   %\tcp*[f]{\footnotesize{receive $\alpha$ from $q$}}}
   {
-    \uIf{\hphantom{$($}$q = \pi[|\pi| - 1] \algoAnd$\tcp*[f]{{\footnotesize{from parent?}\hspace{0.5em}}}\\
-    \hphantom{\textbf{if}} $(c' < V[s'] \,\, \algoOr$\tcp*[f]{\footnotesize{history or state?}\label{line:ascast_version}\hspace{0.5em}}\\
+    \uIf{\hphantom{$($}$q = \pi[|\pi| - 1] \algoAnd$\tcp*[f]{{\footnotesize{from parent?}\hspace{0.75em}}}\\
+    \hphantom{\textbf{if}} $(c' < V[s'] \,\, \algoOr$\tcp*[f]{\footnotesize{history or state?}\label{line:ascast_version}\hspace{0.75em}}\\
     \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} > A_{s, c}^{d, \pi} \algoAnd  p\not\in \pi'))$}\label{line:detectA}} {
-        \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{(II)}\hspace{0.5em}}
+        \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{(II)}\hspace{0.75em}}
     }
     \uElseIf {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \algoAnd p \not\in \pi'$  } {
           $V[s'] \leftarrow c'$ \;
           $A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}$ \;
           \ForEach{$n \in O_p$} {
-            send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$)}\tcp*[r]{\footnotesize{forward}\label{line:ascast_better}\hspace{0.5em}}
+            send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$)}\tcp*[r]{\footnotesize{forward}\label{line:ascast_better}\hspace{0.75em}}
           }
 
      }
@@ -95,6 +95,26 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 %%   }
 %% }
 
+\BlankLine
+
+\begin{multicols}{2}
+\Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$\hspace{0.75em}}}  {
+    \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
+         \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
+         \tcp*[r]{\label{line:compete}\footnotesize{compete with $q$}\hspace{0.75em}}}
+}
+
+% \BlankLine
+
+\Function{\textup{edgeDown($q$)} \tcp*[h]{link to $q$ removed}} {
+  \If {$q = \pi[|\pi| - 1]$} {
+    \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[h]{\footnotesize (III) send $\Delta$}
+  }
+}
+
+\end{multicols}
+
+\BlankLine
 
 %%% Local Variables: 
 %%% mode: latex

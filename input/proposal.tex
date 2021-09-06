@@ -13,9 +13,9 @@ within the system. We highlight the issue when a \process can also
 destroy a replica, and provide a second algorithm that handles replica
 removals as well as dynamic changes of the infrastructure.  This
 section describes the communication primitive called scoped broadcast,
-then discusses the properties that guarantee consistent partitioning
-in our context, and finally details our implementation \NAME and the
-analysis of its complexity.
+then discusses the properties that guarantee consistent partitioning,
+and finally details our implementation \NAME.
+% and the analysis of its complexity.
 
 
 \subsection{Scoped broadcast}
@@ -31,10 +31,13 @@ analysis of its complexity.
 % \TODO{dynamic graph: superscript with $t$?}
 In this paper, we consider Edge infrastructures with heterogeneous
 \nodes interconnected by communication links. \Processes involved in
-the management of content may crash but are not byzantine.  Finally,
-\processes can reliably communicate through asynchronous message
-passing to other known \processes called neighbors.  % A more formal
+the management of content may crash but are not byzantine.  \Processes
+can reliably communicate through asynchronous message passing to other
+known \processes called neighbors.  % A more formal
 %definition of our system is given below:
+We define scoped broadcast as a communication primitive that
+propagates a message around its broadcaster within an
+application-dependant scope.
 
 \begin{definition}[Edge infrastructure]
   An Edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
@@ -60,10 +63,6 @@ passing to other known \processes called neighbors.  % A more formal
 %of connected \processes, thus significantly reducing the generated
 %traffic of broadcast.
 
-We define scoped broadcast as a communication primitive that
-propagates a message around its broadcaster within an
-application-dependant scope:
-
 
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
   When \Process~$x$ scoped \underline{b}roadcasts $b_x(m)$ a
@@ -79,9 +78,9 @@ application-dependant scope:
 This definition encompasses more specific definitions of related
 work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}.  It
 also highlights that epidemic propagation and scoped broadcast have
-well-aligned preoccupations. More precisely, it underlines the transitive relevance of
-messages, thus \processes can stop forwarding messages as soon as the
-corresponding predicate becomes unverified.
+well-aligned preoccupations. More precisely, it underlines the
+transitive relevance of messages, thus a \process can stop forwarding
+messages as soon as its predicate becomes unverified.
 %For instance, a \process
 %from Paris could scoped broadcast messages to all \processes in
 %Paris. This requires \processes to store and maintain their city
@@ -95,8 +94,8 @@ corresponding predicate becomes unverified.
 %uniform reliable broadcast, scoped broadcast implementations expose
 %different trade-offs on space, time, and communication.
 %
-We use \NAMEB to dynamically and efficiently modify the state of each
-\process depending on all partitions that exist in the system.
+We use \NAMEB to efficiently modify the state of each \process
+depending on the partitions that exist in the system.
 
 
 
@@ -461,10 +460,10 @@ any time.  Instead, we propose to use the delivery order at each
   delivered messages about other partitions before or after
   $\alpha_X$.
   \begin{asparadesc}
-  \item [\processes with last $\alpha_X$:] \Processes such as
-    \Process~$a$ where the last and best partition is still $P_X$. By
-    propagating from \process to \process the corresponding $\delta_X$
-    message, these \processes purge $\alpha_X$.
+  \item [\processes with last $\alpha_X$:] \Processes such as $a$
+    where the last and best partition is still $P_X$. By propagating
+    from \process to \process the corresponding $\delta_X$ message,
+    these \processes purge $\alpha_X$.
   \item [\processes with $\alpha_X^x \rightarrow \alpha_Y^y$ with last
     $\alpha_Y^y$, for $\alpha_Y^y< \alpha_X^x$:] \Processes such as
     \Process~$b$ that do not directly suffer from the non-delivery of
@@ -482,7 +481,7 @@ any time.  Instead, we propose to use the delivery order at each
     blocked the corresponding $\delta$ messages and subsequent
     \processes must purge their possibly stale state, for the sake of
     consistency.  We note such a notification $\Delta_X$ to emphasize
-    their relative similarity to $\delta_X$ messages.
+    their proximity to $\delta_X$ messages.
     % the uncertainty of a $\delta$ message.
   \item [\processes with last $\alpha_X$ receiving $\Delta_X$ from
     their parent:] \Processes such as \Process~$d$ that have
@@ -502,7 +501,7 @@ any time.  Instead, we propose to use the delivery order at each
   % receives $\delta_f$ from \Process~$b'$.
   These three phases propagation-detection-propagation ensure that
   \processes eventually purge stale $\alpha$ messages from the system,
-  leaving room for Propagation~I.
+  leaving room for best eventual forwarding of up-to-date messages.
   %
   %  \TODO{cannot loop add from $e$ , undo from $b'$ because $b'$ sent
   % delete to $e$, it will solve the inconsistency.}
@@ -546,7 +545,7 @@ enable dynamic consistent partitioning.
 
 \begin{algorithm}[h!]
   \input{input/algoascast.tex}
-  \caption{\label{algo:ascast}\NAME at \Process~$p$ in static networks.}
+  \caption{\label{algo:ascast}\NAME at \Process~$p$ in dynamic networks.}
 \end{algorithm}
 
 To implement the removal of stale messages as stated in
@@ -649,27 +648,26 @@ number of partitions.
 %% partition deletion is identical to the number of messages of the
 %% corresponding partition creation.
 
-\begin{algorithm}[h!]
-  \input{input/algoedges.tex}
-  \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
-\end{algorithm}
+%% \begin{algorithm}[h!]
+%%   \input{input/algoedges.tex}
+%%   \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
+%% \end{algorithm}
 
-Algorithm~\ref{algo:edges} extends \NAME to enable dynamic consistent
-partitioning in dynamic networks where \processes can join or leave
-the system without notification. We consider that removing a \process
-is equivalent to removing all its edges, and adding a \process is
-equivalent to add as many edges as necessary.
-
-Adding an edge between two \processes may only improve the shortest
-path of one of these \processes. Therefore, it triggers a competition
-between the two \processes only. If one or the other \process
-improves, the propagation of $\alpha$ messages operates normally.
-Removing an edge between two \processes may invalidate the shortest
-path of one of involved \processes plus downstream \processes. As a
-side effect, removing an edge may also impair the propagation of a
-partition delete. To implement this behavior, \NAME uses its
-implementation of $\Delta$ messages. This prove costly but enables
-\NAME even in dynamic networks subject to physical partitioning.
+Algorithm~\ref{algo:ascast} also enables dynamic consistent
+partitioning in dynamic networks where \processes can join, leave, or
+crash at any time. Removing a \process is equivalent to removing all
+its edges, and adding a \process is equivalent to add as many edges as
+necessary.  Adding an edge between two \processes may only improve the
+shortest path of one of these \processes. Therefore, it triggers a
+competition between the two \processes only. If one or the other
+\process improves, the propagation of $\alpha$ messages operates
+normally.  Removing an edge between two \processes may invalidate the
+shortest path of one of involved \processes plus downstream
+\processes. As a side effect, removing an edge may also impair the
+propagation of a partition delete. To implement this behavior, \NAME
+uses its implementation of $\Delta$ messages. This prove costly but
+enables \NAME even in dynamic networks subject to physical
+partitioning.
 
 Next Section provides the details of our simulations that assess the
 proposed implementation.
