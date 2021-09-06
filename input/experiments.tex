@@ -72,8 +72,8 @@ triggering competition while the former aims at updating shortest
 paths. As corollary, the convergence time increases, for $\delta$
 messages must reach the partition borders before sound competitors
 propagate their partition. It is worth noting that this delete
-operation involves concurrency: removals continue to propagate while
-the competition is already partially triggered and propagating.
+operation involves concurrency: removals still propagate while
+the competition has started. %%is already partially triggered and propagating.
 
 %% \begin{figure*}
 %%   \begin{center}
@@ -107,8 +107,8 @@ current partitioning as opposed to past partitionings.
 \noindent Finally, Figure~\ref{fig:complexity} highlights that after
 49 seconds, i.e., after the 100 adds and the 100 deletes, \processes
 do not generate traffic anymore. Being reactive, \NAME has no overhead
-when there is no operation in the system. In other words, \NAME's
-overhead actually depends on its usage.
+when there is no operation in the system. \NAME's overhead actually
+depends on its usage.
 
 \end{asparadesc}
 
