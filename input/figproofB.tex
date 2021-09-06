@@ -1,5 +1,5 @@
 
-\begin{tikzpicture}[scale=0.8]
+\begin{tikzpicture}[scale=0.9]
 
   \thickmuskip=0mu
   \medmuskip=0mu
@@ -10,73 +10,86 @@
 
   \newcommand\ADD{\alpha}
   \newcommand\DEL{\delta}
+  \newcommand\DELDEL{\Delta}
 
   \draw[opacity=0] (-1.4*\X, 0) -- (2.4*\X, 0);
   
 
 
+  \draw[dotted] (-1.5*\X, 0pt) -- (-1.35*\X, 0pt); %% X ->
+  
   \draw[->] (-1.15*\X, 0) -- (-5pt + -1*\X, 0); \draw[dotted] (-1.25*\X, 0) -- (-1.15*\X, 0);
   \draw (5pt + 2*\X, 0) -- (2.15*\X, 0); \draw[dotted,->] (2.15*\X, 0) -- (2.25*\X, 0);
   
   \draw[<->] (5pt - \X, 0.4*\Y) --
-  node[below, font=\small, align=center]{\textbf{I': propagation}\\\textbf{of $\delta$ messages}}
+  node[below, font=\small, align=center]{\textbf{I: propagation}\\\textbf{of $\delta$ messages}}
   (-5pt, 0.4*\Y); %% I as well
   
   \draw[->] (-\X + 5pt, 0)
-  node[below=-0.3em, below right, font=\scriptsize]{$\DEL_d \rightarrow$}
+  node[below=-0.3em, below right, font=\scriptsize]{$\DEL_X \rightarrow$}
   -- (0 - 5pt, 0)
-  node [below=-0.15em, below left, font=\tiny]{$\textcolor{\WRONG}{d \neq f}$}
+  node [below=-0.15em, below left, font=\tiny]{$\textcolor{\WRONG}{a \neq c}$}
   ; %% d - e
 
   \draw[<->] (5pt , 0.4*\Y) --
-  node[below, font=\small, align=center]{\textbf{III: detection}}
+  node[below, font=\small, align=center]{\textbf{II: detection}}
   (-5pt + \X, 0.4*\Y); %% IV
   
   \draw[->] (0 +5pt, 0)
-  node[below=-0.3em, below right, font=\tiny]{$\textcolor{\PH}{\ADD_h^{z'}} \rightarrow$}
+  node[below=-0.3em, below right, font=\tiny]{$\textcolor{\PY}{\ADD_Y^{y'}} \rightarrow$}
   --
   (\X -5pt, 0)
-  node [left= -0.15em, below=-0.3em, below left, font=\tiny]{$\textcolor{\WRONG}{\DEL_h \not\rightarrow \ADD_h^{z'}}$}
+  node [left= -0.15em, below=-0.3em, below left, font=\tiny]{$\textcolor{\WRONG}{\DEL_Y^{\vphantom{y'}} \not\rightarrow \ADD_Y^{y'}}$}
   ; %% e - f
   
   \draw[<->] (5pt +\X , 0.4*\Y) --
-  node[below, font=\small, align=center]{\textbf{IV: propagation}\\\textbf{of $\delta?$ messages}}
+  node[below, font=\small, align=center]{\textbf{III: propagation}\\\textbf{of $\DELDEL$ messages}}
   (-5pt + 2*\X, 0.4*\Y); %% V
   
   \draw[->] ( \X +5pt, 0) -- (2*\X -5pt, 0); %% b - g
 
-
-  
-  \draw[fill=white] (-\X, 0) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
-  \draw[fill=white] (0, 0) node[color=\PH]{$\bm{e}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (\X, 0) node[color=\PD]{$\bm{f}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (2*\X, 0) node[color=\PD]{$\bm{g}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[dotted] (0.5*\X, 1.25*\Y) -- (0.2*\X, 1.1*\Y); %% Y ->
+  \draw[dotted] (0.5*\X, 1.25*\Y) -- (0.8*\X, 1.1*\Y); %% Y ->
 
 
+
+  \draw[fill=white] (-1.5*\X, 0) node{$\bm{X}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+  \draw[fill=white] (0, 0) node[color=\PY]{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (\X, 0) node[color=\PX]{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (2*\X, 0) node[color=\PX]{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0.5*\X, 1.25*\Y)node{$\bm{Y}$}+(-5pt, -5pt) rectangle +(5pt, 5pt);
+
+
+
+  \draw (-1.5*\X, 5pt) node[above]{$\textcolor{\PX}{\ADD_X} \rightarrow \DEL_X$};
   
-  \draw (-\X, 5pt) node[above]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d$};
+  \draw (-\X, 5pt) node[above, font=\tiny]{$\textcolor{\PX}{\ADD_X} \rightarrow \DEL_X$};
   
   \draw ( 0, 5pt) node[above, font=\footnotesize]{$
-    \xrightarrow[\textcolor{\PC}{\ADD_d^{\vphantom{z'}}}]{\mbox{\tiny{before}}}
-    \xrightarrow[\textcolor{\PH}{\ADD_h^{z\vphantom{'}}}]{\mbox{\tiny{last}}}
-    \xrightarrow[\DEL_h^{\vphantom{z'}} ]{\mbox{\tiny{expect}}}$};
+    \xrightarrow[\textcolor{\PX}{\ADD_X^{\vphantom{x'}}}]{\mbox{\tiny{before}}}
+    \xrightarrow[\textcolor{\PY}{\ADD_Y^{y\vphantom{'}}}]{\mbox{\tiny{last}}}
+    \xrightarrow[\DEL_Y^{\vphantom{y'}} ]{\mbox{\tiny{expect}}}$};
   
   \draw ( \X, 5pt) node[above, font=\footnotesize]{$
-    \xrightarrow[\textcolor{\PH}{\ADD_h^{\vphantom{y'}}} \rightarrow \DEL_h]{\mbox{\tiny{before}}}
-    \xrightarrow[\textcolor{\PC}{\ADD_d^{y'}}]{\mbox{\tiny{last}}}
-    \xrightarrow[\DEL_d^{\vphantom{z'}}?]{\mbox{\tiny{expect}}}$};
+    \xrightarrow[\textcolor{\PY}{\ADD_Y^{\vphantom{y'}}} \rightarrow
+      \DEL_Y^{\vphantom{y'}}]{\mbox{\tiny{before}}}
+    \xrightarrow[\textcolor{\PX}{\ADD_X^{x'}}]{\mbox{\tiny{last}}}
+    \xrightarrow[\DELDEL_X^{\vphantom{y'}}]{\mbox{\tiny{expect}}}$};
 
   \draw (2*\X, 5pt) node[above, font=\footnotesize]{$
-    \xrightarrow[\textcolor{\PC}{\ADD_d^{y''}}]{\mbox{\tiny{last}}}
-    \xrightarrow[\DEL_d^{\vphantom{y'}}?]{\mbox{\tiny{expect}}}$};
+    \xrightarrow[\textcolor{\PX}{\ADD_X^{x''}}]{\mbox{\tiny{last}}}
+    \xrightarrow[\DELDEL_X^{\vphantom{x'}}]{\mbox{\tiny{expect}}}$};
 
+  \draw (0.5*\X, 1.25*\Y+5pt) node[above] {$\textcolor{\PY}{\ADD_Y} \rightarrow \DEL_Y$};
+  
 
 
   \draw[->] (-\X,  0.5*\Y) -- (-\X, -5pt);
   \draw[dotted] (-\X,  0.5*\Y) -- (-\X, 0.9*\Y);
 
   \draw[->] ( 0,  0.5*\Y) -- ( 0, -5pt);
-  \draw[dotted] ( 0,  0.5*\Y) -- ( 0, 0.9*\Y) node[below right, font=\scriptsize]{some \process somewhere: $\textcolor{\PH}{\ADD_h} \rightarrow \DEL_h$};
+  \draw[dotted] ( 0,  0.5*\Y) -- ( 0, 0.9*\Y);
 
   \draw[->] ( \X,  0.5*\Y) -- ( \X, -5pt);
   \draw[dotted] ( \X,  0.5*\Y) -- ( \X, 0.9*\Y);
