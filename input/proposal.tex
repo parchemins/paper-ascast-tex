@@ -9,7 +9,7 @@ changes, we designed and implemented \NAME.  \NAME stands for
 relies on a primitive that allows a \process to broadcast a message
 within a limited scope. We first use this primitive to guarantee
 consistent partitioning when a \process can only create a new replica
-within the system. We highlight the issue when a process can also
+within the system. We highlight the issue when a \process can also
 destroy a replica, and provide a second algorithm that handles replica
 removals as well as dynamic changes of the infrastructure.  This
 section describes the communication primitive called scoped broadcast,
@@ -261,7 +261,7 @@ information.
 
 \begin{definition}[\label{def:lwo}Message staleness]
   A message $m$ conveys \underline{s}tale control information if the
-  process that broadcast $m$ later broadcast another message $m'$:
+  \process that broadcast $m$ later broadcast another message $m'$:
   $S(m) = \exists m': b_p(m) \rightarrow b_p(m')$.
 
   %% When a \process $p$ broadcasts two messages $b_p(m) \rightarrow
@@ -326,7 +326,7 @@ consistent partitioning additionally requires
   Assuming BEF as default propagation behavior where \processes
   deliver and forward the best sum of weights they received. We must
   prove that despite stale messages, the last delivery of every
-  process is the message that followed the shortest path to its
+  \process is the message that followed the shortest path to its
   closest source.
   \begin{asparadesc}
   \item [BEF without Purge:] From Figure~\ref{fig:problemD}, a
@@ -346,26 +346,26 @@ consistent partitioning additionally requires
     %% $\alpha_a^{x'}$.
   \item [Purge not followed by BEF:]
     %% also transiting messages
-    Assuming that every process removes control information as soon as
-    they become stale ($S(\alpha_a^x) \implies d_b(\alpha_a^x)
+    Assuming that every \process removes control information as soon as
+    it becomes stale ($S(\alpha_a^x) \implies d_b(\alpha_a^x)
     \rightarrow d_b(\delta_a)$) and cannot deliver stale messages
     anymore ($S(\alpha_a^x) \implies d_c(m_1) \rightarrow \ldots
     \rightarrow d_c(m_k \not\in \alpha_a)$), staleness does not impair
     up-to-date messages propagation. However, even in such settings,
     depending on receipt order ($d_b(\alpha_a^{x}) \rightarrow
-    r_b(\alpha_c^{y : y > x}) \rightarrow d_b(\delta_b)$), a process
+    r_b(\alpha_c^{y : y > x}) \rightarrow d_b(\delta_b)$), a \process
     may never receive again, hence deliver and forward a message that
     was received and discarded before ($\alpha_c^{y}$). When such a
     message contains its best up-to-date partition, the \process never
     ends up in its best partition. Therefore, \processes do not reach
     consistent partitioning.
-  \item [Purge then BEF:] Assuming the eventual removal of stale
-    control information , 
-
-
-    nothing stops up-to-date control information to propagate, as in
-    Theorem~\ref{theo:bef}. Assuming that removal of stale control
-    information immediatly triggers a forwarding of best up-to-date
+  \item [Purge then BEF:] Assuming the eventual and definitive removal
+    of stale messages at each \process, eventually every process only
+    delivers and forwards up-to-date messages, or no message at
+    all. Assuming that eventually, each removal triggers the
+    forwarding of best delivered messages, every \processes eventually
+    delivers and forwards the best up-to-date delivered
+    messages. \Processes reach consistent partitioning together.
     %% Removing \emph{forever} all such stale messages about
     %% deleted partitions would allow \processes to propagate their best
     %% up-to-date partition again, eventually reaching consistent
@@ -381,6 +381,8 @@ consistent partitioning additionally requires
 %%       partitioning requires eventual purging of stale messages (see
 %%       Figure~\ref{fig:proofB}).}
 %% \end{figure}
+
+\TODO{The challenge is therefore about purging.} 
 
 One could guarantee consistent partitioning by always propagating the
 $\delta$ messages corresponding to the $\alpha$ messages it propagated
@@ -426,16 +428,6 @@ of messages about up-to-date partitions.
 %% corollary issue: \Process $b''$ delivered a message from a \process that
 %% may be inconsistent without knowing it.
 
-\begin{figure}
-  \centering\input{input/figproofB.tex}
-  \caption{\label{fig:proofB}Stale $\alpha$ messages may
-      stop $\delta$ messages from reaching processes with the corresponding
-      partition. Consistent partitioning requires that all \processes propagate
-      $\delta$ messages as often as possible (I'); detect possible inconsistencies
-      when parents' $\alpha$ messages contradict history or state (III); notify
-      processes of possible inconsistencies (IV)}
-\end{figure}
-
 \begin{theorem}[Three-phase purge] % Propagations $+$ detection $\implies$ purge]
   Purging stale control information from its source to every \process
   that may have delivered it last requires three
@@ -446,6 +438,16 @@ of messages about up-to-date partitions.
   \item propagation of possibly deleted but blocked notifications.
   \end{inparaenum}
 \end{theorem}
+
+\begin{figure}
+  \centering\input{input/figproofB.tex}
+  \caption{\label{fig:proofB}Stale $\alpha$ messages may
+      stop $\delta$ messages from reaching \processes with the corresponding
+      partition. Consistent partitioning requires that all \processes propagate
+      $\delta$ messages as often as possible (I'); detect possible inconsistencies
+      when parents' $\alpha$ messages contradict history or state (III); notify
+      \processes of possible inconsistencies (IV)}
+\end{figure}
 
 \begin{proof}
   Figure~\ref{fig:proofB} depicts all possible cases that need
