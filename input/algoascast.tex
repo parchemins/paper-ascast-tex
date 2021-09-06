@@ -1,4 +1,6 @@
 
+\SetInd{0.2em}{1em}
+
 \newcommand{\algoAnd}{~\textbf{\textup{and}}~}
 \newcommand{\algoOr}{~\textbf{\textup{or}}~}
 
@@ -14,34 +16,37 @@ $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing} $ \tcp*[r
 $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \BlankLine
-\BlankLine
+% \BlankLine
 
+\begin{multicols}{2}
 \Function{\textup{\texttt{Add ( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
   \textup{\smash{receiveAdd($p$, $\alpha_{p, V[p] + 1}^{0, \varnothing}$)}}\label{line:ascast_add}
 }
 
-\BlankLine
+% \BlankLine
 
 \Function{\textup{\texttt{Del ( )}}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
   \textup{\smash{receiveDel($p$, $\delta_{p, V[p] + 1}$)}}\label{line:ascast_del}
 }
+\end{multicols}
 
 \BlankLine
 \BlankLine
 
+\begin{multicols}{2}
 \Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}}
   %\tcp*[f]{\footnotesize{receive $\alpha$ from $q$}}}
   {
-    \uIf(\tcp*[f]{\footnotesize{state?}}) {\hphantom{$($}$q = \pi[|\pi| - 1] \algoAnd$\tcp*[f]{{\footnotesize{$\alpha$ and $A$ come from $q$?}}}\\
-    \hphantom{\textbf{if}} $(c' < V[s'] \,\, \algoOr$\tcp*[f]{\footnotesize{history?}\label{line:ascast_version}}\\
+    \uIf{\hphantom{$($}$q = \pi[|\pi| - 1] \algoAnd$\tcp*[f]{{\footnotesize{from parent?}\hspace{0.5em}}}\\
+    \hphantom{\textbf{if}} $(c' < V[s'] \,\, \algoOr$\tcp*[f]{\footnotesize{history or state?}\label{line:ascast_version}\hspace{0.5em}}\\
     \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} > A_{s, c}^{d, \pi} \algoAnd  p\not\in \pi'))$}\label{line:detectA}} {
-        \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{III detect}}
+        \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize{(II)}\hspace{0.5em}}
     }
     \uElseIf {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \algoAnd p \not\in \pi'$  } {
           $V[s'] \leftarrow c'$ \;
           $A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}$ \;
           \ForEach{$n \in O_p$} {
-            send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$)}\tcp*[r]{\footnotesize{I propagate}\label{line:ascast_better}}
+            send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$)}\tcp*[r]{\footnotesize{forward}\label{line:ascast_better}\hspace{0.5em}}
           }
 
      }
@@ -49,30 +54,47 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 
 
-\BlankLine
-
 \Function{\textup{receiveDel($q$, $\delta_{s', c'}^{\pi'}$)}
 %  \tcp*[f]{\footnotesize \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}
 } {
   \uIf {$((\delta_{s', c'} \algoAnd \alpha_{s', c'-1} = A_{s, c})  \algoOr$
-    \tcp*[f]{\footnotesize{$\delta$ received}}\\
-    \hphantom{\textbf{if} } $(\delta_{s',c'}^{\pi'}  \algoAnd  \alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi}))  \algoAnd$ \tcp*[f]{\footnotesize{$\delta?$ received}}\\
+    \tcp*[h]{\footnotesize{$\delta$}}\\
+    \hphantom{\textbf{if} } $(\delta_{s',c'}^{\pi'}  \algoAnd  \alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi}))  \algoAnd$ \tcp*[h]{\footnotesize{$\Delta$}}\\
     \hphantom{\textbf{if} $($} $p \not\in \pi'$ \label{line:notloopingB}} {
      $V[s'] \leftarrow \max(V[s'], c')$ \;
      $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing}$ \;
 
     \ForEach{$n \in O_p$}{
-      \lIf(\tcp*[f]{\footnotesize{I' propagate}}) {\smash{$\delta_{s', c'}$}} {
+      \lIf(\tcp*[h]{\footnotesize{(I)}}) {\smash{$\delta_{s', c'}$}} {
         send$_n$(\smash{$\delta_{s', c'}$)}
       } 
-      \hphantom{\textbf{if} $\delta_{s', c'}^{\pi'}$}~\textbf{else} send$_n$(\smash{$\delta_{s', c'}^{\pi'\cup p}$)} \tcp*[f]{\footnotesize{IV propagate}}
+      \hphantom{\textbf{if} $\delta_{s', c'}^{\pi'}$}~\textbf{else} send$_n$(\smash{$\delta_{s', c'}^{\pi'\cup p}$)}~\tcp*[h]{\footnotesize{(III)}}
     }
 
   }\uElseIf{$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
      \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
-     \tcp*[r]{\label{line:ascast_compete}\footnotesize{compete using $A$}}
+     \tcp*[h]{\label{line:ascast_compete}\footnotesize{compete}}
   }
 }
+
+\end{multicols}
+
+\BlankLine
+
+%% \Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$}}  {
+%%     \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
+%%          \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
+%%          \tcp*[r]{\label{line:compete}\footnotesize{compete with $q$}}}
+%% }
+
+%% \BlankLine
+
+%% \Function{\textup{edgeDown($q$)} \tcp*[f]{link to $q$ removed}} {
+%%   \If {$q = \pi[|\pi| - 1]$} {
+%%     \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize IV: $\delta?$ propagation}
+%%   }
+%% }
+
 
 %%% Local Variables: 
 %%% mode: latex

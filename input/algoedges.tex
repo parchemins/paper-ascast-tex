@@ -1,20 +1,27 @@
 \SetKwProg{Function}{func}{}{}
 
+\SetInd{0.2em}{1em}
+
 \small
 
 \DontPrintSemicolon
 \LinesNumbered
 
-\Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$}}  {
+\begin{multicols}{2}
+\Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$\hspace{0.5em}}}  {
     \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
          \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
-         \tcp*[r]{\label{line:compete}\footnotesize{compete with $q$}}}
+         \tcp*[r]{\label{line:compete}\footnotesize{compete with $q$}\hspace{0.5em}}}
 }
 
-\BlankLine
+% \BlankLine
 
-\Function{\textup{edgeDown($q$)} \tcp*[f]{link to $q$ removed}} {
+\Function{\textup{edgeDown($q$)} \tcp*[h]{link to $q$ removed}} {
   \If {$q = \pi[|\pi| - 1]$} {
-    \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize IV: $\delta?$ propagation}
+    \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[h]{\footnotesize (III) send $\Delta$}
   }
 }
+
+\end{multicols}
+
+\BlankLine

@@ -75,10 +75,22 @@ propagate their partition. It is worth noting that this delete
 operation involves concurrency: removals continue to propagate while
 the competition is already partially triggered and propagating.
 
+%% \begin{figure*}
+%%   \begin{center}
+%%     \subfloat[Part A][\label{fig:complexity}Overhead of consistent partitioning
+%%       using \NAME]
+%%              {\includegraphics[width=0.5\columnwidth]{img/as_cast_complexity.eps}}
+%%              \hfill
+%%     \subfloat[Part B][\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters.]
+%%              {\includegraphics[width=0.5\columnwidth]{img/as_cast_geant.eps}}
+%%   \end{center}
+%% \end{figure*}
+
 \begin{figure}
-  \centering\includegraphics[width=0.8\columnwidth]{img/as_cast_complexity.eps}
+  \centering\includegraphics[width=0.65\columnwidth]{img/as_cast_complexity.eps}
   \caption{\label{fig:complexity}Overhead of consistent partitioning
     using \NAME.}
+  
   %% \caption{\label{fig:complexity}Cumulative average number of messages
   %%   per process in a network comprising 10k processes; along with the
   %%   duration before reaching consistent partitioning after adding or
@@ -132,7 +144,7 @@ remove the link between the two clusters. At $1.7$~s, we insert back this
 link.
 
 \begin{figure}
-  \centering\includegraphics[width=0.8\columnwidth]{img/as_cast_geant.eps}
+  \centering\includegraphics[width=0.65\columnwidth]{img/as_cast_geant.eps}
   \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters.}
 \end{figure}
 

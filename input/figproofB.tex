@@ -1,11 +1,11 @@
 
-\begin{tikzpicture}[scale=0.9]
+\begin{tikzpicture}[scale=0.75]
 
   \thickmuskip=0mu
   \medmuskip=0mu
   \thinmuskip=0mu
   
-  \newcommand\X{115pt}
+  \newcommand\X{120pt}
   \newcommand\Y{-60pt}
 
   \newcommand\ADD{\alpha}
@@ -32,7 +32,8 @@
   ; %% d - e
 
   \draw[<->] (5pt , 0.4*\Y) --
-  node[below, font=\small, align=center]{\textbf{II: detection}}
+  node[below, font=\small, align=center]
+  {\textbf{II: detection}\\\textbf{of inconsistencies}}
   (-5pt + \X, 0.4*\Y); %% IV
   
   \draw[->] (0 +5pt, 0)
@@ -58,7 +59,7 @@
   \draw[fill=white] (0, 0) node[color=\PY]{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (\X, 0) node[color=\PX]{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (2*\X, 0) node[color=\PX]{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (0.5*\X, 1.25*\Y)node{$\bm{Y}$}+(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0.5*\X, 1.25*\Y) node{$\bm{Y}$}+(-5pt, -5pt) rectangle +(5pt, 5pt);
 
 
 
