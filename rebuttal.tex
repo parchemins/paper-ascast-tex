@@ -1,40 +1,69 @@
-We thank the reviewers for their thorough reading  and interesting comments.
-We understand that althought the paper is relevant, some parts should be clarified. We would be happy to be shepperded if reviewers believe it is relevant. 
+We thank the reviewers for their thorough reading and interesting
+comments.  We understand that althought the paper is relevant, some
+parts should be clarified. We would be happy to be shepperded if
+reviewers believe it is relevant.
 
 Below, we reply to each remark in more detail.
 
-- R1.1. "forwarding the best known partition"  consists in transmitting the best location where to get the replica.
-It could be more formally defined.
+- R1.1. "forwarding the best known partition" consists in transmitting
+the best location where to get the replica.  It could be more formally
+defined.
 
-- R1.2.  We agree ``Theorem'' is more appropriate than ``Corollary''. Regarding the proof, additional information would be given (under shepperding).
+- R1.2.  We agree ``Theorem'' is more appropriate than
+``Corollary''. Regarding the proof, additional information would be
+given (under shepperding).
 
-- R1.3. Regarding Theorem 2, we chose to list all cases to help understand the algorithm.
-Every Add/Del operation creates a small subset of events that depends on its nature,
-and the neighbors' history. This allows us to perform a neighbor-to-neighbor analysis of cases and avoid any combinatorial explosion.
+- R1.3. Regarding Theorem 2, we chose to list all cases to help
+understand the algorithm.  Every Add/Del operation creates a small
+subset of events that depends on its nature, and the neighbors'
+history. This allows us to perform a neighbor-to-neighbor analysis of
+cases and avoid any combinatorial explosion.
 
-- R2.1. Our objective is to introduce AS-cast and its properties in a generic manner. 
-Hence, experiments focus on evaluating the correctness/costs of our protocol.
-As stated in Conclusion, we plan to assess the use of AS-cast in IPFS distributed storage. This study would clarify its tradeoff depending on object size, update frequency, etc.
+- R2.1. Our objective is to introduce AS-cast and its properties in a
+generic manner.  Hence, experiments focus on evaluating the
+correctness/costs of our protocol.  As stated in Conclusion, we plan
+to assess the use of AS-cast in IPFS distributed storage. This study
+would clarify its tradeoff depending on object size, update frequency,
+etc.
 
-- R2.2. AS-cast is more efficient than CDN: it allows (i) retrieving the closest location eventually and (ii) partitioning the infrastructure dynamically according to the creation/removal of replicas. Contrarily, CDN relies on a static partitioning of the infrastructure: nodes get replicas from a subset of specific nodes and for all objects. A node may contact a peer of the CDN infrastructure while a replica may exist only one hop away (replicated by one of its neighbors). 
-AS-cast natively deals with such cases as any node can serve a replica.
+- R2.2. AS-cast is more efficient than CDN: it allows (i) retrieving
+the closest location eventually and (ii) partitioning the
+infrastructure dynamically according to the creation/removal of
+replicas. Contrarily, CDN relies on a static partitioning of the
+infrastructure: nodes get replicas from a subset of specific nodes and
+for all objects. A node may contact a peer of the CDN infrastructure
+while a replica may exist only one hop away (replicated by one of its
+neighbors).  AS-cast natively deals with such cases as any node can
+serve a replica.
 
-- R2.3.  The scalability issue related to the management of thousands of 
-objects should be addressed. As stated in Conclusion, we propose to leverage the
-hierarchical properties of inter-autonomous systems to avoid flooding uninterested nodes. 
-However, this increases the complexity to prove that our protocol still converge.
+- R2.3.  The scalability issue related to the management of thousands
+of objects should be addressed. As stated in Conclusion, we propose to
+leverage the hierarchical properties of inter-autonomous systems to
+avoid flooding uninterested nodes.  However, this increases the
+complexity to prove that our protocol still converge.
 
-- R3.1. In addition to  R2.3, we confirm that partitioning is per-object.
-Yet, it would be straightforward indeed to mutualize traffic, e.g., using dedicated propagation windows to consolidate control messages together.
+- R3.1. In addition to R2.3, we confirm that partitioning is
+per-object.  Yet, it would be straightforward indeed to mutualize
+traffic, e.g., using dedicated propagation windows to consolidate
+control messages together.
 
-- R3.2. AS-cast does not handle replication strategies. If it exists only one source and it crashes, this reference eventually disappears from the system. AS-cast reacts similarly to crashes and departures of sources (see Algorithm 3 Line 4) to update the best partition known by impacted nodes. 
+- R3.2. AS-cast does not handle replication strategies. If it exists
+only one source and it crashes, this reference eventually disappears
+from the system. AS-cast reacts similarly to crashes and departures of
+sources (see Algorithm 3 Line 4) to update the best partition known by
+impacted nodes.
 
-- R3.3. We do not  address the issue of content mutability.
-From our viewpoint, this aspect is application-dependent. For instance, mutability could be provided by versioning as done in IPFS, BlobSeer, etc.
+- R3.3. We do not address the issue of content mutability.  From our
+viewpoint, this aspect is application-dependent. For instance,
+mutability could be provided by versioning as done in IPFS, BlobSeer,
+etc.
 
 - R3.4. Regarding the experiments remarks, please, refer to R2.2.
 
-- R3.5. Several approaches tackle the indexation problem in NDN. We were unaware of NDNS and agree to add it in Related Work.
+- R3.5. Several approaches tackle the indexation problem in NDN. We
+were unaware of NDNS and agree to add it in Related Work.
 
-- R3.6. Although network topologies include triangular inequalities,  they do not endanger the AS-CAST correctness (AS-CAST relies on the shortest distance between vertices).
+- R3.6. Although network topologies include triangular inequalities,
+they do not endanger the AS-CAST correctness (AS-CAST relies on the
+shortest distance between vertices).
 

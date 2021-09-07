@@ -28,11 +28,13 @@ the generated traffic remains locked down to partitions.
 %% the traffic only where it is needed.
 
 As future work, we plan on extending the logical partitioning protocol
-to enable lazy retrieval of partitions. Indeed, using \NAME, every
-\process partakes in the propagation of indexes. We would like to
-leverage the hierarchical properties of interconnected autonomous
-systems to limit the propagation of such indexes only to interested
-systems.
+to enable lazy retrieval of partitions \TODO{when a large number of
+  objects is involved}. Indeed, using \NAME, every \process partakes
+in the propagation of indexes \TODO{which raises scalability
+  issues}. We would like to leverage the hierarchical properties of
+interconnected autonomous systems to limit the propagation of such
+indexes only to interested systems.
+
 %
 %% As ongoing and future work, we are currently studying how it might be
 %% possible to limit the scope of a partition to one autonomous system at
