@@ -431,7 +431,7 @@ any time.  Instead, we propose to use the delivery order at each
 %% corollary issue: \Process $b''$ delivered a message from a \process that
 %% may be inconsistent without knowing it.
 
-\begin{theorem}[\label{theo:threephase}Three-phase purge]
+\begin{theorem}[\label{theo:threephase}\TODO{Three-phase purge}]
   The following three phases are sufficient to eventually purge the
   system from stale control information:
   \begin{inparaenum}[(i)]
@@ -457,12 +457,35 @@ any time.  Instead, we propose to use the delivery order at each
   appropriate purging. A chain of \processes $[a, b, c, d]$ delivered
   and forwarded a message $\alpha_X$. Some \processes may have
   delivered messages about other partitions before or after
-  $\alpha_X$.
+  $\alpha_X$. \Processes such as $a$ and $d$ have delivered unrelated
+  messages, but their last message is about $P_X$: $d_a(\_)
+  \rightarrow \ldots \rightarrow d_a(\alpha_X)$; \Processes such as $b$
+  and $c$ delivered messages about $P_X$ and $P_Y$ in different order;
+  For \processes such as $b$, the last delivery is $\alpha_Y$:
+  $d_b(\_) \rightarrow \ldots \rightarrow d_b(\alpha_X) \rightarrow
+  \ldots \rightarrow d_b(\alpha_Y)$; For \processes such as $c$, the
+  last delivery is a stale $\alpha_X$, but they delivered the addition
+  and removal of $P_Y$: $d_c(\_) \rightarrow \ldots \rightarrow
+  d_c(\alpha_Y) \rightarrow \ldots \rightarrow d_c(\delta_Y)
+  \rightarrow \ldots \rightarrow d_c(\alpha_X)$.
+  
   \begin{asparadesc}
-  \item [\processes with last $\alpha_X$:] \Processes such as $a$
-    where the last and best partition is still $P_X$. By propagating
+  \item [\TODO{source is type $a$}]
+  \item [($a$ or $c$ or $d$) to ($a$ or $c$ or $d$):] By propagating
     from \process to \process the corresponding $\delta_X$ message,
     these \processes purge $\alpha_X$.
+  \item [$a$ to $b$:] $b$ stops the propagation of $\delta_X$, for the
+    latter does not target its current partition.
+  \item [$b$:] They need to purge their own $P_Y$, we must \TODO{prove
+    that $[a, b, c, d]$ is solved and that it does not require to
+    purge $P_Y$.}
+  \item [$b$ to $d$:] would deliver $d_(\alpha_y)$ hence becoming $b$.
+  \item [$b$ to $c$:] block $d_c(\alpha_y)$, so $c$ stays in $c$. But
+    it detects $b$ is its parent, and possibly blocked any delta with
+    its value $r_b(\delta_z) \rightarrow d_b(\delta_z)$. Since not
+    sure, $\Delta$
+
+    
   \item [\processes with $\alpha_X^x \rightarrow \alpha_Y^y$ with last
     $\alpha_Y^y$, for $\alpha_Y^y< \alpha_X^x$:] \Processes such as
     \Process~$b$ that do not directly suffer from the non-delivery of
