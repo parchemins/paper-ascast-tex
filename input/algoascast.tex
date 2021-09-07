@@ -57,9 +57,9 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \Function{\textup{receiveDel($q$, $\delta_{s', c'}^{\pi'}$)}
 %  \tcp*[f]{\footnotesize \smash{$r_p (\delta_{s', c'})$ \textup{\texttt{or}} $r_p (\delta_{s', c'}^{\pi'})$}}
 } {
-  \uIf(\tcp*[h]{\hspace{-0.5em}\footnotesize{$\Delta$?}}) {\hphantom{$(($} $p \not\in \pi'$ \algoAnd \label{line:notloopingB}\tcp*[h]{\footnotesize{looping?}}\\
-    \hphantom{\textbf{if} } $((\delta_{s', c'} \algoAnd \alpha_{s', c'-1} = A_{s, c})  \algoOr$\tcp*[h]{$\delta$?}\\
-    \hphantom{\textbf{if} } \smash{$(\delta_{s',c'}^{\pi'}  \algoAnd  \alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi}))$}} {
+  \uIf(\tcp*[h]{\hspace{-0.5em}\footnotesize{$\Delta$?}}){\hphantom{$(($}$p \not\in \pi'$ \algoAnd \label{line:notloopingB}\tcp*[h]{\footnotesize{looping?}}\\
+    \hphantom{\textbf{if} }$((\delta_{s', c'} \algoAnd \alpha_{s', c'-1} = A_{s, c})  \algoOr$\tcp*[h]{$\delta$?}\\
+    \hphantom{\textbf{if} }\smash{$(\delta_{s',c'}^{\pi'}  \algoAnd  \alpha_{s', c'}^{\_, \pi'} = A_{s, c}^{\_, \pi}))$}} {
      $V[s'] \leftarrow \max(V[s'], c')$ \;
      $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing}$ \;
 

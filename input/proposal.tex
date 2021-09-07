@@ -432,8 +432,8 @@ any time.  Instead, we propose to use the delivery order at each
 %% may be inconsistent without knowing it.
 
 \begin{theorem}[\label{theo:threephase}Three-phase purge]
-  Purging stale control information from its source to every \process
-  that may have delivered it last requires three phases:
+  The following three phases are sufficient to eventually purge the
+  system from stale control information:
   \begin{inparaenum}[(i)]
   \item propagation of delete notifications,
   \item detection of possibly blocking conditions, and
