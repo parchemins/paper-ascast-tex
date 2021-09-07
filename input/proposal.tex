@@ -283,24 +283,24 @@ Figure~\ref{fig:problem} highlights such consistency issues with
 dynamic partitions, even in contexts where \processes have FIFO links,
 \ie where \processes receive the messages in the order of their
 sending ($s_{pq}(m) \rightarrow s_{pq}(m') \implies r_q(m) \rightarrow
-r_q(m')$). Both \Process~$a$ and \Process~$d$ add then delete their
-partition concurrently. \Process~$c$ receives, delivers, and forwards
-$\alpha_d^3$ followed by $\delta_d$. In the meantime, \Process~$b$
-receives, delivers, and forwards $\alpha_a^2$. In
-Figure~\ref{fig:problemC}, both \Process~$c$ and \Process~$d$ deliver
-the message about Partition $P_a$, for they did not have any known
-partition at receipt time. On the contrary, \Process~$b$ delivers
-$\alpha_d^1$, for it improves its distance to a known
-source. \Process~$b$ then blocks \Process~$a$'s removal notification
-$\delta_a$. It never reaches \Process~$c$ nor \Process~$d$. Also,
-\Process~$c$ does not deliver $\alpha_d$ and $\delta_d$ since it
-already delivered it. The system converges to an inconsistent state
-where some \processes assume they belong to a partition while it does
-not exist anymore. Naive propagation of $\alpha$ and $\delta$ messages
-is insufficient to guarantee consistent partitioning when any \process
-can add or delete its partition at any time. \Processes need to
-exploit their local knowledge gathered over message receipts to allow
-up-to-date messages to propagate to relevant \processes.
+r_q(m')$). Both $a$ and $d$ add then delete their partition
+concurrently. \Process~$c$ receives, delivers, and forwards
+$\alpha_d^3$ followed by $\delta_d$. In the meantime, $b$ receives,
+delivers, and forwards $\alpha_a^2$. In Figure~\ref{fig:problemC},
+both $c$ and $d$ deliver the message about Partition $P_a$, for they
+did not have any known partition at receipt time. On the contrary, $b$
+delivers $\alpha_d^1$, for it improves its distance to a known
+source. \Process~$b$ then blocks $a$'s removal notification
+$\delta_a$. It never reaches $c$ nor $d$. Also, $c$ does not deliver
+$\alpha_d$ and $\delta_d$ since it already delivered it. The system
+converges to an inconsistent state where some \processes assume they
+belong to a partition while it does not exist anymore.
+
+%% Naive propagation of $\alpha$ and $\delta$ messages
+%% is insufficient to guarantee consistent partitioning when any \process
+%% can add or delete its partition at any time. \Processes need to
+%% exploit their local knowledge gathered over message receipts to allow
+%% up-to-date messages to propagate to relevant \processes.
 
 
 \begin{theorem}[\label{theo:dcp}BEF$^+$: BEF $\wedge$ (Purge $\rightarrow$ BEF) $\implies$
@@ -370,9 +370,8 @@ Theorem~\ref{theo:bef}) additionally requires
     %% up-to-date partition again, eventually reaching consistent
     %% partitioning together, as stated by Theorem~\ref{theo:bef}.
   \end{asparadesc}
-  By using BEF along with purge of stale messages that triggers BEF,
-  \processes reach consistent partitioning together as in
-  Theorem~\ref{theo:bef}.
+  Using BEF$^+$, \processes reach consistent partitioning together as
+  in Theorem~\ref{theo:bef}.
 \end{proof}
 
 %% Figure removed as it's kind of redundant with preceding figure that
@@ -554,7 +553,7 @@ message. Such a $\Delta$ must not modify any vector of versions since
 the partition of the corresponding $\alpha$ may still exist.
 Therefore, it additionally includes and maintains a path $\pi$
 initialized to $\alpha$'s one. Such a $\Delta_{s, c}^{\pi}$
-transitively tracks and removes $\alpha$ messages that were forwarded
+transitively tracks and purges $\alpha$ messages that were forwarded
 by the detecting \process. The path $\pi$ also enables a quick stop of
 looping messages and in turns ensures termination. However, carrying
 paths in messages is costly. In the worst case, a message piggybacks
@@ -562,7 +561,7 @@ the identity of all \processes in the system. Fortunately, message
 paths and \NAME synergyze well with each other, for paths tend to be
 smaller as the number of sources in the system increases. Contrarily
 to $\alpha$ and $\Delta$ messages, $\delta_{s, c}$ messages do not
-carry a path. They
+carry a path, and are therefore more efficient. They
 \begin{inparaenum}[(i)]
 \item solely rely on versions to operate, and
 \item use the whole dissemination graph to propagate in the system, as
@@ -582,6 +581,22 @@ Line~\ref{line:ascast_compete}).
 %% \process received the $\delta$. Upon receipt of this answer,
 %% \processes act normally by propagating their changes when they
 %% improve.
+
+Algorithm~\ref{algo:ascast} also enables dynamic consistent
+partitioning in dynamic networks where \processes can join, leave, or
+crash at any time. Removing a \process is equivalent to removing all
+its edges, and adding a \process is equivalent to add as many edges as
+necessary.  Adding an edge between two \processes may only improve the
+shortest path of one of these \processes. Therefore, it triggers a
+competition between the two \processes only. If one or the other
+\process improves, the propagation of $\alpha$ messages operates
+normally.  Removing an edge between two \processes may invalidate the
+shortest path of one of involved \processes plus downstream
+\processes. As a side effect, removing an edge may also impair the
+propagation of a partition delete. To implement this behavior, \NAME
+uses its implementation of $\Delta$ messages. This prove costly but
+enables \NAME even in dynamic networks subject to physical
+partitioning.
 
 %% \NAME guarantees dynamic consistent partitioning by making extensive
 %% use of \process-to-\process communications. It requires
@@ -618,28 +633,10 @@ number of partitions.
 %% a^2)$. As for the average-case, the number of messages for the
 %% partition deletion is identical to the number of messages of the
 %% corresponding partition creation.
-
 %% \begin{algorithm}[h!]
 %%   \input{input/algoedges.tex}
 %%   \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
 %% \end{algorithm}
-
-Algorithm~\ref{algo:ascast} also enables dynamic consistent
-partitioning in dynamic networks where \processes can join, leave, or
-crash at any time. Removing a \process is equivalent to removing all
-its edges, and adding a \process is equivalent to add as many edges as
-necessary.  Adding an edge between two \processes may only improve the
-shortest path of one of these \processes. Therefore, it triggers a
-competition between the two \processes only. If one or the other
-\process improves, the propagation of $\alpha$ messages operates
-normally.  Removing an edge between two \processes may invalidate the
-shortest path of one of involved \processes plus downstream
-\processes. As a side effect, removing an edge may also impair the
-propagation of a partition delete. To implement this behavior, \NAME
-uses its implementation of $\Delta$ messages. This prove costly but
-enables \NAME even in dynamic networks subject to physical
-partitioning.
-
 Next Section provides the details of our simulations that assess the
 proposed implementation.
 

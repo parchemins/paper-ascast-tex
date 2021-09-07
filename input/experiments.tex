@@ -47,6 +47,17 @@ number of messages generated per \process per second during the
 experiment; and the time before reaching consistent partitioning after
 adding or removing a partition.
 
+\begin{figure}
+  \centering\includegraphics[width=0.61\columnwidth]{img/as_cast_complexity.eps}
+  \caption{\label{fig:complexity}Overhead of consistent partitioning
+    using \NAME.}
+  
+  %% \caption{\label{fig:complexity}Cumulative average number of messages
+  %%   per process in a network comprising 10k processes; along with the
+  %%   duration before reaching consistent partitioning after adding or
+  %%   removing a partition, totaling 100 new partition then removed.}
+\end{figure}
+
 \item [Results:]
 
 Figure~\ref{fig:complexity} shows the results of this experiment. The
@@ -86,16 +97,6 @@ the competition has started. %%is already partially triggered and propagating.
 %%   \end{center}
 %% \end{figure*}
 
-\begin{figure}
-  \centering\includegraphics[width=0.65\columnwidth]{img/as_cast_complexity.eps}
-  \caption{\label{fig:complexity}Overhead of consistent partitioning
-    using \NAME.}
-  
-  %% \caption{\label{fig:complexity}Cumulative average number of messages
-  %%   per process in a network comprising 10k processes; along with the
-  %%   duration before reaching consistent partitioning after adding or
-  %%   removing a partition, totaling 100 new partition then removed.}
-\end{figure}
 
 \noindent Figure~\ref{fig:complexity} shows that the overhead of
 adding the $1^{st}$ partition does not correspond to the overhead of
@@ -144,7 +145,7 @@ remove the link between the two clusters. At $1.7$~s, we insert back this
 link.
 
 \begin{figure}
-  \centering\includegraphics[width=0.65\columnwidth]{img/as_cast_geant.eps}
+  \centering\includegraphics[width=0.61\columnwidth]{img/as_cast_geant.eps}
   \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters.}
 \end{figure}
 
@@ -175,13 +176,12 @@ from the cluster without source do not belong to any partition while
 \noindent Figure~\ref{fig:geant} shows that, when adding back the
 inter-continental link, the two clusters can communicate again. In the
 experiment involving one source for two clusters, it generates
-traffic. After a $200$ milliseconds delay corresponding to the link latency, the
-cut off cluster starts to communicate $\alpha$ messages
+traffic. After a $200$ milliseconds delay corresponding to the link
+latency, the cut off cluster starts to communicate $\alpha$ messages
 again. Eventually, all \processes belong to the same
 partition. However, in the experiment involving one source \emph{per}
 cluster, the new link does not trigger noticeable traffic, for
-\processes already know their closest source located in their
-respective cluster.
+\processes already know their closest source located in their cluster.
 
 \noindent Overall, this experimentation empirically demonstrates the
 benefits of \NAME in the context of geo-distributed infrastructures,
