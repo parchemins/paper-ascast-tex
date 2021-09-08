@@ -1,12 +1,16 @@
 
+\newcommand{\FIGSCALE}{0.59}
+
 \section{Experimentation}
 \label{sec:experimentation}
 
-This section describes the results of our experimentation evaluating
-the properties of \NAME that enables adaptive scoped broadcast in
-dynamic networks. It answers the following questions: What is the
-overhead of reaching consistent partitioning using \NAME in large
-scale networks?  Is \NAME relevant in Edge infrastructures where
+%% This section describes the results of our experimentation evaluating
+%% the properties of \NAME that enables adaptive scoped broadcast in
+%% dynamic networks.
+
+This section aims to answer the following questions about \NAME: What
+is the overhead of reaching consistent partitioning using \NAME in
+large scale networks?  Is \NAME relevant in Edge infrastructures where
 \processes are geo-distributed into clusters? We performed the
 experimentation using PeerSim, a simulator written in Java that allows
 researchers to evaluate and assess distributed algorithms in large
@@ -48,7 +52,7 @@ experiment; and the time before reaching consistent partitioning after
 adding or removing a partition.
 
 \begin{figure}
-  \centering\includegraphics[width=0.61\columnwidth]{img/as_cast_complexity.eps}
+  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.eps}
   \caption{\label{fig:complexity}Overhead of dynamic consistent partitioning
     using \NAME.}
   
@@ -145,7 +149,7 @@ remove the link between the two clusters. At $1.7$~s, we insert back this
 link.
 
 \begin{figure}
-  \centering\includegraphics[width=0.61\columnwidth]{img/as_cast_geant.eps}
+  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.eps}
   \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters connected by a long distance link.}
 \end{figure}
 
