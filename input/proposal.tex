@@ -357,18 +357,34 @@ Theorem~\ref{theo:bef}) additionally requires
     ends up in its best partition. Therefore, \processes do not reach
     consistent partitioning.
   \item [Purge then EFB:] Assuming the eventual and definitive removal
-    of stale messages at each \process, eventually every \process only
-    delivers and forwards up-to-date messages, or no message at
-    all. Assuming that eventually, each removal triggers the
-    forwarding of best delivered messages, every \process eventually
-    delivers and forwards the best up-to-date delivered messages.
+    of stale messages at each \process ($S(\alpha_a) \implies
+    (d_b(\alpha_a) \implies \eventually d_b(\alpha_a) \rightarrow
+    d_b(m') \not\rightarrow d_b(\alpha_a))$); and assuming that every
+    removal eventually triggers the forwarding of best delivered
+    messages ($d_c(\delta_x) \implies \eventually f_d(\alpha_y)$),
+    upon receipt of such $\alpha_y$, either the \process already 
+    \TODO{tododododotododoo.}
+
+
+    ($d_c(\delta_x) \implies \eventually f_d(\alpha_y) \wedge \neg
+    S(\alpha_y)$)
+
+
+    eventually every \process only delivers and forwards up-to-date
+    messages, or no message at all ($\eventually d_c(m') \implies \neg
+    S(m')$).
+
+
+
+
+    , every \process eventually delivers and forwards the best
+    up-to-date delivered messages as in Theorem~\ref{theo:bef}.
     %% Removing \emph{forever} all such stale messages about
     %% deleted partitions would allow \processes to propagate their best
     %% up-to-date partition again, eventually reaching consistent
     %% partitioning together, as stated by Theorem~\ref{theo:bef}.
   \end{asparadesc}
-  Using EFB$^+$, \processes reach consistent partitioning together as
-  in Theorem~\ref{theo:bef}.
+  Using EFB$^+$, \processes reach consistent partitioning together.
 \end{proof}
 
 %% Figure removed as it's kind of redundant with preceding figure that
@@ -577,7 +593,7 @@ any time.  Instead, we propose to use the delivery order at each
 \subsection{Implementation and complexity}
 
 Algorithm~\ref{algo:ascast} provides the few instructions of \NAME
-that implement three-phase purge and best eventual forwarding to
+that implement three-phase purge and eventual forwarding of best to
 enable dynamic consistent partitioning. For the sake of simplicity, it
 does not handle multiple sessions and associated optimisation such as
 data structure sharing and message packing.
@@ -632,11 +648,11 @@ carry a path, and are therefore more efficient. They
 \end{inparaenum}
 
 As stated in Theorem~\ref{theo:dcp}, dynamic consistent partitioning
-not only requires eventual purging of stale control information, but
-also the retrieval of the best up-to-date partitions.  In that regard,
-both $\delta$ and $\Delta$ messages have dual use: since they already
-reach the borders of their partition by design, they also trigger a
-competition when reaching such bordering \processes (see
+not only requires eventual purging of stale messages, but also the
+retrieval of the best up-to-date partitions.  In that regard, both
+$\delta$ and $\Delta$ messages have dual use: since they already reach
+the borders of their partition by design, they trigger a competition
+when reaching bordering \processes (see
 Line~\ref{line:ascast_compete}).
 %% This simply consists in sending the
 %% current partition through the communication link from which the
