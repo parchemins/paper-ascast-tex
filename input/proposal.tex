@@ -431,7 +431,7 @@ any time.  Instead, we propose to use the delivery order at each
 %% corollary issue: \Process $b''$ delivered a message from a \process that
 %% may be inconsistent without knowing it.
 
-\begin{theorem}[\label{theo:threephase}\TODO{Three-phase purge}]
+\begin{theorem}[\label{theo:threephase}Three-phase purge]
   The following three phases are sufficient to eventually purge the
   system from stale control information:
   \begin{inparaenum}[(i)]
@@ -471,12 +471,12 @@ any time.  Instead, we propose to use the delivery order at each
   
   These exceptions eventually receive and deliver $\alpha_Y$ since
   $\alpha_Y$ is better than $\alpha_X$ through this path, except if
-  they already received and deliver the removal notification of $P_Y$
-  (such as $c$). These \processes may never receive hence deliver
-  $\delta_X$, and may never receive hence deliver a better message
-  than $\alpha_X$. They need an additional mechanism to eventually
-  purge $\alpha_X$ that cannot rely on the eventual purging of $P_Y$
-  to avoid deadlocks.
+  they already received and delivered the removal notification of
+  $P_Y$ (such as $c$). These \processes may never receive hence
+  deliver $\delta_X$, and may never receive hence deliver a better
+  message than $\alpha_X$. They need an additional mechanism to
+  eventually purge $\alpha_X$ that cannot rely on the eventual purging
+  of $P_Y$ at \processes like $b$, to avoid deadlocks.
   
   Assuming that every \process keeps an history of its past
   deliveries, \processes (such as $c$) can detect the inconsistency,
@@ -485,10 +485,19 @@ any time.  Instead, we propose to use the delivery order at each
   $\delta_Z$ with $\alpha_Z^z < \alpha_Y^y$, and most importantly, if
   $\delta_X$ exists, it discards it. To ensure the purge of stale
   messages, a detecting \process must assume the worst case that such
-  $\delta_X$ exists, and send another kind of message, noted $\Delta$
-  that notify the possible removal of $P_X$. Children \processes that
-  still have $P_X$ as last delivery must trust the detecting \process
-  and remove the possibly stale control information about $P_X$.
+  $\delta_X$ exists, and send another kind of message, noted $\Delta$,
+  that notify the possible removal of $P_X$.
+
+  A \process (such as $d$) whose last delivery is $\alpha_X$, but
+  whose parent is neither inconsistent (like $b$) nor receiving
+  $\delta_X$ (like $a$), eventually receives $\Delta$ from a detecting
+  \process, either directly or transitively, for such a child \process
+  ($d$) trusts the possible removal of $P_X$ by delivering and
+  forwarding such $\Delta$. $\Delta$ suffers from identical blocking
+  conditions (between $b$ and $c$) than $\delta$, leading to the same
+  solutions of detection and propagation of $\Delta$. Eventually,
+  every \process whose last delivery is $\alpha_X$ receives and
+  delivers either a better $\alpha_Z$, or $\delta_X$, or $\Delta_X$.
   
   %% Some \processes may have delivered messages about other partitions
   %% before or after $\alpha_X$. \Processes such as $b$ and $c$ delivered
@@ -503,7 +512,6 @@ any time.  Instead, we propose to use the delivery order at each
   %% \rightarrow d_a(\alpha_X)$. Their difference being their position in
   %% the chain: $d$ is a child of \processes that delivered messages
   %% about $P_Y$.
-
 
   %% \begin{asparadesc}
   %% \item [($a$ or $c$ or $d$) to ($a$ or $c$ or $d$):] The source is
@@ -520,7 +528,6 @@ any time.  Instead, we propose to use the delivery order at each
   %%   it detects $b$ is its parent, and possibly blocked any delta with
   %%   its value $r_b(\delta_z) \rightarrow d_b(\delta_z)$. Since not
   %%   sure, $\Delta$
-
     
   %% \item [\processes with $\alpha_X^x \rightarrow \alpha_Y^y$ with last
   %%   $\alpha_Y^y$, for $\alpha_Y^y< \alpha_X^x$:] \Processes such as
@@ -558,9 +565,9 @@ any time.  Instead, we propose to use the delivery order at each
   % \processes eventually receive and may deliver messages detected as
   % issue. In Figure~\ref{fig:proofB}, \Process~$e$ eventually
   % receives $\delta_f$ from \Process~$b'$.
-  These three phases propagation-detection-propagation ensure that
-  \processes eventually purge stale $\alpha$ messages from the system,
-  leaving room for best eventual forwarding of up-to-date messages.
+  Three-phase purge ensures that all \processes of the system
+  eventually removes stale $\alpha$ messages, leaving room for best
+  eventual forwarding of up-to-date messages.
   %
   %  \TODO{cannot loop add from $e$ , undo from $b'$ because $b'$ sent
   % delete to $e$, it will solve the inconsistency.}
