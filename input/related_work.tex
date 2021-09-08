@@ -37,15 +37,11 @@ issues~\cite{voronet, ipfs, mdht, squirrel, triukose2011measuring,
   coin_19}, but still raises locality issues where \processes
 \begin{inparaenum}[(i)]
 \item request to possibly far away location services the content
-  location (e.g. as in \underline{c}ontent \underline{d}elivery
-  \underline{n}etworks (CDN)~\cite{triukose2011measuring} based on
-  \underline{d}omain \underline{n}ame \underline{s}ystems (DNS)), and
-  then
-\item request the actual content from possibly far away replicas
-  (e.g. as with \underline{d}istributed \underline{h}ash
-  \underline{t}ables (DHT)~\cite{ipfs, mdht, squirrel}).
+  location, and then
+\item request the actual content from possibly far away replicas.
 \end{inparaenum}
-For instance, using DHTs~\cite{ipfs, mdht, squirrel}, each \process
+For instance, using \underline{d}istributed \underline{h}ash
+\underline{t}ables (DHT)~\cite{ipfs, mdht, squirrel}, each \process
 stores a part of the index defined by an interval between hash values.
 The hash values are the keys to retrieve the associated content
 location.  Before downloading any content, a \node asks for its
