@@ -453,70 +453,107 @@ any time.  Instead, we propose to use the delivery order at each
 \end{figure}
 
 \begin{proof}
-  Figure~\ref{fig:proofB} depicts all possible cases that need
-  appropriate purging. A chain of \processes $[a, b, c, d]$ delivered
-  and forwarded a message $\alpha_X$. Some \processes may have
-  delivered messages about other partitions before or after
-  $\alpha_X$. \Processes such as $a$ and $d$ have delivered unrelated
-  messages, but their last message is about $P_X$: $d_a(\_)
-  \rightarrow \ldots \rightarrow d_a(\alpha_X)$; \Processes such as $b$
-  and $c$ delivered messages about $P_X$ and $P_Y$ in different order;
-  For \processes such as $b$, the last delivery is $\alpha_Y$:
-  $d_b(\_) \rightarrow \ldots \rightarrow d_b(\alpha_X) \rightarrow
-  \ldots \rightarrow d_b(\alpha_Y)$; For \processes such as $c$, the
-  last delivery is a stale $\alpha_X$, but they delivered the addition
-  and removal of $P_Y$: $d_c(\_) \rightarrow \ldots \rightarrow
-  d_c(\alpha_Y) \rightarrow \ldots \rightarrow d_c(\delta_Y)
-  \rightarrow \ldots \rightarrow d_c(\alpha_X)$.
+  We must prove that every \process that delivered a stale $\alpha_X$
+  eventually
+  \begin{inparaenum}[(i)]
+  \item delivers a better $\alpha_Y$, or 
+  \item delivers a removal notification of $\alpha_X$.
+  \end{inparaenum}
+  Figure~\ref{fig:proofB} summarizes the issue of purging in scenarios
+  involving concurrent operations:
+
+  If every \process (such as $a$) starting from the source delivers
+  and forwards a removal notification $\delta_X$ when their last
+  delivery is $\alpha_X$, then every such \process eventually delivers
+  the removal notification $\delta_X$ except \processes (such as $b$)
+  that delivered $\alpha_X$ from a \process that delivered a message
+  from another partition $\alpha_Y$ since then.
   
-  \begin{asparadesc}
-  \item [\TODO{source is type $a$}]
-  \item [($a$ or $c$ or $d$) to ($a$ or $c$ or $d$):] By propagating
-    from \process to \process the corresponding $\delta_X$ message,
-    these \processes purge $\alpha_X$.
-  \item [$a$ to $b$:] $b$ stops the propagation of $\delta_X$, for the
-    latter does not target its current partition.
-  \item [$b$:] They need to purge their own $P_Y$, we must \TODO{prove
-    that $[a, b, c, d]$ is solved and that it does not require to
-    purge $P_Y$.}
-  \item [$b$ to $d$:] would deliver $d_(\alpha_y)$ hence becoming $b$.
-  \item [$b$ to $c$:] block $d_c(\alpha_y)$, so $c$ stays in $c$. But
-    it detects $b$ is its parent, and possibly blocked any delta with
-    its value $r_b(\delta_z) \rightarrow d_b(\delta_z)$. Since not
-    sure, $\Delta$
+  These exceptions eventually receive and deliver $\alpha_Y$ since
+  $\alpha_Y$ is better than $\alpha_X$ through this path, except if
+  they already received and deliver the removal notification of $P_Y$
+  (such as $c$). These \processes may never receive hence deliver
+  $\delta_X$, and may never receive hence deliver a better message
+  than $\alpha_X$. They need an additional mechanism to eventually
+  purge $\alpha_X$ that cannot rely on the eventual purging of $P_Y$
+  to avoid deadlocks.
+  
+  Assuming that every \process keeps an history of its past
+  deliveries, \processes (such as $c$) can detect the inconsistency,
+  since they receive from their parent an already deleted partition
+  $P_Y$. This notification means that the parent discards any
+  $\delta_Z$ with $\alpha_Z^z < \alpha_Y^y$, and most importantly, if
+  $\delta_X$ exists, it discards it. To ensure the purge of stale
+  messages, a detecting \process must assume the worst case that such
+  $\delta_X$ exists, and send another kind of message, noted $\Delta$
+  that notify the possible removal of $P_X$. Children \processes that
+  still have $P_X$ as last delivery must trust the detecting \process
+  and remove the possibly stale control information about $P_X$.
+  
+  %% Some \processes may have delivered messages about other partitions
+  %% before or after $\alpha_X$. \Processes such as $b$ and $c$ delivered
+  %% messages about $P_Y$.  For \processes such as $b$, the last delivery
+  %% is $\alpha_Y$: $d_b(\_) \rightarrow \ldots \rightarrow d_b(\alpha_X)
+  %% \rightarrow \ldots \rightarrow d_b(\alpha_Y)$; For \processes such
+  %% as $c$, the last delivery is $\alpha_X$, and they delivered the
+  %% addition and removal of $P_Y$: $d_c(\_) \rightarrow \ldots
+  %% \rightarrow d_c(\alpha_Y) \rightarrow \ldots \rightarrow
+  %% d_c(\delta_Y) \rightarrow \ldots \rightarrow d_c(\alpha_X)$. Both
+  %% $a$ and $d$ delivered $\alpha_X$ last: $d_a(\_) \rightarrow \ldots
+  %% \rightarrow d_a(\alpha_X)$. Their difference being their position in
+  %% the chain: $d$ is a child of \processes that delivered messages
+  %% about $P_Y$.
+
+
+  %% \begin{asparadesc}
+  %% \item [($a$ or $c$ or $d$) to ($a$ or $c$ or $d$):] The source is
+  %%   like $a$.  By propagating from \process to \process the
+  %%   corresponding $\delta_X$ message, these \processes purge
+  %%   $\alpha_X$.
+  %% \item [$a$ to $b$:] $b$ stops the propagation of $\delta_X$, for the
+  %%   latter does not target its current partition.
+  %% \item [$b$:] They need to purge their own $P_Y$, we must \TODO{prove
+  %%   that $[a, b, c, d]$ is solved and that it does not require to
+  %%   purge $P_Y$.}
+  %% \item [$b$ to $d$:] would deliver $d_(\alpha_y)$ hence becoming $b$.
+  %% \item [$b$ to $c$:] block $d_c(\alpha_y)$, so $c$ stays in $c$. But
+  %%   it detects $b$ is its parent, and possibly blocked any delta with
+  %%   its value $r_b(\delta_z) \rightarrow d_b(\delta_z)$. Since not
+  %%   sure, $\Delta$
 
     
-  \item [\processes with $\alpha_X^x \rightarrow \alpha_Y^y$ with last
-    $\alpha_Y^y$, for $\alpha_Y^y< \alpha_X^x$:] \Processes such as
-    \Process~$b$ that do not directly suffer from the non-delivery of
-    $\delta_X$. They need to purge their own $P_Y$ if need
-    be. Nonetheless, they deliver and forward $\alpha_Y$ that at least
-    one following \process will receive.
-  \item [\processes with $\delta_Y \rightarrow \alpha_X$:] \Processes
-    such as \Process~$c$ that do not belong to the preceding category,
-    for they already delivered $\delta_Y$. Nevertheless, best eventual
-    forwarding guarantees that they receive $\alpha_Y$, which
-    contradicts their history or state. In such a case, the detecting
-    \processes purge their own $\alpha_X$. The detecting \processes
-    must also notify subsequent \processes that their current
-    partition \emph{may be} deleted. Indeed their parent may have
-    blocked the corresponding $\delta$ messages and subsequent
-    \processes must purge their possibly stale state, for the sake of
-    consistency.  We note such a notification $\Delta_X$ to emphasize
-    their proximity to $\delta_X$ messages.
-    % the uncertainty of a $\delta$ message.
-  \item [\processes with last $\alpha_X$ receiving $\Delta_X$ from
-    their parent:] \Processes such as \Process~$d$ that have
-    $\alpha_X$ but preceding delivered messages are not
-    important. Such \processes must trust detecting \processes by
-    delivering and forwarding $\Delta_X$. It is worth noting that
-    these messages are subject to all aforementioned blocking
-    conditions, but are also solved by aforementioned mechanisms.
-  \end{asparadesc}
+  %% \item [\processes with $\alpha_X^x \rightarrow \alpha_Y^y$ with last
+  %%   $\alpha_Y^y$, for $\alpha_Y^y< \alpha_X^x$:] \Processes such as
+  %%   \Process~$b$ that do not directly suffer from the non-delivery of
+  %%   $\delta_X$. They need to purge their own $P_Y$ if need
+  %%   be. Nonetheless, they deliver and forward $\alpha_Y$ that at least
+  %%   one following \process will receive.
+  %% \item [\processes with $\delta_Y \rightarrow \alpha_X$:] \Processes
+  %%   such as \Process~$c$ that do not belong to the preceding category,
+  %%   for they already delivered $\delta_Y$. Nevertheless, best eventual
+  %%   forwarding guarantees that they receive $\alpha_Y$, which
+  %%   contradicts their history or state. In such a case, the detecting
+  %%   \processes purge their own $\alpha_X$. The detecting \processes
+  %%   must also notify subsequent \processes that their current
+  %%   partition \emph{may be} deleted. Indeed their parent may have
+  %%   blocked the corresponding $\delta$ messages and subsequent
+  %%   \processes must purge their possibly stale state, for the sake of
+  %%   consistency.  We note such a notification $\Delta_X$ to emphasize
+  %%   their proximity to $\delta_X$ messages.
+  %%   % the uncertainty of a $\delta$ message.
+  %% \item [\processes with last $\alpha_X$ receiving $\Delta_X$ from
+  %%   their parent:] \Processes such as \Process~$d$ that have
+  %%   $\alpha_X$ but preceding delivered messages are not
+  %%   important. Such \processes must trust detecting \processes by
+  %%   delivering and forwarding $\Delta_X$. It is worth noting that
+  %%   these messages are subject to all aforementioned blocking
+  %%   conditions, but are also solved by aforementioned mechanisms.
+  %% \end{asparadesc}
 
-  Propagation~I terminates: a \process does not deliver a $\delta$
-  message if it has already delivered it. Propagation~III terminates: a
-  \process does not deliver a looping message.
+  %% Propagation~I terminates: a \process does not deliver a $\delta$
+  %% message if it has already delivered it. Propagation~III terminates: a
+  %% \process does not deliver a looping message.
+  
   % ; and since \processes forward the messages they deliver, upstream
   % \processes eventually receive and may deliver messages detected as
   % issue. In Figure~\ref{fig:proofB}, \Process~$e$ eventually
