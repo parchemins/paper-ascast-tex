@@ -291,7 +291,11 @@ source. \Process~$b$ then blocks $a$'s removal notification
 $\delta_a$. It never reaches $c$ nor $d$. Also, $c$ does not deliver
 $\alpha_d$ and $\delta_d$ since it already delivered it. The system
 converges to an inconsistent state where some \processes assume they
-belong to a partition while it does not exist anymore.
+belong to a partition while it does not exist anymore. The system
+needs to purge stale $\alpha$ messages that stop $\delta$ messages
+from reaching nodes.
+%The system needs to
+% purge its stale messages.
 
 %% Naive propagation of $\alpha$ and $\delta$ messages
 %% is insufficient to guarantee consistent partitioning when any \process
@@ -331,8 +335,10 @@ Theorem~\ref{theo:bef}) additionally requires
     \rightarrow r_b(\delta_a) \rightarrow d_b(\delta_d)$) that it does
     not forward messages required by other \processes
     ($\delta_a$). The last delivery of some nodes ($c$ and $d$) is
-    wrong ($\alpha_a^3$ instead of $\delta_a$). \Processes never reach
-    consistent partitioning.
+    wrong ($\alpha_a^3$ instead of $\delta_a$).
+    % \Processes never
+    % reach consistent partitioning.
+    %
     %% Figure~\ref{fig:proofA} depicts the generic case where a \process
     %% $b$ precludes itself and subsequent \processes such as $c$ of
     %% delivering the message from their respective best source
@@ -353,9 +359,10 @@ Theorem~\ref{theo:bef}) additionally requires
     r_b(\alpha_c^{y : y > x}) \rightarrow d_b(\delta_b)$), a \process
     may never receive again, hence deliver and forward a message that
     was received and discarded before ($\alpha_c^{y}$). When such a
-    message contains its best up-to-date partition, the \process never
-    ends up in its best partition. Therefore, \processes do not reach
-    consistent partitioning.
+    message contains its best up-to-date partition, a \process may
+    never end up in its best partition.
+    %    Therefore, \processes do not reach
+    % consistent partitioning.
   \item [Purge then EFB:] Assuming the eventual and definitive removal
     of stale messages at each \process ($S(\alpha_a) \implies
     (d_b(\alpha_a) \implies \eventually d_b(\alpha_a) \rightarrow
@@ -476,20 +483,17 @@ any time.  Instead, we propose to use the delivery order at each
 
 \begin{proof}
   We must prove that every \process that delivered a stale $\alpha_X$
-  eventually
-  \begin{inparaenum}[(i)]
-  \item delivers a better $\alpha_Y$, or 
-  \item delivers a removal notification of $\alpha_X$.
-  \end{inparaenum}
-  Figure~\ref{fig:proofB} summarizes the issue of purging in scenarios
-  involving concurrent operations:
+  eventually delivers a better $\alpha_Y$, or delivers a removal
+  notification of $\alpha_X$.  Figure~\ref{fig:proofB} summarizes the
+  issue of purging in scenarios involving concurrent operations.
 
-  If every \process (such as $a$) starting from the source delivers
-  and forwards a removal notification $\delta_X$ when their last
-  delivery is $\alpha_X$, then every such \process eventually delivers
-  the removal notification $\delta_X$ except \processes (such as $b$)
-  that delivered $\alpha_X$ from a \process that delivered a message
-  from another partition $\alpha_Y$ since then.
+  
+  (i) If every \process (such as $a$) starting from the source
+  delivers and forwards a removal notification $\delta_X$ when their
+  last delivery is $\alpha_X$, then every such \process eventually
+  delivers the removal notification $\delta_X$ except \processes (such
+  as $b$) that delivered $\alpha_X$ from a \process that delivered a
+  message from another partition $\alpha_Y$ since then.
   
   These exceptions eventually receive and deliver $\alpha_Y$ since
   $\alpha_Y$ is better than $\alpha_X$ through this path, except if
@@ -500,7 +504,7 @@ any time.  Instead, we propose to use the delivery order at each
   eventually purge $\alpha_X$ that cannot rely on the eventual purging
   of $P_Y$ at \processes like $b$, to avoid deadlocks.
   
-  Assuming that every \process keeps an history of its past
+  (ii) Assuming that every \process keeps an history of its past
   deliveries, \processes (such as $c$) can detect the inconsistency,
   since they receive from their parent an already deleted partition
   $P_Y$. This notification means that the parent discards any
@@ -509,9 +513,9 @@ any time.  Instead, we propose to use the delivery order at each
   messages, a detecting \process must assume the worst case that such
   $\delta_X$ exists, and send another kind of message, noted $\Delta$,
   that notify the possible removal of $P_X$.
-
-  A \process (such as $d$) whose last delivery is $\alpha_X$, but
-  whose parent is neither inconsistent (like $b$) nor receiving
+  
+  (iii) A \process (such as $d$) whose last delivery is $\alpha_X$,
+  but whose parent is neither inconsistent (like $b$) nor receiving
   $\delta_X$ (like $a$), eventually receives $\Delta$ from a detecting
   \process, either directly or transitively, for such a child \process
   ($d$) trusts the possible removal of $P_X$ by delivering and
@@ -594,7 +598,7 @@ any time.  Instead, we propose to use the delivery order at each
   %
   %% In the meantime, \processes that still belong to a partition can
   %% propagate their respective last $\alpha$ message, and reach
-  %% consistent partitioning.
+    %% consistent partitioning.
 \end{proof}
 
 

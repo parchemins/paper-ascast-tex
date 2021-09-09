@@ -43,8 +43,8 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
     \uElseIf {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \algoAnd p \not\in \pi'$  } {
           $V[s'] \leftarrow c'$ \;
           $\smash{A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}}$ \;
-          \ForEach{$n \in O_p$} {
-            send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$)} \tcp*[h]{\footnotesize{forward}\label{line:ascast_better}}
+          \ForEach(\tcp*[h]{\footnotesize{forward}}){$n \in O_p$} {
+            send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$})\label{line:ascast_better}
           }
 
      }
@@ -61,7 +61,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
      $V[s'] \leftarrow \max(V[s'], c')$ \;
      $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing}$ \;
 
-    \ForEach{$n \in O_p$}{
+    \ForEach(\tcp*[h]{\footnotesize{forward}}){$n \in O_p$}{
       \lIf(\tcp*[h]{\footnotesize{(I)}}) {\smash{$\delta_{s', c'}$}} {
         send$_n$(\smash{$\delta_{s', c'}$)}
       } 
