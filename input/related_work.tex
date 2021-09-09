@@ -43,12 +43,11 @@ issues~\cite{voronet, ipfs, mdht, squirrel, triukose2011measuring,
 For instance, using \underline{d}istributed \underline{h}ash
 \underline{t}ables (DHT)~\cite{ipfs, mdht, squirrel}, each \process
 stores a part of the index defined by an interval between hash values.
-The hash values are the keys to retrieve the associated content
-location.  Before downloading any content, a \node asks for its
-location using its key. After a series of round-trips between possibly
-distant DHT servers, the \node gets a list of available
-replicas. Contrarily to \NAME, such services do not ensure to include
-the closest replica.
+Hash values are keys to retrieve the associated content location.
+Before downloading any content, a \node requests its location using
+its key. After round-trips between possibly distant DHT servers, the
+\node gets available replicas. Contrarily to \NAME, such services do
+not ensure to include the closest replica.
 
 \noindent In addition, they often do not include distance information
 along with replica location. Determining where resides the closest

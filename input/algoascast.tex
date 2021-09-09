@@ -16,21 +16,18 @@ $A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing} $ \tcp*[r
 $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \BlankLine
-\BlankLine
 
 \begin{multicols}{2}
 \Function{\textup{\texttt{Add ( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
   \textup{\smash{receiveAdd($p$, $\alpha_{p, V[p] + 1}^{0, \varnothing}$)}}\label{line:ascast_add}
 }
 
-% \BlankLine
 
 \Function{\textup{\texttt{Del ( )}}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
   \textup{\smash{receiveDel($p$, $\delta_{p, V[p] + 1}$)}}\label{line:ascast_del}
 }
 \end{multicols}
 
-\BlankLine
 \BlankLine
 \BlankLine
 
@@ -81,15 +78,12 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \BlankLine
 \BlankLine
-\BlankLine
 
 %% \Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$}}  {
 %%     \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
 %%          \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
 %%          \tcp*[r]{\label{line:compete}\footnotesize{compete with $q$}}}
 %% }
-
-%% \BlankLine
 
 %% \Function{\textup{edgeDown($q$)} \tcp*[f]{link to $q$ removed}} {
 %%   \If {$q = \pi[|\pi| - 1]$} {
@@ -103,8 +97,6 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
          \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
          \tcp*[h]{\label{line:compete}\footnotesize{compete with $q$}}}
 }
-
-% \BlankLine
 
 \Function{\textup{edgeDown($q$)} \tcp*[h]{link to $q$ removed}} {
   \If {$q = \pi[|\pi| - 1]$} {

@@ -346,8 +346,8 @@ Theorem~\ref{theo:bef}) additionally requires
     Assuming that every \process removes control information as soon
     as it becomes stale ($S(\alpha_a) \implies d_b(\alpha_a^x)
     \rightarrow d_b(\delta_a)$) and cannot deliver stale messages
-    anymore ($S(\alpha_a^x) \implies d_c(m_1) \rightarrow \ldots
-    \rightarrow d_c(m_k \not\in \alpha_a)$), staleness does not impair
+    anymore ($S(\alpha_a^x) \implies d_c(m) \rightarrow \ldots
+    \rightarrow d_c(m' \not\in \alpha_a)$), staleness does not impair
     up-to-date messages propagation. However, even in such settings,
     depending on receipt order ($d_b(\alpha_a^{x}) \rightarrow
     r_b(\alpha_c^{y : y > x}) \rightarrow d_b(\delta_b)$), a \process
@@ -362,29 +362,38 @@ Theorem~\ref{theo:bef}) additionally requires
     d_b(m') \not\rightarrow d_b(\alpha_a))$); and assuming that every
     removal eventually triggers the forwarding of best delivered
     messages ($d_c(\delta_x) \implies \eventually f_d(\alpha_y)$),
-    upon receipt of such $\alpha_y$, either the \process already 
-    \TODO{tododododotododoo.}
+    \processes may deliver other stale messages that will be 
+    eventually removed to never be delivered again. In the worst case,
+    all processes deliver and remove all stale messages to ultimately
+    deliver and forward only up-to-date messages ($\eventually d_c(m')
+    \implies \neg S(m')$). As in Theorem~\ref{theo:bef}, they
+    eventually deliver and forward their best up-to-date message.
+    
+    %% upon receipt of such $\alpha_y$, either the \process already
+    %% delivered its removal and it does 
+    
+
+    %% ($d_c(\delta_x) \implies \eventually f_d(\alpha_y) \wedge \neg
+    %% S(\alpha_y)$)
 
 
-    ($d_c(\delta_x) \implies \eventually f_d(\alpha_y) \wedge \neg
-    S(\alpha_y)$)
-
-
-    eventually every \process only delivers and forwards up-to-date
-    messages, or no message at all ($\eventually d_c(m') \implies \neg
-    S(m')$).
+    %% eventually every \process only delivers and forwards up-to-date
+    %% messages, or no message at all 
 
 
 
 
-    , every \process eventually delivers and forwards the best
-    up-to-date delivered messages as in Theorem~\ref{theo:bef}.
+    %% , every \process eventually delivers and forwards the best
+    %% up-to-date delivered messages as in Theorem~\ref{theo:bef}.
+    
     %% Removing \emph{forever} all such stale messages about
     %% deleted partitions would allow \processes to propagate their best
     %% up-to-date partition again, eventually reaching consistent
     %% partitioning together, as stated by Theorem~\ref{theo:bef}.
   \end{asparadesc}
-  Using EFB$^+$, \processes reach consistent partitioning together.
+  Using EFB$^+$, \processes reach consistent partitioning together
+  even under dynamic partitioning settings where \nodes can
+  \texttt{Add} and \texttt{Del}ete their partition.
 \end{proof}
 
 %% Figure removed as it's kind of redundant with preceding figure that
@@ -623,8 +632,8 @@ This vector of versions constitutes a summary of local deliveries. It
 allows a \process to detect inconsistencies in message delivery: the
 parent delivered a stale message (see Line~\ref{line:ascast_version}),
 or the parent delivered a worse message (see
-Line~\ref{line:detectA}). This may happen in stage II of
-Figure~\ref{fig:proofB} between $b$ and $c$.
+Line~\ref{line:detectA}). % This may happen in stage II of
+% Figure~\ref{fig:proofB} between $b$ and $c$.
 
 A \process ($c$) detecting an inconsistency disseminates a $\Delta$
 message. Such a $\Delta$ must not modify any vector of versions since
