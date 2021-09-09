@@ -1,15 +1,14 @@
 
 \begin{figure*}
   \begin{center}
-    \subfloat[Part A][\label{fig:problemA}Both \Process~$a$ and
-      \Process~$d$ add then delete their partition. For the recall,
-      $w_{ab} = 2$; $w_{bc} = w_{bd} = 1$; $w_{cd} =
+    \subfloat[Part A][\label{fig:problemA}Both nodes $a$ and $d$ create a
+      new partition.  $w_{ab} = 2$; $w_{bc} = w_{bd} = 1$; $w_{cd} =
       3$.]{\input{input/figproblemA.tex}}
     \hspace{0pt}
-    \subfloat[Part B][\label{fig:problemB}$b$
-      delivers and forwards the $\alpha$ message about $P_a$ while
-      \Process~$c$ delivers and forwards both $\alpha$ and $\delta$
-      messages about $P_d$.]  {\input{input/figproblemB.tex}}
+    \subfloat[Part B][\label{fig:problemB}Both $a$ and $d$ delete
+      their partition. $b$ delivers and forwards $\alpha_a$ while
+      $c$ delivers and forwards both $\alpha_d$ and $\delta_d$.]
+             {\input{input/figproblemB.tex}}
     \hspace{0pt}
     \subfloat[Part C][\label{fig:problemC}$b$
       already blocks the propagation of $\delta_a$ despite it
