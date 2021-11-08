@@ -87,12 +87,12 @@ one, partition (see Section~\ref{subsec:consistent}).
 %% over their neighboring \processes: they cannot add nor remove
 %% communication links.
 
-\item [Dynamic partitioning and adaptive scoped broadcast:]
+\item [Dynamic partitioning:]
 
-Finally, in Figure~\ref{fig:partition_intuitionD}, \Process $G$
-destroys its replica. Every \process that belonged to its green
-partition must choose another partition to be in. While it makes sense
-for \Process~$G$ to scoped broadcast its removal, \Process~$B$ and
+In Figure~\ref{fig:partition_intuitionD}, \Process $G$ destroys its
+replica. Every \process that belonged to its green partition must
+choose another partition to be in. While it makes sense for
+\Process~$G$ to scoped broadcast its removal, \Process~$B$ and
 \Process~$R$ cannot afford to continuously advertise their replica to
 fill the gap left open by \Process~$G$. Instead, we want to trigger
 once again scoped broadcast at bordering \processes of red and blue
@@ -100,6 +100,19 @@ partitions. The scope of scoped broadcast changes over receipts by
 \processes. Dynamic partitioning raises additional challenges related
 to concurrent operations where removed partitions would block the
 propagation of other partitions (see Section~\ref{subsec:dynamic}).
+
+\item [Lazy partitioning:]
+  
+\TODO{Finally, in Figure~\ref{fig:partition_intuition}, every nodes of
+  the system maintains an index to every content. In systems
+  comprising billions of content, this could constitute a scalability
+  issue. The partitioning protocol should take advantage of boundary
+  between autonomous systems in the Internet. For instance, the AS
+  from France should not flood the AS from Spain unless the latter
+  starts to host a replica. In addition, when the system removes its
+  last source, it should stop receiving messages from other ASes
+  designed to maintain the closest partition.}
+
 \end{asparadesc}
 
 Next Section details the properties of scoped broadcast and dynamic

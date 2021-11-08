@@ -18,7 +18,7 @@ and finally details our implementation \NAME.
 % and the analysis of its complexity.
 
 
-\subsection{Scoped broadcast}
+\subsection{Scoped broadcast \TODO{Is it so important?}}
 \label{subsec:scoped}
 
 %For instance, a \process from Paris could scoped broadcast messages to
@@ -256,9 +256,10 @@ information.
 \end{definition}
 
 \begin{definition}[\label{def:lwo}Message staleness]
-  A message $m$ conveys \underline{s}tale control information if the
-  \process that broadcast $m$ later broadcast another message $m'$:
-  $S(m) = \exists m': b_p(m) \rightarrow b_p(m')$.
+  Only the latest message of a \process matters. A message $m$ conveys
+  \underline{s}tale control information if the \process that broadcast
+  $m$ later broadcast another message $m'$: $S(m) = \exists m': b_p(m)
+  \rightarrow b_p(m')$.
 
   %% When a \process $p$ broadcasts two messages $b_p(m) \rightarrow
   %% b_p(m')$, no \process $q$ can deliver $m$ if it has delivered $m'$:
@@ -268,7 +269,7 @@ information.
 
 \input{input/figdel.tex}
 
-\input{input/figproblem.tex}
+\input{input/figsimplerproblem.tex}
 
 Unfortunately, stale control information as stated in
 Definition~\ref{def:lwo} may impair the propagation of both

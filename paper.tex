@@ -1,4 +1,8 @@
-\documentclass[a4paper, anonymous, thm-restate]{lipics-v2021}
+% \documentclass[a4paper, anonymous, thm-restate]{lipics-v2021}
+\documentclass[conference]{IEEEtran}
+
+% \IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 
 %\usepackage{lmodern}
 %\usepackage[nocompress]{cite}
@@ -26,7 +30,7 @@
 \usepackage{multirow}
 %% figures
 %\usepackage{caption}
-% \usepackage{subfig}
+\usepackage{subfig}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing,plotmarks,shapes,matrix}
 %% transform eps in pdf crossplateform
@@ -34,6 +38,9 @@
 \usepackage{epsfig}
 
 \usepackage{xspace}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
 
 \newcommand{\NAME}[0]{\mbox{AS-cast}\xspace}
 \newcommand{\NAMEB}[0]{\mbox{S-cast}\xspace}
@@ -49,9 +56,9 @@
 \newcommand{\WRONG}[0]{red!75}
 
 \newtheorem{problem}{Problem Statement}
-%% \newtheorem{definition}{Definition}
-%% \newtheorem{theorem}{Theorem}
-%% \newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
 \newcommand{\eventually}{\Diamond\,}
 \newcommand{\ie}{{i.e.,}\xspace}
 \newcommand{\eg}{{e.g.,}\xspace}
@@ -66,28 +73,25 @@
 \newcommand{\Nodes}{\Processes}
 
 \title{\NAME: Lock Down the Traffic\\of Decentralized Content Indexing at the Edge}
-\titlerunning{\NAME: Lock Down the Traffic of Decentralized Content Indexing at the Edge}
-%% \NAME: Adaptive scoped broadcast for the edge
+% \titlerunning{\NAME: Lock Down the Traffic of Decentralized Content Indexing at the Edge}
 
-\keywords{
-  Edge, decentralized content indexing, scoped
-  broadcast, logical partitioning
-}
-
-\ccsdesc[500]{Networks~Network protocols}
-
-%\author{Adrien L{\`e}bre, Brice N{\'e}delec, Alexandre Van Kempen
-%% \author{\IEEEauthorblockN{Anonymous}
-%%  \IEEEauthorblockA{\textit{Affiliation}, City, Country\\email address or ORCID}
+%% \keywords{
+%%   Edge, decentralized content indexing, scoped
+%%   broadcast, logical partitioning
 %% }
 
-\author{Adrien L{\`e}bre}{Affiliation}{address}{}{} %% anon for now, so w/e
-\author{Brice N{\'e}delec}{Affiliation}{address}{}{}
-\author{Alexandre Van Kempen}{Affiliation}{address}{}{}
+%% \ccsdesc[500]{Networks~Network protocols}
+
+\author{\IEEEauthorblockN{Adrien L{\`e}bre, Brice N{\'e}delec, Alexandre Van Kempen}
+  \IEEEauthorblockA{\textit{Inria Rennes}, Nantes, France\\first.last@inria.fr}
+}
+
+%% \author{Adrien L{\`e}bre}{Affiliation}{address}{}{} %% anon for now, so w/e
+%% \author{Brice N{\'e}delec}{Affiliation}{address}{}{}
+%% \author{Alexandre Van Kempen}{Affiliation}{address}{}{}
 
 
 \begin{document}
-
 
 % \author{Anonymous}
 % \proceedings{}

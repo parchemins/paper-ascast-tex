@@ -17,7 +17,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \BlankLine
 
-\begin{multicols}{2}
+% \begin{multicols}{2}
 \Function{\textup{\texttt{Add ( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
   \textup{\smash{receiveAdd($p$, $\alpha_{p, V[p] + 1}^{0, \varnothing}$)}}\label{line:ascast_add}
 }
@@ -26,12 +26,12 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \Function{\textup{\texttt{Del ( )}}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
   \textup{\smash{receiveDel($p$, $\delta_{p, V[p] + 1}$)}}\label{line:ascast_del}
 }
-\end{multicols}
+% \end{multicols}
 
 \BlankLine
 \BlankLine
 
-\begin{multicols}{2}
+% \begin{multicols}{2}
 \Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}}
   %\tcp*[f]{\footnotesize{receive $\alpha$ from $q$}}}
   {
@@ -74,7 +74,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
   }
 }
 
-\end{multicols}
+% \end{multicols}
 
 \BlankLine
 \BlankLine
@@ -91,7 +91,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 %%   }
 %% }
 
-\begin{multicols}{2}
+% \begin{multicols}{2}
 \Function{\textup{edgeUp($q$)} \tcp*[h]{new link to $q$}}  {
     \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
          \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
@@ -104,9 +104,9 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
   }
 }
 
-\end{multicols}
+% \end{multicols}
 
-\BlankLine
+% \BlankLine
 
 %%% Local Variables: 
 %%% mode: latex
