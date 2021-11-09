@@ -12,14 +12,14 @@
 \LinesNumbered
 
 $O_p$, $W_p$ \tcp*[r]{set of neighbors and weights}
-$A_{s, c}^{d, \pi} \leftarrow \alpha_{\infty, 0}^{\infty, \varnothing} $ \tcp*[r]{best $\alpha$ so far}
+$A_{\pi}^{d} \leftarrow \alpha_{\varnothing}^{\infty} $ \tcp*[r]{best $\alpha$ so far}
 $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \BlankLine
 
 % \begin{multicols}{2}
 \Function{\textup{\texttt{Add ( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
-  \textup{\smash{receiveAdd($p$, $\alpha_{p, V[p] + 1}^{0, \varnothing}$)}}\label{line:ascast_add}
+  \textup{\smash{receiveAdd($p$, $\alpha_{[\langle p, V[p] + 1\rangle]}^{0}$)}}\label{line:ascast_add}
 }
 
 
@@ -32,11 +32,11 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 
 % \begin{multicols}{2}
-\Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}} {
-  \uIf{$\langle q, \_ \rangle = \pi[|\pi| - 1] \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$ \label{line:ascast_version}} {
+\Function{\textup{receiveAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
+  \uIf{$\textup{isParent}(q) \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$ \label{line:ascast_version}} {
     \textup{receiveDel($q$, $\delta_{p, V[p] + 1}$)} \tcp*[h]{\footnotesize{(II) send $\Delta$}}
   }
-  \uElseIf {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \algoAnd p \not\in \pi'$  } {
+  \uElseIf {\footnotesize$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^d)$  } {
     $V[s'] \leftarrow c'$ \;
     $\smash{A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}}$ \;
     \ForEach(\tcp*[h]{\footnotesize{forward}}){$n \in O_p$} {

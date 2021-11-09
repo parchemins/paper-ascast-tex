@@ -614,7 +614,7 @@ data structure sharing and message packing.
 
 \begin{algorithm}
   \input{input/algoascast.tex}
-  \caption{\label{algo:ascast}\NAME at \Process~$p$ in dynamic networks.}
+  \caption{\label{algo:ascast}\NAME at \Process~$p$.}
 \end{algorithm}
 
 As stated in Theorem~\ref{theo:dcp}, every \process must purge stale
@@ -674,21 +674,25 @@ Line~\ref{line:ascast_compete}).
 %% \processes act normally by propagating their changes when they
 %% improve.
 
-Algorithm~\ref{algo:ascast} also enables dynamic consistent
-partitioning in dynamic networks where \processes can join, leave, or
-crash at any time. Removing a \process is equivalent to removing all
-its edges, and adding a \process is equivalent to add as many edges as
-necessary.  Adding an edge between two \processes may only improve the
-shortest path of one of these \processes. Therefore, it triggers a
-competition between the two \processes only. If one or the other
-\process improves, the propagation of $\alpha$ messages operates
-normally.  Removing an edge between two \processes may invalidate the
-shortest path of one of involved \processes plus downstream
-\processes. As a side effect, removing an edge may also impair the
-propagation of a partition delete. To implement this behavior, \NAME
-uses its implementation of $\Delta$ messages. This prove costly but
-enables \NAME even in dynamic networks subject to physical
-partitioning.
+\begin{algorithm}
+  \input{input/algoedges.tex}
+  \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
+\end{algorithm}
+
+Algorithm~\ref{algo:edges} enables dynamic consistent partitioning in
+dynamic networks where \processes can join, leave, or crash at any
+time. Removing a \process is equivalent to removing all its edges, and
+adding a \process is equivalent to add as many edges as necessary.
+Adding an edge between two \processes may only improve the shortest
+path of one of these \processes. Therefore, it triggers a competition
+between the two \processes only. If one or the other \process
+improves, the propagation of $\alpha$ messages operates normally.
+Removing an edge between two \processes may invalidate the shortest
+path of one of involved \processes plus downstream \processes. As a
+side effect, removing an edge may also impair the propagation of a
+partition delete. To implement this behavior, \NAME uses its
+implementation of $\Delta$ messages. This prove costly but enables
+\NAME even in dynamic networks subject to physical partitioning.
 
 %% \NAME guarantees dynamic consistent partitioning by making extensive
 %% use of \process-to-\process communications. It requires
