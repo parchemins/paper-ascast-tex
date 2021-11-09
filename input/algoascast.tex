@@ -32,22 +32,18 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 
 % \begin{multicols}{2}
-\Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}}
-  %\tcp*[f]{\footnotesize{receive $\alpha$ from $q$}}}
-  {
-    \uIf{\hphantom{$($}$q = \pi[|\pi| - 1] \algoAnd$\tcp*[h]{{\footnotesize{from parent?}}}\\
-    \hphantom{\textbf{if}} $(c' < V[s'] \,\, \algoOr$\tcp*[h]{\footnotesize{history or state?}\label{line:ascast_version}}\\
-    \hphantom{\textbf{if}} \smash{$(\alpha_{s', c'}^{d', \pi'} > A_{s, c}^{d, \pi} \algoAnd  p\not\in \pi'))$}\label{line:detectA}} {
-        \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[h]{\footnotesize{(II) send $\Delta$}}
+\Function{\textup{receiveAdd($q$, $\alpha_{s', c'}^{d', \pi'}$)}} {
+  \uIf{$\langle q, \_ \rangle = \pi[|\pi| - 1] \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$ \label{line:ascast_version}} {
+    \textup{receiveDel($q$, $\delta_{p, V[p] + 1}$)} \tcp*[h]{\footnotesize{(II) send $\Delta$}}
+  }
+  \uElseIf {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \algoAnd p \not\in \pi'$  } {
+    $V[s'] \leftarrow c'$ \;
+    $\smash{A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}}$ \;
+    \ForEach(\tcp*[h]{\footnotesize{forward}}){$n \in O_p$} {
+      send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$})\label{line:ascast_better}
     }
-    \uElseIf {$A_{s, c}^{d, \pi} < \alpha_{s', c'}^{d', \pi} \algoAnd p \not\in \pi'$  } {
-          $V[s'] \leftarrow c'$ \;
-          $\smash{A_{s, c}^{d, \pi} \leftarrow \alpha_{s', c'}^{d', \pi'}}$ \;
-          \ForEach(\tcp*[h]{\footnotesize{forward}}){$n \in O_p$} {
-            send$_n$(\smash{$\alpha_{s', c'}^{d' + W_{pq}, \pi' \cup p}$})\label{line:ascast_better}
-          }
-
-     }
+    
+  }
 }
 
 
@@ -91,18 +87,31 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 %%   }
 %% }
 
-% \begin{multicols}{2}
-\Function{\textup{edgeUp($q$)} \tcp*[h]{new link to $q$}}  {
-    \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
-         \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
-         \tcp*[h]{\label{line:compete}\footnotesize{compete with $q$}}}
+
+\lFunction{\textup{isStale}(\smash{$\alpha_{\pi'}^{d'}$})} {
+  \Return \smash{$\exists \langle q, c \rangle \in \pi': c < V[q]$}
 }
 
-\Function{\textup{edgeDown($q$)} \tcp*[h]{link to $q$ removed}} {
-  \If {$q = \pi[|\pi| - 1]$} {
-    \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[h]{\footnotesize (III) send $\Delta$}
-  }
+\lFunction{\textup{isLoop}(\smash{$\alpha_{\pi'}^{d'}$}) } {
+  \Return $\langle p, \_ \rangle \in \pi'$
 }
+
+\lFunction{\textup{isParent}($q$)} {
+  \Return $\langle q, \_ \rangle = \pi[|\pi|-1]$
+}
+
+% \begin{multicols}{2}
+% \Function{\textup{edgeUp($q$)} \tcp*[h]{new link to $q$}}  {
+%     \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
+%          \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
+%          \tcp*[h]{\label{line:compete}\footnotesize{compete with $q$}}}
+% }
+
+% \Function{\textup{edgeDown($q$)} \tcp*[h]{link to $q$ removed}} {
+%   \If {$q = \pi[|\pi| - 1]$} {
+%     \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[h]{\footnotesize (III) send $\Delta$}
+%   }
+% }
 
 % \end{multicols}
 
