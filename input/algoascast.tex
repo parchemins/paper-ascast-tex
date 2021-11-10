@@ -17,7 +17,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \BlankLine
 
-% \begin{multicols}{2}
+\begin{multicols}{2}
 \Function{\textup{\texttt{Add( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
   $V[p] \leftarrow V[p] + 1$ \;
   \textup{\smash{receiveAdd($p$, $\alpha_{\varnothing}^{0}$)}}\label{line:ascast_add}
@@ -25,17 +25,19 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 
 \Function{\textup{\texttt{Del( )}}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
-  \textup{\smash{receiveDel($p$, $\delta_{p, V[p] + 1}$)}}\label{line:ascast_del}
+  $V[p] \leftarrow V[p] + 1$ \;
+  \textup{\smash{receiveDel($p$, $\delta_{p, V[p]}$)}}\label{line:ascast_del}
 }
-% \end{multicols}
+\end{multicols}
 
+\BlankLine
 \BlankLine
 
 
 
 % \begin{multicols}{2}
 \Function{\textup{receiveAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
-  \uIf {$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^{d'})$  } {
+  \uIf {\smash{$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^{d'})$} } {
     $\smash{A_{\pi}^{d} \leftarrow \alpha_{\pi' \cup \langle p, V[p] \rangle}^{d'}}$ \;
     \lForEach{$n \in O_p$} {
       send$_n$(\smash{$\alpha_{\pi}^{d + W_{pn}}$})\label{line:ascast_better}
@@ -45,22 +47,23 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
     \textup{receiveDel($q$, $\delta_{p, V[p] + 1}$)}
   }
 
-
   updateVersions($\pi'$) \;
 }
 
 
 
+\BlankLine
+
 \Function{\textup{receiveDel($q$, $\delta_{s, c}$)}} {
   \uIf {$\exists \langle s, c' \rangle \in \pi: c' < c$} {
-    $A^d_\pi \leftarrow \alpha^\infty_\varnothing$ \;
+    $\smash{A^d_\pi \leftarrow \alpha^\infty_\varnothing}$ \;
     \lForEach {$n \in O_p \setminus q$}{send$_n$($\delta_{s, c}$)}
   }
   \lElseIf {$A_s^d \neq \alpha^\infty_\varnothing$} {
     send$_q$($\alpha_\pi^{d + W_{pq}}$)
   }
 
-  updateVersions($[\langle s, c \rangle]$) \;
+  updateVersions($[\langle s, c \rangle]$)
 }
 
 % \end{multicols}
