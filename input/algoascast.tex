@@ -37,13 +37,13 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 % \begin{multicols}{2}
 \Function{\textup{receiveAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
-  \uIf {\smash{$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^{d'})$} } {
+  \uIf {\smash{$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^{d'})$\label{line:ascast_improve}}} {
     $\smash{A_{\pi}^{d} \leftarrow \alpha_{\pi' \cup \langle p, V[p] \rangle}^{d'}}$ \;
     \lForEach{$n \in O_p$} {
-      send$_n$(\smash{$\alpha_{\pi}^{d + W_{pn}}$})\label{line:ascast_better}
+      send$_n$(\smash{$\alpha_{\pi}^{d + W_{pn}}$})
     }
   }
-  \uElseIf{$\textup{isParent}(q) \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$ \label{line:ascast_version}} {
+  \uElseIf{$\textup{isParent}(q) \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$\label{line:ascast_detect}} {
     \textup{receiveDel($q$, $\delta_{p, V[p] + 1}$)}
   }
 
@@ -55,12 +55,12 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 \BlankLine
 
 \Function{\textup{receiveDel($q$, $\delta_{s, c}$)}} {
-  \uIf {$\exists \langle s, c' \rangle \in \pi: c' < c$} {
+  \uIf {$\exists \langle s, c' \rangle \in \pi: c' < c$\label{line:ascast_delete}} {
     $\smash{A^d_\pi \leftarrow \alpha^\infty_\varnothing}$ \;
     \lForEach {$n \in O_p \setminus q$}{send$_n$($\delta_{s, c}$)}
   }
   \lElseIf {$A_s^d \neq \alpha^\infty_\varnothing$} {
-    send$_q$($\alpha_\pi^{d + W_{pq}}$)
+    send$_q$($\alpha_\pi^{d + W_{pq}}$)\label{line:ascast_echo}
   }
 
   updateVersions($[\langle s, c \rangle]$)

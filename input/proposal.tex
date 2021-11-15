@@ -228,6 +228,8 @@ by concurrent operations.
 %% partition by only piggybacking a monotonically increasing distance in
 %% forwarded messages.
 
+\input{input/figdel.tex}
+
 At any time, a source can revoke its self-appointed status of source
 by executing a \texttt{Del} operation, hence deleting its partition
 from the system. All \processes that belong to this partition must
@@ -249,6 +251,8 @@ state that all preceding events become obsolete, and that all messages
 originating from these preceding events convey stale control
 information.
 
+\input{input/figsimplerproblem.tex}
+
 \begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
   relationship defines a strict partial order between events. Two
@@ -266,10 +270,6 @@ information.
   %% $\nexists q \in V$ with $d_q(m') \rightarrow d_q(m)$, for $m$
   %% convey \emph{\underline{s}tale} control information: $S(m)$.
 \end{definition}
-
-\input{input/figdel.tex}
-
-\input{input/figsimplerproblem.tex}
 
 Unfortunately, stale control information as stated in
 Definition~\ref{def:lwo} may impair the propagation of both
@@ -298,10 +298,10 @@ needs to purge stale $\alpha$ messages that stop $\delta$ messages
 from reaching nodes.
 
 \begin{definition}[\label{def:purge}Message purge]
-  A system purges a message $P(m)$ when every \node $q$ that delivered
-  $m$ eventually delivers another message $m'$ never followed by the
-  delivery of the former message $m$: $d_q(m) \implies \eventually
-  (d_q(m) \rightarrow d_q(m'))$.
+  A system purges a message \TODO{$P(m)$} when every \node $q$ that
+  delivered $m$ eventually delivers another message $m'$ never
+  followed by the delivery of the former message $m$: $d_q(m) \implies
+  \eventually (d_q(m) \rightarrow d_q(m')) \TODO{\wedge}$.
 \end{definition}
 
 
@@ -314,7 +314,7 @@ from reaching nodes.
   (Theorem~\ref{theo:efb}) additionally requires
 \begin{inparaenum}[(i)]
 \item eventual purging of stale messages ($S(m) \implies P(m)$), then
-\item the eventual forwarding of best (Definition~\ref{theo:efb}).
+\item the eventual forwarding of best (Theorem~\ref{theo:efb}).
 \end{inparaenum}
 \end{theorem}
 
@@ -328,12 +328,12 @@ from reaching nodes.
   \process is the message that followed the shortest path to its
   closest source.
   \begin{asparadesc}
-  \item [EFB without Purge:] From Figure~\ref{fig:problemD}, a
-    \process may receive messages in such an order ($d_b(\alpha_d^1)
-    \rightarrow r_b(\delta_a) \rightarrow d_b(\delta_d)$) that it does
-    not forward messages required by other \processes
-    ($\delta_a$). The last delivery of some nodes ($c$ and $d$) is
-    wrong ($\alpha_a^3$ instead of $\delta_a$).
+  \item [EFB without Purge:] A \process may receive messages in such
+    an order (\eg in Figure~\ref{fig:problemC}: $d_b(\alpha_c^1)
+    \rightarrow r_b(\delta_a) \rightarrow r_b(\delta_a)$) that it does
+    not forward messages required by other \processes ($\delta_a$ for
+    $c$). The last delivery of some nodes may be wrong (\eg in
+    Figure~\ref{fig:problemD}: $\alpha_a^3$ instead of $\delta_a$).
     % \Processes never
     % reach consistent partitioning.
     %
@@ -463,7 +463,7 @@ any time.  Instead, we propose to use the delivery order at each
   stale control information:
   \begin{inparaenum}[(i)]
   \item propagation of delete notifications,
-  \item detection of possibly blocking conditions, and
+  \item detection of possibly blocked deletion, and
   \item propagation of delete notifications that were possibly blocked.
   \end{inparaenum}
 \end{theorem}
@@ -484,7 +484,6 @@ any time.  Instead, we propose to use the delivery order at each
   eventually delivers a better $\alpha_Y$, or delivers a removal
   notification of $\alpha_X$.  Figure~\ref{fig:proofB} summarizes the
   issue of purging in scenarios involving concurrent operations.
-
   
   (i) If every \process (such as $a$) starting from the source
   delivers and forwards a removal notification $\delta_X$ when their
@@ -603,11 +602,10 @@ any time.  Instead, we propose to use the delivery order at each
 
 \subsection{Implementation and complexity}
 
-Algorithm~\ref{algo:ascast} provides the few instructions of \NAME
-that implement three-phase purge and eventual forwarding of best to
-enable dynamic consistent partitioning. For the sake of simplicity, it
-does not handle multiple sessions and associated optimisation such as
-data structure sharing and message packing.
+Algorithm~\ref{algo:ascast} provides the instructions of \NAME that
+implement three-phase purge and eventual forwarding of best to enable
+dynamic consistent partitioning. For the sake of simplicity, it does
+not handle multiple sessions nor optimisation such as message packing.
 
 \begin{algorithm}
   \input{input/algoascast.tex}
@@ -621,55 +619,45 @@ known source, or has-been source. Its size increases linearly with the
 number of sources that the \process has ever known, which is the
 number of \processes in the system $\mathcal{O}(V)$ in the worst case.
 Nevertheless, following the principles of scoped broadcast, we expect
-that every \process only acknowledges a small subset of sources.
-Using such a vector, every message $m$ carries its source $s$ along
-with its version $c$ that we subscript $m_{s, c}$.  Each \process
-delivers and forwards
-\begin{inparaenum}[(i)]
-\item only newest messages (see Line~\ref{line:ascast_version}) that
-\item improve their best known partition (see
-  Line~\ref{line:ascast_better}).
-\end{inparaenum}
-This vector of versions constitutes a summary of local deliveries. It
-allows a \process to detect inconsistencies in message delivery: the
-parent delivered a stale message (see Line~\ref{line:ascast_version}),
-or the parent delivered a worse message (see
-Line~\ref{line:detectA}). % This may happen in stage II of
-% Figure~\ref{fig:proofB} between $b$ and $c$.
+that every \process only acknowledges a small subset of sources.  In
+addition, each message carries the identifier and counter of each
+\node that forwarded it. Again, following the principles of scoped
+broadcast, we expect that versioned paths remain small. Using these
+data structures, each \process delivers and forwards only new messages
+that improve their best known partition (see
+Line~\ref{line:ascast_improve}).
 
-A \process ($c$) detecting an inconsistency disseminates a $\Delta$
-message. Such a $\Delta$ must not modify any vector of versions since
-the partition of the corresponding $\alpha$ may still exist.
-Therefore, it additionally includes and maintains a path $\pi$
-initialized to $\alpha$'s one. Such a $\Delta_{s, c}^{\pi}$
-transitively tracks and purges $\alpha$ messages that were forwarded
-by the detecting \process. The path $\pi$ also enables a quick stop of
-looping messages and in turns ensures termination. However, carrying
-paths in messages is costly. In the worst case, a message piggybacks
-the identity of all \processes in the system. Fortunately, message
-paths and \NAME synergyze well with each other, for paths tend to be
-smaller as the number of sources in the system increases. Contrarily
-to $\alpha$ and $\Delta$ messages, $\delta_{s, c}$ messages do not
-carry a path, and are therefore more efficient. They
-\begin{inparaenum}[(i)]
-\item solely rely on versions to operate, and
-\item use the whole dissemination graph to propagate in the system, as
-  opposed to $\Delta$ that must follow the dissemination tree of the
-  corresponding $\alpha$.
-\end{inparaenum}
+This vector of versions constitutes a summary of known progress of
+other \nodes. It discards stale messages and it enables detecting
+possible inconsistencies in message delivery: the current best
+partition comes from a neighbor that just delivered a stale message
+(see Line~\ref{line:ascast_detect}). Figure~\ref{fig:problem} shows
+that such a behavior may hide a delete notification. The detecting
+\process must act to reflect this possible change: all \processes
+whose last message comes from the detecting \process must remove it
+and accept the competition of other \processes. Since this behavior is
+similar to that of source deletion, we implement it in a similar way.
+
+A \process that removes its self-appointed status of source, or
+detects a possible inconsistency, increments its local counter and
+disseminates a delete notification message $\delta_{s, c}$
+piggybacking its identifier $s$ and counter $c$. Any \process that
+receives such delete notification deliver and forward it if their best
+message contains the has-been source or detector associated to a lower
+counter (see Line~\ref{line:ascast_delete}). This allows $\delta$
+messages to quickly reach every downstream \process.
 
 As stated in Theorem~\ref{theo:dcp}, dynamic consistent partitioning
 not only requires eventual purging of stale messages, but also the
-retrieval of the best up-to-date partitions.  In that regard, both
-$\delta$ and $\Delta$ messages have dual use: since they already reach
-the borders of their partition by design, they trigger a competition
-when reaching bordering \processes (see
-Line~\ref{line:ascast_compete}).
-%% This simply consists in sending the
-%% current partition through the communication link from which the
-%% \process received the $\delta$. Upon receipt of this answer,
-%% \processes act normally by propagating their changes when they
-%% improve.
+retrieval of the best up-to-date partitions.  In that regard, $\delta$
+messages have a dual use: since they already reach the borders of
+their partition by design, they trigger a competition when reaching
+bordering.  When a \process receives a delete notification from a
+neighbor $q$ but does not deliver it, it assumes that the just
+received $\delta$ message purged possibly stale messages, creating a
+gap that its own best partition could help fill. Consequently, it
+sends to $q$ its own best $\alpha$ message (see
+Line~\ref{line:ascast_echo}).
 
 \begin{algorithm}
   \input{input/algoedges.tex}
@@ -682,14 +670,14 @@ time. Removing a \process is equivalent to removing all its edges, and
 adding a \process is equivalent to add as many edges as necessary.
 Adding an edge between two \processes may only improve the shortest
 path of one of these \processes. Therefore, it triggers a competition
-between the two \processes only. If one or the other \process
-improves, the propagation of $\alpha$ messages operates normally.
-Removing an edge between two \processes may invalidate the shortest
-path of one of involved \processes plus downstream \processes. As a
-side effect, removing an edge may also impair the propagation of a
-partition delete. To implement this behavior, \NAME uses its
-implementation of $\Delta$ messages. This prove costly but enables
-\NAME even in dynamic networks subject to physical partitioning.
+between the two \processes. If one or the other \process improves, the
+propagation of $\alpha$ messages operates normally.  Removing an edge
+between two \processes may invalidate the shortest path of one of
+involved \processes plus downstream \processes. As a side effect,
+removing an edge may also impair the propagation of a partition
+delete. To implement this behavior, \NAME uses its implementation of
+$\delta$ messages. This enables \NAME even in dynamic networks subject
+to physical partitioning.
 
 %% \NAME guarantees dynamic consistent partitioning by making extensive
 %% use of \process-to-\process communications. It requires
