@@ -277,25 +277,26 @@ Definition~\ref{def:lwo} may impair the propagation of both
 \item notifications about actual sources, and
 \item notifications about deleted partitions.
 \end{inparaenum}
-\TODO{Rework here.}
 Figure~\ref{fig:problem} highlights such consistency issues with
-dynamic partitions, even in contexts where \processes have FIFO links,
-\ie where \processes receive the messages in the order of their
-sending ($s_{pq}(m) \rightarrow s_{pq}(m') \implies r_q(m) \rightarrow
-r_q(m')$). Both $a$ and $d$ add then delete their partition
-concurrently. \Process~$c$ receives, delivers, and forwards
-$\alpha_d^3$ followed by $\delta_d$. In the meantime, $b$ receives,
-delivers, and forwards $\alpha_a^2$. In Figure~\ref{fig:problemC},
-both $c$ and $d$ deliver the message about Partition $P_a$, for they
-did not have any known partition at receipt time. On the contrary, $b$
-delivers $\alpha_d^1$, for it improves its distance to a known
-source. \Process~$b$ then blocks $a$'s removal notification
-$\delta_a$. It never reaches $c$ nor $d$. Also, $c$ does not deliver
-$\alpha_d$ and $\delta_d$ since it already delivered it. The system
-converges to an inconsistent state where some \processes assume they
-belong to a partition while it does not exist anymore. The system
-needs to purge stale $\alpha$ messages that stop $\delta$ messages
-from reaching nodes.
+dynamic partitions even in simple scenarios comprising three
+\processes $a$, $b$, $c$ chained with FIFO links, \ie where \processes
+receive the messages in the order of their sending ($s_{pq}(m)
+\rightarrow s_{pq}(m') \implies r_q(m) \rightarrow r_q(m')$). In
+Figure~\ref{fig:problemA}, both $a$ and $c$ become sources, sending
+their respective notification message to $b$. In
+Figure~\ref{fig:problemB} (bottom), both $a$ and $c$ delete their
+partition while $b$ receives, delivers, and forwards $\alpha_a^2$. In
+Figure~\ref{fig:problemC} (bottom), $b$ receives, delivers, and
+forwards $\alpha_c^1$, for it improves its best partition. Then it
+receives and discards $\delta_a$, for its best partition does not
+match the deleted one. The bottom part of Figure~\ref{fig:problemD}
+shows that eventually, $c$ stays in the deleted partition $P_a$ for
+not having received $\delta_a$ that $b$ blocked earlier. As a
+cascading effect, not only $c$ wrongfully believes that it belongs to
+$a$'s partition when $a$ already deleted it, but it could contribute
+to its inconsistency by blocking farther but up-to-date messages from
+actual sources. Using local knowledge only, the system needs to purge
+all stale messages to guarantee consistent partitioning.
 
 \begin{definition}[\label{def:purge}Message purge]
   A system purges a message \TODO{$P(m)$} when every \node $q$ that
@@ -642,7 +643,7 @@ A \process that removes its self-appointed status of source, or
 detects a possible inconsistency, increments its local counter and
 disseminates a delete notification message $\delta_{s, c}$
 piggybacking its identifier $s$ and counter $c$. Any \process that
-receives such delete notification deliver and forward it if their best
+receives such delete notification delivers and forwards it if its best
 message contains the has-been source or detector associated to a lower
 counter (see Line~\ref{line:ascast_delete}). This allows $\delta$
 messages to quickly reach every downstream \process.
