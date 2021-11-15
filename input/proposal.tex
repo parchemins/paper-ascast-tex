@@ -18,7 +18,7 @@ and finally details our implementation \NAME.
 % and the analysis of its complexity.
 
 
-\subsection{Scoped broadcast \TODO{Is it so important?}}
+\subsection{Scoped broadcast}
 \label{subsec:scoped}
 
 %For instance, a \process from Paris could scoped broadcast messages to
@@ -146,7 +146,7 @@ any other source. Since epidemic dissemination and scoped broadcast
 have well-aligned preoccupations, we assume implementations relying on
 message forwarding from neighbor-to-neighbor.
 
-\begin{theorem}[\label{theo:bef}\underline{E}ventual \underline{F}orwarding
+\begin{theorem}[\label{theo:efb}\underline{E}ventual \underline{F}orwarding
     of \underline{B}est $(EFB) \implies CP$] Assuming reliable
   communication links where a correct \process $q$ eventually receives
   the message $m$ \underline{s}ent to it by a \process $p$ ($s_{pq}(m)
@@ -277,6 +277,7 @@ Definition~\ref{def:lwo} may impair the propagation of both
 \item notifications about actual sources, and
 \item notifications about deleted partitions.
 \end{inparaenum}
+\TODO{Rework here.}
 Figure~\ref{fig:problem} highlights such consistency issues with
 dynamic partitions, even in contexts where \processes have FIFO links,
 \ie where \processes receive the messages in the order of their
@@ -295,29 +296,25 @@ converges to an inconsistent state where some \processes assume they
 belong to a partition while it does not exist anymore. The system
 needs to purge stale $\alpha$ messages that stop $\delta$ messages
 from reaching nodes.
-%The system needs to
-% purge its stale messages.
 
-%% Naive propagation of $\alpha$ and $\delta$ messages
-%% is insufficient to guarantee consistent partitioning when any \process
-%% can add or delete its partition at any time. \Processes need to
-%% exploit their local knowledge gathered over message receipts to allow
-%% up-to-date messages to propagate to relevant \processes.
+\begin{definition}[\label{def:purge}Message purge]
+  A system purges a message $P(m)$ when every \node $q$ that delivered
+  $m$ eventually delivers another message $m'$ never followed by the
+  delivery of the former message $m$: $d_q(m) \implies \eventually
+  (d_q(m) \rightarrow d_q(m'))$.
+\end{definition}
 
 
 \begin{theorem}[\label{theo:dcp}EFB$^+$: EFB $\wedge$ (Purge $\rightarrow$ EFB) $\implies$
     \underline{D}ynamic \underline{c}onsistent
     \underline{p}artitioning (DCP)]
 %
-When a \process can \texttt{Add} and \texttt{Del}ete its partition, to
-ensure consistent partitioning, eventual forwarding of best (see
-Theorem~\ref{theo:bef}) additionally requires
+  When a \process can \texttt{Add} and \texttt{Del}ete its partition,
+  to ensure consistent partitioning, eventual forwarding of best
+  (Theorem~\ref{theo:efb}) additionally requires
 \begin{inparaenum}[(i)]
-\item eventual purging of stale messages ($S(m)
-  \implies (d_q(m) \implies \eventually d_q(m) \rightarrow
-  d_q(m'))$);
-\item then the eventual forwarding of best such that $m'$ ends up
-  originating from the best up-to-date source for $q$.
+\item eventual purging of stale messages ($S(m) \implies P(m)$), then
+\item the eventual forwarding of best (Definition~\ref{theo:efb}).
 \end{inparaenum}
 \end{theorem}
 
@@ -374,7 +371,7 @@ Theorem~\ref{theo:bef}) additionally requires
     eventually removed to never be delivered again. In the worst case,
     all \processes deliver and remove all stale messages to ultimately
     deliver and forward only up-to-date messages ($\eventually d_c(m')
-    \implies \neg S(m')$). As in Theorem~\ref{theo:bef}, they
+    \implies \neg S(m')$). As in Theorem~\ref{theo:efb}, they
     eventually deliver and forward their best up-to-date message.
     
     %% upon receipt of such $\alpha_y$, either the \process already
@@ -471,16 +468,16 @@ any time.  Instead, we propose to use the delivery order at each
   \end{inparaenum}
 \end{theorem}
 
-\begin{figure}
-  \centering\input{input/figproofB.tex}
-  \caption{\label{fig:proofB}Stale $\alpha$ messages may stop $\delta$
-    messages from reaching \processes with the corresponding
-    partition. Consistent partitioning requires that all \processes
-    propagate $\delta$ messages as often as possible (I); detect
-    possible inconsistencies when parents' $\alpha$ messages
-    contradict history or state (II); notify \processes of possible
-    inconsistencies (III).}
-\end{figure}
+%% \begin{figure}
+%%   \centering\input{input/figproofB.tex}
+%%   \caption{\label{fig:proofB}Stale $\alpha$ messages may stop $\delta$
+%%     messages from reaching \processes with the corresponding
+%%     partition. Consistent partitioning requires that all \processes
+%%     propagate $\delta$ messages as often as possible (I); detect
+%%     possible inconsistencies when parents' $\alpha$ messages
+%%     contradict history or state (II); notify \processes of possible
+%%     inconsistencies (III).}
+%% \end{figure}
 
 \begin{proof}
   We must prove that every \process that delivered a stale $\alpha_X$
