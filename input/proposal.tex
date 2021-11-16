@@ -612,127 +612,37 @@ any time.  Instead, we propose to use the delivery order at each
 
 
 
-\subsection{Implementation and complexity}
+\subsection{Lazy partitioning}
+\label{subsec:lazy}
 
-Algorithm~\ref{algo:ascast} provides the instructions of \NAME that
-implement three-phase purge and eventual forwarding of best to enable
-dynamic consistent partitioning. For the sake of simplicity, it does
-not handle multiple sessions nor optimisation such as message packing.
+\NAME enables indexing the closest replica of each \process without
+flooding the whole network when a new replica appears or disappears.
+Nevertheless, every node must partake in the indexing of each
+content. When the networks accounts for billions of content, this
+raises scalability issues. Inspired by the Internet topology that
+comprises tens of thousands of interconnected autonomous systems
+serving billions of people~\cite{nur2018crossas}, we want to further
+lock-down traffic by leveraging the edges of networks as barriers, and
+enable on-demand indexing.
 
-\begin{algorithm}
-  \input{input/algoascast.tex}
-  \caption{\label{algo:ascast}\NAME at \Process~$p$.}
-\end{algorithm}
+To enable cross-network indexing, we designed and implemented \NAMEC
+(stands for both \underline{cross} \underline{a}utonomous
+\underline{s}ystems and \underline{ex}tended \underline{a}daptive
+\underline{s}coped broad\underline{cast}). The main idea behind \NAMEC
+is that every node maintains two \NAME:
+\begin{inparaenum}[(i)]
+\item the first maintaining the closest source intra-AS and
+  acknowledges the interests of its AS;
+\item the second maintaining the closest source cross-AS that also
+  competes against the local closest source.
+\end{inparaenum}
+\NAMEC enables nodes to discard irrelevant indexes while maintaining
+the closest source between connected ASes. \TODO{This section
+  describes our proposal.}
 
-As stated in Theorem~\ref{theo:dcp}, every \process must purge stale
-messages.  To identify staleness, each \process maintains a vector of
-versions that associates the respective known local counter of each
-known source, or has-been source. Its size increases linearly with the
-number of sources that the \process has ever known, which is the
-number of \processes in the system $\mathcal{O}(V)$ in the worst case.
-Nevertheless, following the principles of scoped broadcast, we expect
-that every \process only acknowledges a small subset of sources.  In
-addition, each message carries the identifier and counter of each
-\node that forwarded it. Again, following the principles of scoped
-broadcast, we expect that versioned paths remain small. Using these
-data structures, each \process delivers and forwards only new messages
-that improve their best known partition (see
-Line~\ref{line:ascast_improve}).
 
-This vector of versions constitutes a summary of known progress of
-other \nodes. It discards stale messages and it enables detecting
-possible inconsistencies in message delivery: the current best
-partition comes from a neighbor that just delivered a stale message
-(see Line~\ref{line:ascast_detect}). Figure~\ref{fig:problem} shows
-that such a behavior may hide a delete notification. The detecting
-\process must act to reflect this possible change: all \processes
-whose last message comes from the detecting \process must remove it
-and accept the competition of other \processes. Since this behavior is
-similar to that of source deletion, we implement it in a similar way.
-
-A \process that removes its self-appointed status of source, or
-detects a possible inconsistency, increments its local counter and
-disseminates a delete notification message $\delta_{s, c}$
-piggybacking its identifier $s$ and counter $c$. Any \process that
-receives such delete notification delivers and forwards it if its best
-message contains the has-been source or detector associated to a lower
-counter (see Line~\ref{line:ascast_delete}). This allows $\delta$
-messages to quickly reach every downstream \process.
-
-As stated in Theorem~\ref{theo:dcp}, dynamic consistent partitioning
-not only requires eventual purging of stale messages, but also the
-retrieval of the best up-to-date partitions.  In that regard, $\delta$
-messages have a dual use: since they already reach the borders of
-their partition by design, they trigger a competition when reaching
-bordering.  When a \process receives a delete notification from a
-neighbor $q$ but does not deliver it, it assumes that the just
-received $\delta$ message purged possibly stale messages, creating a
-gap that its own best partition could help fill. Consequently, it
-sends to $q$ its own best $\alpha$ message (see
-Line~\ref{line:ascast_echo}).
-
-\begin{algorithm}
-  \input{input/algoedges.tex}
-  \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
-\end{algorithm}
-
-Algorithm~\ref{algo:edges} enables dynamic consistent partitioning in
-dynamic networks where \processes can join, leave, or crash at any
-time. Removing a \process is equivalent to removing all its edges, and
-adding a \process is equivalent to add as many edges as necessary.
-Adding an edge between two \processes may only improve the shortest
-path of one of these \processes. Therefore, it triggers a competition
-between the two \processes. If one or the other \process improves, the
-propagation of $\alpha$ messages operates normally.  Removing an edge
-between two \processes may invalidate the shortest path of one of
-involved \processes plus downstream \processes. As a side effect,
-removing an edge may also impair the propagation of a partition
-delete. To implement this behavior, \NAME uses its implementation of
-$\delta$ messages. This enables \NAME even in dynamic networks subject
-to physical partitioning.
-
-%% \NAME guarantees dynamic consistent partitioning by making extensive
-%% use of \process-to-\process communications. It requires
-%% \begin{inparaenum}[(i)]
-%% \item purging stale control information, hence propagating $\delta$
-%%   messages; and
-%% \item retrieving the closest source, hence propagating $\alpha$
-%%   messages.
-%% \end{inparaenum}
-In terms of number of messages, in the average case, a \process $i$
-chosen uniformly at random among all \processes creates a logical
-partition. Its messages $\alpha_i$ spread through the network until
-reaching \processes that belong to another partition closer to
-them. This splits partitions in half on average. Overall, the $a^{th}$
-new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
-      \log_2 a \rfloor}})$} \processes. This decreases every new
-partition until reaching one \process per new partition: its
-source. The average number of messages per \process is
-\smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
-      \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
-number of neighbors per \process.
-% \TODO{Multiple receipt and
-% multiple
-%  delivery imply more messages (receipt bounded by $|O|$ as well).}
-Deleting the $a^{th}$ partition generates twice as many messages as
-creating the $a^{th}$ partition: $\delta$ messages travel through the
-partition, then $\alpha$ messages compete to fill the gap.  Overall,
-the communication complexity shows that \NAME scales well to the
-number of partitions.
-%% In the
-%% worst-case, every new partition includes all but one \process
-%% belonging to the previous partition. The total number of messages
-%% after the $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot
-%% a^2)$. As for the average-case, the number of messages for the
-%% partition deletion is identical to the number of messages of the
-%% corresponding partition creation.
-%% \begin{algorithm}[h!]
-%%   \input{input/algoedges.tex}
-%%   \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
-%% \end{algorithm}
-Next Section provides the details of our simulations that assess the
-proposed implementation.
-
+\TODO{Added invariant: global is always smaller than local when they
+  exist.}
 
 
 %%% Local Variables: 
