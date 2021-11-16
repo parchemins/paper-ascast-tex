@@ -1,0 +1,56 @@
+
+\begin{tikzpicture}[scale=\SCALE]
+
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+  
+  \newcommand\X{50pt}
+  \newcommand\Y{-50pt}
+
+  \newcommand\ADD{\alpha}
+  \newcommand\DEL{\delta}
+
+
+  
+%%   \draw (-\X + 5pt, 0) --
+%%   node[above=-0.3em, font=\tiny]{~ ~ ~ ~ ~ $\DEL_{a} \RIGHT$} %% b - a
+%%   node[above=-0.3em, font=\tiny]{~ ~ ~ ~ ~ $\textcolor{\WRONG}{\text{\normalsize\xmark}} \hphantom{\RIGHT}$} %% b - a
+%%   node[below=-0.3em, font=\tiny]{$\LEFT \textcolor{\PC}{\ADD_c^3}$} %% b - a
+%%   (0 - 5pt, 0);
+
+%%   \draw (0 +5pt, 0) --
+%%   node[below=-0.3em, font=\tiny]{$\LEFT \DEL_c \vphantom{\ADD^1}$}
+%%   (\X -5pt, 0); %% b - c
+
+%% 
+  
+%%   \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+%%   \draw[fill=white] (0, 0) node{\textcolor{\PC}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+%%   \draw[fill=white] (\X, 0) node{\textcolor{\PA}{$\bm{c}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  
+%%   \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a}\rightarrow \DEL_a$};
+%%   \draw (  0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a^2} \rightarrow \textcolor{\PC}{\ADD_c^1}$};
+%%   \draw ( \X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PC}{\ADD_c}\vphantom{\ADD_a^3} \rightarrow \DEL_c \rightarrow \textcolor{\PA}{\ADD_a^3}$};
+
+
+  \begin{scope}[shift={(0, -1*\Y)}]
+    \draw (-\X + 5pt, 0) --
+    node[below=-0.3em, font=\tiny]{$\LEFT \textcolor{\PC}{\ADD_c^3}$} %% b - a
+    (0 - 5pt, 0);
+    
+    \draw (0 +5pt, 0) --
+    node[below=-0.3em, font=\tiny]{$\LEFT \DEL_c \vphantom{\ADD^1}$}
+    (\X -5pt, 0); %% b - c
+    
+    \draw[fill=white] (-\X, 0) node{\textcolor{\PA}{$\bm{a}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+    \draw[fill=white] (0, 0) node{\textcolor{\PC}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+    \draw[fill=white] (\X, 0) node{\textcolor{\PA}{$\bm{c}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+    
+    \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a^0}$};
+    \draw (  0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a^2} \rightarrow \textcolor{\PC}{\ADD_c^1}$};
+    \draw ( \X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PC}{\ADD_c}\vphantom{\ADD_a^3} \rightarrow \DEL_c \rightarrow \textcolor{\PA}{\ADD_a^3}$};
+    
+  \end{scope}
+
+\end{tikzpicture}

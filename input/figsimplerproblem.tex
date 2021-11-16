@@ -6,28 +6,30 @@
   \newcommand{\RIGHT}{\triangleright}
   
   \begin{center}
-    \subfloat[Part A][\label{fig:problemA}(both) $a$ and $c$ become sources.
+    \subfloat[Part A][\label{fig:problemA}Both $a$ and $c$ become sources.
       $w_{ab} = 2$; $w_{bc} = 1$.]{\input{input/figsimplerproblemA.tex}}
     \hspace{0pt}
-    \subfloat[Part B][\label{fig:problemB}(top) $c$ deletes its partition. (bottom)
-    $a$ and $c$ delete their partition. (both) $b$ delivers and forwards $\alpha_a$.]
+    \subfloat[Part B][\label{fig:problemB}Both $a$ and $c$ delete their partition 
+     while $b$ delivers and forwards $\alpha_a$.]
              {\input{input/figsimplerproblemB.tex}}
     \hspace{0pt}
-    \subfloat[Part C][\label{fig:problemC}(bottom) $b$ blocks the only transiting
-      $\delta_a$ despite it propagated $\alpha_a$ before. (both) $b$ delivers and forwards $\alpha_c$.]
+    \subfloat[Part C][\label{fig:problemC}$b$ blocks the only transiting
+      $\delta_a$ while $b$ delivers and forwards $\alpha_c$.]
              {\input{input/figsimplerproblemC.tex}}
     \hspace{0pt}
-    \subfloat[Part D][\label{fig:problemD}(both) $b$ delivers and forwards $\delta_c$. (top)
-    It reaches $a$ that answers with $\alpha_a$. $b$ delivers $\alpha_a$ again. (both) $c$
-    stays in $P_a$.]
+    \subfloat[Part D][\label{fig:problemD}$b$ delivers and forwards $\delta_c$. $c$
+    stays in the deleted partition $P_a$.]
              {\input{input/figsimplerproblemD.tex}}
   \end{center}
   \caption{\label{fig:problem}Even in the simplest scenarios, naive
     propagation of $\alpha$ and $\delta$ messages may be insufficient
     to guarantee consistent partitioning. In the bottom scenario, if
     $c$ had children, they would stay in the wrong partition
-    too. Despite both scenarios look the same from $c$'s perspective,
-    $c$ must acknowledge $P_a$'s \emph{possible} deletion and
-    propagate it.}
+    too.
+
+    % Despite both scenarios look the same from $c$'s perspective, $c$
+    % must acknowledge $P_a$'s \emph{possible} deletion and propagate
+    % it.
+  }
 \end{figure*}
 

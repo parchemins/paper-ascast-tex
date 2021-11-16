@@ -1,0 +1,27 @@
+
+\begin{figure*}
+  \newcommand{\SCALE}{0.9}
+
+  \newcommand{\LEFT}{\triangleleft}
+  \newcommand{\RIGHT}{\triangleright}
+  
+  \begin{center}
+    \subfloat[Part A][\label{fig:undoproblemA}$a$ and $c$ become sources.
+      $w_{ab} = 2$; $w_{bc} = 1$.]{\input{input/figundoproblemA.tex}}
+    \hspace{0pt}
+    \subfloat[Part B][\label{fig:undoproblemB}($c$ deletes its partition but $a$ does not.
+      $b$ delivers and forwards $\alpha_a$.]
+             {\input{input/figundoproblemB.tex}}
+    \hspace{0pt}
+    \subfloat[Part C][\label{fig:undoproblemC}$b$ delivers and forwards $\alpha_c$.]
+             {\input{input/figundoproblemC.tex}}
+    \hspace{0pt}
+    \subfloat[Part D][\label{fig:undoproblemD}(both) $b$ delivers and forwards $\delta_c$.]
+             {\input{input/figundoproblemD.tex}}
+  \end{center}
+  \caption{\label{fig:undoproblem}From $c$'s perspective, this
+    scenario and Figure~\ref{fig:problem} are similar. Even when $a$
+    did not delete its partition, $c$ must acknowledge $P_a$'s
+    \emph{possible} deletion and propagate it.}
+\end{figure*}
+

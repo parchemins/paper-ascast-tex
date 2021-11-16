@@ -230,20 +230,28 @@ by concurrent operations.
 
 \input{input/figdel.tex}
 
-At any time, a source can revoke its self-appointed status of source
-by executing a \texttt{Del} operation, hence deleting its partition
-from the system. All \processes that belong to this partition must
-eventually choose another partition to belong to. In
-Figure~\ref{fig:del}, two partitions exist initially: $P_a$ and $P_d$
-that respectively include $\{a\}$, and $\{b, c, d\}$. In
-Figure~\ref{fig:delA}, \Process~$a$ deletes its partition. It notifies
-all neighboring \processes~--~here only \Process~$b$~-- that may
-belong to its partition using \NAMEB. Upon receipt, \Process~$b$
-discards the \underline{d}elete notification $\delta_a$ since
-$\delta_a$ does not target the former's partition $P_d$. \Process~$b$
-sends its own best partition $\alpha_d^3$ that may be the best for
-\Process~$a$. Eventually, every \process belongs to Partition
-$P_d$. In this scenario, they reach consistent partitioning.
+At any time, a source can revoke its status of source by executing a
+\texttt{Del} operation, hence deleting its partition from the
+system. All \processes that belong to this partition must eventually
+choose another partition to belong to.
+
+\input{input/figsimplerproblem.tex}
+
+A naive implementation resembles echos in acoustics:
+\underline{d}elete notifications $\delta$ propagate as long as
+receivers' current partition is the targeted one, and when delete
+notifications reach the bordering \processes of the deleted partition,
+it triggers a competition that goes backward to fill the gap left open
+by removals.  For example, in Figure~\ref{fig:del}, two partitions
+initially exist: $P_a$ and $P_d$ that respectively include $\{a\}$,
+and $\{b, c, d\}$. In Figure~\ref{fig:delA}, \Process~$a$ deletes its
+partition. It notifies all neighboring \processes~--~here only
+\Process~$b$~-- that may belong to its partition using \NAMEB. Upon
+receipt, \Process~$b$ discards the delete notification $\delta_a$
+since $\delta_a$ does not target the former's partition
+$P_d$. \Process~$b$ sends its own best partition $\alpha_d^3$ that may
+be the best for \Process~$a$. Eventually, every \process belongs to
+Partition $P_d$. In this scenario, they reach consistent partitioning.
 
 Delete operations add a new notion of order between events, and most
 importantly between message deliveries. Delete operations implicitly
@@ -251,7 +259,8 @@ state that all preceding events become obsolete, and that all messages
 originating from these preceding events convey stale control
 information.
 
-\input{input/figsimplerproblem.tex}
+
+\input{input/figundoproblem.tex}
 
 \begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
@@ -277,26 +286,26 @@ Definition~\ref{def:lwo} may impair the propagation of both
 \item notifications about actual sources, and
 \item notifications about deleted partitions.
 \end{inparaenum}
-Figure~\ref{fig:problem} highlights such consistency issues with
-dynamic partitions even in simple scenarios comprising three
+Figure~\ref{fig:problem} depicts a scenario comprising only three
 \processes $a$, $b$, $c$ chained with FIFO links, \ie where \processes
 receive the messages in the order of their sending ($s_{pq}(m)
 \rightarrow s_{pq}(m') \implies r_q(m) \rightarrow r_q(m')$). In
 Figure~\ref{fig:problemA}, both $a$ and $c$ become sources, sending
 their respective notification message to $b$. In
-Figure~\ref{fig:problemB} (bottom), both $a$ and $c$ delete their
-partition while $b$ receives, delivers, and forwards $\alpha_a^2$. In
-Figure~\ref{fig:problemC} (bottom), $b$ receives, delivers, and
-forwards $\alpha_c^1$, for it improves its best partition. Then it
-receives and discards $\delta_a$, for its best partition does not
-match the deleted one. The bottom part of Figure~\ref{fig:problemD}
-shows that eventually, $c$ stays in the deleted partition $P_a$ for
-not having received $\delta_a$ that $b$ blocked earlier. As a
-cascading effect, not only $c$ wrongfully believes that it belongs to
-$a$'s partition when $a$ already deleted it, but it could contribute
-to its inconsistency by blocking farther but up-to-date messages from
-actual sources. Using local knowledge only, the system needs to purge
-all stale messages to guarantee consistent partitioning.
+Figure~\ref{fig:problemB}, both $a$ and $c$ delete their partition
+while $b$ receives, delivers, and forwards $\alpha_a^2$. In
+Figure~\ref{fig:problemC}, $b$ receives, delivers, and forwards
+$\alpha_c^1$, for it improves its best partition. Then it receives and
+discards $\delta_a$, for its best partition does not match the deleted
+one. It produces an echo but since $\alpha_c^3$ is already transiting
+towards $a$, we simplify it. Finally, Figure~\ref{fig:problemD} shows
+that eventually, $c$ stays in the deleted partition $P_a$ for not
+having received $\delta_a$ that $b$ blocked earlier. As a cascading
+effect, not only $c$ wrongfully believes that it belongs to $a$'s
+partition when $a$ already deleted it, but it could contribute to its
+inconsistency by blocking farther but up-to-date messages from actual
+sources. The system needs to purge all stale messages to guarantee
+consistent partitioning.
 
 \begin{definition}[\label{def:purge}Message purge]
   A system purges a message \TODO{$P(m)$} when every \node $q$ that
