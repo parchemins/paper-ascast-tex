@@ -2,6 +2,24 @@
 \section{Implementation and complexity analysis}
 \label{sec:implementation}
 
+\TODO{To assign and maintain \processes to their best partition according to
+replica creations and removals, as well as dynamic infrastructure
+changes, we designed and implemented \NAME.  \NAME stands for
+\underline{A}daptive \underline{S}coped broad\underline{cast}. It
+relies on a primitive that allows a \process to broadcast a message
+within a limited scope. We first use this primitive to guarantee
+consistent partitioning when a \process can only create a new replica
+within the system. We highlight the issue when a \process can also
+destroy a replica, and provide a second algorithm that handles replica
+removals as well as dynamic changes of the infrastructure. Finally, we
+propose \NAMEC that improves \NAME by leveraging the network topology
+to further reduce generated traffic at the Edge.  This section
+describes the communication primitive called scoped broadcast, then
+discusses the properties that guarantee consistent partitioning, and
+finally details our implementation \NAME.}
+
+
+
 \begin{asparadesc}
 \item [Dynamic consistent partitioning:]
   Algorithm~\ref{algo:ascast}

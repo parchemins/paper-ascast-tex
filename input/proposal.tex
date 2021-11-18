@@ -2,67 +2,52 @@
 \section{Adaptive scoped broadcast}
 \label{sec:adaptive}
 
-To assign and maintain \processes to their best partition according to
-replica creations and removals, as well as dynamic infrastructure
-changes, we designed and implemented \NAME.  \NAME stands for
-\underline{A}daptive \underline{S}coped broad\underline{cast}. It
-relies on a primitive that allows a \process to broadcast a message
-within a limited scope. We first use this primitive to guarantee
-consistent partitioning when a \process can only create a new replica
-within the system. We highlight the issue when a \process can also
-destroy a replica, and provide a second algorithm that handles replica
-removals as well as dynamic changes of the infrastructure.  This
-section describes the communication primitive called scoped broadcast,
-then discusses the properties that guarantee consistent partitioning,
-and finally details our implementation \NAME.
-% and the analysis of its complexity.
+To provide lazy and dynamic logical partitioning in dynamic networks
+using scoped broadcast, all live \processes must collaborate to
+disseminate messages that notify new or removed sources to all and
+only interested \processes. This section reviews step-by-step the
+properties that allow \processes to converge to the desired state
+together. It first defines scoped broadcast, then uses it to guarantee
+consistent partitioning when a \process can only become a new source
+in the system. It highlights the issue when a \process can also remove
+its status of source. It shows that using local knowledge and scoped
+broadcast, \processes can still reach dynamic consistent partitioning
+when they are able to detect possible blocking conditions in the
+dissemination of required notifications. Finally, it further constrain
+the system by allowing only subsets of \processes to reach lazy
+consistent partitioning. \TODO{It shows that it only needs what?}
 
 
 \subsection{Scoped broadcast}
 \label{subsec:scoped}
 
-%For instance, a \process from Paris could scoped broadcast messages to
-%all \processes in Paris; and \processes from other cities would never
-%deliver such messages.
-%Scoped broadcast only targets a connected \emph{subset} of \processes
-%in the whole distributed system.
-%
+In this paper, we consider Edge infrastructures as a set of
+interconnected autonomous systems comprising heterogeneous \nodes
+interconnected by communication links. \Processes involved in the
+management of content may crash but are not byzantine.  \Processes can
+reliably communicate through asynchronous message passing to other
+known \processes called neighbors.  We define scoped broadcast as a
+communication primitive that propagates a message around its
+broadcaster within an application-dependant scope.
 
-% \TODO{dynamic graph: superscript with $t$?}
-In this paper, we consider Edge infrastructures with heterogeneous
-\nodes interconnected by communication links. \Processes involved in
-the management of content may crash but are not byzantine.  \Processes
-can reliably communicate through asynchronous message passing to other
-known \processes called neighbors.  % A more formal
-%definition of our system is given below:
-We define scoped broadcast as a communication primitive that
-propagates a message around its broadcaster within an
-application-dependant scope.
-
-\begin{definition}[Edge infrastructure]
-  An Edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
-  \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
-  \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from
+\begin{definition}[Autonomous systems]
+  An autonomous system is a network comprising nodes and communication
+  links that we represent as a \underline{g}raph of
+  \underline{v}ertices and \underline{e}dges: $G = \langle V, E
+  \rangle$ with $E \in V \times V$. A \underline{p}ath $\pi_{ij}$ from
   \Process~$i$ to \Process~$j$ is a sequence of vertices $[i, k_1,
     k_2, \ldots k_n, j]$ with $\forall m: 0\leq m \leq n, \langle
   \pi_{ij}[m], \pi_{ij}[m+1] \rangle \in E$.
 \end{definition}
 
-
-%Using epidemic
-%propagation (or gossiping), \processes can reliably broadcast messages
-%by forwarding delivered messages from neighbors to
-%neighbors~\cite{birman1999bimodal, hadzilacos1994modular,
-%  nedelec2018causal, raynal2013distributed}.
-%
-%However, uniform reliable
-%broadcast states that \emph{all} correct \processes must deliver all
-%broadcast messages. This proves costly in large scale systems
-%comprising thousands of \processes. Instead, we define \emph{scoped
-%broadcast} where messages reach only an application-dependant subset
-%of connected \processes, thus significantly reducing the generated
-%traffic of broadcast.
-
+%% \begin{definition}[Edge infrastructure]
+%%   An Edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
+%%   \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
+%%   \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from
+%%   \Process~$i$ to \Process~$j$ is a sequence of vertices $[i, k_1,
+%%     k_2, \ldots k_n, j]$ with $\forall m: 0\leq m \leq n, \langle
+%%   \pi_{ij}[m], \pi_{ij}[m+1] \rangle \in E$.
+%% \end{definition}
 
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
   When \Process~$x$ scoped \underline{b}roadcasts $b_x(m)$ a
@@ -614,6 +599,15 @@ any time.  Instead, we propose to use the delivery order at each
 
 \subsection{Lazy partitioning}
 \label{subsec:lazy}
+
+Edge infrastructures are networks of networks. \TODO{Meow.}
+
+\begin{definition}[Edge infrastructure]
+  An Edge infrastructure $\mathcal{G}$ has multiple autonomous systems
+  interconnected with additional links $\mathcal{E} \in V_1 \times
+  V_2$ where $V_1 \neq V_2$, hence $\mathcal{G} = \langle \{G_1,
+  \ldots G_n\}, \mathcal{E} \rangle$.
+\end{definition}
 
 \NAME enables indexing the closest replica of each \process without
 flooding the whole network when a new replica appears or disappears.
