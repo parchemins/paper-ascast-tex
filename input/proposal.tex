@@ -113,7 +113,7 @@ exactly one consistent partitioning that \processes eventually converge
 to.
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
-  Let $W_{xy} = W_{yx}$ be the positive symmetric \underline{w}eight
+  Let $W_{xy} = W_{yx}$ be the positive \TODO{symmetric} \underline{w}eight
   between $x$ and $y$, $\Pi_{xz}$ be the shortest \underline{p}ath
   from $x$ to $z$ the weight of which $|\Pi_{xz}|$ is lower than any
   other path weight, with $|\Pi_{xx}|$ being the greatest lower bound
@@ -131,14 +131,15 @@ any other source. Since epidemic dissemination and scoped broadcast
 have well-aligned preoccupations, we assume implementations relying on
 message forwarding from neighbor-to-neighbor.
 
-\begin{theorem}[\label{theo:efb}\underline{E}ventual \underline{F}orwarding
-    of \underline{B}est $(EFB) \implies CP$] Assuming reliable
-  communication links where a correct \process $q$ eventually receives
-  the message $m$ \underline{s}ent to it by a \process $p$ ($s_{pq}(m)
-  \implies r_{q}(m)$), \processes eventually reach consistent
-  partitioning if each \process eventually \underline{f}orwards
+\begin{theorem}[\label{theo:efb}\underline{E}ventual
+  \underline{F}orwarding of \underline{B}est $(EFB) \implies CP$]
+  Assuming reliable communication links where a correct \process $q$
+  eventually receives the message $m$ \underline{s}ent to it by a
+  \process $p$ ($s_{pq}(m) \implies r_{q}(m)$), \processes eventually
+  reach consistent partitioning if each \process eventually
+  \underline{f}orwards
   ($f_p(m) \implies \forall \langle p, q\rangle \in E: s_{pq}(m)$) its
-  best known partition.
+  best known partition. \TODO{setminus parent to comply with implem'.}
 \end{theorem}
 
 \input{input/figadd.tex} 
@@ -597,11 +598,20 @@ any time.  Instead, we propose to use the delivery order at each
 
 
 
-\subsection{Lazy partitioning}
+\subsection{Lazy dynamic consistent partitioning}
 \label{subsec:lazy}
 
-Edge infrastructures are networks of autonomous systems. Autonomous
-systems that do not host any sources should not generate traffic. 
+In Edge infrastructures comprising tens of thousands of autonomous
+systems~\cite{nur2018crossas}, only a small subset of autonomous
+systems needs logical partitioning. At any time, an autonomous system
+start logical partitioning when a \process from this network becomes a
+source.  Then every \process from this network belongs to the
+partition of its closest source not only from their own network but
+that of adjacent networks that started logical partitioning as well.
+At any time, an autonomous system stops logical partitioning when the
+last source from this network revokes its status of
+source. Eventually, all nodes from this network do not belong to any
+partition and the generated traffic stops.
 
 \begin{definition}[Edge infrastructure]
   An Edge infrastructure $\mathcal{G}$ has multiple autonomous systems
@@ -610,30 +620,25 @@ systems that do not host any sources should not generate traffic.
   \ldots G_n\}, \mathcal{E} \rangle$.
 \end{definition}
 
-\NAME enables indexing the closest replica of each \process without
-flooding the whole network when a new replica appears or disappears.
-Nevertheless, every node must partake in the indexing of each
-content. When the networks accounts for billions of content, this
-raises scalability issues. Inspired by the Internet topology that
-comprises tens of thousands of interconnected autonomous systems
-serving billions of people~\cite{nur2018crossas}, we want to further
-lock-down traffic by leveraging the edges of networks as barriers, and
-enable on-demand indexing.
+\begin{definition}[\TODO{Lazy DCP}]
+  
+\end{definition}
 
-To enable cross-network indexing, we designed and implemented \NAMEC
-(stands for both \underline{cross} \underline{a}utonomous
-\underline{s}ystems and \underline{ex}tended \underline{a}daptive
-\underline{s}coped broad\underline{cast}). The main idea behind \NAMEC
-is that every node maintains two \NAME:
-\begin{inparaenum}[(i)]
-\item the first maintaining the closest source intra-AS and
-  acknowledges the interests of its AS;
-\item the second maintaining the closest source cross-AS that also
-  competes against the local closest source.
-\end{inparaenum}
-\NAMEC enables nodes to discard irrelevant indexes while maintaining
-the closest source between connected ASes. \TODO{This section
-  describes our proposal.}
+To provide lazy partitioning, \emph{gateway} \nodes that link
+autonomous systems together must acknowledge if there exists a source
+in their network.
+
+Must differentiate local from global when they cross the gates.
+
+% \NAME enables indexing the closest replica of each \process without
+% flooding the whole network when a new replica appears or disappears.
+% Nevertheless, every node must partake in the indexing of each
+% content. When the networks accounts for billions of content, this
+% raises scalability issues. Inspired by the Internet topology that
+% comprises tens of thousands of interconnected autonomous systems
+% serving billions of , we want to further
+% lock-down traffic by leveraging the edges of networks as barriers, and
+% enable on-demand indexing.
 
 
 \TODO{Added invariant: global is always smaller than local when they

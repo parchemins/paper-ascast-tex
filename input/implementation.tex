@@ -146,7 +146,21 @@ number of partitions.
 
 
 \begin{asparadesc}
-\item [Lazy partitioning:] \TODO{Meow.}
+\item [Lazy partitioning:]
+  To enable lazy partitioning in networks of networks, we designed and
+  implemented \NAMEC (stands for both \underline{cross}
+  \underline{a}utonomous \underline{s}ystems and \underline{ex}tended
+  \underline{a}daptive \underline{s}coped broad\underline{cast}). The
+  main idea behind \NAMEC is that every node maintains two \NAME:
+  \begin{inparaenum}[(i)]
+\item the first maintaining the closest source intra-AS and
+  acknowledges the interests of its AS;
+\item the second maintaining the closest source cross-AS that also
+  competes against the local closest source.
+\end{inparaenum}
+\NAMEC enables nodes to discard irrelevant indexes while maintaining
+the closest source between connected ASes. 
+
 \end{asparadesc}
 
 
@@ -156,7 +170,7 @@ number of partitions.
 \end{algorithm}
 
 Next Section provides the details of our simulations that assess the
-proposed implementation.
+proposed implementations.
 
 
 %%% Local Variables: 
