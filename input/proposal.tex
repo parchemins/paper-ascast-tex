@@ -139,14 +139,14 @@ message forwarding from neighbor-to-neighbor.
 \end{definition}
 
 \begin{theorem}[\label{theo:efb}\underline{F}orwarding of \underline{B}est (FB)
-  $\implies\eventually$CP] Assuming reliable communication links
-  ($s_{pq}(m) \iff \eventually r_{qp}(m)$), \processes eventually
-  reach consistent partitioning if each \process delivers the message
-  notifying its shortest path weight to a source among its set of
-  \underline{r}eceived messages $R_p$ ($(m = \min R_p) \implies
-  d_p(m)$), and forwards the message notifying its shortest path
-  weight to a source $s$ among its set of \underline{d}elivered
-  messages $D_p$ ($(m = \min D_p) \implies f_p(m)$).
+    $\implies\eventually$CP]
+  %
+  Assuming reliable communication links ($s_{pq}(m) \iff \eventually
+  r_{qp}(m)$), \processes eventually reach consistent partitioning if
+  each \process delivers and forwards its best message among
+  \underline{r}eceived messages $R_p$, \ie the message $\alpha_s^d$
+  with the smallest distance $d$ to the source $s$ ($(\alpha_s^d = \min R_p)
+  \implies (d_p(\alpha_s^d) \wedge f_p(\TODO{\alpha_s^d}))$).
 \end{theorem}
 
 \input{input/figadd.tex}
@@ -164,7 +164,7 @@ message forwarding from neighbor-to-neighbor.
   \noindent Such a source $s$ forwards $\alpha_{s}$ to its neighbors.
   Since communication links are reliable, neighboring \processes
   eventually receive such a notification $\forall \langle s, q \rangle
-  \in E \iff \eventually r_q(\alpha_{s})$. Most importantly,
+  \in E \iff \eventually r_q(\alpha_{s}^{w_{pq}})$. Most importantly,
   whatever the order of received messages, every \process $q$ in this
   neighborhood such that there exists no closer source $s'$ than the
   received one $s$, delivers it, since $|\Pi_{sq}| < |\Pi_{s'q}|$.
@@ -193,26 +193,28 @@ message forwarding from neighbor-to-neighbor.
 Algorithm~\ref{algo:add} shows the instructions that implement
 forwarding of best to reach consistent partitioning when
 \begin{inparaenum}[(i)]
-\item weights are scalar values,
+\item weights are scalar values piggybacked in messages and
+  accumulated over forwardings,
 \item \processes only add new partitions to the system,
-\item and \processes never crash nor leave the system.
-\end{inparaenum} \TODO{Disambiguator and comparison with $\alpha < A$.}
-\TODO{Why not towards parent?}
-Figure~\ref{fig:add} illustrates its behavior on a system comprising 4
-\processes $a$, $b$, $c$, and $d$. \Process~$a$ and \Process~$d$
-become the sources of their partition. They \NAMEB a notification
-\underline{a}dd message: $\alpha_a^0$ and $\alpha_d^0$. They
-initialize their own state with the lowest possible bound $0$ (see
-Line~\ref{line:lowestbound}), and send a message to each of their
-neighbors by accumulating the corresponding edge weight (see
-Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, \Process~$b$
-receives $\alpha_{d}^{1}$. Since it improves its own partition
-distance, it keeps it and forwards it to its neighbors. In
-Figure~\ref{fig:addD}, \Process~$b$ discards $\alpha_{a}^{2}$, for it
-does not improve its partition distance. \Processes $c$ and $d$ will
-never acknowledge that Source~$a$ exists. Ultimately, \processes
-discard last transiting messages. Despite the obvious lack of traffic
-optimization, the system reaches consistent partitioning.
+\item and \processes never join, crash nor leave the system.
+\end{inparaenum}
+For the sake of simplicity, a \process does not forward a notification
+to its sender (Line~\ref{line:accumulator}).  Figure~\ref{fig:add}
+illustrates its behavior on a system comprising 4 \processes $a$, $b$,
+$c$, and $d$. \Process~$a$ and \Process~$d$ become the sources of
+their partition.  They \NAMEB a notification \underline{a}dd message:
+$\alpha_a^0$ and $\alpha_d^0$. They initialize their own state with
+the lowest possible bound $0$ (see Line~\ref{line:lowestbound}), and
+send a message to each of their neighbors by accumulating the
+corresponding edge weight (see Line~\ref{line:accumulator}). In
+Figure~\ref{fig:addC}, \Process~$b$ receives $\alpha_{d}^{1}$. Since
+it improves its own partition distance, it keeps it and forwards it to
+its neighbors. In Figure~\ref{fig:addD}, \Process~$b$ discards
+$\alpha_{a}^{2}$, for it does not improve its partition
+distance. \Processes $c$ and $d$ will never acknowledge that
+Source~$a$ exists. Ultimately, \processes discard last transiting
+messages. Despite the obvious lack of traffic optimization, the system
+reaches consistent partitioning.
 
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity caused
