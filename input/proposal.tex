@@ -93,15 +93,16 @@ operation. This partition includes at least its source plus
 neighboring \processes that estimate they are closer to this source
 than any other one. Such a distance (or \emph{weight}) is
 application-dependant: in the context of maintaining distributed
-indexes, this would be about link latency that \nodes could monitor
-by aggregating \texttt{ping}s.
+indexes, this would be about link latency that \nodes could monitor by
+aggregating \texttt{ping}s; or operational costs when dealing with
+multiple tenants.
 
 \begin{definition}[\label{def:partitioning}Partitioning]
-  Let $S \subseteq V$ be the set of \underline{s}ources, and $P_s$ be
-  the \underline{p}artition including at least \Process~$s$, each
-  \process belongs to at most one partition $\forall p,q \in V, \forall
-  s_1,s_2 \in S: p \in P_{s_1} \wedge q \in P_{s_2} \implies p \neq q
-  \vee s_1 = s_2$, and there exists at least one path $\pi_{ps}$ of
+  Let $S \subseteq V$ be the set of \underline{s}ources, and $P_{s\in
+    S}$ be the \underline{p}artition including at least \Process~$s$,
+  each \process belongs to at most one partition $\forall p,q \in V,
+  \forall s,s' \in S: (p \in P_{s} \wedge q \in P_{s'}) \implies (p \neq
+  q \vee s = s')$, and there exists at least one path $\pi_{ps}$ of
   \processes that belong to this partition $\forall q \in \pi_{ps}: q
   \in P_s$.
 \end{definition}
@@ -113,14 +114,14 @@ exactly one consistent partitioning that \processes eventually converge
 to.
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
-  Let $W_{xy} = W_{yx}$ be the positive \TODO{symmetric} \underline{w}eight
-  between $x$ and $y$, $\Pi_{xz}$ be the shortest \underline{p}ath
-  from $x$ to $z$ the weight of which $|\Pi_{xz}|$ is lower than any
-  other path weight, with $|\Pi_{xx}|$ being the greatest lower bound
-  of $x$, the only consistent partitioning $\mathcal{P}$ is a set of
-  partitions $P_{s\in S}$ such that each \process belongs to a logical
-  partition comprising its closest source: $\forall p \in P_{s_1}:
-  \nexists P_{s_2}$ such that $|\Pi_{s_2p}| < |\Pi_{s_1p}|$.
+  Let $W_{xy}$ be the positive \underline{w}eight from $x$ to $y$,
+  $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to $z$ the
+  weight of which $|\Pi_{xz}|$ is lower than any other path weight,
+  with $|\Pi_{xx}|$ being the greatest lower bound of $x$, the only
+  consistent partitioning $\mathcal{P}$ is a set of partitions
+  $P_{s\in S}$ such that each \process belongs to a logical partition
+  comprising its closest source: $\forall p \in P_{s}: \nexists
+  P_{s'}$ such that $|\Pi_{s'p}| < |\Pi_{sp}|$.
 \end{definition}
 
 Unfortunately, \processes do not share a common global knowledge of
@@ -128,41 +129,53 @@ the network state. For \processes to reach consistent partitioning
 together, a \Process $s$ \underline{a}dding a partition must send a
 notification $\alpha_s$ to every \process that is closer to it than
 any other source. Since epidemic dissemination and scoped broadcast
-have well-aligned preoccupations, we assume implementations relying on
+have well-aligned objectives, we assume implementations relying on
 message forwarding from neighbor-to-neighbor.
 
-\begin{theorem}[\label{theo:efb}\underline{E}ventual
-  \underline{F}orwarding of \underline{B}est $(EFB) \implies CP$]
-  Assuming reliable communication links where a correct \process $q$
-  eventually receives the message $m$ \underline{s}ent to it by a
-  \process $p$ ($s_{pq}(m) \implies r_{q}(m)$), \processes eventually
-  reach consistent partitioning if each \process eventually
-  \underline{f}orwards
-  ($f_p(m) \implies \forall \langle p, q\rangle \in E: s_{pq}(m)$) its
-  best known partition. \TODO{setminus parent to comply with implem'.}
+\begin{definition}[\label{def:forwarding}Forwarding]
+  A \process $p$ \underline{f}orwards a message $m$ by
+  \underline{s}ending it to its neighbors: $f_p(m) \implies \forall
+  \langle p, q\rangle \in E: \TODO{s_{pq}(m)}$.
+\end{definition}
+
+\begin{theorem}[\label{theo:efb}\underline{F}orwarding of \underline{B}est (FB)
+  $\implies\eventually$CP] Assuming reliable communication links
+  ($s_{pq}(m) \iff \eventually r_{qp}(m)$), \processes eventually
+  reach consistent partitioning if each \process delivers the message
+  notifying its shortest path weight to a source among its set of
+  \underline{r}eceived messages $R_p$ ($(m = \min R_p) \implies
+  d_p(m)$), and forwards the message notifying its shortest path
+  weight to a source $s$ among its set of \underline{d}elivered
+  messages $D_p$ ($(m = \min D_p) \implies f_p(m)$).
 \end{theorem}
 
-\input{input/figadd.tex} 
+\input{input/figadd.tex}
 
 \begin{proof}
-  When a \process $s_1$ becomes a source, it belongs to its own
-  partition, for there exists no better partition than its own:
-  $\forall p \in V: |\Pi_{s_1 s_1}| < |\Pi_{s_1 p}|$. It delivers,
-  hence forwards such an $\alpha$ message to its neighbors. Since
-  communication links are reliable, neighboring \processes eventually
-  receive such a notification $\forall \langle s_1, q \rangle \in E,
-  s_1 \in S \iff \eventually r_q(\alpha_{s_1}^{w_{s_1 q}})$. Most
-  importantly, whatever the order of received messages, every \process
-  $q'$ in this neighborhood -- such that there exists no better
-  partition $s_2$ than the received one -- delivers and forwards it:
-  $\forall s_2 \in S: |\Pi_{q' s_1}| < |\Pi_{q' s_2}| \implies
-  \eventually d_{q'}(\alpha_{s_1}^{w_{s_1 q'}})$. By transitivity, the
-  message originating from $s_1$ reaches all such \processes through
-  their shortest paths: $\forall q'' \in V, s_1, s_2 \in S: |\Pi_{q''
-    s_1}| < |\Pi_{q'' s_2}| \implies \eventually
-  d_{q''}(\alpha_{s_1}^{|\Pi_{s_1 q''}|})$.  Since there exists only
-  one best sum of weights per \process that can never be retracted,
-  \processes eventually reach consistent partitioning.
+  When there are no sources, no \process receives, nor delivers hence
+  forwards any message. \Processes do not belong to any partition.
+  
+  \noindent Whenever a \process $s$ becomes a source, it delivers its
+  own message $d_p(\alpha_{s})$. Whatever its set of received
+  messages, its own partition $P_s$ becomes and remains its closest
+  partition $\alpha_{s} = \min D_p$ since $\forall p \neq s: |\Pi_{s
+    s}| < |\Pi_{s p}|$.
+
+  \noindent Such a source $s$ forwards $\alpha_{s}$ to its neighbors.
+  Since communication links are reliable, neighboring \processes
+  eventually receive such a notification $\forall \langle s, q \rangle
+  \in E \iff \eventually r_q(\alpha_{s})$. Most importantly,
+  whatever the order of received messages, every \process $q$ in this
+  neighborhood such that there exists no closer source $s'$ than the
+  received one $s$, delivers it, since $|\Pi_{sq}| < |\Pi_{s'q}|$.
+
+  \noindent They forward it and their respective neighbors eventually
+  receive it. By transitivity, the message originating from $s$
+  reaches all \processes belonging to $P_s$ at least through their
+  shortest paths: $\forall q' \in V, s, s' \in S: |\Pi_{s q'}| <
+  |\Pi_{s' q'}| \implies \eventually d_{q'}(\alpha_{s})$.  Since there
+  exists only one best sum of weights per \process that can never be
+  retracted, \processes eventually reach consistent partitioning.
   %% /!\ not equivalence for there exists other implementations.
   %% \item [$CP \implies BEF$:] By contradiction, if a \process $q \in
   %%   \Pi_{sp} = [s, \ldots, q, q', \ldots, p]$ with $s, q, p \in P_s$
@@ -178,12 +191,13 @@ message forwarding from neighbor-to-neighbor.
 \end{algorithm}
 
 Algorithm~\ref{algo:add} shows the instructions that implement
-consistent partitioning when
+forwarding of best to reach consistent partitioning when
 \begin{inparaenum}[(i)]
 \item weights are scalar values,
 \item \processes only add new partitions to the system,
 \item and \processes never crash nor leave the system.
-\end{inparaenum}
+\end{inparaenum} \TODO{Disambiguator and comparison with $\alpha < A$.}
+\TODO{Why not towards parent?}
 Figure~\ref{fig:add} illustrates its behavior on a system comprising 4
 \processes $a$, $b$, $c$, and $d$. \Process~$a$ and \Process~$d$
 become the sources of their partition. They \NAMEB a notification
@@ -227,17 +241,18 @@ A naive implementation resembles echos in acoustics:
 \underline{d}elete notifications $\delta$ propagate as long as
 receivers' current partition is the targeted one, and when delete
 notifications reach the bordering \processes of the deleted partition,
-it triggers a competition that goes backward to fill the gap left open
-by removals.  For example, in Figure~\ref{fig:del}, two partitions
-initially exist: $P_a$ and $P_d$ that respectively include $\{a\}$,
-and $\{b, c, d\}$. In Figure~\ref{fig:delA}, \Process~$a$ deletes its
-partition. It notifies all neighboring \processes~--~here only
-\Process~$b$~-- that may belong to its partition using \NAMEB. Upon
-receipt, \Process~$b$ discards the delete notification $\delta_a$
-since $\delta_a$ does not target the former's partition
-$P_d$. \Process~$b$ sends its own best partition $\alpha_d^3$ that may
-be the best for \Process~$a$. Eventually, every \process belongs to
-Partition $P_d$. In this scenario, they reach consistent partitioning.
+it triggers a competition -- or an echo -- that goes backward to fill
+the gap left open by removals.  For example, in Figure~\ref{fig:del},
+two partitions initially exist: $P_a$ and $P_d$ that respectively
+include $\{a\}$, and $\{b, c, d\}$. In Figure~\ref{fig:delA},
+\Process~$a$ deletes its partition. It notifies all neighboring
+\processes~--~here only \Process~$b$~-- that may belong to its
+partition using \NAMEB. Upon receipt, \Process~$b$ discards the delete
+notification $\delta_a$ since $\delta_a$ does not target the former's
+partition $P_d$. \Process~$b$ sends its own best partition
+$\alpha_d^3$ that may be the best for \Process~$a$. Eventually, every
+\process belongs to Partition $P_d$. In this scenario, they reach
+consistent partitioning.
 
 Delete operations add a new notion of order between events, and most
 importantly between message deliveries. Delete operations implicitly
@@ -291,10 +306,10 @@ effect, not only $c$ wrongfully believes that it belongs to $a$'s
 partition when $a$ already deleted it, but it could contribute to its
 inconsistency by blocking farther but up-to-date messages from actual
 sources. The system needs to purge all stale messages to guarantee
-consistent partitioning.
+consistent partitioning. 
 
 \begin{definition}[\label{def:purge}Message purge]
-  A system \underline{p}urges a message $\mathcal{P}(m)$ when every
+  A system \underline{p}urges a message $\TODO{\mathcal{P}}(m)$ when every
   \node $q$ that delivered $m$ eventually delivers another message
   $m'$ never followed by the delivery of the former message $m$:
   $d_q(m) \implies \exists m': \eventually (d_q(m)

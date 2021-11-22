@@ -6,26 +6,23 @@
 \LinesNumbered
 
 $O_p$, $W_p$\tcp*[r]{set of neighbors and weights}
-$s \leftarrow \varnothing$ \tcp*[r]{best source of partition ($\sigma$)}
-$d \leftarrow \infty$ \tcp*[r]{smallest distance to $s$ ($\sigma$ and $\mu$)}
+$A^d_s \rightarrow \alpha^\infty_\varnothing$ \tcp*[r]{smallest distance $d$ to Source $s$}
 
 
 \BlankLine
 
-\Function{\textup{\texttt{Add( )}} \tcp*[f]{become a source}} {
-  \textup{receiveAdd($\varnothing$, $p$, $0$)} \label{line:lowestbound} \tcp*[f]{$b_p(\alpha_p^0)$}
+\lFunction(\tcp*[f]{become source}){\textup{\texttt{Add( )}}} {
+  \textup{receiveAdd($\varnothing$, $\alpha_p^0$)} \label{line:lowestbound}
 }
 
 \BlankLine
 
-\Function{\textup{receiveAdd($q$, $s'$, $d'$)} \tcp*[f]{$r_p(\alpha_{s'}^{d'})$ from $q$}} {
-  \If (\tcp*[f]{distance predicate ($\phi$)}){$d' < d$} {
-      $s \leftarrow s'$ \tcp*[r]{deliver \smash{$d_p(\alpha_{s'}^{d'})$}}
-      $d \leftarrow d'$ \tcp*[r]{update local state ($\sigma$)}
+\Function{\textup{receiveAdd($q$, $\alpha_{s'}^{d'}$)} \tcp*[f]{notification from $q$}} {
+  \If (\tcp*[f]{check predicate ($\phi$)}){\smash{$\alpha^{d'}_{s'} < A^d_s$}} {
+      $\smash{A_s^d \leftarrow \alpha_{s'}^{d'}}$ \tcp*[r]{deliver and update ($\sigma$)}
 
-      \ForEach(\tcp*[f]{\smash{forward $f_p(\alpha_{s'}^{d'})$}}) {$n \in O_p \setminus q$} {
-          \textup{send$_n$($s', d' + W_{pn}$)} \label{line:accumulator}
-          \tcp*[r]{\smash{$s_{pn}(\alpha_{s'}^{d'+w_{pn}})$}}
+      \lForEach(\tcp*[f]{fwd}) {$n \in O_p \setminus q$} {
+          \textup{send$_n$(\smash{$\alpha^{d' + W_{pn}}_{s'}$})} \label{line:accumulator}
        }      
   }
 }
