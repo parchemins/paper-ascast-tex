@@ -33,11 +33,12 @@ broadcaster within an application-dependant scope.
 \begin{definition}[Autonomous systems]
   An autonomous system is a network comprising nodes and communication
   links that we represent as a \underline{g}raph of
-  \underline{v}ertices and \underline{e}dges: $G = \langle V, E
-  \rangle$ with $E \in V \times V$. A \underline{p}ath $\pi_{ij}$ from
-  \Process~$i$ to \Process~$j$ is a sequence of vertices $[i, k_1,
-    k_2, \ldots k_n, j]$ with $\forall m: 0\leq m \leq n, \langle
-  \pi_{ij}[m], \pi_{ij}[m+1] \rangle \in E$.
+  \underline{v}ertices and \underline{e}dges:
+  $G = \langle V, E \rangle$ with $E \in V \times V$. A
+  \underline{p}ath $\pi_{xz}$ from \Process~$x$ to \Process~$z$ is a
+  sequence of contiguous edges
+  $[\langle x, y_1 \rangle, \langle y_1, y_2\rangle, \ldots, \langle
+  y_n, z \rangle]$.
 \end{definition}
 
 %% \begin{definition}[Edge infrastructure]
@@ -55,17 +56,19 @@ broadcaster within an application-dependant scope.
   \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
   $d_y(m)$. The scope depends on the \underline{s}tate $\sigma$ of
   each \process, the \underline{m}etadata $\mu$ piggybacked by each
-  message, and a \underline{p}redicate $\phi$ verified from \process to
-  \process: $b_x(m) \wedge r_y(m) \implies \exists \pi_{xy}: \forall z
-  \in \pi_{xy}, \phi(\mu_z, \sigma_z)$.
+  message, and a \underline{p}redicate $\phi$ verified from \process
+  to \process:
+  $(b_x(m) \wedge r_y(m)) \implies \exists \pi_{xy}: \forall z \in
+  \pi_{xy}, \phi(\mu_z, \sigma_z)$.
 \end{definition}
 
 This definition encompasses more specific definitions of related
 work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}.  It
-also highlights that epidemic propagation and scoped broadcast have
-well-aligned preoccupations. More precisely, it underlines the
-transitive relevance of messages, thus a \process can stop forwarding
-messages as soon as its predicate becomes unverified.
+also highlights that the functioning of epidemic propagation is
+well-aligned with the objectives of scoped broadcast. More precisely,
+it underlines the transitive relevance of messages, thus a \process
+can stop forwarding messages as soon as its predicate becomes
+unverified.
 %For instance, a \process
 %from Paris could scoped broadcast messages to all \processes in
 %Paris. This requires \processes to store and maintain their city
@@ -100,10 +103,10 @@ multiple tenants.
 \begin{definition}[\label{def:partitioning}Partitioning]
   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_{s\in
     S}$ be the \underline{p}artition including at least \Process~$s$,
-  each \process belongs to at most one partition $\forall p,q \in V,
-  \forall s,s' \in S: (p \in P_{s} \wedge q \in P_{s'}) \implies (p \neq
-  q \vee s = s')$, and there exists at least one path $\pi_{ps}$ of
-  \processes that belong to this partition $\forall q \in \pi_{ps}: q
+  each \process belongs to at most one partition $\forall x, y \in V,
+  \forall s,s' \in S: (x \in P_{s} \wedge y \in P_{s'}) \implies (x \neq
+  y \vee s = s')$, and there exists at least one path $\pi_{xs}$ of
+  \processes that belong to this partition $\forall z \in \pi_{xs}: z
   \in P_s$.
 \end{definition}
 
@@ -114,14 +117,16 @@ exactly one consistent partitioning that \processes eventually converge
 to.
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
-  Let $W_{xy}$ be the positive \underline{w}eight from $x$ to $y$,
-  $\Pi_{xz}$ be the shortest \underline{p}ath from $x$ to $z$ the
-  weight of which $|\Pi_{xz}|$ is lower than any other path weight,
-  with $|\Pi_{xx}|$ being the greatest lower bound of $x$, the only
-  consistent partitioning $\mathcal{P}$ is a set of partitions
-  $P_{s\in S}$ such that each \process belongs to a logical partition
-  comprising its closest source: $\forall p \in P_{s}: \nexists
-  P_{s'}$ such that $|\Pi_{s'p}| < |\Pi_{sp}|$.
+  We associate each edge $\langle x, y \rangle \in E$ with a pair of
+  positive \underline{w}eights $w_{xy}$ and $w_{yx}$. The shortest
+  \underline{p}ath $\Pi_{xz}$ has a distance as a sum of weights
+  $\sum\{w_{pq} | \langle p, q \rangle \in \Pi_{xz}\} = |\Pi_{xz}|$
+  that is smaller than any other path, with $\Pi_{xx}$ being the
+  greatest lower bound of $x$. The only consistent partitioning is a
+  set of logical partitions $P_{s\in S}$ such that every \process
+  belongs to the partition of its closest source:
+  $\forall x \in P_{s}: \nexists P_{s'}$ such that
+  $|\Pi_{s'x}| < |\Pi_{sx}|$.
 \end{definition}
 
 Unfortunately, \processes do not share a common global knowledge of
@@ -133,42 +138,48 @@ have well-aligned objectives, we assume implementations relying on
 message forwarding from neighbor-to-neighbor.
 
 \begin{definition}[\label{def:forwarding}Forwarding]
-  A \process $p$ \underline{f}orwards a message $m$ by
-  \underline{s}ending it to its neighbors: $f_p(m) \implies \forall
-  \langle p, q\rangle \in E: \TODO{s_{pq}(m)}$.
+  A \process $x$ \underline{f}orwards a message $m$ by
+  \underline{s}ending it to its neighbors:
+  $f_x(m) \implies \forall \langle x, y\rangle \in E:
+  \TODO{s_{xy}(m)}$.
 \end{definition}
 
 \begin{theorem}[\label{theo:efb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually$CP]
-  %
-  Assuming reliable communication links ($s_{pq}(m) \iff \eventually
-  r_{qp}(m)$), \processes eventually reach consistent partitioning if
-  each \process delivers and forwards its best message among
-  \underline{r}eceived messages $R_p$, \ie the message $\alpha_s^d$
-  with the smallest distance $d$ to the source $s$ ($(\alpha_s^d = \min R_p)
-  \implies (d_p(\alpha_s^d) \wedge f_p(\TODO{\alpha_s^d}))$).
+    % 
+    Assuming reliable communication links
+    ($s_{xy}(m) \iff \eventually r_{yx}(m)$), \processes eventually
+    reach consistent partitioning if each \process delivers its best
+    message among \underline{r}eceived messages $R_x$, and forwards
+    its best message among \underline{d}elivered messages $D_x$.
+    % , \ie
+    % the message $\alpha_s^d$ with the smallest distance $d$ to the
+    % source $s$
+    % ($(\alpha_s^d = \min R_x) \implies (d_x(\alpha_s^d) \wedge
+    % f_x(\TODO{\alpha_s^d}))$).
 \end{theorem}
 
 \input{input/figadd.tex}
 
 \begin{proof}
-  When there are no sources, no \process receives, nor delivers hence
-  forwards any message. \Processes do not belong to any partition.
+  % When there are no sources, no \process receives, nor delivers hence
+  % forwards any message. \Processes do not belong to any partition.
   
   \noindent Whenever a \process $s$ becomes a source, it delivers its
-  own message $d_p(\alpha_{s})$. Whatever its set of received
+  own message $d_s(\alpha_{s})$. Whatever its set of received
   messages, its own partition $P_s$ becomes and remains its closest
-  partition $\alpha_{s} = \min D_p$ since $\forall p \neq s: |\Pi_{s
-    s}| < |\Pi_{s p}|$.
-
+  partition $\alpha_{s}^{|\Pi_{ss}|} = \min D_s$ since $\forall x \neq s: |\Pi_{s
+    s}| < |\Pi_{s x}|$.
+  %
   \noindent Such a source $s$ forwards $\alpha_{s}$ to its neighbors.
   Since communication links are reliable, neighboring \processes
-  eventually receive such a notification $\forall \langle s, q \rangle
-  \in E \iff \eventually r_q(\alpha_{s}^{w_{pq}})$. Most importantly,
-  whatever the order of received messages, every \process $q$ in this
-  neighborhood such that there exists no closer source $s'$ than the
-  received one $s$, delivers it, since $|\Pi_{sq}| < |\Pi_{s'q}|$.
-
+  eventually receive such a notification
+  $\forall \langle s, y \rangle \in E \iff \eventually
+  r_y(\alpha_{s}^{d})$. Most importantly, whatever the order of
+  received messages, every \process $q$ in this neighborhood such that
+  there exists no closer source $s'$ than the received one $s$,
+  delivers it, since $|\Pi_{sq}| < |\Pi_{s'q}|$.
+  %
   \noindent They forward it and their respective neighbors eventually
   receive it. By transitivity, the message originating from $s$
   reaches all \processes belonging to $P_s$ at least through their
@@ -194,27 +205,27 @@ Algorithm~\ref{algo:add} shows the instructions that implement
 forwarding of best to reach consistent partitioning when
 \begin{inparaenum}[(i)]
 \item weights are scalar values piggybacked in messages and
-  accumulated over forwardings,
+  accumulated over forwarding,
 \item \processes only add new partitions to the system,
 \item and \processes never join, crash nor leave the system.
 \end{inparaenum}
 For the sake of simplicity, a \process does not forward a notification
 to its sender (Line~\ref{line:accumulator}).  Figure~\ref{fig:add}
-illustrates its behavior on a system comprising 4 \processes $a$, $b$,
-$c$, and $d$. \Process~$a$ and \Process~$d$ become the sources of
-their partition.  They \NAMEB a notification \underline{a}dd message:
-$\alpha_a^0$ and $\alpha_d^0$. They initialize their own state with
-the lowest possible bound $0$ (see Line~\ref{line:lowestbound}), and
-send a message to each of their neighbors by accumulating the
-corresponding edge weight (see Line~\ref{line:accumulator}). In
-Figure~\ref{fig:addC}, \Process~$b$ receives $\alpha_{d}^{1}$. Since
-it improves its own partition distance, it keeps it and forwards it to
-its neighbors. In Figure~\ref{fig:addD}, \Process~$b$ discards
-$\alpha_{a}^{2}$, for it does not improve its partition
-distance. \Processes $c$ and $d$ will never acknowledge that
-Source~$a$ exists. Ultimately, \processes discard last transiting
-messages. Despite the obvious lack of traffic optimization, the system
-reaches consistent partitioning.
+illustrates the behavior of this algorithm on a system comprising 4
+\processes $a$, $b$, $c$, and $d$. \Process~$a$ and \Process~$d$
+become the sources of their partition.  They \NAMEB a notification
+\underline{a}dd message: $\alpha_a^0$ and $\alpha_d^0$. They
+initialize their own state with the lowest possible bound $0$ (see
+Line~\ref{line:lowestbound}), and send a message to each of their
+neighbors by accumulating the corresponding edge weight (see
+Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, \Process~$b$
+receives $\alpha_{d}^{1}$. Since it improves its own partition
+distance, it keeps it and forwards it to its neighbors. In
+Figure~\ref{fig:addD}, \Process~$b$ discards $\alpha_{a}^{2}$, for it
+does not improve its partition distance. \Processes $c$ and $d$ will
+never acknowledge that Source~$a$ exists. Ultimately, \processes
+discard last transiting messages. Despite the obvious lack of traffic
+optimization, the system reaches consistent partitioning.
 
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity caused
