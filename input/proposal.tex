@@ -147,11 +147,12 @@ message forwarding from neighbor-to-neighbor.
 \begin{theorem}[\label{theo:efb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually$CP]
     % 
-    Assuming reliable communication links
-    ($s_{xy}(m) \iff \eventually r_{yx}(m)$), \processes eventually
-    reach consistent partitioning if each \process delivers its \TODO{best}
-    message among \underline{r}eceived messages $R_x$, and forwards
-    its \TODO{best} message among \underline{d}elivered messages $D_x$.
+    Assuming reliable communication links ($s_{xy}(m) \iff \eventually
+    r_{yx}(m)$), and a total order on messages ($<$), \processes
+    eventually reach consistent partitioning if each \process delivers
+    its best message among \underline{r}eceived messages $R_x$, and
+    forwards its best message among \underline{d}elivered messages
+    $D_x$.
     % , \ie
     % the message $\alpha_s^d$ with the smallest distance $d$ to the
     % source $s$
@@ -165,11 +166,12 @@ message forwarding from neighbor-to-neighbor.
   % When there are no sources, no \process receives, nor delivers hence
   % forwards any message. \Processes do not belong to any partition.
   
-  \noindent Whenever a \process $s$ becomes a source, it delivers its
-  own message $d_s(\alpha_{s})$. Whatever its set of received
-  messages, its own partition $P_s$ becomes and remains its closest
-  partition $\alpha_{s}^{|\Pi_{ss}|} = \min D_s$ since $\forall x \neq
-  s: |\Pi_{s s}| < |\Pi_{s x}|$.
+  \noindent \TODO{use total order ($<$) and sets $R_p D_p$} Whenever a
+  \process $s$ becomes a source, it delivers its own message
+  $d_s(\alpha_{s})$. Whatever its set of received messages, its own
+  partition $P_s$ becomes and remains its closest partition
+  $\alpha_{s}^{|\Pi_{ss}|} = \min D_s$ since $\forall x \neq s:
+  |\Pi_{s s}| < |\Pi_{s x}|$.
   %
   \noindent Such a source $s$ forwards $\alpha_{s}$ to its neighbors.
   Since communication links are reliable, neighboring \processes
@@ -265,15 +267,14 @@ notifications reach the bordering \processes of the deleted partition,
 it triggers a competition -- or an echo -- that goes backward to fill
 the gap left open by removals.  For example, in Figure~\ref{fig:del},
 two partitions initially exist: $P_a$ and $P_d$ that respectively
-include $\{a\}$, and $\{b, c, d\}$. In Figure~\ref{fig:delA},
-\Process~$a$ deletes its partition. It notifies all neighboring
-\processes~--~here only \Process~$b$~-- that may belong to its
-partition using \NAMEB. Upon receipt, \Process~$b$ discards the delete
-notification $\delta_a$ since $\delta_a$ does not target the former's
-partition $P_d$. \Process~$b$ sends its own best partition
-$\alpha_d^3$ that may be the best for \Process~$a$. Eventually, every
-\process belongs to Partition $P_d$. In this scenario, they reach
-consistent partitioning.
+include $\{a\}$, and $\{b, c, d\}$. In Figure~\ref{fig:delA}, $a$
+deletes its partition. It notifies all neighboring \processes~--~here
+only $b$~-- that may belong to its partition using \NAMEB. Upon
+receipt, $b$ discards the delete notification $\delta_a$ since
+$\delta_a$ does not target the former's partition $P_d$. \Process~$b$
+sends its own best partition $\alpha_d^3$ that may be the best for
+$a$. Eventually, every \process belongs to Partition $P_d$. In this
+scenario, they reach consistent partitioning.
 
 Delete operations add a new notion of order between events, and most
 importantly between message deliveries. Delete operations implicitly
@@ -283,49 +284,91 @@ information.
 
 \input{input/figundoproblem.tex}
 
-\begin{definition}[Happens-before $\rightarrow$~\cite{lamport1978time}]
+\begin{definition}[Happens-before ($\rightarrow$)~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
   relationship defines a strict partial order between events. Two
   messages are concurrent if none happens before the other.
 \end{definition}
 
 \begin{definition}[\label{def:lwo}Stale messages]
-  Only the latest message of a \process matters. A message $m$ conveys
-  \underline{s}tale control information if the \process that broadcast
-  $m$ later broadcast another message $m'$:
-  $\mathcal{S}(m) = \exists m': b_x(m) \rightarrow b_x(m')$.
+  Only the latest broadcast of a \node matters.  A message $m$ conveys
+  \underline{s}tale control information $\mathcal{S}(m)$ as soon as
+  its broadcaster broadcasts another message: $\mathcal{S}(\alpha_x) =
+  \exists \delta_x: b_x(\alpha_x) \rightarrow b_x(\delta_x)$.  A
+  \process only sends messages that it assumes up-to-date:
+  $s_x(\alpha_s) \implies \delta_s \not\in R_x$.
 \end{definition}
 
-Unfortunately, stale control information as stated in
-Definition~\ref{def:lwo} may impair the propagation of both
+\begin{definition}[\label{def:fd}\underline{F}orwarding of
+    \underline{s}taleness (FS)]
+  %
+  To \NAMEB staleness, a \process $x$ delivers and forwards a received
+  staleness notification if it is not yet delivered and targets its
+  best delivered message: $\delta_s \in R_x \setminus D_x \wedge
+  \alpha_s = \min D_x \TODO{\implies} d_x(\delta_s) \wedge
+  f_x(\delta_s)$.
+\end{definition}
+
+\begin{definition}[\label{def:echo}\underline{E}chos (E)]
+  A \process $x$ that receives a stale message sends back --~or
+  echoes~-- its best up-to-date delivered message: $r_{xy}(\alpha_s)
+  \wedge \delta_s \in D_x \implies s_{xy}(\alpha_{s'})$ with
+  $\alpha_{s'} = \min D_x \wedge \delta_{s'} \not\in D_x$.
+\end{definition}
+
+\begin{lemma}[\label{def:fbfse}FB+FS+E $\centernot\implies$ DCP]
+  Forwarding of best up-to-date, forwarding of staleness, and echos is
+  not sufficient to guarantee dynamic consistent partitioning.
+\end{lemma}
+
+\begin{proof}
+Stale control information as stated in Definition~\ref{def:lwo} may
+impair the propagation of both
 \begin{inparaenum}[(i)]
 \item notifications about actual sources, and
 \item notifications about deleted partitions.
 \end{inparaenum}
 Figure~\ref{fig:problem} depicts a scenario comprising only three
 \processes $a$, $b$, $c$ chained with FIFO links, \ie where \processes
-receive the messages in the order of their sending
-($s_{pq}(m) \rightarrow s_{pq}(m') \implies r_q(m) \rightarrow
-r_q(m')$). In Figure~\ref{fig:problemA}, both $a$ and $c$ become
-sources, sending their respective notification message to $b$. In
+receive the messages in the order of their sending ($s_{pq}(m)
+\rightarrow s_{pq}(m') \implies r_q(m) \rightarrow r_q(m')$). In
+Figure~\ref{fig:problemA}, both $a$ and $c$ become sources, sending
+their respective notification message to $b$. In
 Figure~\ref{fig:problemB}, both $a$ and $c$ delete their partition
 while $b$ receives, delivers, and forwards $\alpha_a^2$. In
 Figure~\ref{fig:problemC}, $b$ receives, delivers, and forwards
 $\alpha_c^1$, for it improves its best partition. Then it receives and
 discards $\delta_a$, for its best partition does not match the deleted
-one. It produces an echo but since $\alpha_c^3$ is already transiting
-towards $a$, we simplify it. Finally, Figure~\ref{fig:problemD} shows
-that eventually, $c$ stays in the deleted partition $P_a$ for not
-having received $\delta_a$ that $b$ blocked earlier. As a cascading
-effect, not only $c$ wrongfully believes that it belongs to $a$'s
-partition when $a$ already deleted it, but it could contribute to its
-inconsistency by blocking farther but up-to-date messages from actual
-sources. To reach consistent partitioning, \processes need
+one. We simplify the echo since $\alpha_c^3$ is already transiting
+towards $a$. Finally, Figure~\ref{fig:problemD} shows that eventually,
+$c$ stays in the deleted partition $P_a$ for not having received
+$\delta_a$ that $b$ blocked earlier. \end{proof}
+
+As a cascading effect, in Figure~\ref{fig:problemD}, not only $c$
+wrongfully believes that it belongs to $a$'s partition when $a$
+already deleted it, but it could contribute to its inconsistency by
+blocking farther but up-to-date messages from actual sources. To reach
+consistent partitioning, \processes need
 \begin{inparaenum}[(i)]
-\item to purge all stale messages which
-\item implies detecting possibly blocking conditions
-\item by acknowledging the last partition of neighbors.
+\item to detect possibly blocking conditions 
+\item to purge all stale messages from the system
+\item enabling up-to-date notifications to eventually reach every
+  \process.
 \end{inparaenum}
+
+\begin{lemma}[\label{def:detection}Detector existence]
+  Assuming a chain of \process $[x,\ldots, z]$ that delivered a
+  message $\alpha_x$, if $x$ deletes its partition, either all
+  \processes eventually deliver $\delta_s$, or a \process along the
+  chain detects the blocking of the delete notification
+\end{lemma}
+
+
+
+\TODO{But cannot just delete. It must be deleted only downstream, see
+  figure.}
+
+
 
 \begin{definition}[\label{def:purge}Message purge]
   A system \underline{p}urges a message when every \node $q$ that
@@ -335,10 +378,11 @@ sources. To reach consistent partitioning, \processes need
   \wedge \neg (d_q(m') \rightarrow d_q(m)))$.
 \end{definition}
 
-\begin{lemma}[FB $\wedge$ \underline{F}orwarding of \underline{S}tale
-  (FS) $\implies$ Detection]
-  \TODO{meow!}
+\begin{lemma}[FB $\wedge$ FD $\implies$ Detection] \TODO{meow!}
 \end{lemma}
+
+\begin{definition}[\TODO{Assuming purge, echo => DCP}]
+\end{definition}
 
 \TODO{rest to rework\ldots}
 

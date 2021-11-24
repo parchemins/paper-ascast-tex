@@ -40,7 +40,7 @@ $\textup{x}A_{\pi}^{d} \leftarrow \alpha_{\varnothing}^{\infty} $
   \uIf {\smash{$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^{d'})$\label{line:ascast_improve}}} {
     $\smash{A_{\pi}^{d} \leftarrow \alpha_{\pi' \cup \langle p, V[p] \rangle}^{d'}}$ \;
     \lForEach{$n \in O_p$} {
-      send$_n$(\smash{$\alpha_{\pi}^{d + W_{pn}}$})
+      send$_n$(\smash{$\alpha_{\pi}^{d + w_{pn}}$})
     }
   }
   \uElseIf{$\textup{isParent}(q) \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$\label{line:ascast_detect}} {
@@ -68,7 +68,7 @@ $\textup{x}A_{\pi}^{d} \leftarrow \alpha_{\varnothing}^{\infty} $
     \lForEach {$n \in O_p \setminus q$}{send$_n$($\delta_{s, c}$)}
   }
   \lElseIf {$A_s^d \neq \alpha^\infty_\varnothing$} {
-    send$_q$($\alpha_\pi^{d + W_{pq}}$)\label{line:ascast_echo}
+    send$_q$($\alpha_\pi^{d + w_{pq}}$)\label{line:ascast_echo}
   }
 
   updateVersions($[\langle s, c \rangle]$)
