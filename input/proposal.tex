@@ -41,15 +41,6 @@ broadcaster within an application-dependant scope.
   y_n, z \rangle]$.
 \end{definition}
 
-%% \begin{definition}[Edge infrastructure]
-%%   An Edge infrastructure is a connected \underline{g}raph $G(V, E)$ of
-%%   \underline{v}ertices $V$ and bidirectional \underline{e}dges $E
-%%   \subseteq V \times V$.  A \underline{p}ath $\pi_{ij}$ from
-%%   \Process~$i$ to \Process~$j$ is a sequence of vertices $[i, k_1,
-%%     k_2, \ldots k_n, j]$ with $\forall m: 0\leq m \leq n, \langle
-%%   \pi_{ij}[m], \pi_{ij}[m+1] \rangle \in E$.
-%% \end{definition}
-
 \begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
   When \Process~$x$ scoped \underline{b}roadcasts $b_x(m)$ a
   \underline{m}essage $m$, every correct \process $y$ within a scope
@@ -68,22 +59,8 @@ also highlights that the functioning of epidemic propagation is
 well-aligned with the objectives of scoped broadcast. More precisely,
 it underlines the transitive relevance of messages, thus a \process
 can stop \TODO{forwarding messages} as soon as its predicate becomes
-unverified.
-%For instance, a \process
-%from Paris could scoped broadcast messages to all \processes in
-%Paris. This requires \processes to store and maintain their city
-%location in their local state. \Processes stop delivering and
-%forwarding their received messages when they come from a different
-%city.  In another instance, a \process from Paris could scoped
-%broadcast messages to all \processes in Paris plus neighboring
-%cities. This requires \processes to overload forwarded messages the
-%first time they reach another city. The predicate checks if messages
-%already reached two distinct cities before delivery. Similarly to
-%uniform reliable broadcast, scoped broadcast implementations expose
-%different trade-offs on space, time, and communication.
-%
-We use \NAMEB to efficiently modify the state of each \process
-depending on the partitions that exist in the system.
+unverified.  We use \NAMEB to efficiently modify the state of each
+\process depending on the partitions that exist in the system.
 
 
 
@@ -361,19 +338,19 @@ consistent partitioning, \processes need
 
 \begin{lemma}[\label{def:detection}\underline{D}etector existence (D)]
   Assuming a chain of \processes $[x,\ldots, z]$ that delivered a
-  message $\alpha_x$, when $x$ deletes its partition, either every
-  \process of this chain eventually deliver $\delta_s$, or a \process
-  along the chain detects the blocking of the staleness notification
-  $\delta_s$.
+  message $\alpha_x$ with $\alpha_x = \min D_z$, when $x$ deletes its
+  partition, either every \process of this chain eventually delivers
+  $\delta_x$, or a \process along the chain detects the blocking of
+  the staleness notification $\delta_s$.
 \end{lemma}
 
 
 \begin{proof}
-  \TODO{Rework this!} We must prove that every \process that delivered
-  a stale $\alpha_X$ eventually delivers a better $\alpha_Y$, or
-  delivers a removal notification of $\alpha_X$.
-  Figure~\ref{fig:proofB} summarizes the issue of purging in scenarios
-  involving concurrent operations.
+  Assuming a chain of \processes $[x, x_2, \ldots, y]$ such that
+  $\alpha_x \min D$
+
+  
+  Assuming $[x, x_2, \ldots, x_k, y, y_1, y_2, \ldots, y_\ell, z]$, 
   
   (i) If every \process (such as $a$) starting from the source
   delivers and forwards a removal notification $\delta_X$ when their
@@ -419,7 +396,7 @@ last delivered and forwarded message to its \emph{downstream}
 \processes. Indeed, Figure~\ref{fig:undoproblem} shows that from
 detector's perspective, the chain of events is identical, yet it must
 react to the worst case scenario where $\delta_a$ existed and was
-blocked. \TODO{More about figure.} \TODO{Challenging?}
+blocked. \TODO{More about figure.} \TODO{Challenging?} 
 
 \begin{definition}[FS$^+$: forwarding staleness downstream]
   To further reduce the scope  \TODO{Meow.}
@@ -754,7 +731,9 @@ partition and the generated traffic stops.
   An Edge infrastructure $\mathcal{G}$ has multiple autonomous systems
   interconnected with additional links $\mathcal{E} \in V_1 \times
   V_2$ where $V_1 \neq V_2$, hence $\mathcal{G} = \langle \{G_1,
-  \ldots G_n\}, \mathcal{E} \rangle$.
+  \ldots G_n\}, \mathcal{E} \rangle$. A \emph{gateway} $g$ is a
+  \process with at least one link towards another network: $\langle g,
+  \_ \rangle \in \mathcal{E}$.
 \end{definition}
 
 \begin{definition}[Lazy dynamic consistent partitioning (LDCP)]
@@ -764,6 +743,10 @@ partition and the generated traffic stops.
     partition.}
 \end{definition}
 
+To enable LDCP in an Edge infrastructure, we use the property provided
+by DCP in an autonomous system to all its \processes and among others,
+to its gateways.
+
 \begin{lemma}[Source existence]
   When a system becomes quiescent, DCP guarantees that every \process
   eventually acknowledges the existence or non-existence of a source
@@ -771,25 +754,24 @@ partition and the generated traffic stops.
 \end{lemma}
 
 \begin{proof}
-  By design, obvious.
+  By design, \TODO{obvious}.
 \end{proof}
 
-To provide lazy partitioning, \emph{gateway} \nodes that link
-autonomous systems together must acknowledge if there exists a source
-in their network.
+The gateways become responsible for the flooding or the stopping of
+notifications foreign to their respective network. They must
+differentiate between local and global notifications. Local
+notifications provide both \begin{inparaenum}[(i)]
+\item local source existence, and
+\item closest local source in the network
+\end{inparaenum}; while global notifications only improve on closest global sources,
+\ie it does not need to propagate when the foreign source is farther
+than the local one.
 
-Must differentiate local from global when they cross the gates.
+\begin{definition}[\underline{B}roadcasting of \underline{u}ninterested (BU)]
+  \TODO{meow}
+\end{definition} 
 
-% \NAME enables indexing the closest replica of each \process without
-% flooding the whole network when a new replica appears or disappears.
-% Nevertheless, every node must partake in the indexing of each
-% content. When the networks accounts for billions of content, this
-% raises scalability issues. Inspired by the Internet topology that
-% comprises tens of thousands of interconnected autonomous systems
-% serving billions of , we want to further
-% lock-down traffic by leveraging the edges of networks as barriers, and
-% enable on-demand indexing.
-
+\TODO{Blocking condition local global remains.}
 
 \TODO{Added invariant: global is always smaller than local when they
   exist.}
