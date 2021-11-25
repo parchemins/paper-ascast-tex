@@ -349,8 +349,8 @@ consistent partitioning, \processes need
 \begin{proof}
   %% knowing that b_p delta is sufficient to say that processes will
   %% receive delta or detect blocking
-  (A) Assuming a chain of delivery $C = [x, \ldots, z]$ of $\alpha_x$ with
-  $\forall p \in C: \alpha_x = \min D_p$, and assuming
+  (A) Assuming a chain of delivery $C = [x, \ldots, z]$ of $\alpha_x$
+  with $\forall p \in C: \alpha_x = \min D_p$, and assuming
   $d_x(\delta_x)$, then with forwarding of staleness
   (Definition~\ref{def:fs}), $f_{C[k]}(\delta_x) \implies \eventually
   d_{C[k+1]}(\delta_x)$ except if $\delta_x \in D_{C[k+1]}$ which
@@ -358,67 +358,51 @@ consistent partitioning, \processes need
   following another such a chain of delivery. Therefore, $z$
   eventually receives, hence delivers $\delta_x$.
 
-  \noindent Assuming a chain of delivery $C = [x, \ldots, z]$ of
-  $\alpha_x$ with $\alpha_x = \min D_z$, and assuming $d_x(\delta_x)$,
-  then by (A), the staleness notification reaches a \process $y\in C$ 
+  \noindent (B) Assuming a chain of delivery $C = [x, \ldots, z]$ of
+  $\alpha_x$ with at least $\alpha_x = \min D_z$, and assuming
+  $d_x(\delta_x)$, then by (A), the staleness notification reaches a
+  \process $C[k]$. By Definition~\ref{def:fs}, the fowarding stops
+  when $C[k]$ already delivered $\delta_x$ (covered by (A)) or
+  delivered a better message $\alpha_x \neq \alpha_y = \min
+  D_{C[k]}$. The latter means that $\eventually d_{C[k+1]}(\alpha_y)$
+  or $\delta_y \in D_{C[k+1]}$.
 
+  %% (i) If every \process (such as $a$) starting from the source
+  %% delivers and forwards a removal notification $\delta_X$ when their
+  %% last delivery is $\alpha_X$, then every such \process eventually
+  %% delivers the removal notification $\delta_X$ except \processes (such
+  %% as $b$) that delivered $\alpha_X$ from a \process that delivered a
+  %% message from another partition $\alpha_Y$ since then.
   
-  every \process eventually deliver and forward $\delta_x$ either
-  following the same chain, except if $\alpha_x$ is already stale
-  which
-
-
-
-  $z$ does not receive, hence deliver $\delta_x$ when a \process $y$
-  between $x$ and $z$ stops forwarding $\delta_x$ because it delivered
-  another message $\alpha_s$ with $\alpha_s < \alpha_x$.
-
+  %% These exceptions eventually receive and deliver $\alpha_Y$ since
+  %% $\alpha_Y$ is better than $\alpha_X$ through this path, except if
+  %% they already received and delivered the removal notification of
+  %% $P_Y$ (such as $c$). These \processes may never receive hence
+  %% deliver $\delta_X$, and may never receive hence deliver a better
+  %% message than $\alpha_X$. They need an additional mechanism to
+  %% eventually purge $\alpha_X$ that cannot rely on the eventual purging
+  %% of $P_Y$ at \processes like $b$, to avoid deadlocks.
   
-
+  %% (ii) Assuming that every \process keeps an history of its past
+  %% deliveries, \processes (such as $c$) can detect the inconsistency,
+  %% since they receive from their parent an already deleted partition
+  %% $P_Y$. This notification means that the parent discards any
+  %% $\delta_Z$ with $\alpha_Z^z < \alpha_Y^y$, and most importantly, if
+  %% $\delta_X$ exists, it discards it. To ensure the purge of stale
+  %% messages, a detecting \process must assume the worst case that such
+  %% $\delta_X$ exists, and send another kind of message, noted $\Delta$,
+  %% that notify the possible removal of $P_X$.
   
-  
-  Assuming a chain of \processes $[x, x_2, \ldots, y]$ such that
-  $\alpha_x \min D$
-
-  
-  Assuming $[x, x_2, \ldots, x_k, y, y_1, y_2, \ldots, y_\ell, z]$, 
-  
-  (i) If every \process (such as $a$) starting from the source
-  delivers and forwards a removal notification $\delta_X$ when their
-  last delivery is $\alpha_X$, then every such \process eventually
-  delivers the removal notification $\delta_X$ except \processes (such
-  as $b$) that delivered $\alpha_X$ from a \process that delivered a
-  message from another partition $\alpha_Y$ since then.
-  
-  These exceptions eventually receive and deliver $\alpha_Y$ since
-  $\alpha_Y$ is better than $\alpha_X$ through this path, except if
-  they already received and delivered the removal notification of
-  $P_Y$ (such as $c$). These \processes may never receive hence
-  deliver $\delta_X$, and may never receive hence deliver a better
-  message than $\alpha_X$. They need an additional mechanism to
-  eventually purge $\alpha_X$ that cannot rely on the eventual purging
-  of $P_Y$ at \processes like $b$, to avoid deadlocks.
-  
-  (ii) Assuming that every \process keeps an history of its past
-  deliveries, \processes (such as $c$) can detect the inconsistency,
-  since they receive from their parent an already deleted partition
-  $P_Y$. This notification means that the parent discards any
-  $\delta_Z$ with $\alpha_Z^z < \alpha_Y^y$, and most importantly, if
-  $\delta_X$ exists, it discards it. To ensure the purge of stale
-  messages, a detecting \process must assume the worst case that such
-  $\delta_X$ exists, and send another kind of message, noted $\Delta$,
-  that notify the possible removal of $P_X$.
-  
-  (iii) A \process (such as $d$) whose last delivery is $\alpha_X$,
-  but whose parent is neither inconsistent (like $b$) nor receiving
-  $\delta_X$ (like $a$), eventually receives $\Delta$ from a detecting
-  \process, either directly or transitively, for such a child \process
-  ($d$) trusts the possible removal of $P_X$ by delivering and
-  forwarding such $\Delta$. $\Delta$ suffers from identical blocking
-  conditions (between $b$ and $c$) than $\delta$, leading to the same
-  solutions of detection and propagation of $\Delta$. Eventually,
-  every \process whose last delivery is $\alpha_X$ receives and
-  delivers either a better $\alpha_Z$, or $\delta_X$, or $\Delta_X$.
+  %% (iii) A \process (such as $d$) whose last delivery is $\alpha_X$,
+  %% but whose parent is neither inconsistent (like $b$) nor receiving
+  %% $\delta_X$ (like $a$), eventually receives $\Delta$ from a detecting
+  %% \process, either directly or transitively, for such a child \process
+  %% ($d$) trusts the possible removal of $P_X$ by delivering and
+  %% forwarding such $\Delta$. $\Delta$ suffers from identical blocking
+  %% conditions (between $b$ and $c$) than $\delta$, leading to the same
+  %% solutions of detection and propagation of $\Delta$. Eventually,
+  %% every \process whose last delivery is $\alpha_X$ receives and
+  %% delivers either a better $\alpha_Z$, or $\delta_X$, or $\Delta_X$.
 \end{proof}
 
 To reach dynamic consistent partitioning, the detecting \process must
