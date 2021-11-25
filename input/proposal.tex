@@ -278,7 +278,7 @@ information.
 
 \input{input/figundoproblem.tex}
 
-\begin{definition}[\label{def:fd}\underline{F}orwarding of
+\begin{definition}[\label{def:fs}\underline{F}orwarding of
     \underline{s}taleness (FS)]
   %
   To \NAMEB staleness, a \process $x$ delivers and forwards a received
@@ -337,15 +337,46 @@ consistent partitioning, \processes need
 \end{inparaenum}
 
 \begin{lemma}[\label{def:detection}\underline{D}etector existence (D)]
-  Assuming a chain of \processes $[x,\ldots, z]$ that delivered a
-  message $\alpha_x$ with $\alpha_x = \min D_z$, when $x$ deletes its
-  partition, either every \process of this chain eventually delivers
-  $\delta_x$, or a \process along the chain detects the blocking of
-  the staleness notification $\delta_s$.
+  Assuming a chain of delivery of $\alpha_x$ from \Process~$x$ to
+  \Process~$z$ with $\alpha_x = \min D_z$, if $x$ broadcasts a
+  staleness notification $\delta_x$, either $z$ eventually delivers
+  it, or a \process of the delivery chain $[x,\ldots, z]$ eventually
+  detects its blocking.
+  % $b_p(\delta_x) \implies d_q(x) U Detect[X]$ ??? 
 \end{lemma}
 
 
 \begin{proof}
+  %% knowing that b_p delta is sufficient to say that processes will
+  %% receive delta or detect blocking
+  (A) Assuming a chain of delivery $C = [x, \ldots, z]$ of $\alpha_x$ with
+  $\forall p \in C: \alpha_x = \min D_p$, and assuming
+  $d_x(\delta_x)$, then with forwarding of staleness
+  (Definition~\ref{def:fs}), $f_{C[k]}(\delta_x) \implies \eventually
+  d_{C[k+1]}(\delta_x)$ except if $\delta_x \in D_{C[k+1]}$ which
+  means that $C[k+1]$ already delivered and forwarded $\delta_x$
+  following another such a chain of delivery. Therefore, $z$
+  eventually receives, hence delivers $\delta_x$.
+
+  \noindent Assuming a chain of delivery $C = [x, \ldots, z]$ of
+  $\alpha_x$ with $\alpha_x = \min D_z$, and assuming $d_x(\delta_x)$,
+  then by (A), the staleness notification reaches a \process $y\in C$ 
+
+  
+  every \process eventually deliver and forward $\delta_x$ either
+  following the same chain, except if $\alpha_x$ is already stale
+  which
+
+
+
+  $z$ does not receive, hence deliver $\delta_x$ when a \process $y$
+  between $x$ and $z$ stops forwarding $\delta_x$ because it delivered
+  another message $\alpha_s$ with $\alpha_s < \alpha_x$.
+
+  
+
+  
+  
   Assuming a chain of \processes $[x, x_2, \ldots, y]$ such that
   $\alpha_x \min D$
 
