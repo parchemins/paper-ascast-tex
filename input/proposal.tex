@@ -123,7 +123,7 @@ message forwarding from neighbor-to-neighbor.
   \TODO{s_{xy}(m)}$.
 \end{definition}
 
-\begin{theorem}[\label{theo:efb}\underline{F}orwarding of \underline{B}est (FB)
+\begin{theorem}[\label{theo:fb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually$CP]
     % 
     Assuming reliable communication links ($s_{xy}(m) \iff \eventually
@@ -288,14 +288,14 @@ information.
   f_x(\delta_s)$.
 \end{definition}
 
-\begin{definition}[\label{def:echo}FB$^+$: echos] FB where a
+\begin{definition}[\label{def:fbplus}FB$^+$: echos] FB where a
   \process $x$ that receives a stale message sends back --~or
   echoes~-- its best up-to-date delivered message: $r_{xy}(\alpha_s)
   \wedge \delta_s \in D_x \implies s_{xy}(\alpha_{s'})$ with
   $\alpha_{s'} = \min D_x \wedge \delta_{s'} \not\in D_x$.
 \end{definition}
 
-\begin{lemma}[\label{def:fbfse}FB$^+ \wedge$ FS $\centernot\implies$ DCP]
+\begin{lemma}[\label{lem:fbfse}FB$^+ \wedge$ FS $\centernot\implies$ DCP]
   Forwarding best up-to-date, forwarding staleness, and echoing is not
   sufficient to guarantee dynamic consistent partitioning.
 \end{lemma}
@@ -341,8 +341,8 @@ consistent partitioning, \processes need
   Assuming $\textup{FB}^+$, $\textup{FS}$, a chain of delivery on
   $\pi_{xz}$ of $\alpha_x$ with $\alpha_x = \min D_z$, if $x$
   broadcasts a staleness notification $\delta_x$, either $z$
-  eventually delivers it, or a \process $y\in\pi_{xz}$ eventually
-  detects its blocking.
+  eventually delivers it, or a \process $y$ in such a chain of
+  delivery $\pi_{xz}'$ eventually detects its blocking.
   % $b_p(\delta_x) \implies d_q(x) U Detect[X]$ ??? 
 \end{lemma}
 
@@ -363,12 +363,28 @@ consistent partitioning, \processes need
   \noindent (B) Assuming a chain of delivery
   $\pi_{xz} = [x, \ldots, z]$ of $\alpha_x$ with at least
   $\alpha_x = \min D_z$, and assuming $d_x(\delta_x)$, then by (A),
-  the staleness notification reaches a \process $\pi_{xz}[k]$. By
-  Definition~\ref{def:fs}, the fowarding stops when $\pi_{xz}[k]$
-  already delivered $\delta_x$ (covered by (A)) or delivered a better
-  message $\alpha_x \neq \alpha_y = \min D_{\pi_{xz}[k]}$. The latter
-  means that $\eventually d_{\pi_{xz}[k+1]}(\alpha_y)$ or
-  $\delta_y \in D_{\pi_{xz}[k+1]}$.
+  the staleness notification reaches a \process $ y = \pi_{xz}[k]$. By
+  Definition~\ref{def:fs}, the fowarding stops when $y$ already
+  delivered $\delta_x$ ($\delta_x \in D_y$ covered by (A)) or
+  delivered a better message $\alpha_s = \min D_y$ with
+  $\alpha_s \neq \alpha_x$. With $y'=\pi_{xz}[k+1]$, forwarding of
+  best (Definition~\ref{def:fbplus}) implies three possible outcomes:
+  \begin{enumerate}[(i)]
+  \item $\alpha_{s'} = \min D_{y'}$ with $\alpha_{s'} \neq \alpha_x$
+    hence $y' \iff y$ which leaves two possible outcomes:
+  \item
+    $r_{y'}(\alpha_s) \wedge \alpha_x = \min D_{y'} \wedge \alpha_x <
+    \alpha_s$ which means that a shorter path of delivery $\pi_{xz}'$
+    exists that either forwards appropriate staleness notifications
+    (A) or detects its possible blocking:
+  \item
+    $r_{y'}(\alpha_s) \wedge \delta_s \in D_{y'} \wedge \alpha_x =
+    \min D_{y'}$ which detects a possible blocking of
+    $\delta_x$. Without global knowledge, $y'$ assumes it belongs to
+    the shortest and only path of delivery of $\alpha_x$
+    ($\pi_{xy'} \subseteq \Pi_{xz}$) thus it does not further delegate
+    the detection to another \process.
+  \end{enumerate} \vspace{-1.5em} %% ugly vspace but necessary for enumerate+qed
   %
   %% (i) If every \process (such as $a$) starting from the source
   %% delivers and forwards a removal notification $\delta_X$ when their
