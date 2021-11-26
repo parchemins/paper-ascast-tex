@@ -336,7 +336,7 @@ consistent partitioning, \processes need
   every \process.
 \end{inparaenum}
 
-\begin{lemma}[\label{def:detection}$\textup{FB}^+ \wedge \textup{FS}
+\begin{lemma}[\label{lem:detector}$\textup{FB}^+ \wedge \textup{FS}
   \implies$ \underline{D}etector existence (D)]
   Assuming $\textup{FB}^+$, $\textup{FS}$, a chain of delivery on
   $\pi_{xz}$ of $\alpha_x$ with $\alpha_x = \min D_z$, if $x$
@@ -424,13 +424,21 @@ consistent partitioning, \processes need
   %% delivers either a better $\alpha_Z$, or $\delta_X$, or $\Delta_X$.
 \end{proof}
 
-To reach dynamic consistent partitioning, the detecting \process must
-broadcast a message notifying the \emph{possible} staleness of its
-last delivered and forwarded message to its \emph{downstream}
-\processes. Indeed, Figure~\ref{fig:undoproblem} shows that from
-detector's perspective, the chain of events is identical, yet it must
-react to the worst case scenario where $\delta_a$ existed and was
-blocked. \TODO{More about figure.} \TODO{Challenging?} 
+Proof of Lemma~\ref{lem:detector} shows that there exists false
+positive in the blocking detection: $\delta_x$ may not exist but $y'$
+still receives $\alpha_s$ after the delivery of $\delta_s$ from the
+path it delivered $\alpha_x$. Figure~\ref{fig:undoproblem} highlights
+this behavior. In Figure~\ref{fig:undoproblemB}, $a$ does not delete
+its partition. In Figure~\ref{fig:undoproblemD} and because of \NAMEB,
+$c$ received the same series of messages as in
+Figure~\ref{fig:problemD}. Yet, $c$ must assume the existence of
+$\delta_a$ and act accordingly by forcing the staleness of its best
+delivered message and disseminate this information to its neighbors.
+To avoid flooding the system with false positive staleness
+notifications, we propose to reduce the scope of staleness
+notifications by including only downstream \processes. In
+Figure~\ref{fig:undoproblemD}, false positives would not affect $a$
+and $b$.
 
 \begin{definition}[FS$^+$: forwarding staleness downstream]
   To further reduce the scope  \TODO{Meow.}
