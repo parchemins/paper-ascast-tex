@@ -481,75 +481,54 @@ delivered this message.
   \caption{\label{algo:ascast}\NAME at \Process~$p$.}
 \end{algorithm}
 
-\TODO{Rework this to remove repetitions. Since implem is close from
-  section.}
-
-Algorithm~\ref{algo:ascast} shows the instructions implementing
-dynamic consistent partitioning. To implement staleness, each \process
-maintains a vector of versions that associates the respective known
-local counter of each known source, or has-been source. Its size
-increases linearly with the number of sources that the \process has
-ever known, which is the number of \processes in the system
-$\mathcal{O}(V)$ in the worst case.  Nevertheless, following the
-principles of scoped broadcast, we expect that every \process only
-acknowledges a small subset of sources.  In addition, each message
-carries the identifier and counter of each \node that forwarded
-it. Again, following the principles of scoped broadcast, we expect
-that versioned paths remain small. Using these data structures, each
-\process delivers and forwards only new messages that improve their
-best known partition (see Line~\ref{line:ascast_improve}).
-
-This vector of versions constitutes a summary of known progress of
-other \nodes. It discards stale messages and it enables detecting
-possible blocking of staleness notifications: the current best
-partition comes from a neighbor that just delivered a stale message
-(see Line~\ref{line:ascast_detect}). Figure~\ref{fig:problem} shows
-that such a behavior may hide a delete notification. The detecting
-\process must act to reflect this possible change: all \processes
-whose last message comes from the detecting \process must remove it
-and accept the competition of other \processes. Since this behavior is
-similar to that of source deletion, we implement it in a similar way.
-
-A \process that removes its self-appointed status of source, or
-detects a possible inconsistency, increments its local counter and
-disseminates a delete notification message $\delta_{s, c}$
-piggybacking its identifier $s$ and counter $c$. Any \process that
-receives such delete notification delivers and forwards it if its best
-message contains the has-been source or detector associated to a lower
-counter (see Line~\ref{line:ascast_delete}). This allows $\delta$
-messages to quickly reach every downstream \process.
-
-As stated in Theorem~\ref{theo:dcp}, dynamic consistent partitioning
-not only requires eventual purging of stale messages, but also the
-retrieval of the best up-to-date partitions.  In that regard, $\delta$
-messages have a dual use: since they already reach the borders of
-their partition by design, they trigger a competition when reaching
-bordering.  When a \process receives a delete notification from a
-neighbor $q$ but does not deliver it, it assumes that the just
-received $\delta$ message purged possibly stale messages, creating a
-gap that its own best partition could help fill. Consequently, it
-sends to $q$ its own best $\alpha$ message (see
-Line~\ref{line:ascast_echo}).
+Algorithm~\ref{algo:ascast} shows the instructions of our
+implementation called \NAME that enables dynamic consistent
+partitioning. It implements forwarding of best (see
+Line~\ref{line:fb}) and echos (see Line~\ref{line:echo}). To implement
+forwarding of staleness downstream as stated in
+Definition~\ref{def:fsplus},
+\begin{inparaenum}[(A)]
+\item each \process maintains a vector of versions that associates the
+  respective known local counter of each known source, or has-been
+  source. It constitutes a summary of known progress of other
+  \processes; 
+\item each notification message $\alpha$ carries the list of
+  identifier and counter of each \node that forwarded it. In the worst
+  case, both these structures grow linearly with the number of
+  \processes in the system $\mathcal{O}(V)$. Nevertheless, following
+  the principles of scoped broadcast, we expect that \processes only
+  acknowledge a small subset of sources and messages;
+\item each staleness notifications $\delta$ only carry the identifier
+  and counter of the \process~--~source or detector~--~that generated
+  it. Only downstream \processes may deliver such message, since they
+  carry the identifier of the generator. 
+\end{inparaenum}
+To implement the detection as stated in Lemma~\ref{lem:detector}, each
+\process only requires to know the direct parent of its best delivered
+message which is already included in the piggybacked path of this
+message. Receiving a message known to be stale from this parent
+triggers the generation of staleness notifications that force
+downstream \processes to reevaluate the partition they are in (see
+Line~\ref{line:detect}).
 
 \begin{algorithm}[h]
   \input{input/algoedges.tex}
   \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
 \end{algorithm}
 
-Algorithm~\ref{algo:edges} enables dynamic consistent partitioning in
-dynamic networks where \processes can join, leave, or crash at any
-time. Removing a \process is equivalent to removing all its edges, and
-adding a \process is equivalent to add as many edges as necessary.
-Adding an edge between two \processes may only improve the shortest
-path of one of these \processes. Therefore, it triggers a competition
-between the two \processes. If one or the other \process improves, the
-propagation of $\alpha$ messages operates normally.  Removing an edge
-between two \processes may invalidate the shortest path of one of
-involved \processes plus downstream \processes. As a side effect,
-removing an edge may also impair the propagation of a partition
-delete. To implement this behavior, \NAME uses its implementation of
-$\delta$ messages. This enables \NAME even in dynamic networks subject
-to physical partitioning.
+By reusing \NAME's default behavior, Algorithm~\ref{algo:edges}
+enables dynamic consistent partitioning in dynamic networks where
+\processes can join, leave, or crash at any time.  Adding a \process
+is equivalent to add as many edges as necessary. Since adding an edge
+may improve shortest paths, the protocol triggers a competition using
+echos of Definition~\ref{def:fbplus}.  Removing a \process is
+equivalent to removing all its edges. Removing an edge between two
+\processes may invalidate the shortest path of one of involved
+\processes plus downstream \processes, or impair the propagation of
+staleness notifications. Therefore, the protocol reuses its detection
+mechanism of Lemma~\ref{lem:detector} as a solution.
+Algorithm~\ref{algo:edges} even extends \NAME to dynamic networks
+subject to physical partitioning.
 
 %% \NAME guarantees dynamic consistent partitioning by making extensive
 %% use of \process-to-\process communications. It requires
@@ -559,18 +538,18 @@ to physical partitioning.
 %% \item retrieving the closest source, hence propagating $\alpha$
 %%   messages.
 %% \end{inparaenum}
-In terms of number of messages, in the average case, a \process $i$
-chosen uniformly at random among all \processes creates a logical
-partition. Its messages $\alpha_i$ spread through the network until
-reaching \processes that belong to another partition closer to
-them. This splits partitions in half on average. Overall, the $a^{th}$
-new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
-      \log_2 a \rfloor}})$} \processes. This decreases every new
-partition until reaching one \process per new partition: its
-source. The average number of messages per \process is
-\smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 a
-      \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
-number of neighbors per \process.
+\TODO{TODOUBLECHECK}. In terms of number of messages, in the average
+case, a \process $i$ chosen uniformly at random among all \processes
+creates a logical partition. Its messages $\alpha_i$ spread through
+the network until reaching \processes that belong to another partition
+closer to them. This splits partitions in half on average. Overall,
+the $a^{th}$ new partition comprises
+\smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor \log_2 a \rfloor}})$}
+\processes. This decreases every new partition until reaching one
+\process per new partition: its source. The average number of messages
+per \process is \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor
+      \log_2 a \rfloor}})$}, where \smash{$\overline{|O|}$} is the
+average number of neighbors per \process.
 % \TODO{Multiple receipt and
 % multiple
 %  delivery imply more messages (receipt bounded by $|O|$ as well).}
