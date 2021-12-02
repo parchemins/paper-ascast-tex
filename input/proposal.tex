@@ -273,7 +273,8 @@ information.
   its broadcaster broadcasts another message: $\mathcal{S}(\alpha_x) =
   \exists \delta_x: b_x(\alpha_x) \rightarrow b_x(\delta_x)$.  A
   \process only sends messages that it assumes up-to-date:
-  $s_x(\alpha_s) \implies \delta_s \not\in R_x$.
+  $s_x(\alpha_s) \implies \delta_s \not\in R_x$. \TODO{Only keep last?
+    Tothink what happens if we keep all as in def now.}
 \end{definition}
 
 \input{input/figundoproblem.tex}
@@ -464,7 +465,15 @@ delivered this message.
 \end{theorem}
 
 \begin{proof}
-  \TODO{Meow.}
+  Detection triggers forwarding of staleness downstream which
+  completes the case study of Lemma~\ref{lem:detector} by ensuring
+  that, when a source broadcasts its staleness notification, all
+  \processes that belong to its partition eventually deliver such a
+  staleness notification. All downstream bordering \processes also
+  eventually receive such a staleness notification and echo back their
+  best delivered message. This triggers another competition as in
+  Theorem~\ref{theo:fb} for the \processes that delivered the
+  staleness notification.
 \end{proof}
 
 \begin{algorithm}
