@@ -290,11 +290,14 @@ information.
 \end{definition}
 
 \begin{definition}[\label{def:fbplus}FB$^+$: echos] FB where a
-  \process $x$ that receives a stale message sends back --~or
+  \process $x$ that receives a staleness notification sends back --~or
   echoes~-- its best up-to-date delivered message: $r_{xy}(\alpha_s)
   \wedge \delta_s \in D_x \implies s_{xy}(\alpha_{s'})$ with
-  $\alpha_{s'} = \min D_x \wedge \delta_{s'} \not\in D_x$.
+  $\alpha_{s'} = \min D_x \wedge \delta_{s'} \not\in
+  D_x$. \TODO{Rework min}
 \end{definition}
+
+\TODO{Naive implementation is FB$^+$ etc. It does not work.}
 
 \begin{lemma}[\label{lem:fbfse}FB$^+ \wedge$ FS $\centernot\implies$ DCP]
   Forwarding best up-to-date, forwarding staleness, and echoing is not
@@ -338,12 +341,12 @@ consistent partitioning, \processes need
 \end{inparaenum}
 
 \begin{lemma}[\label{lem:detector}$\textup{FB}^+ \wedge \textup{FS}
-  \implies$ \underline{D}etector existence (D)]
-  Assuming $\textup{FB}^+$, $\textup{FS}$, a chain of delivery on
-  $\pi_{xz}$ of $\alpha_x$ with $\alpha_x = \min D_z$, if $x$
-  broadcasts a staleness notification $\delta_x$, either $z$
-  eventually delivers it, or a \process $y$ in such a chain of
-  delivery $\pi_{xz}'$ eventually detects its blocking.
+  \implies$ \underline{D}etector existence (D)] Assuming
+  $\textup{FB}^+$, $\textup{FS}$, a chain of delivery on $\pi_{xz}$ of
+  $\alpha_x$ with $\alpha_x = \min D_z$, if $x$ broadcasts a staleness
+  notification $\delta_x$, either $z$ eventually delivers it, or a
+  \process $y$ in such a chain of delivery $\pi_{xz}'$ eventually
+  \TODO{detects} its \TODO{blocking}.
   % $b_p(\delta_x) \implies d_q(x) U Detect[X]$ ??? 
 \end{lemma}
 
@@ -457,7 +460,9 @@ staleness notification downstream. The notification must reach all
 upstream, and belongs to the delivery path of all \processes that
 delivered this message.
 
-\begin{theorem}[$\textup{FB}^+ \wedge \textup{FS}^+ \wedge \textup{D} \implies \textup{DCP}$]
+\TODO{$FB \subseteq FB+$}.
+
+\begin{theorem}[$\textup{FB}^+ \wedge \textup{FS}^+ \TODO{\wedge \textup{D}} \implies \textup{DCP}$]
   A protocol guarantees dynamic consistent partitioning if it
   implements forwarding of best up-to-date messages with echos,
   forwarding of staleness messages downstream, and detection of
