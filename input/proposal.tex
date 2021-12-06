@@ -147,12 +147,12 @@ $|\Pi_{sx}|$ being built over forwarding along this path.
 \begin{proof}
   % When there are no sources, no \process receives, nor delivers hence
   % forwards any message. \Processes do not belong to any partition.
-  \noindent \TODO{use total order ($<$) and sets $R_p D_p$} Whenever a
-  \process $s$ becomes a source, it delivers its own message
-  $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever its set of received
+  % \noindent \TODO{use total order ($<$) and sets $R_p D_p$}
+  Whenever a \process $s$ becomes a source, it delivers its own
+  message $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever its set of received
   messages, its own partition $P_s$ becomes and remains its closest
-  partition $\alpha_{s}^{|\Pi_{ss}|} = \min D_s$ since $\forall x \neq
-  s: |\Pi_{s s}| < |\Pi_{s x}|$.
+  partition $\alpha_{s}^{|\pi_{ss}|} = \min D_s$ since $|\pi_{ss}|$ is
+  its greatest lower bound.
   %
   \noindent Such a source $s$ forwards $\alpha_{s}$ to its neighbors.
   Since communication links are reliable, neighboring \processes
