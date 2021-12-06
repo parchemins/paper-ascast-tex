@@ -120,21 +120,26 @@ Unfortunately, \processes do not share a common global knowledge of
 the network state. For \processes to eventually ($\eventually$) reach
 consistent partitioning, each source $s$ must send notifications
 $\alpha_s$ to all \processes that are closer to it than any other
-source, along with enough control information to allow them to decide
-of their closest source.
+source, along with enough metadata to allow them to decide of their
+closest source. A simple implementation consists in ensuring that each
+\process $x$ eventually receives $\alpha_s^{|\Pi_{sx}|}$ where
+$\Pi_{sx}$ is the \emph{best} path from any source to it; the value
+$|\Pi_{sx}|$ being built over forwarding along this path.
 
 \begin{theorem}[\label{theo:fb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually \textup{CP}$]
     % 
-    Assuming reliable communication links ($s_{xy}(m) \iff \eventually
-    r_{yx}(m)$), and a total order on messages ($<$), \processes
-    eventually reach consistent partitioning if each \process delivers
-    its best message among \underline{r}eceived messages $R_x$, and
+    Assuming that each \process $x$ stores its outgoing weights
+    ($\forall \langle x, y \rangle \in E: \pi_{xy} \in \sigma_x$), a
+    total order on messages based on weights ($m^d_s < m^{d'}_{s'}$
+    when $d < d' \vee (d = d' \wedge s< s')$), reliable communication
+    links ($s_{xy}(m) \iff r_{yx}(m)$), \processes eventually reach
+    consistent partitioning if each \process delivers its best (\ie
+    smallest) message among \underline{r}eceived messages $R_x$, and
     forwards its best message among \underline{d}elivered messages
-    $D_x$.
-    % , \ie
-    % the message $\alpha_s^d$ with the smallest distance $d$ to the
-    % source $s$
+    $D_x$ such that $f_x(\alpha^d_s) \implies \forall \langle x, y
+    \rangle \in E: s_{xy}(\alpha_s^d \oplus ^{w_{xy}})$, \ie by
+    accumulating the respective weight of used edges.
     % ($(\alpha_s^d = \min R_x) \implies (d_x(\alpha_s^d) \wedge
     % f_x(\TODO{\alpha_s^d}))$).
 \end{theorem}
@@ -142,13 +147,12 @@ of their closest source.
 \begin{proof}
   % When there are no sources, no \process receives, nor delivers hence
   % forwards any message. \Processes do not belong to any partition.
-  
   \noindent \TODO{use total order ($<$) and sets $R_p D_p$} Whenever a
   \process $s$ becomes a source, it delivers its own message
-  $d_s(\alpha_{s})$. Whatever its set of received messages, its own
-  partition $P_s$ becomes and remains its closest partition
-  $\alpha_{s}^{|\Pi_{ss}|} = \min D_s$ since $\forall x \neq s:
-  |\Pi_{s s}| < |\Pi_{s x}|$.
+  $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever its set of received
+  messages, its own partition $P_s$ becomes and remains its closest
+  partition $\alpha_{s}^{|\Pi_{ss}|} = \min D_s$ since $\forall x \neq
+  s: |\Pi_{s s}| < |\Pi_{s x}|$.
   %
   \noindent Such a source $s$ forwards $\alpha_{s}$ to its neighbors.
   Since communication links are reliable, neighboring \processes
@@ -181,22 +185,23 @@ of their closest source.
   \caption{\label{algo:add}Adding a partition by \Process~$p$.}
 \end{algorithm}
 
-Algorithm~\ref{algo:add} shows the instructions that implement
-forwarding of best to reach consistent partitioning when
+Algorithm~\ref{algo:add} shows the instructions that implement a
+\emph{reactive} forwarding of best to reach consistent partitioning
+when
 \begin{inparaenum}[(i)]
 \item weights are scalar values piggybacked in messages and
   accumulated over forwarding,
 \item \processes only add new partitions to the system,
 \item and \processes never join, crash nor leave the system.
 \end{inparaenum}
-For the sake of simplicity and to remove obvious loops, a \process
-does not forward a notification to its sender
-(Line~\ref{line:accumulator}).  Figure~\ref{fig:add} illustrates the
-behavior of this algorithm on a system comprising 4 \processes $a$,
-$b$, $c$, and $d$. \Process~$a$ and \Process~$d$ become the sources of
-their partition.  They \NAMEB a notification \TODO{\underline{a}dd
-  message}: $\alpha_a^0$ and $\alpha_d^0$. They initialize their own
-state with the lowest possible bound $0$ (see
+\TODO{We only keep last.}  For the sake of simplicity and to remove
+obvious loops, a \process does not forward a notification to its
+sender (Line~\ref{line:accumulator}).  Figure~\ref{fig:add}
+illustrates the behavior of this algorithm on a system comprising 4
+\processes $a$, $b$, $c$, and $d$. \Process~$a$ and \Process~$d$
+become the sources of their partition.  They \NAMEB a notification
+\TODO{\underline{a}dd message}: $\alpha_a^0$ and $\alpha_d^0$. They
+initialize their own state with the lowest possible bound $0$ (see
 Line~\ref{line:lowestbound}), and send a message to each of their
 neighbors by accumulating the corresponding edge weight (see
 Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, \Process~$b$
