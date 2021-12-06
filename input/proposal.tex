@@ -54,12 +54,21 @@ broadcaster within an application-dependant scope.
 \end{definition}
 
 This definition encompasses more specific definitions of related
-work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}.  It
-also highlights that the functioning of epidemic propagation is
-well-aligned with the objectives of scoped broadcast. More precisely,
-it underlines the transitive relevance of messages, thus a \process
-can stop \TODO{forwarding messages} as soon as its predicate becomes
-unverified.  We use \NAMEB to efficiently modify the state of each
+work~\cite{hsiao2005scoped, lue2006scoped, wang2015prodiluvian}. It
+underlines the transitive relevance of messages. It also highlights
+that the functioning of epidemic propagation is well-aligned with the
+objectives of scoped broadcast. As consequence, we assume
+implementations relying on the forwarding of messages from
+neighbor-to-neighbor.
+
+\begin{definition}[\label{def:forwarding}Forwarding]
+  A \process $x$ \underline{f}orwards a message $m$ by
+  \underline{s}ending it to its neighbors with metadata that depends
+  on its local knowledge: $f_x(m) \implies \forall \langle x, y\rangle
+  \in E: s_{xy}(m \oplus \sigma_x)$.
+\end{definition}
+
+We use scoped broadcast to efficiently modify the state of each
 \process depending on the partitions that exist in the system.
 
 
@@ -70,61 +79,52 @@ unverified.  We use \NAMEB to efficiently modify the state of each
 At any time, a \process can decide to become a \emph{source}, hence
 creating a new partition in the system by executing an \texttt{Add}
 operation. This partition includes at least its source plus
-neighboring \processes that estimate they are closer to this source
-than any other one. Such a distance (or \emph{weight}) is
-application-dependant: in the context of maintaining distributed
-indexes, this would be about link latency that \nodes could monitor by
-aggregating \texttt{ping}s; or operational costs when dealing with
-multiple tenants.
+neighboring \processes that are closer to this source than any other
+one. Such a distance (or \emph{weight}) is application-dependant: in
+the context of maintaining distributed indexes, this would be about
+link latency that \nodes could monitor by aggregating \texttt{ping}s;
+or operational costs when dealing with multiple tenants.
 
 \input{input/figadd.tex}
 
-\begin{definition}[\label{def:partitioning}Partitioning]
-  Let $S \subseteq V$ be the set of \underline{s}ources, and $P_{s\in
-    S}$ be the \underline{p}artition including at least \Process~$s$,
-  each \process belongs to at most one partition $\forall x, y \in V,
-  \forall s,s' \in S: (x \in P_{s} \wedge y \in P_{s'}) \implies (x \neq
-  y \vee s = s')$, and there exists at least one path $\pi_{xs}$ of
-  \processes that belong to this partition $\forall z \in \pi_{xs}: z
-  \in P_s$.
-\end{definition}
+%% \begin{definition}[\label{def:partitioning}Partitioning]
+%%   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_{s\in
+%%     S}$ be the \underline{p}artition including at least \Process~$s$,
+%%   each \process belongs to at most one partition $\forall x, y \in V,
+%%   \forall s,s' \in S: (x \in P_{s} \wedge y \in P_{s'}) \implies (x \neq
+%%   y \vee s = s')$, and there exists at least one path $\pi_{xs}$ of
+%%   \processes that belong to this partition $\forall z \in \pi_{xs}: z
+%%   \in P_s$.
+%% \end{definition}
 
-Definition~\ref{def:scoped} and Definition~\ref{def:partitioning}
-share the transitive relevance of \process states. However, we further
-constrain the partitioning in order to guarantee the existence of
-exactly one consistent partitioning that \processes eventually converge
-to.
+%% Definition~\ref{def:scoped} and Definition~\ref{def:partitioning}
+%% share the transitive relevance of \process states. However, we further
+%% constrain the partitioning in order to guarantee the existence of
+%% exactly one consistent partitioning that \processes eventually
+%% converge to.
 
 \begin{definition}[\underline{C}onsistent \underline{p}artitioning (CP)]
-  We associate each edge $\langle x, y \rangle \in E$ with a pair of
-  positive \underline{w}eights $w_{xy}$ and $w_{yx}$. The shortest
-  \underline{p}ath $\Pi_{xz}$ has a distance as a sum of weights
-  $\sum\{w_{pq} | \langle p, q \rangle \in \Pi_{xz}\} = |\Pi_{xz}|$
-  that is smaller than any other path, with $\Pi_{xx}$ being the
-  greatest lower bound of $x$. The only consistent partitioning is a
-  set of logical partitions $P_{s\in S}$ such that every \process
-  belongs to the partition of its closest source:
-  $\forall x \in P_{s}: \nexists P_{s'}$ such that
-  $|\Pi_{s'x}| < |\Pi_{sx}|$.
+  Assuming a set of \underline{s}ources $S\subseteq V$, a positive
+  \underline{w}eight $w_{xy}$ associated with each edge $\langle x, y
+  \rangle \in E$, we define consistent partitioning as a set of
+  logical partitions $P_{s\in S}$ where each \node $x$ belongs to the
+  partition of its closest source $s$, \ie there exists a
+  \underline{p}ath $\pi_{sx}$ with a sum of weights $|\pi_{sx}| =
+  \sum\{w_{pq} | \langle p, q \rangle \in \pi_{sx}\}$ smaller than any
+  other path, with $|\pi_{xx}|$ being $x$'s greatest lower bound.
+  %$\forall x \in
+  % P_{s}:  \nexists P_{s'}$ such that $|\pi_{s'x}| < |\pi_{sx}|$.
 \end{definition}
 
 Unfortunately, \processes do not share a common global knowledge of
-the network state. For \processes to reach consistent partitioning
-together, a \Process $s$ \underline{a}dding a partition must send a
-notification $\alpha_s$ to every \process that is closer to it than
-any other source. Since epidemic dissemination and scoped broadcast
-have well-aligned objectives, we assume implementations relying on
-message forwarding from neighbor-to-neighbor.
-
-\begin{definition}[\label{def:forwarding}Forwarding]
-  A \process $x$ \underline{f}orwards a message $m$ by
-  \underline{s}ending it to its neighbors:
-  $f_x(m) \implies \forall \langle x, y\rangle \in E:
-  \TODO{s_{xy}(m)}$.
-\end{definition}
+the network state. For \processes to eventually ($\eventually$) reach
+consistent partitioning, each source $s$ must send notifications
+$\alpha_s$ to all \processes that are closer to it than any other
+source, along with enough control information to allow them to decide
+of their closest source.
 
 \begin{theorem}[\label{theo:fb}\underline{F}orwarding of \underline{B}est (FB)
-    $\implies\eventually$CP]
+    $\implies\eventually \textup{CP}$]
     % 
     Assuming reliable communication links ($s_{xy}(m) \iff \eventually
     r_{yx}(m)$), and a total order on messages ($<$), \processes
