@@ -30,7 +30,7 @@ known \processes called neighbors.  We define scoped broadcast as a
 communication primitive that propagates a message around its
 broadcaster within an application-dependant scope.
 
-\begin{definition}[Autonomous systems]
+\begin{definition}[Autonomous system]
   An autonomous system is a network comprising nodes and communication
   links that we represent as a \underline{g}raph of
   \underline{v}ertices and \underline{e}dges:
@@ -122,10 +122,11 @@ consistent partitioning, each source $s$ must send
 \texttt{\underline{A}dd} notifications $\alpha_s$ to all \processes
 that are closer to it than any other source, along with enough
 metadata to allow them to decide of their closest source. A simple
-implementation consists in ensuring that each \process $x$ eventually
-receives $\alpha_s^{|\Pi_{sx}|}$ where $\Pi_{sx}$ is the \emph{best}
-path from any source to it; the value $|\Pi_{sx}|$ being built over
-forwarding along this path.
+implementation based on Definition~\ref{def:scoped} consists in
+ensuring that each \process $x$ eventually receives
+$\alpha_s^{|\Pi_{sx}|}$ where $\Pi_{sx}$ is the \emph{best} path from
+any source to it; the value $|\Pi_{sx}|$ being built over forwarding
+along this path.
 
 \begin{theorem}[\label{theo:fb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually \textup{CP}$]
@@ -173,7 +174,7 @@ forwarding along this path.
 
 \begin{algorithm}
   \input{input/algoadd.tex}
-  \caption{\label{algo:add}Adding a partition by \Process~$p$.}
+  \caption{\label{algo:add}Add-only CP protocol at \Process~$p$.}
 \end{algorithm}
 
 Algorithm~\ref{algo:add} shows the few instructions that implement a
@@ -224,9 +225,11 @@ choose another partition to belong to.
 \input{input/figdel.tex}
 
 \begin{definition}[\label{def:dcp}\underline{D}ynamic
-  \underline{c}onsistent \underline{p}artitioning (DCP)]
-  Dynamic consistent partitioning is consistent partitioning where
-  \processes can join or leave the set of sources at any \TODO{time}.
+    \underline{c}onsistent \underline{p}artitioning (DCP)] A DCP
+  protocol enables \processes to join or leave the set of sources at
+  any time while ensuring eventual consistent partitioning.
+  % Dynamic consistent partitioning is consistent partitioning where
+  % \processes can join or leave the set of sources at any \TODO{time}.
 \end{definition}
 
 
@@ -245,6 +248,9 @@ $\delta_a$ does not target the former's partition $P_d$. \Process~$b$
 sends its own best partition $\alpha_d^3$ that may be the best for
 $a$. Eventually, every \process belongs to Partition $P_d$. In this
 scenario, they reach consistent partitioning.
+
+%% Unfortunately, depending on receipt order of messages, \processes may
+%% converge to
 
 Delete operations add a new notion of order between events, and most
 importantly between message deliveries. Delete operations implicitly
@@ -281,7 +287,7 @@ information.
   f_x(\delta_s)$.
 \end{definition}
 
-\begin{definition}[\label{def:fbplus}FB$^+$: echos] FB where a
+\begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos] FB where a
   \process $x$ that receives a staleness notification sends back --~or
   echoes~-- its best up-to-date delivered message: $r_{xy}(\alpha_s)
   \wedge \delta_s \in D_x \implies s_{xy}(\alpha_{s'})$ with
@@ -289,11 +295,13 @@ information.
   D_x$. \TODO{Rework min}
 \end{definition}
 
-\TODO{Naive implementation is FB$^+$ etc. It does not work.}
+\TODO{The naive implementation described above is $\textup{FB}^+
+  \wedge FS$. And it does  not work.}
 
-\begin{lemma}[\label{lem:fbfse}FB$^+ \wedge$ FS $\centernot\implies$ DCP]
-  Forwarding best up-to-date, forwarding staleness, and echoing is not
-  sufficient to guarantee dynamic consistent partitioning.
+\begin{lemma}[\label{lem:fbfse}$\textup{FB}^+ \wedge \textup{FS}
+    \centernot\implies \textup{DCP}$] Forwarding best up-to-date,
+  forwarding staleness, and echoing is not sufficient to guarantee
+  dynamic consistent partitioning.
 \end{lemma}
 
 \begin{proof}
@@ -475,7 +483,7 @@ delivered this message.
 
 \begin{algorithm}
   \input{input/algoascast.tex}
-  \caption{\label{algo:ascast}\NAME at \Process~$p$.}
+  \caption{\label{algo:ascast}\NAME: DCP protocol at \Process~$p$.}
 \end{algorithm}
 
 Algorithm~\ref{algo:ascast} shows the instructions of our
