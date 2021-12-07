@@ -232,32 +232,13 @@ choose another partition to belong to.
   % \processes can join or leave the set of sources at any \TODO{time}.
 \end{definition}
 
-
-A naive implementation resembles echos in acoustics:
-\underline{d}elete notifications $\delta$ propagate as long as
-receivers' current partition is the targeted one, and when delete
-notifications reach the bordering \processes of the deleted partition,
-it triggers a competition -- or an echo -- that goes backward to fill
-the gap left open by removals.  For example, in Figure~\ref{fig:del},
-two partitions initially exist: $P_a$ and $P_d$ that respectively
-include $\{a\}$, and $\{b, c, d\}$. In Figure~\ref{fig:delA}, $a$
-deletes its partition. It notifies all neighboring \processes~--~here
-only $b$~-- that may belong to its partition using \NAMEB. Upon
-receipt, $b$ discards the delete notification $\delta_a$ since
-$\delta_a$ does not target the former's partition $P_d$. \Process~$b$
-sends its own best partition $\alpha_d^3$ that may be the best for
-$a$. Eventually, every \process belongs to Partition $P_d$. In this
-scenario, they reach consistent partitioning.
-
-%% Unfortunately, depending on receipt order of messages, \processes may
-%% converge to
-
-Delete operations add a new notion of order between events, and most
-importantly between message deliveries. Delete operations implicitly
-state that all preceding events become obsolete, and that all messages
-originating from these preceding events convey stale control
-information.
-
+Delete operations bring a new notion of order between events, and most
+importantly between message deliveries. When a \process $s$ performs a
+\texttt{Del} operation, this implicitly states that all its preceding
+\texttt{Add} operations become obsolete. As consequence, their results
+-- scoped broadcast in the form of \texttt{\underline{A}dd}
+notifications $\alpha_s$ -- should be canceled by the corresponding
+\texttt{\underline{D}el} notifications $\delta_s$.
 
 \begin{definition}[Happens-before ($\rightarrow$)~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
@@ -274,6 +255,13 @@ information.
   $s_x(\alpha_s) \implies \delta_s \not\in R_x$. \TODO{Only keep last?
     Tothink what happens if we keep all as in def now.}
 \end{definition}
+
+A naive implementation based on scoped broadcast as stated in
+Definition~\ref{def:scoped} resembles echos in acoustics: staleness
+notifications propagate as long as receivers' current partition is the
+targeted one, and when staleness notifications reach the bordering
+\processes of the deleted partition, it triggers a competition -- or
+an echo -- that goes backward to fill the gap left open by removals.
 
 \input{input/figundoproblem.tex}
 
@@ -295,8 +283,21 @@ information.
   D_x$. \TODO{Rework min}
 \end{definition}
 
-\TODO{The naive implementation described above is $\textup{FB}^+
-  \wedge FS$. And it does  not work.}
+Figure~\ref{fig:del} illustrates the behavior of this intuitive
+implementation.  Two partitions initially exist: $P_a$ and $P_d$ that
+respectively include $\{a\}$, and $\{b, c, d\}$. In
+Figure~\ref{fig:delA}, $a$ deletes its partition. It notifies all
+neighboring \processes~--~here only $b$~-- that may belong to its
+partition. Upon receipt, $b$ discards the delete notification
+$\delta_a$ since $\delta_a$ does not target the former's partition
+$P_d$. \Process~$b$ sends its own best partition $\alpha_d^3$ that may
+be the best for $a$. Eventually, every \process belongs to Partition
+$P_d$. In this scenario, they reach consistent
+partitioning. Unfortunately, this protocol does not ensure consistent
+partitioning in every scenario.
+
+% \TODO{The naive implementation described above is $\textup{FB}^+
+%  \wedge FS$. And it does  not work.}
 
 \begin{lemma}[\label{lem:fbfse}$\textup{FB}^+ \wedge \textup{FS}
     \centernot\implies \textup{DCP}$] Forwarding best up-to-date,
