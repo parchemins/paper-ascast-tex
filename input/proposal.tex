@@ -63,9 +63,9 @@ neighbor-to-neighbor.
 
 \begin{definition}[\label{def:forwarding}Forwarding]
   A \process $x$ \underline{f}orwards a message $m$ by
-  \underline{s}ending it to its neighbors with metadata that depends
-  on its local knowledge: $f_x(m) \implies \forall \langle x, y\rangle
-  \in E: s_{xy}(m \oplus \sigma_x)$.
+  \underline{s}ending it to its neighbors $y$ with metadata that
+  depends on its local knowledge: $f_x(m) \implies \forall \langle x,
+  y\rangle \in E: s_{xy}(m \oplus \sigma_x)$.
 \end{definition}
 
 We use scoped broadcast to efficiently modify the state of each
@@ -118,13 +118,14 @@ or operational costs when dealing with multiple tenants.
 
 Unfortunately, \processes do not share a common global knowledge of
 the network state. For \processes to eventually ($\eventually$) reach
-consistent partitioning, each source $s$ must send notifications
-$\alpha_s$ to all \processes that are closer to it than any other
-source, along with enough metadata to allow them to decide of their
-closest source. A simple implementation consists in ensuring that each
-\process $x$ eventually receives $\alpha_s^{|\Pi_{sx}|}$ where
-$\Pi_{sx}$ is the \emph{best} path from any source to it; the value
-$|\Pi_{sx}|$ being built over forwarding along this path.
+consistent partitioning, each source $s$ must send
+\texttt{\underline{A}dd} notifications $\alpha_s$ to all \processes
+that are closer to it than any other source, along with enough
+metadata to allow them to decide of their closest source. A simple
+implementation consists in ensuring that each \process $x$ eventually
+receives $\alpha_s^{|\Pi_{sx}|}$ where $\Pi_{sx}$ is the \emph{best}
+path from any source to it; the value $|\Pi_{sx}|$ being built over
+forwarding along this path.
 
 \begin{theorem}[\label{theo:fb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually \textup{CP}$]
@@ -133,51 +134,41 @@ $|\Pi_{sx}|$ being built over forwarding along this path.
     ($\forall \langle x, y \rangle \in E: \pi_{xy} \in \sigma_x$), a
     total order on messages based on weights ($m^d_s < m^{d'}_{s'}$
     when $d < d' \vee (d = d' \wedge s< s')$), reliable communication
-    links ($s_{xy}(m) \iff r_{yx}(m)$), \processes eventually reach
+    links ($s_{xy}(m) \iff \eventually r_{yx}(m)$), \processes eventually reach
     consistent partitioning if each \process delivers its best (\ie
     smallest) message among \underline{r}eceived messages $R_x$, and
     forwards its best message among \underline{d}elivered messages
     $D_x$ such that $f_x(\alpha^d_s) \implies \forall \langle x, y
     \rangle \in E: s_{xy}(\alpha_s^d \oplus ^{w_{xy}})$, \ie by
     accumulating the respective weight of used edges.
-    % ($(\alpha_s^d = \min R_x) \implies (d_x(\alpha_s^d) \wedge
-    % f_x(\TODO{\alpha_s^d}))$).
 \end{theorem}
 
 \begin{proof}
-  % When there are no sources, no \process receives, nor delivers hence
-  % forwards any message. \Processes do not belong to any partition.
-  % \noindent \TODO{use total order ($<$) and sets $R_p D_p$}
-  Whenever a \process $s$ becomes a source, it delivers its own
-  message $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever its set of received
-  messages, its own partition $P_s$ becomes and remains its closest
-  partition $\alpha_{s}^{|\pi_{ss}|} = \min D_s$ since $|\pi_{ss}|$ is
-  its greatest lower bound.
-  %
-  \noindent Such a source $s$ forwards $\alpha_{s}$ to its neighbors.
-  Since communication links are reliable, neighboring \processes
-  eventually receive such a notification
-  $\forall \langle s, y \rangle \in E \iff \eventually
-  r_y(\alpha_{s}^{d})$. Most importantly, whatever the order of
-  received messages, every \process $q$ in this neighborhood such that
-  there exists no closer source $s'$ than the received one $s$,
-  delivers it, since $w_{sq} < |\Pi_{s'q}|$.
-  %
-  \noindent They forward it and their respective neighbors eventually
-  receive it. By transitivity, the message originating from $s$
-  reaches all \processes belonging to $P_s$ at least through their
-  shortest paths: $\smash{\forall q' \in V, s, s' \in S: |\Pi_{s q'}| <
-  |\Pi_{s' q'}| \implies \eventually d_{q'}(\alpha_{s}^{|\Pi_{sq'}|})}$.
-  Since there exists only one best sum of weights per \process that
-  can never be retracted, \processes eventually reach consistent
-  partitioning.
-  %% /!\ not equivalence for there exists other implementations.
-  %% \item [$CP \implies BEF$:] By contradiction, if a \process $q \in
-  %%   \Pi_{sp} = [s, \ldots, q, q', \ldots, p]$ with $s, q, p \in P_s$
-  %%   does not forward its received $\alpha_s^{|\Pi_{sq}|}$, then
-  %%   following \processes from $q'$ to $p$ may mistake another
-  %%   partition for their  because it needs the weight $W_{pq}$.
-  %% \end{asparadesc}
+  Whenever a \process~$s$ becomes a source, it broadcasts hence
+  delivers its own message $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever
+  its set of received messages, it acknowledges that it belongs to its
+  own partition $P_s$ since $\alpha_{s}^{|\pi_{ss}|} = \min D_s$ and
+  it remains forever since $|\pi_{ss}|$ is its greatest lower bound.
+  \noindent Such a source forwards its notification to its neighbors.
+  Every neighbor eventually receives its notification since
+  communication links are reliable. Whatever the order of received
+  messages $R_x$ at neighboring \process~$x$, total order ensures that
+  it delivers notifications $\alpha_s^{d}$ when $d= |\pi_{ss}| +
+  w_{sx} = \min |\pi_{s'x}|$ where $\min |\pi_{s'x}|$ is the lightest
+  weight of $x$ to any source $s'$.
+  \noindent Among these neighbors, at least those that fulfill the
+  latest condition forward their respective notification.  By
+  transitivity, the message originating from $s$ reaches all
+  \processes that belong to $P_s$ at least through their respective
+  lightest path: $\small\smash{\forall y \in V, s, s' \in S: \min
+    |\pi_{s y}| < \min |\pi_{s' y}| \implies \eventually
+    d_{y}(\alpha_{s}^{\min |\pi_{sy}|})}$. When the system becomes
+  quiescent, \ie no \process becomes source anymore, every \process
+  eventually acknowledges the partition it belongs to, \ie \processes
+  eventually reach consistent partitioning together. In addition, the
+  protocol terminates: a \process never delivers hence forwards a
+  message after it received, delivered, and forwarded the message of
+  its closest source from its lightest path.
 \end{proof}
 
 \begin{algorithm}
@@ -185,33 +176,29 @@ $|\Pi_{sx}|$ being built over forwarding along this path.
   \caption{\label{algo:add}Adding a partition by \Process~$p$.}
 \end{algorithm}
 
-Algorithm~\ref{algo:add} shows the instructions that implement a
-\emph{reactive} forwarding of best to reach consistent partitioning
-when
-\begin{inparaenum}[(i)]
-\item weights are scalar values piggybacked in messages and
-  accumulated over forwarding,
-\item \processes only add new partitions to the system,
-\item and \processes never join, crash nor leave the system.
-\end{inparaenum}
-\TODO{We only keep last.}  For the sake of simplicity and to remove
+Algorithm~\ref{algo:add} shows the few instructions that implement a
+\emph{reactive} forwarding of best to reach consistent partitioning in
+a static network where \processes never join, crash, nor leave the
+system. As soon as a \process receives a better message, it delivers
+and forwards it. The trade-off consists in decreasing termination time
+at cost of increased traffic. For the sake of simplicity and to remove
 obvious loops, a \process does not forward a notification to its
-sender (Line~\ref{line:accumulator}).  Figure~\ref{fig:add}
-illustrates the behavior of this algorithm on a system comprising 4
-\processes $a$, $b$, $c$, and $d$. \Process~$a$ and \Process~$d$
-become the sources of their partition.  They \NAMEB a notification
-\TODO{\underline{a}dd message}: $\alpha_a^0$ and $\alpha_d^0$. They
-initialize their own state with the lowest possible bound $0$ (see
-Line~\ref{line:lowestbound}), and send a message to each of their
-neighbors by accumulating the corresponding edge weight (see
-Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, \Process~$b$
-receives $\alpha_{d}^{1}$. Since it improves its own partition
-distance, it keeps it and forwards it to its neighbors. In
-Figure~\ref{fig:addD}, $b$ discards $\alpha_{a}^{2}$, for it does not
-improve its partition distance. \Processes $c$ and $d$ will never
-acknowledge that Source~$a$ exists. Ultimately, \processes discard
-last transiting messages. Despite the obvious lack of traffic
-optimization, the system reaches consistent partitioning.
+sender (Line~\ref{line:accumulator}). Figure~\ref{fig:add} illustrates
+the behavior of this algorithm on a system comprising 4 \processes
+$a$, $b$, $c$, and $d$. Both $a$ and $d$ become sources.  They \NAMEB
+notifications $\alpha_a^0$ and $\alpha_d^0$. They initialize their own
+state with the lowest value $0$ (see Line~\ref{line:lowestbound}), and
+send a message to each of their neighbors by accumulating the
+corresponding edge weight (see Line~\ref{line:accumulator}). In
+Figure~\ref{fig:addC}, $b$ receives $\alpha_{d}^{1}$. Since it
+improves its own partition distance, it keeps it and forwards it to
+its neighbors. In Figure~\ref{fig:addD}, $b$ discards
+$\alpha_{a}^{2}$, for it does not improve its partition
+distance. Neither $c$ nor $d$ will ever acknowledge that Source~$a$
+exists. Ultimately, \processes discard last transiting
+messages.
+% Despite the obvious lack of traffic optimization,
+The system reaches consistent partitioning.
 
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity caused
