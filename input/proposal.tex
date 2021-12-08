@@ -251,8 +251,8 @@ notifications $\alpha_s$ -- should be canceled by the corresponding
   \underline{u}p-\underline{t}o-\underline{d}ate.
   % : $s_x(\alpha_s)
   % \implies \delta_s \not\in R_x$.
-  For convenience, we define $\textup{minUTD(}D\textup{)} = \min
-  \{\alpha_s^d | \alpha_s^d \in D \wedge \delta_s \notin D\}$, and
+  For convenience, we define \TODO{$\textup{minUTD(}D\textup{)} = \min
+  \{\alpha_s^d | \alpha_s^d \in D \wedge \delta_s \notin D\}$}, and
   $\textup{last(}D\textup{)} = \alpha_s \in D: \nexists \alpha_{s'}
   \in D: d_x(\alpha_s) \rightarrow d_x(\alpha_{s'})$.
   %  \TODO{Only keep last?  Tothink what happens if we keep all as in
@@ -280,12 +280,21 @@ backward to fill the gap left open by removals.
   \implies d_x(\delta_s) \rightarrow f_x(\delta_s)$.
 \end{definition}
 
-\begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos] FB where a
-  \process $x$ that receives a staleness notification sends back --~or
-  echoes~-- its best up-to-date delivered message: $r_{xy}(\alpha_s)
-  \wedge \delta_s \in D_x \implies s_{xy}(\alpha_{s'}^d\oplus
-  ^{w_{xy}})$ with $\alpha_{s'^d} = \min D_x \wedge \delta_{s'} \not\in
-  D_x$. \TODO{Rework min}
+\begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos] FB where
+  a \process $x$ that receives but does not deliver a staleness
+  notification sends back --~or echoes~-- its best up-to-date
+  delivered message:
+  $\textup{last}~D_x = \alpha_s^d \wedge \delta_s
+  \not\in D_x \wedge d_x(\alpha_s^d)\rightarrow r_{xy}(\delta_{s'}) \implies
+  s_{xy}(\alpha_s^d\oplus^{w_{xy}})$.
+
+  
+  % $r_{xy}(\alpha_s)
+  % \wedge \delta_s \in D_x \implies s_{xy}(\alpha_{s'}^d\oplus
+  % ^{w_{xy}})$ with $\alpha_{s'^d} = \min D_x \wedge \delta_{s'} \not\in
+  % D_x$. \TODO{Rework min}
+  
+  
 \end{definition}
 
 Figure~\ref{fig:del} illustrates the behavior of this implementation
