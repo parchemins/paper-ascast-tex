@@ -232,7 +232,9 @@ importantly between message deliveries. A \process $s$ that performs a
 \texttt{Add} operations become obsolete. As consequence, their results
 -- scoped broadcast in the form of \texttt{\underline{A}dd}
 notifications $\alpha_s$ -- should be canceled by the corresponding
-\texttt{\underline{D}el} notifications $\delta_s$.
+\texttt{\underline{D}el} notifications $\delta_s$. \TODO{From algo, we
+  see that last is also best, so we want to exploit this. but why ? or
+  should we show ``forwarding all staleness'' first.}
 
 \begin{definition}[Happens-before ($\rightarrow$)~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
@@ -245,12 +247,14 @@ notifications $\alpha_s$ -- should be canceled by the corresponding
   \underline{s}tale control information $\mathcal{S}(m)$ as soon as
   its broadcaster broadcasts another message: $\mathcal{S}(\alpha_x) =
   \exists \delta_x: b_x(\alpha_x) \rightarrow b_x(\delta_x)$.  A
-  \process only sends messages that it assumes
+  \process only delivers or sends messages that it assumes
   \underline{u}p-\underline{t}o-\underline{d}ate.
   % : $s_x(\alpha_s)
   % \implies \delta_s \not\in R_x$.
   For convenience, we define $\textup{minUTD(}D\textup{)} = \min
-  \{\alpha_s^d | \alpha_s^d \in D \wedge \delta_s \notin D\}$.
+  \{\alpha_s^d | \alpha_s^d \in D \wedge \delta_s \notin D\}$, and
+  $\textup{last(}D\textup{)} = \alpha_s \in D: \nexists \alpha_{s'}
+  \in D: d_x(\alpha_s) \rightarrow d_x(\alpha_{s'})$.
   %  \TODO{Only keep last?  Tothink what happens if we keep all as in
 %    def now.}
 \end{definition}
@@ -269,9 +273,11 @@ backward to fill the gap left open by removals.
     \underline{s}taleness (FS)]
   %
   A \process $x$ delivers and forwards a received staleness
-  notification if it targets its best up-to-date delivered message:
-  $(\delta_s \in R_x \wedge \alpha_s = \textup{minUTD}~D_x) \iff
-  \eventually (d_x(\delta_s) \rightarrow f_x(\delta_s))$.
+  notification if it targets its best up-to-date delivered message:\\
+  \TODO{$(\delta_s \in R_x \wedge \alpha_s = \textup{minUTD}~D_x) \iff
+  \eventually (d_x(\delta_s) \rightarrow f_x(\delta_s))$.}\\
+  $\textup{last}~D = \alpha_s \wedge d_x(\alpha_s) \rightarrow r_x(\delta_s)
+  \implies d_x(\delta_s) \rightarrow f_x(\delta_s)$.
 \end{definition}
 
 \begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos] FB where a
