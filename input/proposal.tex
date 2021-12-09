@@ -65,7 +65,7 @@ neighbor-to-neighbor.
   A \process $x$ \underline{f}orwards a message $m$ by
   \underline{s}ending it to its neighbors $y$ with metadata that
   depends on its local knowledge: $f_x(m) \implies \forall \langle x,
-  y\rangle \in E: s_{xy}(m \oplus \sigma_x)$.
+  y\rangle \in E: s_{xy}(m \TODO{\oplus} \sigma_x)$.
 \end{definition}
 
 We use scoped broadcast to efficiently modify the state of each
@@ -125,8 +125,8 @@ metadata to allow them to decide of their closest source. A simple
 implementation based on Definition~\ref{def:scoped} consists in
 ensuring that each \process $x$ eventually receives
 $\alpha_s^{|\Pi_{sx}|}$ where $\Pi_{sx}$ is the \emph{best} path from
-any source to it; the value $|\Pi_{sx}|$ being built over forwarding
-along this path.
+any source to it; the best value $|\Pi_{sx}|$ being built over
+forwarding along this path.
 
 \begin{theorem}[\label{theo:fb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually \textup{CP}$]
@@ -182,25 +182,37 @@ Algorithm~\ref{algo:add} shows the few instructions that implement a
 a static network where \processes never join, crash, nor leave the
 system. As soon as a \process receives a better message, it delivers
 and forwards it. The trade-off consists in decreasing termination time
-at cost of increased traffic. For the sake of simplicity and to remove
-obvious loops, a \process does not forward a notification to its
-sender (Line~\ref{line:accumulator}). Figure~\ref{fig:add} illustrates
-the behavior of this algorithm on a system comprising 4 \processes
-$a$, $b$, $c$, and $d$. Both $a$ and $d$ become sources.  They \NAMEB
-notifications $\alpha_a^0$ and $\alpha_d^0$. They initialize their own
-state with the lowest value $0$ (see Line~\ref{line:lowestbound}), and
-send a message to each of their neighbors by accumulating the
-corresponding edge weight (see Line~\ref{line:accumulator}). In
-Figure~\ref{fig:addC}, $b$ receives $\alpha_{d}^{1}$. Since it
-improves its own partition distance, it keeps it and forwards it to
-its neighbors. In Figure~\ref{fig:addD}, $b$ discards
-$\alpha_{a}^{2}$, for it does not improve its partition
+at cost of increased traffic. \TODO{For the sake of simplicity and to
+  remove obvious loops, a \process does not forward a notification to
+  its sender (Line~\ref{line:accumulator})}. Figure~\ref{fig:add}
+illustrates the behavior of this algorithm on a system comprising 4
+\processes $a$, $b$, $c$, and $d$. Both $a$ and $d$ become sources.
+They \NAMEB notifications $\alpha_a^0$ and $\alpha_d^0$. They
+initialize their own state with the lowest value $0$ (see
+Line~\ref{line:lowestbound}), and send a message to each of their
+neighbors by accumulating the corresponding edge weight (see
+Line~\ref{line:accumulator}). In Figure~\ref{fig:addC}, $b$ receives
+$\alpha_{d}^{1}$. Since it improves its own partition distance, it
+keeps it and forwards it to its neighbors. In Figure~\ref{fig:addD},
+$b$ discards $\alpha_{a}^{2}$, for it does not improve its partition
 distance. Neither $c$ nor $d$ will ever acknowledge that Source~$a$
-exists. Ultimately, \processes discard last transiting
-messages.
+exists. Ultimately, \processes discard last transiting messages.
 % Despite the obvious lack of traffic optimization,
 The system reaches consistent partitioning.
-\TODO{Traffic complexity here?}
+
+\noindent \TODO{In terms of space complexity.} In terms of number of
+messages, in the average case, a \process $x$ chosen uniformly at
+random among all \processes creates a logical partition. Its messages
+$\alpha_x$ spread through the network until reaching \processes that
+belong to another partition closer to them. This splits partitions in
+half on average. Overall, the $n^{th}$ new partition comprises
+\smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor \log_2 n \rfloor}})$}
+\processes. This decreases every new partition until reaching one
+\process per new partition: its source. The average number of messages
+per \process is
+\smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 n
+      \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
+number of neighbors per \process.
 
 While only adding logical partitions to the distributed system is
 straightforward, removing them introduces additional complexity caused
@@ -261,11 +273,13 @@ notifications $\alpha_s$ -- should be canceled by the corresponding
 
 A naive attempt at implementing DCP resembles echoes in
 acoustics. Following the principles of scoped broadcast as stated in
-Definition~\ref{def:scoped}, staleness notifications propagate as long
-as receivers' current partition is the targeted one, and when
-staleness notifications reach the bordering \processes of the deleted
-partition, it triggers a competition -- or an echo -- that goes
-backward to fill the gap left open by removals.
+Definition~\ref{def:scoped}, a \process that receives a staleness
+notification forwards it only if the latter targets its current
+partition. The staleness notifications propagate through the network
+as long as they remain in the deleted partition. When they reach the
+bordering \processes of the deleted partition, it triggers a
+competition -- or an echo -- that goes backward to fill the gap left
+open by removals. \TODO{as in FB.}
 
 \input{input/figundoproblem.tex}
 
@@ -565,18 +579,7 @@ subject to physical partitioning.
 %% \item retrieving the closest source, hence propagating $\alpha$
 %%   messages.
 %% \end{inparaenum}
-\TODO{TODOUBLECHECK}. In terms of number of messages, in the average
-case, a \process $i$ chosen uniformly at random among all \processes
-creates a logical partition. Its messages $\alpha_i$ spread through
-the network until reaching \processes that belong to another partition
-closer to them. This splits partitions in half on average. Overall,
-the $a^{th}$ new partition comprises
-\smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor \log_2 a \rfloor}})$}
-\processes. This decreases every new partition until reaching one
-\process per new partition: its source. The average number of messages
-per \process is \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor
-      \log_2 a \rfloor}})$}, where \smash{$\overline{|O|}$} is the
-average number of neighbors per \process.
+\TODO{TODOUBLECHECK}.
 % \TODO{Multiple receipt and
 % multiple
 %  delivery imply more messages (receipt bounded by $|O|$ as well).}
