@@ -270,9 +270,10 @@ backward to fill the gap left open by removals.
 \input{input/figundoproblem.tex}
 
 \begin{definition}[\label{def:fs}\underline{F}orwarding of
-    \underline{s}taleness (FS)]
-  %
-  A \process $x$ delivers and forwards a received staleness
+  \underline{s}taleness (FS)]
+  % 
+  \TODO{A source broadcasts.}
+  A \process $x$ delivers and forwards \TODO{at most once} a received staleness
   notification if it targets its best up-to-date delivered message:\\
   \TODO{$(\delta_s \in R_x \wedge \alpha_s = \textup{minUTD}~D_x) \iff
   \eventually (d_x(\delta_s) \rightarrow f_x(\delta_s))$.}\\
@@ -356,6 +357,10 @@ consistent partitioning, \processes need
 \item enabling up-to-date notifications to eventually echo back to
   every \process.
 \end{inparaenum}
+\TODO{A lot of blockings occur, only that of example is a problem.
+  Could be $b$ or $c$ that detects? We put burden on $c$ since
+  unconsistency starts here. Problem: how to make sure that $c$
+  receives a staleness notification in this case?}
 
 \begin{lemma}[\label{lem:detector}$\textup{FB}^+ \wedge \textup{FS}
   \implies$ \underline{D}etector existence (D)] Assuming
@@ -463,7 +468,7 @@ and $b$.
 
 \begin{definition}[\label{def:fsplus}$\textup{FS}^+$: forwarding
   staleness downstream]
-  To \NAMEB staleness downstream, a node $x$ delivers and forwards a
+  \TODO{Any process broadcast.}  A node $x$ delivers and forwards a
   received staleness notification if it is not yet delivered and it
   comes from the path of delivery of its best up-to-date delivered
   message. \TODO{more.}
