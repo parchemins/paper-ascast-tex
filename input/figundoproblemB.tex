@@ -1,26 +1,13 @@
 
-
 \begin{tikzpicture}[scale=\SCALE]
-
-  \thickmuskip=0mu
-  \medmuskip=0mu
-  \thinmuskip=0mu
-  
-  \newcommand\X{50pt}
-  \newcommand\Y{-50pt}
-
-  \newcommand\ADD{\alpha}
-  \newcommand\DEL{\delta}
-
-
   
 %%   \draw (-\X + 5pt, 0) --
-%%   node[above=-0.3em,font=\tiny]{$\bm{\DEL_{a} \RIGHT}$}
+%%   node[above=-0.3em,font=\tiny]{$\bm{\delta_{a} \RIGHT}$}
 %%   (0 - 5pt, 0); %% b - a 
 
 %%   \draw (0 +5pt, 0) --
-%%   node[above=-0.3em,font=\tiny]{$\textcolor{\PA}{\ADD_{a}^{3}} \RIGHT$}
-%%   node[below=-0.3em,font=\tiny]{$\LEFT \textcolor{\PC}{\ADD_{c}^{1}} \cdot \DEL_c$}
+%%   node[above=-0.3em,font=\tiny]{$\textcolor{\PA}{\alpha_{a}^{3}} \RIGHT$}
+%%   node[below=-0.3em,font=\tiny]{$\LEFT \textcolor{\PC}{\alpha_{c}^{1}} \cdot \delta_c$}
 %%   (\X -5pt, 0); %% b - c
 
 %% 
@@ -29,26 +16,28 @@
 %%   \draw[fill=white] (0, 0) node{\textcolor{\PA}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
 %%   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-%%   \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a} \bm{\rightarrow \DEL_a}$};
-%%   \draw (  0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a^2}$};
-%%   \draw ( \X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PC}{\ADD_c}\vphantom{\ADD_a^3} \rightarrow \DEL_c$};
+%%   \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a} \bm{\rightarrow \delta_a}$};
+%%   \draw (  0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a^2}$};
+%%   \draw ( \X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PC}{\alpha_c}\vphantom{\alpha_a^3} \rightarrow \delta_c$};
 
   \begin{scope}[shift={(0, -1*\Y)}]
-      \draw [->] (-\X + 5pt, 0) -- (0 - 5pt, 0); %% b - a 
-      
-      \draw (0 +5pt, 0) --
-      node[above=-0.3em,font=\tiny]{$\textcolor{\PA}{\ADD_{a}^{3}} \RIGHT$}
-      node[below=-0.3em,font=\tiny]{$\LEFT \textcolor{\PC}{\ADD_{c}^{1}} \cdot \DEL_c$}
-      (\X -5pt, 0); %% b - c
-      
-      \draw[fill=white] (-\X, 0) node{\textcolor{\PA}{$\bm{a}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
-      \draw[fill=white] (0, 0) node{\textcolor{\PA}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-      \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-      
-      \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a^0}$};
-      \draw (  0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a^2}$};
-      \draw ( \X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PC}{\ADD_c}\vphantom{\ADD_a^3} \rightarrow \DEL_c$};
-
+    \draw [->] (-\X + 5pt, 0) --
+    node[opacity=\OACK, below=-0.3em, font=\SMSG]{$\LEFT \alpha_b^4$}
+    (0 - 5pt, 0); %% b - a 
+    
+    \draw (0 +5pt, 0) --
+    node[above=-0.3em,font=\SMSG]{$\textcolor{\PA}{\alpha_{a}^{3}} \RIGHT$}
+    node[below=-0.3em,font=\SMSG]{$\LEFT \textcolor{\PC}{\alpha_{c}^{1}} \cdot \delta_c$}
+    (\X -5pt, 0); %% b - c
+    
+    \draw[fill=white] (-\X, 0) node{\textcolor{\PA}{$\bm{a}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+    \draw[fill=white] (0, 0) node{\textcolor{\PA}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+    \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+    
+    \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a^0}$};
+    \draw (  0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a^2}$};
+    \draw ( \X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PC}{\alpha_c}\vphantom{\alpha_a^3} \rightarrow \delta_c$};
+    
   \end{scope}
 
 \end{tikzpicture}

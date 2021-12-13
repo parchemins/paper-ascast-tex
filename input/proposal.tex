@@ -496,13 +496,12 @@ staleness notification downstream. The notification must reach all
 upstream, and belongs to the delivery path of all \processes that
 delivered this message.
 
-\TODO{$FB \subseteq FB+$}.
-
-\begin{theorem}[$\textup{FB}^+ \wedge \textup{FS}^+ \TODO{\wedge \textup{D}} \implies \textup{DCP}$]
+\begin{theorem}[$\textup{FB}^+ \wedge \textup{FS}^+ \implies \textup{DCP}$]
   A protocol guarantees dynamic consistent partitioning if it
   implements forwarding of best up-to-date messages with echos,
-  forwarding of staleness messages downstream, and detection of
-  possible blocking of staleness notifications.
+  forwarding of staleness messages downstream, and the detection of
+  possible blocking triggers the forwarding of staleness notifications
+  downstream.
 \end{theorem}
 
 \begin{proof}
@@ -607,7 +606,7 @@ number of partitions.
 \subsection{Lazy dynamic consistent partitioning}
 \label{subsec:lazy}
 
-In Edge infrastructures comprising tens of thousands of autonomous
+\TODO{In Edge infrastructures comprising tens of thousands of autonomous
 systems~\cite{nur2018crossas}, only a small subset of autonomous
 systems needs logical partitioning. At any time, an autonomous system
 start logical partitioning when a \process from this network becomes a
@@ -617,7 +616,9 @@ that of adjacent networks that started logical partitioning as well.
 At any time, an autonomous system stops logical partitioning when the
 last source from this network revokes its status of
 source. Eventually, all nodes from this network do not belong to any
-partition and the generated traffic stops.
+partition and the generated traffic stops.}
+
+\TODO{Further scale, follow up of motivations.}
 
 \begin{definition}[Edge infrastructure]
   An Edge infrastructure $\mathcal{G}$ has multiple autonomous systems
