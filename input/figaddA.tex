@@ -1,17 +1,6 @@
 
 \begin{tikzpicture}[scale=\SCALE]
 
-  \thickmuskip=0mu
-  \medmuskip=0mu
-  \thinmuskip=0mu
-  
-  \newcommand\X{50pt}
-  \newcommand\Y{-50pt}
-
-  \newcommand\ADD{\alpha}
-
-
-  
   \draw (-\X + 5pt, 0) --
   node[shape=circle, draw, fill=white, inner sep=0.5pt, font=\footnotesize]{2}
   (0 - 5pt, 0); %% a - b
@@ -35,7 +24,7 @@
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (0, \Y) node[color=\PD]{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-  \draw (-\X, 5pt) node[above, font=\small, color=\PA]{$\ADD_a^0$};
-  \draw (-5pt, \Y) node[left, font=\small, color=\PD]{$\ADD_d^0$};
+  \draw (-\X, 5pt) node[above, font=\small, color=\PA]{$\alpha_a^0$};
+  \draw (-5pt, \Y) node[left, font=\small, color=\PD]{$\alpha_d^0$};
 
 \end{tikzpicture}

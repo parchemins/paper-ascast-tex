@@ -21,8 +21,8 @@ $A^d_s \rightarrow \alpha^\infty_\varnothing$ \tcp*[r]{smallest distance $d$ to 
   \If (\tcp*[f]{check predicate ($\phi$)}){\smash{$\alpha^{d'}_{s'} < A^d_s$}} {
       $\smash{A_s^d \leftarrow \alpha_{s'}^{d'}}$ \tcp*[r]{deliver and update ($\sigma$)}
 
-      \lForEach(\tcp*[f]{fwd}) {$n \in O_p \setminus q$} {
-          \textup{send$_n$(\smash{$\alpha^{d' + w_{pn}}_{s'}$})} \label{line:accumulator}
+      \lForEach(\tcp*[f]{fwd}) {$n \in O_p$} {
+          \textup{send$_n$(\smash{$\alpha^{d'}_{s'} \oplus ^{w_{pn}}$})} \label{line:accumulator}
        }      
   }
 }
