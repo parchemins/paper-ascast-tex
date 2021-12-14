@@ -271,6 +271,8 @@ highlighted by Algorithm~\ref{algo:add}.
 %    def now.}
 \end{definition}
 
+\newcommand{\last}{\textup{last}~}
+
 A naive attempt at implementing DCP resembles echoes in
 acoustics. Following the principles of scoped broadcast as stated in
 Definition~\ref{def:scoped}, a \process that receives a staleness
@@ -293,7 +295,7 @@ Theorem~\ref{theo:fb}.
   %% \TODO{$(\delta_s \in R_x \wedge \alpha_s =
   %%     \textup{minUTD}~D_x) \iff \eventually (d_x(\delta_s) \rightarrow
   %% f_x(\delta_s))$.}
-  $(\textup{last}~D_x = \alpha_s \wedge d_x(\alpha_s) \rightarrow
+  $(\last D_x = \alpha_s \wedge d_x(\alpha_s) \rightarrow
   r_x(\delta_s)) \implies d_x(\delta_s) \rightarrow f_x(\delta_s)$.
   % \wedge \nexists d'_s: d_x(\delta_s) \TODO{\not\rightarrow} d_x(\delta_s'))$.
 \end{definition}
@@ -301,7 +303,7 @@ Theorem~\ref{theo:fb}.
 \begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos] FB where
   a \process $x$ that receives but does not deliver a staleness
   notification sends back --~or echoes~-- its best up-to-date
-  delivered message: $(\textup{last}~D_x = \alpha_s^d \wedge \delta_s
+  delivered message: $(\last D_x = \alpha_s^d \wedge \delta_s
   \not\in D_x \wedge d_x(\alpha_s^d)\rightarrow r_{xy}(\delta_{s'}))
   \implies r_{xy}(\delta_{s'}) \rightarrow
   s_{xy}(\alpha_s^d\oplus^{w_{xy}})$.
@@ -366,27 +368,34 @@ wrongfully believes that it belongs to $a$'s partition when $a$
 already deleted it, but it could contribute to its inconsistency by
 blocking farther but up-to-date messages from actual sources.
 
-To reach consistent partitioning, \processes need
-\begin{inparaenum}[(i)]
-\item to detect possibly blocking conditions
-\item to purge all stale messages from the system
-\item enabling up-to-date notifications to eventually echo back to
-  every \process.
-\end{inparaenum}
-Since Figure~\ref{fig:problemD} highlights that when the protocol
-terminates, $c$ is the \process that remains in the wrong partition,
-we put the burden of detection and resolution on it. 
+A first step to avoid staying in inconsistent state is to extend the
+behavior of each \process so \processes such as $c$, that would remain
+in a wrong partition, use their history of receipt and delivery to
+detect the blocking of staleness notifications that can hinder
+reaching consistent partitioning. For instance, $c$ detects the
+blocking of $\delta_a$ because it acknowledges that its parent $b$
+delivered a stale notification $\alpha_c^1$, \ie between the delivery
+of $\alpha_c^1$ and the delivery of $\delta_c$, $b$ blocked any other
+$\delta$.
 
-\TODO{A lot of blockings occur, only that of example is a problem.
-  Could be $b$ or $c$ that detects? We put burden on $c$ since
-  unconsistency starts here. Problem: how to make sure that $c$
-  receives a staleness notification in this case? Also, $b$ is not
-  sure to receive $\delta_c$ since composable problem.}
+%% \Begincomme{inparaenum}[(i)] \item to detect possibly blocking
+%% conditions that can hinder \item to purge all stale messages from
+%% the system \item enabling up-to-date notifications to eventually
+%% echo back to every \process.  \end{inparaenum} Since
+%% Figure~\ref{fig:problemD} highlights that when the protocol
+%% terminates, $c$ is the \process that remains in the wrong
+%% partition, we put the burden of detection and resolution on it.
+
+%% \TODO{A lot of blockings occur, only that of example is a problem.
+%%   Could be $b$ or $c$ that detects? We put burden on $c$ since
+%%   unconsistency starts here. Problem: how to make sure that $c$
+%%   receives a staleness notification in this case? Also, $b$ is not
+%%   sure to receive $\delta_c$ since composable problem.}
 
 \begin{lemma}[\label{lem:detector}$\textup{FB}^+ \wedge \textup{FS}
-  \implies$ \underline{D}etector existence (D)] Assuming
-  $\textup{FB}^+$, $\textup{FS}$, a chain of delivery on $\pi_{xz}$ of
-  $\alpha_x$ with $\alpha_x = \textup{last}~D_z$, if $x$ broadcasts a staleness
+  \implies$ Detector existence] Assuming
+  $\textup{FB}^+$ and $\textup{FS}$, a chain of delivery on $\pi_{xz}$ of
+  $\alpha_x$ with $\alpha_x = \last D_z$, if $x$ broadcasts a staleness
   notification $\delta_x$, either $z$ eventually delivers it, or a
   \process $y$ in such a chain of delivery $\pi_{xz}'$ eventually
   acknowledges its blocking.
@@ -398,7 +407,7 @@ we put the burden of detection and resolution on it.
   %% knowing that b_p delta is sufficient to say that processes will
   %% receive delta or detect blocking
   (A) Assuming a chain of delivery $\pi_{xz} = [x, \ldots, z]$ of
-  $\alpha_x$ with $\forall y \in \pi_{xz}: \alpha_x = \min D_y$, and
+  $\alpha_x$ with $\forall y \in \pi_{xz}: \alpha_x = \last D_y$, and
   assuming $d_x(\delta_x)$, then with forwarding of staleness
   (Definition~\ref{def:fs}),
   $f_{\pi_{xz}[k]}(\delta_x) \implies \eventually
@@ -409,24 +418,24 @@ we put the burden of detection and resolution on it.
 
   \noindent (B) Assuming a chain of delivery
   $\pi_{xz} = [x, \ldots, z]$ of $\alpha_x$ with at least
-  $\alpha_x = \min D_z$, and assuming $d_x(\delta_x)$, then by (A),
+  $\alpha_x = \last D_z$, and assuming $d_x(\delta_x)$, then by (A),
   the staleness notification reaches a \process $ y = \pi_{xz}[k]$. By
   Definition~\ref{def:fs}, the forwarding stops when $y$ already
   delivered $\delta_x$ ($\delta_x \in D_y$ covered by (A)) or
-  delivered a better message $\alpha_s = \min D_y$ with
+  delivered a better message $\alpha_s = \last D_y$ with
   $\alpha_s \neq \alpha_x$. With $y'=\pi_{xz}[k+1]$, forwarding of
   best (Definition~\ref{def:fbplus}) implies three possible outcomes:
   \begin{enumerate}[(i)]
-  \item $\alpha_{s'} = \min D_{y'}$ with $\alpha_{s'} \neq \alpha_x$
+  \item $\alpha_{s'} = \last D_{y'}$ with $\alpha_{s'} \neq \alpha_x$
     hence $y' \iff y$ which leaves two possible outcomes:
   \item
-    $r_{y'}(\alpha_s) \wedge \alpha_x = \min D_{y'} \wedge \alpha_x <
+    $r_{y'}(\alpha_s) \wedge \alpha_x = \last D_{y'} \wedge \alpha_x <
     \alpha_s$ which means that a shorter path of delivery $\pi_{xz}'$
     exists that either forwards appropriate staleness notifications
     (A) or detects its possible blocking:
   \item
     $r_{y'}(\alpha_s) \wedge \delta_s \in D_{y'} \wedge \alpha_x =
-    \min D_{y'}$ which detects a possible blocking of
+    \last D_{y'}$ which detects a possible blocking of
     $\delta_x$. Without global knowledge, $y'$ assumes it belongs to
     the shortest and only path of delivery of $\alpha_x$
     ($\pi_{xy'} \subseteq \Pi_{xz}$) thus it does not further delegate
@@ -471,13 +480,18 @@ we put the burden of detection and resolution on it.
   %% delivers either a better $\alpha_Z$, or $\delta_X$, or $\Delta_X$.
 \end{proof}
 
-Proof of Lemma~\ref{lem:detector} shows that there exists false
-positive in the blocking detection: $\delta_x$ may not exist but $y'$
-still receives $\alpha_s$ after the delivery of $\delta_s$ from the
-path it delivered $\alpha_x$. Figure~\ref{fig:undoproblem} highlights
-this behavior. In Figure~\ref{fig:undoproblemB}, $a$ does not delete
-its partition. In Figure~\ref{fig:undoproblemD} and because of \NAMEB,
-$c$ received the same series of messages as in
+As a second step, detecting \processes must proactively purge the
+system from their forwarded notifications. For instance in
+Figure~\ref{fig:problemD}, $c$ could broadcast $\delta_a$ in order to
+acknowledge the staleness of its own $\alpha_a^3$ and inform
+neighboring \processes that delivered it as well. Unfortunately, proof
+of Lemma~\ref{lem:detector} shows that there exists false positive in
+the blocking detection: $\delta_x$ may not exist but $y'$ still
+receives $\alpha_s$ after the delivery of $\delta_s$ from the path it
+delivered $\alpha_x$. Figure~\ref{fig:undoproblem} highlights this
+behavior. In Figure~\ref{fig:undoproblemB}, $a$ does not delete its
+partition. In Figure~\ref{fig:undoproblemD} and because of scoped
+broadcast, $c$ received the same series of messages as in
 Figure~\ref{fig:problemD}. Yet, $c$ must assume the existence of
 $\delta_a$ and act accordingly by forcing the staleness of its best
 delivered message and disseminate this information to its neighbors.
@@ -492,7 +506,7 @@ and $b$.
   staleness notification at any time. A \emph{child \process} $x$
   delivers and forwards a received staleness notification if it comes
   from the path of delivery of its best up-to-date delivered
-  message. \TODO{more.}
+  message.
 \end{definition}
 
 It is worth noting that forwarding of staleness as stated in
@@ -577,23 +591,13 @@ mechanism of Lemma~\ref{lem:detector} as a solution.
 Algorithm~\ref{algo:edges} even extends \NAME to dynamic networks
 subject to physical partitioning.
 
-%% \NAME guarantees dynamic consistent partitioning by making extensive
-%% use of \process-to-\process communications. It requires
-%% \begin{inparaenum}[(i)]
-%% \item purging stale control information, hence propagating $\delta$
-%%   messages; and
-%% \item retrieving the closest source, hence propagating $\alpha$
-%%   messages.
-%% \end{inparaenum}
-\TODO{TODOUBLECHECK}.
-% \TODO{Multiple receipt and
-% multiple
-%  delivery imply more messages (receipt bounded by $|O|$ as well).}
-Deleting the $a^{th}$ partition generates twice as many messages as
-creating the $a^{th}$ partition: $\delta$ messages travel through the
-partition, then $\alpha$ messages compete to fill the gap.  Overall,
-the communication complexity shows that \NAME scales well to the
-number of partitions.
+% \TODO{Multiple receipt and multiple delivery}
+In terms of number of messages, deleting the $a^{th}$ partition
+generates twice as many messages as creating the $a^{th}$ partition:
+$\delta$ messages travel through the partition, then $\alpha$ messages
+compete to fill the gap \TODO{which is?}. \TODO{What about false
+  positives?} Overall, the communication complexity shows that \NAME
+scales well to the number of partitions.
 %% In the
 %% worst-case, every new partition includes all but one \process
 %% belonging to the previous partition. The total number of messages
@@ -601,12 +605,6 @@ number of partitions.
 %% a^2)$. As for the average-case, the number of messages for the
 %% partition deletion is identical to the number of messages of the
 %% corresponding partition creation.
-%% \begin{algorithm}[h!]
-%%   \input{input/algoedges.tex}
-%%   \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
-%% \end{algorithm}
-
-
 
 
 
