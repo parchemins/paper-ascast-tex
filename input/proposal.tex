@@ -194,9 +194,10 @@ improves its own partition distance, it keeps it and forwards it to
 its neighbors. In Figure~\ref{fig:addD}, $b$ discards
 $\alpha_{a}^{2}$, for it does not improve its partition
 distance. Neither $c$ nor $d$ will ever acknowledge that Source~$a$
-exists. Ultimately, \processes discard last transiting messages.
-Despite the obvious lack of traffic optimization, the system reaches
-consistent partitioning.
+exists.  The protocol lacks of obvious traffic optimization, \eg grey
+messages are useless in this scenario. Nevertheless, the system
+discards last transiting messages after it reached consistent
+partitioning.
 
 Each \process has a space complexity of $\mathcal{O}(\log_2(d \cdot
 |V|))$, and generates messages of identical space complexity. In terms
@@ -360,29 +361,35 @@ $c$ stays in the deleted partition $P_a$ for not having received
 $\delta_a$ that $b$ blocked earlier. The system does not reach
 consistent partitioning. \end{proof}
 
-As a cascading effect, in Figure~\ref{fig:problemD}, not only $c$
+As a cascading effect in Figure~\ref{fig:problemD}, not only $c$
 wrongfully believes that it belongs to $a$'s partition when $a$
 already deleted it, but it could contribute to its inconsistency by
-blocking farther but up-to-date messages from actual sources. To reach
-consistent partitioning, \processes need
+blocking farther but up-to-date messages from actual sources.
+
+To reach consistent partitioning, \processes need
 \begin{inparaenum}[(i)]
-\item to detect possibly blocking conditions 
+\item to detect possibly blocking conditions
 \item to purge all stale messages from the system
 \item enabling up-to-date notifications to eventually echo back to
   every \process.
 \end{inparaenum}
+Since Figure~\ref{fig:problemD} highlights that when the protocol
+terminates, $c$ is the \process that remains in the wrong partition,
+we put the burden of detection and resolution on it. 
+
 \TODO{A lot of blockings occur, only that of example is a problem.
   Could be $b$ or $c$ that detects? We put burden on $c$ since
   unconsistency starts here. Problem: how to make sure that $c$
-  receives a staleness notification in this case?}
+  receives a staleness notification in this case? Also, $b$ is not
+  sure to receive $\delta_c$ since composable problem.}
 
 \begin{lemma}[\label{lem:detector}$\textup{FB}^+ \wedge \textup{FS}
   \implies$ \underline{D}etector existence (D)] Assuming
   $\textup{FB}^+$, $\textup{FS}$, a chain of delivery on $\pi_{xz}$ of
-  $\alpha_x$ with $\alpha_x = \min D_z$, if $x$ broadcasts a staleness
+  $\alpha_x$ with $\alpha_x = \textup{last}~D_z$, if $x$ broadcasts a staleness
   notification $\delta_x$, either $z$ eventually delivers it, or a
   \process $y$ in such a chain of delivery $\pi_{xz}'$ eventually
-  \TODO{detects} its \TODO{blocking}.
+  acknowledges its blocking.
   % $b_p(\delta_x) \implies d_q(x) U Detect[X]$ ??? 
 \end{lemma}
 
