@@ -11,6 +11,7 @@
 \DontPrintSemicolon
 \LinesNumbered
 
+
 \newcommand{\XADD}{\Gamma}
 \newcommand{\xadd}{\gamma}
 
@@ -20,61 +21,43 @@ $\XADD_{\pi}^{d} \leftarrow \gamma_{\varnothing}^{\infty} $
 
 \BlankLine
 
-%% \begin{multicols}{2}
-%% \Function{\textup{\texttt{Add( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
-%%   $V[p] \leftarrow V[p] + 1$ \;
-%%   \textup{\smash{receiveAdd($p$, $\alpha_{\varnothing}^{0}$)}}\label{line:ascast_add}
-%% }
-
-
-%% \Function{\textup{\texttt{Del( )}}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
-%%   $V[p] \leftarrow V[p] + 1$ \;
-%%   \textup{\smash{receiveDel($p$, $\delta_{p, V[p]}$)}}\label{line:ascast_del}
-%% }
-%% \end{multicols}
-
 
 
 % \begin{multicols}{2}
 
 \Function{\textup{receiveAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
-  \If {$m \in \xadd \vee q \in X_p$}{
-    receiveXAdd($q$, $m$)
-  } \Else {
-    receiveLAdd($q$, $m$)
+  \If {$q \in X_p \algoAnd \min(A, \XADD)\neq \alpha_\varnothing^\infty$} {
+    send$_q$($\min(A, \XADD) \oplus ^{w_{pq}}$)\;
+    receiveXAdd(\smash{$q, \xadd_{\pi'}^{d'}$})
   }
+  \ElseIf {\smash{$\textup{isParent}(q, \TODO{\XADD}) \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$}}
+  { receiveDel($q$, $\delta_{p, V[p] +1}$) }
+  \lElse {\smash{\textsc{ascast}.receiveAdd($q$, $\alpha_{\pi'}^{d'}$)}}
+  \lIf {$A<\XADD \algoOr A = \alpha_\varnothing^\infty$} {$\XADD_\pi^d \leftarrow \alpha_\varnothing^\infty$}
 }
 
 \BlankLine
-
-\Function{\textup{receiveLAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
-  \uIf {\smash{$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^{d'})$\label{line:ascast_improve}}} {
-    $\smash{A_{\pi}^{d} \leftarrow \alpha_{\pi' \cup \langle p, V[p] \rangle}^{d'}}$ \;
-    \lForEach{$n \in O_p$} {
-      send$_n$(\smash{$\alpha_{\pi}^{d + w_{pn}}$})
-    }
-  }
-  \uElseIf{$\textup{isParent}(q) \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$\label{line:ascast_detect}} {
-    \textup{receiveDel($q$, $\delta_{p, V[p] + 1}$)}
-  }
-
-  updateVersions($\pi'$) \;
-}
 
 
 
-\BlankLine
+\Function{\textup{receiveXAdd($q$, $\xadd_{\pi'}^{d'}$)}} {
+  \If {$\xadd_{\pi'}^{d'} < A \algoAnd \xadd_{\pi}^{d'} < \XADD \algoAnd A_\pi^d \neq \alpha_\varnothing^\infty
+    \algoAnd$ $\neg \textup{isStale}(\xadd_{\pi'}^{d'}) \algoAnd \neg \textup{isLoop}(\xadd_{\pi'}^{d'})$} {
+    $\XADD \leftarrow \xadd_{\pi'}^{d'} \cup _{\langle p, V[p] \rangle}$ \;
+    
+    \lForEach {$n \in O_p$}{send$_n$($\XADD_{\pi}^d \oplus ^{w_{pq}}$)}
 
-\Function{\textup{receiveXAdd($q$, x$\alpha_{\pi'}^{d'}$)}} {
-  
+  } \ElseIf {$\textup{isStale}(\xadd_{\pi'}^{d'}) \algoAnd \textup{isParent}(q, \XADD)$} {
+    receiveDel($q$, $\delta_{p, V[p] + 1}$)
+  }
+  updateVersions($\pi'$)
 }
 
+\BlankLine
 
 
 
-\BlankLine
-
-\Function{\textup{receiveDel($q$, $\delta_{s, c}$)}} {
+\Function{\textup{\TODO{receiveDel}($q$, $\delta_{s, c}$)}} {
   \uIf {$\exists \langle s, c' \rangle \in \pi: c' < c$\label{line:ascast_delete}} {
     $\smash{A^d_\pi \leftarrow \alpha^\infty_\varnothing}$ \;
     \lForEach {$n \in O_p \setminus q$}{send$_n$($\delta_{s, c}$)}
