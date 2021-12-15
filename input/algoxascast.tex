@@ -11,32 +11,43 @@
 \DontPrintSemicolon
 \LinesNumbered
 
+\newcommand{\XADD}{\Gamma}
+\newcommand{\xadd}{\gamma}
+
 $X_p$ \tcp*[r]{neighbors in a different network}
-$\textup{x}A_{\pi}^{d} \leftarrow \alpha_{\varnothing}^{\infty} $
-\tcp*[r]{best global $\alpha$ so far}
+$\XADD_{\pi}^{d} \leftarrow \gamma_{\varnothing}^{\infty} $
+\tcp*[r]{best $\gamma$ so far (\underline{g}lobal $\alpha$)}
 
 \BlankLine
 
-\begin{multicols}{2}
-\Function{\textup{\texttt{Add( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
-  $V[p] \leftarrow V[p] + 1$ \;
-  \textup{\smash{receiveAdd($p$, $\alpha_{\varnothing}^{0}$)}}\label{line:ascast_add}
-}
+%% \begin{multicols}{2}
+%% \Function{\textup{\texttt{Add( )}}} { % \hfill [if $V[p]\equiv 0 \mod 2 $]} } {
+%%   $V[p] \leftarrow V[p] + 1$ \;
+%%   \textup{\smash{receiveAdd($p$, $\alpha_{\varnothing}^{0}$)}}\label{line:ascast_add}
+%% }
 
 
-\Function{\textup{\texttt{Del( )}}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
-  $V[p] \leftarrow V[p] + 1$ \;
-  \textup{\smash{receiveDel($p$, $\delta_{p, V[p]}$)}}\label{line:ascast_del}
-}
-\end{multicols}
-
-\BlankLine
-\BlankLine
+%% \Function{\textup{\texttt{Del( )}}} { % \hfill [if $V[p]\equiv 1 \mod 2 $]} } {
+%%   $V[p] \leftarrow V[p] + 1$ \;
+%%   \textup{\smash{receiveDel($p$, $\delta_{p, V[p]}$)}}\label{line:ascast_del}
+%% }
+%% \end{multicols}
 
 
 
 % \begin{multicols}{2}
+
 \Function{\textup{receiveAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
+  \If {$m \in \xadd \vee q \in X_p$}{
+    receiveXAdd($q$, $m$)
+  } \Else {
+    receiveLAdd($q$, $m$)
+  }
+}
+
+\BlankLine
+
+\Function{\textup{receiveLAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
   \uIf {\smash{$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^{d'})$\label{line:ascast_improve}}} {
     $\smash{A_{\pi}^{d} \leftarrow \alpha_{\pi' \cup \langle p, V[p] \rangle}^{d'}}$ \;
     \lForEach{$n \in O_p$} {
@@ -58,6 +69,7 @@ $\textup{x}A_{\pi}^{d} \leftarrow \alpha_{\varnothing}^{\infty} $
   
 }
 
+
 
 
 \BlankLine
@@ -78,21 +90,10 @@ $\textup{x}A_{\pi}^{d} \leftarrow \alpha_{\varnothing}^{\infty} $
 
 \BlankLine
 
-\lFunction{\textup{isStale(\smash{$\alpha_{\pi'}^{d'}$})}} {
-  \Return \smash{$\exists \langle q, c \rangle \in \pi': c < V[q]$}
-}
-
-\lFunction{\textup{isLoop(\smash{$\alpha_{\pi'}^{d'}$})} } {
-  \Return $\langle p, \_ \rangle \in \pi'$
-}
-
-\lFunction{\textup{isParent($q$)}} {
-  \Return $\langle q, \_ \rangle = \pi[|\pi|-1]$
-}
-
-
-\footnotesize\lFunction{\textup{updateVersions($\pi'$)}} {
-  \textbf{for} {$\langle q, c \rangle \in \pi'$} \textbf{do} {$V[q] \leftarrow \max(V[q], c)$}
+\footnotesize\lFunction{\textup{fromX($q$, $\alpha_{\pi'}^{d'}$)}} {
+  %% ugly if then else but w/e
+  \textbf{if} $q \in X_p$ \textbf{then} {\Return x\smash{$\alpha_{\pi'}^{d'}$} \textbf{else}
+    \Return \smash{$\alpha_{\pi'}^{d'}$}}
 }
 
 %%% Local Variables: 
