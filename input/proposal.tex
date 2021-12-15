@@ -63,9 +63,10 @@ neighbor-to-neighbor.
 
 \begin{definition}[\label{def:forwarding}Forwarding]
   A \process $x$ \underline{f}orwards a message $m$ by
-  \underline{s}ending it to its neighbors $y$ with metadata that
-  depends on its local knowledge: $f_x(m) \implies \forall \langle x,
-  y\rangle \in E: s_{xy}(m \TODO{\oplus} \sigma_x)$.
+  \underline{s}ending it to its neighbors $y$ \TODO{enriched}
+  ($\oplus$) with metadata that depends on its local knowledge
+  $\sigma_x$: $f_x(m) \implies \forall \langle x, y\rangle \in E:
+  s_{xy}(m \TODO{\oplus} \sigma_x)$.
 \end{definition}
 
 We use scoped broadcast to efficiently modify the state of each
@@ -122,11 +123,11 @@ consistent partitioning, each source $s$ must send
 \texttt{\underline{A}dd} notifications $\alpha_s$ to all \processes
 that are closer to it than any other source, along with enough
 metadata to allow them to decide of their closest source. A simple
-implementation based on Definition~\ref{def:scoped} consists in
-ensuring that each \process $x$ eventually receives
-$\alpha_s^{|\Pi_{sx}|}$ where $\Pi_{sx}$ is the \emph{best} path from
-any source to it; the best value $|\Pi_{sx}|$ being built over
-forwarding along this path.
+implementation based on Definition~\ref{def:scoped} and
+Definition~\ref{def:forwarding} consists in ensuring that each
+\process $x$ eventually receives $\alpha_s^{|\Pi_{sx}|}$ where
+$\Pi_{sx}$ is the \emph{best} path from any source to it; the best
+value $|\Pi_{sx}|$ being built over forwarding along this path.
 
 \begin{theorem}[\label{theo:fb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually \textup{CP}$]
@@ -177,7 +178,7 @@ forwarding along this path.
   \caption{\label{algo:add}Add-only CP protocol at \Process~$p$.}
 \end{algorithm}
 
-Algorithm~\ref{algo:add} shows the few instructions that implement a
+Algorithm~\ref{algo:add} shows the instructions that implement a
 \emph{reactive} forwarding of best to reach consistent partitioning in
 a static network where \processes never join, crash, nor leave the
 system. As soon as a \process receives a better message, it delivers
@@ -214,7 +215,7 @@ source. The average number of messages per \process is
       \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
 number of neighbors per \process.
 
-While only adding logical partitions to the distributed system is
+While adding logical partitions to the distributed system is
 straightforward and lightweight, removing them introduces additional
 complexity and costs caused by concurrent operations.
 
@@ -340,8 +341,8 @@ partitioning in every scenario.
 \end{lemma}
 
 \begin{proof}
-Stale control information as stated in Definition~\ref{def:lwo} may
-impair the propagation of both
+Stale control information (see Definition~\ref{def:lwo}) may impair
+the propagation of both
 \begin{inparaenum}[(i)]
 \item notifications about actual sources, and
 \item notifications about deleted partitions.
@@ -376,7 +377,7 @@ reaching consistent partitioning. For instance, $c$ detects the
 blocking of $\delta_a$ because it acknowledges that its parent $b$
 delivered a stale notification $\alpha_c^1$, \ie between the delivery
 of $\alpha_c^1$ and the delivery of $\delta_c$, $b$ blocked any other
-$\delta$.
+$\delta$ and therefore $\delta_a$.
 
 %% \Begincomme{inparaenum}[(i)] \item to detect possibly blocking
 %% conditions that can hinder \item to purge all stale messages from
@@ -497,7 +498,7 @@ $\delta_a$ and act accordingly by forcing the staleness of its best
 delivered message and disseminate this information to its neighbors.
 To avoid flooding the system with false positive staleness
 notifications, we propose to reduce the scope of staleness
-notifications by including only downstream \processes. In
+notifications by including \TODO{only downstream \processes}. In
 Figure~\ref{fig:undoproblemD}, false positives would not affect $a$
 and $b$.
 
