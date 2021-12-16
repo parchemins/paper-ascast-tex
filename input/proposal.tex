@@ -41,7 +41,7 @@ broadcaster within an application-dependant scope.
   y_n, z \rangle]$.
 \end{definition}
 
-\begin{definition}[\label{def:scoped}\underline{S}coped broad\underline{cast} (\NAMEB)]
+\begin{definition}[\label{def:scoped}Scoped broadcast]
   When \Process~$x$ scoped \underline{b}roadcasts $b_x(m)$ a
   \underline{m}essage $m$, every correct \process $y$ within a scope
   \underline{r}eceives $r_y(m)$ and \underline{d}elivers it
@@ -62,11 +62,12 @@ implementations relying on the forwarding of messages from
 neighbor-to-neighbor.
 
 \begin{definition}[\label{def:forwarding}Forwarding]
-  A \process $x$ \underline{f}orwards a message $m$ by
-  \underline{s}ending it to its neighbors $y$ \TODO{enriched}
-  ($\oplus$) with metadata that depends on its local knowledge
-  $\sigma_x$: $f_x(m) \implies \forall \langle x, y\rangle \in E:
-  s_{xy}(m \TODO{\oplus} \sigma_x)$.
+  When Node $x$ \underline{f}orwards $f_x(m)$ a message $m$, it
+  \underline{s}ends $s_{xy}(m)$ the latter to all its neighbors $y$
+  \TODO{enriched} ($\oplus$) with metadata that depends on its local
+  knowledge $\sigma_x$:
+  $f_x(m) \implies \forall \langle x, y\rangle \in E: s_{xy}(m
+  \TODO{\oplus} \sigma_x)$.
 \end{definition}
 
 We use scoped broadcast to efficiently modify the state of each
@@ -119,21 +120,21 @@ or operational costs when dealing with multiple tenants.
 
 Unfortunately, \processes do not share a common global knowledge of
 the network state. For \processes to eventually ($\eventually$) reach
-consistent partitioning, each source $s$ must send
+consistent partitioning (CP), each source $s$ must send
 \texttt{\underline{A}dd} notifications $\alpha_s$ to all \processes
 that are closer to it than any other source, along with enough
-metadata to allow them to decide of their closest source. A simple
-implementation based on Definition~\ref{def:scoped} and
-Definition~\ref{def:forwarding} consists in ensuring that each
-\process $x$ eventually receives $\alpha_s^{|\Pi_{sx}|}$ where
-$\Pi_{sx}$ is the \emph{best} path from any source to it; the best
-value $|\Pi_{sx}|$ being built over forwarding along this path.
+metadata to allow them to decide of their closest source. Based on
+Definition~\ref{def:scoped} and Definition~\ref{def:forwarding}, this
+consists in ensuring that each \process $x$ eventually receives
+$\alpha_s^{|\Pi_{sx}|}$ where $\Pi_{sx}$ is the \emph{best} path from
+any source to it; the best value $|\Pi_{sx}|$ being built over
+forwarding along this path.
 
 \begin{theorem}[\label{theo:fb}\underline{F}orwarding of \underline{B}est (FB)
     $\implies\eventually \textup{CP}$]
     % 
     Assuming that each \process $x$ stores its outgoing weights
-    ($\forall \langle x, y \rangle \in E: \pi_{xy} \in \sigma_x$), a
+    ($\forall \langle x, y \rangle \in E: w_{xy} \in \sigma_x$), a
     total order on messages based on weights ($m^d_s < m^{d'}_{s'}$
     when $d < d' \vee (d = d' \wedge s< s')$), reliable communication
     links ($s_{xy}(m) \iff \eventually r_{yx}(m)$), \processes eventually reach
@@ -155,9 +156,10 @@ value $|\Pi_{sx}|$ being built over forwarding along this path.
   Every neighbor eventually receives its notification since
   communication links are reliable. Whatever the order of received
   messages $R_x$ at neighboring \process~$x$, total order ensures that
-  it delivers notifications $\alpha_s^{d}$ when $d= |\pi_{ss}| +
-  w_{sx} = \min |\pi_{s'x}|$ where $\min |\pi_{s'x}|$ is the lightest
-  weight of $x$ to any source $s'$.
+  it delivers notifications $\alpha_s^{d}$ when
+  $d= |\pi_{ss}| + w_{sx} = \min |\pi_{s'x}|$ where $\min |\pi_{s'x}|$
+  is the lightest weight of $x$ to any source $s'$, $s'$ being $s$ in
+  this case.
   \noindent Among these neighbors, at least those that fulfill the
   latest condition forward their respective notification.  By
   transitivity, the message originating from $s$ reaches all
@@ -185,7 +187,7 @@ system. As soon as a \process receives a better message, it delivers
 and forwards it. The trade-off consists in decreasing termination time
 at cost of increased traffic.  Figure~\ref{fig:add} illustrates the
 behavior of this algorithm on a system comprising 4 \processes $a$,
-$b$, $c$, and $d$. Both $a$ and $d$ become sources.  They \NAMEB
+$b$, $c$, and $d$. Both $a$ and $d$ become sources.  They scoped broadcast
 notifications $\alpha_a^0$ and $\alpha_d^0$. They initialize their own
 state with the lowest value $0$ (see Line~\ref{line:lowestbound}), and
 send a message to each of their neighbors by accumulating the
@@ -245,13 +247,14 @@ importantly between message deliveries. A \process $s$ that performs a
 \texttt{Add} operations become obsolete. As consequence, their results
 -- scoped broadcast in the form of \texttt{\underline{A}dd}
 notifications $\alpha_s$ -- should be canceled by the corresponding
-\texttt{\underline{D}el} notifications $\delta_s$. We focus on the
-last delivery of each \process, since the best is also the last, as
-highlighted by Algorithm~\ref{algo:add}.
+\texttt{\underline{D}el} notifications of staleness $\delta_s$. We
+focus on the last delivery of each \process, since the best is also
+the last, as highlighted by Algorithm~\ref{algo:add}. \TODO{More about
+  useless $\alpha$ ?}
 
 \begin{definition}[Happens-before ($\rightarrow$)~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
-  relationship defines a strict partial order between events. Two
+  relationship defines a strict partial order between events.  Two
   messages are concurrent if none happens before the other.
 \end{definition}
 
@@ -274,16 +277,17 @@ highlighted by Algorithm~\ref{algo:add}.
 
 \newcommand{\last}{\textup{last}~}
 
-A naive attempt at implementing DCP resembles echoes in
-acoustics. Following the principles of scoped broadcast as stated in
-Definition~\ref{def:scoped}, a \process that receives a staleness
-notification forwards it only if the latter targets its current
-partition. The staleness notifications propagate through the network
-as long as they remain in the deleted partition. When they reach the
-bordering \processes of the deleted partition, it creates an echo of
-bordering partitions that will go backward to fill the gap left open
-by removals using forwarding of best (FB) as stated by
-Theorem~\ref{theo:fb}.
+A naive attempt at implementing DCP resembles echoes in acoustics: a
+sound propagates in the air before crashing into surrounding walls to
+finally come back altered. Following the principles of scoped
+broadcast as stated in Definition~\ref{def:scoped}, a \process $x$
+that receives a staleness notification $\delta_s$ forwards it only if
+the latter targets its current partition $\alpha_s$. The staleness
+notifications propagate through the network as long as they remain in
+the deleted partition. When they reach the bordering \processes of the
+deleted partition, it creates an echo of bordering partitions that
+will go backward to fill the gap left open by removals using
+forwarding of best (FB) as stated by Theorem~\ref{theo:fb}.
 
 \input{input/figundoproblem.tex}
 
@@ -367,7 +371,7 @@ consistent partitioning. \end{proof}
 As a cascading effect in Figure~\ref{fig:problemD}, not only $c$
 wrongfully believes that it belongs to $a$'s partition when $a$
 already deleted it, but it could contribute to its inconsistency by
-blocking farther but up-to-date messages from actual sources.
+not forwarding farther but up-to-date messages from actual sources.
 
 A first step to avoid staying in inconsistent state is to extend the
 behavior of each \process so \processes such as $c$, that would remain
@@ -377,7 +381,10 @@ reaching consistent partitioning. For instance, $c$ detects the
 blocking of $\delta_a$ because it acknowledges that its parent $b$
 delivered a stale notification $\alpha_c^1$, \ie between the delivery
 of $\alpha_c^1$ and the delivery of $\delta_c$, $b$ blocked any other
-$\delta$ and therefore $\delta_a$.
+$\delta$ and therefore $\delta_a$.  \TODO{Must take action because its
+  parent has forwarded something already stale so previous cannot be
+  good.}
+
 
 %% \Begincomme{inparaenum}[(i)] \item to detect possibly blocking
 %% conditions that can hinder \item to purge all stale messages from
