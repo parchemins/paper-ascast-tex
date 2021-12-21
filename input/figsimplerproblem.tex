@@ -28,27 +28,19 @@
       $\delta_a$ while $b$ delivers and forwards $\alpha_c$.]
              {\input{input/figsimplerproblemC.tex}}
     \hspace{5pt}
-    \subfloat[Part D][\label{fig:problemD}\TODO{$b$ blocks the only transiting
-      $\delta_a$ while $b$ delivers and forwards $\alpha_c$.}]
+    \subfloat[Part D][\label{fig:problemD}$\alpha_c^3$ reaches $a$ that delivers it.]
              {\input{input/figsimplerproblemD.tex}}
     \hspace{5pt}
-    \subfloat[Part E][\label{fig:problemE}\TODO{$b$ blocks the only transiting
-      $\delta_a$ while $b$ delivers and forwards $\alpha_c$.}]
+    \subfloat[Part E][\label{fig:problemE}$\delta_c$ reaches $a$ that delivers it.]
              {\input{input/figsimplerproblemE.tex}}
     \hspace{5pt}
-    \subfloat[Part F][\label{fig:problemF}$b$ delivers and forwards $\delta_c$. $c$
-    stays in the deleted partition $P_a$.]
+    \subfloat[Part F][\label{fig:problemF}$a$ and $b$ do not belong to any partition but
+      $c$ stays forever in a stale one: $P_a$.]
              {\input{input/figsimplerproblemF.tex}}
   \end{center}
-  \caption{\label{fig:problem}Even in the simplest scenarios, naive
-    propagation of $\alpha$ and $\delta$ messages may be insufficient
-    to guarantee consistent partitioning. In the bottom scenario, if
-    $c$ had children, they would stay in the wrong partition
-    too.
-    %
-    % Despite both scenarios look the same from $c$'s perspective, $c$
-    % must acknowledge $P_a$'s \emph{possible} deletion and propagate
-    % it.
-  }
+  \caption{\label{fig:problem}Even in the simplest scenarios, the
+    naive propagation of $\alpha$ and $\delta$ messages may be
+    insufficient to guarantee consistent partitioning. If $c$ had
+    children, they would stay in the wrong partition too.}
 \end{figure*}
 

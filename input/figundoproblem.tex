@@ -26,18 +26,20 @@
     \subfloat[Part C][\label{fig:undoproblemC}$b$ delivers and forwards $\alpha_c$.]
              {\input{input/figundoproblemC.tex}}
     \hspace{5pt}
-    \subfloat[Part D][\label{fig:undoproblemD}\TODO{$b$ delivers and forwards $\alpha_c$.}]
+    \subfloat[Part D][\label{fig:undoproblemD}$b$ delivers and forwards $\delta_c$.]
              {\input{input/figundoproblemD.tex}}
     \hspace{5pt}
-    \subfloat[Part E][\label{fig:undoproblemE}\TODO{$b$ delivers and forwards $\alpha_c$.}]
+    \subfloat[Part E][\label{fig:undoproblemE}$a$ echoes back $\alpha_a^2$ that $b$ needs.]
              {\input{input/figundoproblemE.tex}}
     \hspace{5pt}
-    \subfloat[Part F][\label{fig:undoproblemF}$b$ delivers and forwards $\delta_c$.]
+    \subfloat[Part F][\label{fig:undoproblemF}$a$, $b$, and $c$ belong to $P_a$.]
              {\input{input/figundoproblemF.tex}}
   \end{center}
-  \caption{\label{fig:undoproblem}From $c$'s perspective, this
-    scenario and Figure~\ref{fig:problem} are similar. Even when $a$
-    did not delete its partition, $c$ must acknowledge $P_a$'s
-    \emph{possible} deletion and propagate it.}
+  \caption{\label{fig:undoproblem}From $c$'s perspective,
+    Figure~\ref{fig:problemE} and Figure~\ref{fig:undoproblemE} are
+    similar in terms of received messages, but the outcomes eventually
+    differ. Yet, $c$ must act on Figure~\ref{fig:undoproblemE}, and
+    acknowledge then propagate the \emph{possible} staleness of its
+    partition $P_a$.}
 \end{figure*}
 
