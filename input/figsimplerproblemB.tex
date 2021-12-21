@@ -1,15 +1,17 @@
 
-
 \begin{tikzpicture}[scale=\SCALE]
 
+  \draw [opacity=0] (-1.5*\X, 0) -- (1.5*\X, 0); %% spacing
+  
   \draw [->] (-\X + 5pt, 0) --
-  node[above=-0.3em,font=\tiny]{$\bm{\delta_{a} \RIGHT}$}
+  node[above=-0.3em,font=\SMSG]{$\bm{\delta_{a} \RIGHT}$}
   node[opacity=\OACK, below=-0.3em, font=\SMSG]{$\LEFT \alpha_a^4$}
   (0 - 5pt, 0); %% a - b
 
   \draw (0 +5pt, 0) --
-  node [above=-0.3em,font=\tiny]{$\textcolor{\PA}{\alpha_{a}^{3}} \RIGHT$}
-  node [below=-0.3em,font=\tiny]{$\LEFT \textcolor{\PC}{\alpha_{c}^{1}} \cdot \delta_c$}
+  node [above=-0.3em,font=\SMSG]{$\textcolor{\PA}{\alpha_{a}^{3}} \RIGHT$}
+  node [below=-0.3em,font=\SMSG]{$\LEFT \textcolor{\PC}{\alpha_{c}^{1}}$ ~ ~ ~ ~ ~}
+  node [below=-0.3em,font=\SMSG]{~ ~ ~ ~ ~ $\LEFT \delta_c \vphantom{\alpha^3}$}
   (\X -5pt, 0); %% b - c
 
 

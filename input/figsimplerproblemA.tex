@@ -1,12 +1,14 @@
 
 \begin{tikzpicture}[scale=\SCALE]
 
+  \draw [opacity=0] (-1.5*\X, 0) -- (1.5*\X, 0); %% spacing
+  
   \draw (-\X + 5pt, 0) --
   node[above=-0.3em, font=\SMSG]{$\textcolor{\PA}{\alpha_{a}^{2}} \RIGHT$}
   (0 - 5pt, 0); %% b - a 
 
   \draw (0 +5pt, 0) --
-  node[below=-0.3em,font=\SMSG]{$\LEFT \textcolor{\PC}{\alpha_{c}^{1}}$}
+  node[below=-0.3em,font=\SMSG]{~ ~ ~ ~ ~$\LEFT \textcolor{\PC}{\alpha_{c}^{1}}$}
   (\X -5pt, 0); %% b - c
 
 

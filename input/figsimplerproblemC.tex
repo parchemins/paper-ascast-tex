@@ -1,5 +1,7 @@
 
 \begin{tikzpicture}[scale=\SCALE]
+
+  \draw [opacity=0] (-1.5*\X, 0) -- (1.5*\X, 0); %% spacing
   
   \draw (-\X + 5pt, 0) --
   node[above=-0.3em, font=\SMSG]{~ ~ ~ ~ ~ $\delta_{a} \RIGHT$} %% b - a
@@ -8,7 +10,7 @@
   (0 - 5pt, 0);
 
   \draw [<->] (0 +5pt, 0) --
-  node[opacity=\OACK, above=-0.3em, font=\SMSG]{$\alpha_c^2 \RIGHT$}
+  node[opacity=\OACK, above=-0.3em, font=\SMSG]{$\alpha_c^2 \RIGHT$~ ~ ~ ~ ~}
   node[below=-0.3em, font=\SMSG]{$\LEFT \delta_c \vphantom{\alpha^1}$~ ~ ~ ~ ~ ~}
   node[opacity=\OACK, below=-0.3em, font=\SMSG]{~ ~ ~ ~ ~ $\LEFT \alpha_a^4$}
   (\X -5pt, 0); %% b - c
