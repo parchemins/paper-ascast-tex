@@ -362,29 +362,33 @@ while $b$ receives, delivers, and forwards $\alpha_a^2$. In
 Figure~\ref{fig:problemC}, $b$ receives, delivers, and forwards
 $\alpha_c^1$, for it improves its best partition. Then it receives and
 discards $\delta_a$, for its best partition does not match the deleted
-one. We simplify the echo since $\alpha_c^3$ is already transiting
-towards $a$. Finally, Figure~\ref{fig:problemD} shows that eventually,
-$c$ stays in the deleted partition $P_a$ for not having received
-$\delta_a$ that $b$ blocked earlier. The system does not reach
-consistent partitioning. \end{proof}
+one. It echoes back $\alpha_c^3$ to $a$. In Figures~\ref{fig:problemD}
+and \ref{fig:problemE}, $a$ and $b$ handle transiting
+notifications. Finally, Figure~\ref{fig:problemF} shows that
+eventually, $c$ stays in the deleted partition $P_a$ for not having
+received $\delta_a$ that $b$ blocked earlier. The system does not
+reach consistent partitioning. \end{proof}
 
-As a cascading effect in Figure~\ref{fig:problemD}, not only $c$
-wrongfully believes that it belongs to $a$'s partition when $a$
-already deleted it, but it could contribute to its inconsistency by
-not forwarding farther but up-to-date messages from actual sources.
+The issue is that each \process trusts its parent to forward all
+staleness notifications relevant to it. When this fails, as in
+Figure~\ref{fig:problem}, not only a \process ($c$) may wrongfully
+stay in a partition ($P_a$) when its source ($a$) already deleted it,
+but it may contribute to its inconsistency by not forwarding farther
+but up-to-date messages from live sources.
 
 A first step to avoid staying in inconsistent state is to extend the
 behavior of each \process so \processes such as $c$, that would remain
 in a wrong partition, use their history of receipt and delivery to
 detect the blocking of staleness notifications that can hinder
-reaching consistent partitioning. For instance, $c$ detects the
-blocking of $\delta_a$ because it acknowledges that its parent $b$
-delivered a stale notification $\alpha_c^1$, \ie between the delivery
-of $\alpha_c^1$ and the delivery of $\delta_c$, $b$ blocked any other
-$\delta$ and therefore $\delta_a$.  \TODO{Must take action because its
-  parent has forwarded something already stale so previous cannot be
-  good.}
-
+reaching consistent partitioning.  In Figure~\ref{fig:problem}, $b$
+blocked the staleness notification $\delta_a$ that $c$ needs since it
+belongs to a ephemeral partition $P_c$ that $c$ acknowledges to be
+stale before $b$ does. Therefore, $c$ can detect the blocking of
+$\delta_a$ since it acknowledges that its parent $b$ received,
+delivered, and forwarded the stale notification $\alpha_c^1$. In other
+terms, $c$ acknowledges that between the delivery of $\alpha_c^1$ and
+the delivery of $\delta_c$, $b$ blocked any other $\delta$ and
+therefore, it could have blocked $\delta_a$.
 
 %% \Begincomme{inparaenum}[(i)] \item to detect possibly blocking
 %% conditions that can hinder \item to purge all stale messages from
@@ -404,9 +408,12 @@ $\delta$ and therefore $\delta_a$.  \TODO{Must take action because its
   \implies$ Detector existence] Assuming
   $\textup{FB}^+$ and $\textup{FS}$, a chain of delivery on $\pi_{xz}$ of
   $\alpha_x$ with $\alpha_x = \last D_z$, if $x$ broadcasts a staleness
-  notification $\delta_x$, either $z$ eventually delivers it, or a
-  \process $y$ in such a chain of delivery $\pi_{xz}'$ eventually
-  acknowledges its blocking.
+  notification $\delta_x$, either
+  \begin{inparaenum}[(A)]
+  \item\label{lem:detectorA}  $z$ eventually delivers it, or 
+  \item\label{lem:detectorB} a \process $y$ in such a chain of
+    delivery $\pi_{xz}'$ eventually acknowledges its blocking.
+  \end{inparaenum}
   % $b_p(\delta_x) \implies d_q(x) U Detect[X]$ ??? 
 \end{lemma}
 
@@ -414,17 +421,20 @@ $\delta$ and therefore $\delta_a$.  \TODO{Must take action because its
 \begin{proof}
   %% knowing that b_p delta is sufficient to say that processes will
   %% receive delta or detect blocking
-  (A) Assuming a chain of delivery $\pi_{xz} = [x, \ldots, z]$ of
-  $\alpha_x$ with $\forall y \in \pi_{xz}: \alpha_x = \last D_y$, and
-  assuming $d_x(\delta_x)$, then with forwarding of staleness
-  (Definition~\ref{def:fs}),
-  $f_{\pi_{xz}[k]}(\delta_x) \implies \eventually
-  d_{\pi_{xz}[k+1]}(\delta_x)$ except if $\delta_x \in D_{\pi_{xz}[k+1]}$ which
-  means that $\pi_{xz}[k+1]$ already delivered and forwarded $\delta_x$
-  following another such a chain of delivery. Therefore, $z$
-  eventually receives, hence delivers $\delta_x$.
+  Assuming a chain of delivery $\pi_{xz} = [x, \ldots, z]$ of
+  $\alpha_x$, we must prove that whatever the possible states of
+  \nodes that belong to this chain, \TODO{WIP}
+  \begin{asparadesc}
+  \item [In the same partition:] $\forall y \in \pi_{xz}: \alpha_x =
+    \last D_y$, and assuming $d_x(\delta_x)$, then with forwarding of
+    staleness (Definition~\ref{def:fs}), $f_{\pi_{xz}[k]}(\delta_x)
+    \implies \eventually d_{\pi_{xz}[k+1]}(\delta_x)$ except if
+    $\delta_x \in D_{\pi_{xz}[k+1]}$ which means that $\pi_{xz}[k+1]$
+    already delivered and forwarded $\delta_x$ following another such
+    a chain of delivery. Therefore, $z$ eventually receives, hence
+    delivers $\delta_x$.
 
-  \noindent (B) Assuming a chain of delivery
+  \item[ (\ref{lem:detectorB})] Assuming a chain of delivery
   $\pi_{xz} = [x, \ldots, z]$ of $\alpha_x$ with at least
   $\alpha_x = \last D_z$, and assuming $d_x(\delta_x)$, then by (A),
   the staleness notification reaches a \process $ y = \pi_{xz}[k]$. By
@@ -448,7 +458,9 @@ $\delta$ and therefore $\delta_a$.  \TODO{Must take action because its
     the shortest and only path of delivery of $\alpha_x$
     ($\pi_{xy'} \subseteq \Pi_{xz}$) thus it does not further delegate
     the detection to another \process.
-  \end{enumerate} \vspace{-1.5em} %% ugly vspace but necessary for enumerate+qed
+  \end{enumerate}
+  \end{asparadesc}
+  \vspace{-1.5em} %% ugly vspace but necessary for enumerate+qed
   %
   %% (i) If every \process (such as $a$) starting from the source
   %% delivers and forwards a removal notification $\delta_X$ when their
