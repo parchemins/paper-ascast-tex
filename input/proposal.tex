@@ -422,43 +422,48 @@ therefore, it could have blocked $\delta_a$.
   %% knowing that b_p delta is sufficient to say that processes will
   %% receive delta or detect blocking
   Assuming a chain of delivery $\pi_{xz} = [x, \ldots, z]$ of
-  $\alpha_x$, we must prove that whatever the possible states of
-  \nodes that belong to this chain, \TODO{WIP}
+  $\alpha_x$ with $\alpha_x = \last D_z$ and $d_x(\delta_x$), we must
+  prove that whatever the possible states of \nodes that belong to
+  this chain, it either leads to outcome (\ref{lem:detectorA}) or
+  (\ref{lem:detectorB}).
   \begin{asparadesc}
-  \item [In the same partition:] $\forall y \in \pi_{xz}: \alpha_x =
-    \last D_y$, and assuming $d_x(\delta_x)$, then with forwarding of
-    staleness (Definition~\ref{def:fs}), $f_{\pi_{xz}[k]}(\delta_x)
-    \implies \eventually d_{\pi_{xz}[k+1]}(\delta_x)$ except if
-    $\delta_x \in D_{\pi_{xz}[k+1]}$ which means that $\pi_{xz}[k+1]$
-    already delivered and forwarded $\delta_x$ following another such
-    a chain of delivery. Therefore, $z$ eventually receives, hence
-    delivers $\delta_x$.
-
-  \item[ (\ref{lem:detectorB})] Assuming a chain of delivery
-  $\pi_{xz} = [x, \ldots, z]$ of $\alpha_x$ with at least
-  $\alpha_x = \last D_z$, and assuming $d_x(\delta_x)$, then by (A),
-  the staleness notification reaches a \process $ y = \pi_{xz}[k]$. By
-  Definition~\ref{def:fs}, the forwarding stops when $y$ already
-  delivered $\delta_x$ ($\delta_x \in D_y$ covered by (A)) or
-  delivered a better message $\alpha_s = \last D_y$ with
-  $\alpha_s \neq \alpha_x$. With $y'=\pi_{xz}[k+1]$, forwarding of
-  best (Definition~\ref{def:fbplus}) implies three possible outcomes:
-  \begin{enumerate}[(i)]
-  \item $\alpha_{s'} = \last D_{y'}$ with $\alpha_{s'} \neq \alpha_x$
-    hence $y' \iff y$ which leaves two possible outcomes:
-  \item
-    $r_{y'}(\alpha_s) \wedge \alpha_x = \last D_{y'} \wedge \alpha_x <
-    \alpha_s$ which means that a shorter path of delivery $\pi_{xz}'$
-    exists that either forwards appropriate staleness notifications
-    (A) or detects its possible blocking:
-  \item
-    $r_{y'}(\alpha_s) \wedge \delta_s \in D_{y'} \wedge \alpha_x =
-    \last D_{y'}$ which detects a possible blocking of
-    $\delta_x$. Without global knowledge, $y'$ assumes it belongs to
-    the shortest and only path of delivery of $\alpha_x$
-    ($\pi_{xy'} \subseteq \Pi_{xz}$) thus it does not further delegate
-    the detection to another \process.
-  \end{enumerate}
+  \item [(I) Same last partition:] $\forall y \in \pi_{xz}: \alpha_x =
+    \last D_y$, with forwarding of staleness
+    (Definition~\ref{def:fs}), $f_{\pi_{xz}[k]}(\delta_x) \implies
+    \eventually d_{\pi_{xz}[k+1]}(\delta_x)$ except if $\delta_x \in
+    D_{\pi_{xz}[k+1]}$ which means that $\pi_{xz}[k+1]$ already
+    delivered and forwarded $\delta_x$ following another such a chain
+    of delivery. Therefore, $z$ eventually receives, hence delivers
+    $\delta_x$ (outcome \ref{lem:detectorA}).
+    
+  \item[(II) Different last partitions:] $\exists y \in \pi_{xz}
+    \setminus \{x, z\}: \alpha_s = \last D_y$, by (I), the staleness
+    notification reaches the first of such a \process $y =
+    \pi_{xz}[k]$.  Forwarding of staleness (Definition~\ref{def:fs})
+    states that the forwarding stops when $y$ already delivered
+    $\delta_x$ ($\delta_x \in D_y$ covered by (I)) or delivered a
+    better message $\alpha_s = \last D_y$.  With $y'=\pi_{xz}[k+1]$,
+    forwarding of best (Definition~\ref{def:fbplus}) implies three
+    possible results:
+  \begin{asparadesc}
+  \item [(i) $y'$ equivalent to $y$:] $\alpha_{s'} = \last D_{y'}$
+    with $\alpha_{s'} \neq \alpha_x$ hence $y' \iff y$ which leaves
+    two possible results as follows:
+  \item [(ii) $y'$ in $P_x$ from another parent:] $r_{y'}(\alpha_s)
+    \wedge \alpha_x = \last D_{y'} \wedge \alpha_x < \alpha_s$ which
+    means that a shorter path of delivery $\pi_{xz}'$ exists that
+    either forwards appropriate staleness notifications (covered by
+    (I)) or detects its possible blocking as follows:
+  \item [(iii) $y'$ in $P_x$ with $y$ as parent] but does not deliver
+    the $y$'s last partition for it already delivered the
+    corresponding staleness notification: $r_{y'}(\alpha_s) \wedge
+    \delta_s \in D_{y'} \wedge \alpha_x = \last D_{y'}$ which detects
+    a possible blocking of $\delta_x$ (outcome
+    (\ref{lem:detectorB})). Without global knowledge, $y'$ assumes it
+    belongs to the shortest and only path of delivery of $\alpha_x$
+    % ($\pi_{xy'} \subseteq \Pi_{xz}$)
+    thus it cannot further delegate the detection to another \process.
+  \end{asparadesc}
   \end{asparadesc}
   \vspace{-1.5em} %% ugly vspace but necessary for enumerate+qed
   %
@@ -502,24 +507,27 @@ therefore, it could have blocked $\delta_a$.
 
 As a second step, detecting \processes must proactively purge the
 system from their forwarded notifications. For instance in
-Figure~\ref{fig:problemD}, $c$ could broadcast $\delta_a$ in order to
+Figure~\ref{fig:problemF}, $c$ detects the blocking of the staleness
+notification $\delta_a$. It could broadcast $\delta_a$ in order to
 acknowledge the staleness of its own $\alpha_a^3$ and inform
-neighboring \processes that delivered it as well. Unfortunately, proof
-of Lemma~\ref{lem:detector} shows that there exists false positive in
-the blocking detection: $\delta_x$ may not exist but $y'$ still
-receives $\alpha_s$ after the delivery of $\delta_s$ from the path it
-delivered $\alpha_x$. Figure~\ref{fig:undoproblem} highlights this
-behavior. In Figure~\ref{fig:undoproblemB}, $a$ does not delete its
-partition. In Figure~\ref{fig:undoproblemD} and because of scoped
-broadcast, $c$ received the same series of messages as in
-Figure~\ref{fig:problemD}. Yet, $c$ must assume the existence of
+neighboring \processes that delivered it as well. Unfortunately, there
+exists false positive in the blocking detection.
+Lemma~\ref{lem:detector}'s proof shows that the detection at $y'$ does
+not depend on $\delta_x$. Therefore $\delta_x$ may not exist but $y'$
+still receives $\alpha_s$ after the delivery of $\delta_s$ from the
+path it received and delivered
+$\alpha_x$. Figure~\ref{fig:undoproblem} highlights this behavior. In
+Figure~\ref{fig:undoproblemB}, $a$ does not delete its partition. In
+Figure~\ref{fig:undoproblemF} and because of scoped broadcast, $c$
+received the same series of messages as in
+Figure~\ref{fig:problemF}. Yet, $c$ must assume the existence of
 $\delta_a$ and act accordingly by forcing the staleness of its best
 delivered message and disseminate this information to its neighbors.
 To avoid flooding the system with false positive staleness
-notifications, we propose to reduce the scope of staleness
-notifications by including \TODO{only downstream \processes}. In
-Figure~\ref{fig:undoproblemD}, false positives would not affect $a$
-and $b$.
+notifications, we reduce the scope of staleness notifications by
+including only downstream \processes. In
+Figure~\ref{fig:undoproblemF}, false positives would generate traffic
+at $c$ and its children if it had any, without impacting $a$ and $b$.
 
 \begin{definition}[\label{def:fsplus}$\textup{FS}^+$: forwarding
     staleness downstream] Any \emph{\process} can broadcast a
@@ -567,7 +575,7 @@ implementation called \NAME that enables dynamic consistent
 partitioning. It implements forwarding of best (see
 Line~\ref{line:fb}) and echos (see Line~\ref{line:echo}). To implement
 forwarding of staleness downstream as stated in
-Definition~\ref{def:fsplus},
+Definition~\ref{def:fsplus}:
 \begin{inparaenum}[(A)]
 \item each \process maintains a vector of versions that associates the
   respective known local counter of each known source, or has-been
@@ -588,27 +596,26 @@ To implement the detection as stated in Lemma~\ref{lem:detector}, each
 \process only requires to know the direct parent of its best delivered
 message which is already included in the piggybacked path of this
 message. Receiving a message known to be stale from this parent
-triggers the generation of staleness notifications that force
-downstream \processes to reevaluate the partition they are in (see
-Line~\ref{line:detect}).
+triggers the generation of staleness notifications that can only be
+delivered by downstream \processes (see Line~\ref{line:detect}).
 
 \begin{algorithm}[h]
   \input{input/algoedges.tex}
   \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
 \end{algorithm}
 
-By reusing \NAME's default behavior, Algorithm~\ref{algo:edges}
-enables dynamic consistent partitioning in dynamic networks subject to
-physical partitioning where \processes can join, leave, or crash at
-any time. Adding a \process is equivalent to add as many edges as
-necessary. Since adding an edge may improve shortest paths, the
-protocol triggers a competition using echos of
-Definition~\ref{def:fbplus}.  Removing a \process is equivalent to
-removing all its edges. Removing an edge between two \processes may
-invalidate the shortest path of one of involved \processes plus
-downstream \processes, or impair the propagation of staleness
-notifications. Therefore, the protocol reuses its detectors of
-Lemma~\ref{lem:detector} to remove irrelevant messages from the
+By reusing \NAME's default behavior of echos and downstream staleness,
+Algorithm~\ref{algo:edges} enables dynamic consistent partitioning
+even in dynamic networks subject to physical partitioning where
+\processes can join, leave, or crash at any time. Adding a \process is
+equivalent to add as many edges as necessary. Since adding an edge may
+improve shortest paths, the protocol triggers a competition using
+echos of Definition~\ref{def:fbplus}.  Removing a \process is
+equivalent to removing all its edges. Removing an edge between two
+\processes may invalidate the shortest path of one of involved
+\processes plus downstream \processes, or impair the propagation of
+staleness notifications. Therefore, the protocol reuses its detectors
+of Lemma~\ref{lem:detector} to remove irrelevant messages from the
 system.
 
 \TODO{Multiple receipt and multiple delivery} In terms of number of
