@@ -202,24 +202,10 @@ messages are useless in this scenario. Nevertheless, the system
 discards last transiting messages after it reached consistent
 partitioning.
 
-Each \process has a space complexity of $\mathcal{O}(\log_2(d \cdot
-|V|))$, and generates messages of identical space complexity. In terms
-of number messages, in the average case, a \process $x$ chosen
-uniformly at random among all \processes creates a logical
-partition. Its messages $\alpha_x$ spread through the network until
-reaching \processes that belong to another partition closer to
-them. This splits partitions in half on average. Overall, the $n^{th}$
-new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
-      \log_2 n \rfloor}})$} \processes. This decreases every new
-partition until reaching one \process per new partition: its
-source. The average number of messages per \process is
-\smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 n
-      \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
-number of neighbors per \process.
-
-While adding logical partitions to the distributed system is
-straightforward and lightweight, removing them introduces additional
-complexity and costs caused by concurrent operations.
+Adding logical partitions to a static network is straightforward and
+lightweight. Unfortunately, removing partitions or introducing dynamic
+network membership increases complexity and costs caused by concurrent
+operations.
 
 \subsection{Dynamic consistent partitioning}
 \label{subsec:dynamic}
@@ -243,14 +229,15 @@ choose another partition to belong to.
 
 Delete operations bring a new notion of order between events, and most
 importantly between message deliveries. A \process $s$ that performs a
-\texttt{Del} operation implicitly states that all its preceding
-\texttt{Add} operations become obsolete. As consequence, their results
+\texttt{Del} operation implicitly states that its preceding
+\texttt{Add} operation becomes obsolete. As consequence, their results
 -- scoped broadcast in the form of \texttt{\underline{A}dd}
 notifications $\alpha_s$ -- should be canceled by the corresponding
 \texttt{\underline{D}el} notifications of staleness $\delta_s$. We
 focus on the last delivery of each \process, since the best is also
-the last, as highlighted by Algorithm~\ref{algo:add}. \TODO{More about
-  useless $\alpha$ ?}
+the last, as highlighted by Algorithm~\ref{algo:add}.
+
+%% \TODO{More about useless $\alpha$ ?}
 
 \begin{definition}[Happens-before ($\rightarrow$)~\cite{lamport1978time}]
   The transitive, irreflexive, and antisymmetric happens-before
@@ -618,21 +605,6 @@ staleness notifications. Therefore, the protocol reuses its detectors
 of Lemma~\ref{lem:detector} to remove irrelevant messages from the
 system.
 
-\TODO{Multiple receipt and multiple delivery} In terms of number of
-messages, deleting the $a^{th}$ partition generates twice as many
-messages as creating the $a^{th}$ partition: $\delta$ messages travel
-through the partition, then $\alpha$ messages compete to fill the gap
-\TODO{which is?}. \TODO{What about false positives?} Overall, the
-communication complexity shows that \NAME scales well to the number of
-partitions.
-%% In the
-%% worst-case, every new partition includes all but one \process
-%% belonging to the previous partition. The total number of messages
-%% after the $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot
-%% a^2)$. As for the average-case, the number of messages for the
-%% partition deletion is identical to the number of messages of the
-%% corresponding partition creation.
-
 
 
 %% \subsection{Lazy dynamic consistent partitioning}
@@ -722,7 +694,10 @@ partitions.
 %%   \caption{\label{algo:xascast}\NAMEC at \Process~$p$. \TODO{TODO.}}
 %% \end{algorithm}
 
-\TODO{Transition to experiments.}
+\NAME follows the principles of scoped broadcast to efficiently and
+consistently propagate notifications to \processes that need them
+despite concurrent operations. \TODO{Next section aims at providing
+empirical evidence of the scalability and properties of \NAME.}
 
 %%% Local Variables: 
 %%% mode: latex

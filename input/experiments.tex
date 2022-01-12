@@ -8,6 +8,37 @@
 %% the properties of \NAME that enables adaptive scoped broadcast in
 %% dynamic networks.
 
+\TODO{Each \process has a space complexity of $\mathcal{O}(\log_2(d \cdot
+|V|))$, and generates messages of identical space complexity. In terms
+of number messages, in the average case, a \process $x$ chosen
+uniformly at random among all \processes creates a logical
+partition. Its messages $\alpha_x$ spread through the network until
+reaching \processes that belong to another partition closer to
+them. This splits partitions in half on average. Overall, the $n^{th}$
+new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
+      \log_2 n \rfloor}})$} \processes. This decreases every new
+partition until reaching one \process per new partition: its
+source. The average number of messages per \process is
+\smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 n
+      \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
+number of neighbors per \process.}
+\TODO{\TODO{Multiple receipt and multiple delivery} In terms of number of
+messages, deleting the $a^{th}$ partition generates twice as many
+messages as creating the $a^{th}$ partition: $\delta$ messages travel
+through the partition, then $\alpha$ messages compete to fill the gap
+\TODO{which is?}. \TODO{What about false positives?} Overall, the
+communication complexity shows that \NAME scales well to the number of
+partitions.}
+
+%% In the
+%% worst-case, every new partition includes all but one \process
+%% belonging to the previous partition. The total number of messages
+%% after the $a^{th}$ new partition is $\mathcal{O}(\overline{|O|}\cdot
+%% a^2)$. As for the average-case, the number of messages for the
+%% partition deletion is identical to the number of messages of the
+%% corresponding partition creation.
+
+
 This section aims to answer the following questions about \NAME: What
 is the overhead of reaching consistent partitioning using \NAME in
 large scale networks?  Is \NAME relevant in Edge infrastructures where
@@ -125,6 +156,12 @@ depends on its usage.
 
 \begin{asparadesc}
 
+\begin{figure}
+  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.eps}
+  \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters connected by a long distance link.}
+\end{figure}
+
+  
 \item [Objective:] Confirm that \NAME locks down the traffic of decentralized content
   indexing in the context of dynamic inter-autonomous system
   communications.
@@ -148,10 +185,21 @@ cluster. Afterwards both scenarios are identical. At $850$~ms, we
 remove the link between the two clusters. At $1.7$~s, we insert back this
 link.
 
-\begin{figure}
-  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.eps}
-  \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters connected by a long distance link.}
-\end{figure}
+
+\begin{figure*}
+  \subfloat[PartA][\label{fig:europe-ases}An edge infrastructure
+    comprising 40 interconnected autonomous systems spanning across
+    Europe~\cite{knight2011internet}.]{
+    \includegraphics[width=\FIGSCALE\columnwidth]{img/europe-ases.pdf}
+  } \subfloat[PartB][\label{fig:xascast}
+    \TODO{Experiment with ascast against xascast? with different cache
+      size}]{
+    \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/europe_as_vs_xas.eps}
+  }
+  \caption{\TODO{Experiment measuring something on such a trace.} \TODO{Worst case when using as-cast}}
+\end{figure*}
+
+
 
 \item [Results:]
 
@@ -195,20 +243,6 @@ would allow locking down the traffic of replica indexing, while
 providing every \process with quick access to replicated content.
 
 \end{asparadesc}
-
-\begin{figure*}
-  \subfloat[PartA][\label{fig:europe-ases}An edge infrastructure
-    comprising 40 interconnected autonomous systems spanning across
-    Europe~\cite{knight2011internet}.]{
-    \includegraphics[width=\FIGSCALE\columnwidth]{img/europe-ases.pdf}
-  } \subfloat[PartB][\label{fig:xascast}
-    \TODO{Experiment with ascast against xascast? with different cache
-      size}]{
-    \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/europe_as_vs_xas.eps}
-  }
-  \caption{\TODO{Experiment measuring something on such a trace.} \TODO{Worst case when using as-cast}}
-\end{figure*}
-
 
 
 %% Next Section reviews state-of-the-art approaches for content indexing
