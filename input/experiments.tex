@@ -191,7 +191,7 @@ link.
     comprising 40 interconnected autonomous systems spanning across
     Europe~\cite{knight2011internet}.]{
     \includegraphics[width=\FIGSCALE\columnwidth]{img/europe-ases.pdf}
-  } \subfloat[PartB][\label{fig:xascast}
+  } \subfloat[PartB][\label{fig:europe_as_vs_xas}
     \TODO{Experiment with ascast against xascast? with different cache
       size}]{
     \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/europe_as_vs_xas.eps}
@@ -244,14 +244,49 @@ providing every \process with quick access to replicated content.
 
 \end{asparadesc}
 
+\begin{asparadesc}
+  \item[Objective:] Highlight the shortcoming of \NAME in Edge
+    infrastructures and propose an improvement called \NAMEC (stands
+    for \underline{cross} \underline{\NAME}) that fits this context by
+    enabling lazy dynamic partitioning.
+    
+  \item[Description:] We build a network of networks by using an Edge
+    infrastructure comprising 1157 \processes distributed in 40
+    interconnected autonomous systems spanning across
+    Europe~\cite{knight2011internet} as depicted in
+    Figure~\ref{fig:europe-ases}. \emph{Gateway} \processes (dark in
+    the figure) link autonomous systems together, \eg a Lisbon \node
+    links Portugal to Spain and United Kingdoms through a Madrid \node
+    and a London \node respectively.
+
+    \noindent Figure~\ref{fig:europe-ases} depicts the operations executed
+    during the simulation that lasts 7 seconds: at 1 second, a \node
+    located in Lisbon, Portugal performs an \texttt{Add}; at 2
+    seconds, a \node located in Palma de Majorque, Spain performs an
+    \texttt{Add}; at 3 seconds, a \node located in Paris, France
+    performs an \texttt{Add}; at 4 seconds, a \node located in
+    Hvanneyri, Iceland performs an \texttt{Add}; and finally, at 5
+    seconds, the \node in Spain performs a \texttt{Del}.
+    
+    \noindent \NAMEC extends \NAME to enable lazy dynamic partitioning
+    by allowing gateways to stop notifications when their respective
+    network does not appear to have a source. Using \NAMEC, each
+    \process maintains a \emph{local} index that corresponds to the
+    best partition of its autonomous systems, and a \emph{global}
+    index that corresponds to the best partition cross autonomous
+    systems, \ie contiguous autonomous systems that have at least one
+    source.
+    
+    \noindent We measure the number of messages transiting through the
+    network for each operation, and we measure the number of
+    \processes that index (\ie belong to a partition) over time.
+    
+  \item[Results:] Figure~\ref{fig:europe_as_vs_xas} shows the results
+    of this experiment.
+\end{asparadesc}
 
 %% Next Section reviews state-of-the-art approaches for content indexing
-%% in geo-distributed infrastructures and explains their shortcomings.
-
-% \subsection{Use case: caching}
-% \subsection{Use case: routing}
-% \subsection{Use case: broadcast domain}
-
+%%  in geo-distributed infrastructures and explains their shortcomings.
 
 %%% Local Variables: 
 %%% mode: latex
