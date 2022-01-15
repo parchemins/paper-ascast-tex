@@ -8,27 +8,27 @@
 %% the properties of \NAME that enables adaptive scoped broadcast in
 %% dynamic networks.
 
-\TODO{Each \process has a space complexity of $\mathcal{O}(\log_2(d \cdot
-|V|))$, and generates messages of identical space complexity. In terms
-of number messages, in the average case, a \process $x$ chosen
-uniformly at random among all \processes creates a logical
-partition. Its messages $\alpha_x$ spread through the network until
-reaching \processes that belong to another partition closer to
-them. This splits partitions in half on average. Overall, the $n^{th}$
-new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
-      \log_2 n \rfloor}})$} \processes. This decreases every new
-partition until reaching one \process per new partition: its
-source. The average number of messages per \process is
-\smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 n
-      \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
-number of neighbors per \process.}
-\TODO{\TODO{Multiple receipt and multiple delivery} In terms of number of
-messages, deleting the $a^{th}$ partition generates twice as many
-messages as creating the $a^{th}$ partition: $\delta$ messages travel
-through the partition, then $\alpha$ messages compete to fill the gap
-\TODO{which is?}. \TODO{What about false positives?} Overall, the
-communication complexity shows that \NAME scales well to the number of
-partitions.}
+%% \TODO{Each \process has a space complexity of $\mathcal{O}(\log_2(d \cdot
+%% |V|))$, and generates messages of identical space complexity. In terms
+%% of number messages, in the average case, a \process $x$ chosen
+%% uniformly at random among all \processes creates a logical
+%% partition. Its messages $\alpha_x$ spread through the network until
+%% reaching \processes that belong to another partition closer to
+%% them. This splits partitions in half on average. Overall, the $n^{th}$
+%% new partition comprises \smash{$\mathcal{O}(\frac{|V|}{2^{\lfloor
+%%       \log_2 n \rfloor}})$} \processes. This decreases every new
+%% partition until reaching one \process per new partition: its
+%% source. The average number of messages per \process is
+%% \smash{$\mathcal{O}(\frac{\overline{|O|}}{2^{\lfloor \log_2 n
+%%       \rfloor}})$}, where \smash{$\overline{|O|}$} is the average
+%% number of neighbors per \process.}
+%% \TODO{\TODO{Multiple receipt and multiple delivery} In terms of number of
+%% messages, deleting the $a^{th}$ partition generates twice as many
+%% messages as creating the $a^{th}$ partition: $\delta$ messages travel
+%% through the partition, then $\alpha$ messages compete to fill the gap
+%% \TODO{which is?}. \TODO{What about false positives?} Overall, the
+%% communication complexity shows that \NAME scales well to the number of
+%% partitions.}
 
 %% In the
 %% worst-case, every new partition includes all but one \process
@@ -54,12 +54,12 @@ the Github platform at
 %%   of the system.}
 
 \begin{asparadesc}
-\item [Objective:] Confirm the complexity analysis stating that
-  communication and time overheads depend on the current partitioning
-  of the system.
+\item [Objective:] Confirm the scalability of \NAME by higlighting the
+  trade-off between the current partitioning of the system and the
+  protocol's overhead in terms of traffic and termination time.
   
 \item [Description:]
-
+  
 We build a network comprising 10k \processes. First, we chain
 \processes together, then we add another communication link per
 \process to another random \process. Since links are bidirectional,
@@ -101,13 +101,20 @@ between $\alpha$ and $\delta$ messages. The bottom part shows the time
 before reaching consistent partitioning.
 
 \noindent Figure~\ref{fig:complexity} confirms that \NAME's overhead
-depends on the size of partitions. The first partition is the most
-expensive, for $\alpha$'s must reach every \process which takes time
-and generate more traffic.  \NAME quickly converges towards consistent
-partitioning in only 350 milliseconds. The last and $100^{th}$
-partition added around 21 seconds is the least expensive. By using
-scoped broadcast, control information only reaches a small subset of
-the whole network.
+depends on the size of partitions. In this scenario, it empirically
+corresponds to a complexity in terms of number of messages of
+$\mathcal{O}(\frac{|E|}{|V|\cdot|P|})$ where $E$ is the number of
+links, $V$ is the number of \processes, and $P$ is the number of
+partitions. In other terms, the $p^{th}$ partition contains $1/p$
+\processes and reduces the size of closest partitions so every
+partition has $1/p$ \processes on average.
+  
+\noindent Therefore, the first partition is the most expensive, for $\alpha$'s
+must reach every \process which takes time and generate more traffic.
+\NAME quickly converges towards consistent partitioning in only 350
+milliseconds. The last and $100^{th}$ partition added around 21
+seconds is the least expensive. By using scoped broadcast, control
+information only reaches a small subset of the whole network.
 
 \noindent Figure~\ref{fig:complexity} also confirms that \NAME's
 delete operations are more expensive than add operations. Indeed, the
@@ -187,16 +194,17 @@ link.
 
 
 \begin{figure*}
-  \subfloat[PartA][\label{fig:europe-ases}An edge infrastructure
-    comprising 40 interconnected autonomous systems spanning across
-    Europe~\cite{knight2011internet}.]{
+  \subfloat {
     \includegraphics[width=\FIGSCALE\columnwidth]{img/europe-ases.pdf}
-  } \subfloat[PartB][\label{fig:europe_as_vs_xas}
-    \TODO{Experiment with ascast against xascast? with different cache
-      size}]{
+  }
+  \hspace{5pt}
+  \subfloat {
     \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/europe_as_vs_xas.eps}
   }
-  \caption{\TODO{Experiment measuring something on such a trace.} \TODO{Worst case when using as-cast}}
+  \caption{\label{fig:europe-ases}Traffic overhead and indexes
+    maintained by \NAME and its extension \NAMEC in an Edge
+    infrastructure comprising 40 interconnected autonomous systems of
+    1157 \processes spanning across Europe~\cite{knight2011internet}}
 \end{figure*}
 
 
@@ -234,14 +242,6 @@ partition. However, in the experiment involving one source \emph{per}
 cluster, the new link does not trigger noticeable traffic, for
 \processes already know their closest source located in their cluster.
 
-\noindent Overall, this experimentation empirically demonstrates the
-benefits of \NAME in the context of geo-distributed infrastructures,
-e.g., inter-connected autonomous systems where \processes and
-communications links may be added and removed at any time. \NAME
-coupled with replication strategies designed for Edge infrastructures
-would allow locking down the traffic of replica indexing, while
-providing every \process with quick access to replicated content.
-
 \end{asparadesc}
 
 \begin{asparadesc}
@@ -253,20 +253,20 @@ providing every \process with quick access to replicated content.
   \item[Description:] We build a network of networks by using an Edge
     infrastructure comprising 1157 \processes distributed in 40
     interconnected autonomous systems spanning across
-    Europe~\cite{knight2011internet} as depicted in
+    Europe~\cite{knight2011internet} as depicted in the left
     Figure~\ref{fig:europe-ases}. \emph{Gateway} \processes (dark in
     the figure) link autonomous systems together, \eg a Lisbon \node
     links Portugal to Spain and United Kingdoms through a Madrid \node
     and a London \node respectively.
 
-    \noindent Figure~\ref{fig:europe-ases} depicts the operations executed
-    during the simulation that lasts 7 seconds: at 1 second, a \node
-    located in Lisbon, Portugal performs an \texttt{Add}; at 2
-    seconds, a \node located in Palma de Majorque, Spain performs an
-    \texttt{Add}; at 3 seconds, a \node located in Paris, France
-    performs an \texttt{Add}; at 4 seconds, a \node located in
-    Hvanneyri, Iceland performs an \texttt{Add}; and finally, at 5
-    seconds, the \node in Spain performs a \texttt{Del}.
+    \noindent The left Figure~\ref{fig:europe-ases} depicts the
+    operations executed during the simulation that lasts 7 seconds: at
+    1 second, a \node located in Lisbon, Portugal performs an
+    \texttt{Add}; at 2 seconds, a \node located in Palma de Majorque,
+    Spain performs an \texttt{Add}; at 3 seconds, a \node located in
+    Paris, France performs an \texttt{Add}; at 4 seconds, a \node
+    located in Hvanneyri, Iceland performs an \texttt{Add}; and
+    finally, at 5 seconds, the \node in Spain performs a \texttt{Del}.
     
     \noindent \NAMEC extends \NAME to enable lazy dynamic partitioning
     by allowing gateways to stop notifications when their respective
@@ -274,16 +274,78 @@ providing every \process with quick access to replicated content.
     \process maintains a \emph{local} index that corresponds to the
     best partition of its autonomous systems, and a \emph{global}
     index that corresponds to the best partition cross autonomous
-    systems, \ie contiguous autonomous systems that have at least one
+    systems, \ie adjacent autonomous systems that have at least one
     source.
     
     \noindent We measure the number of messages transiting through the
     network for each operation, and we measure the number of
     \processes that index (\ie belong to a partition) over time.
     
-  \item[Results:] Figure~\ref{fig:europe_as_vs_xas} shows the results
-    of this experiment.
+  \item[Results:] Figure~\ref{fig:europe-ases} shows the results
+    of this experiment. The top part highlights the cost of each
+    partitioning protocol after each operation, while the bottom part
+    provides the insight that explains these costs by displaying the
+    number of indexes maintained by each protocol.
+
+    \noindent Figure~\ref{fig:europe-ases} shows that Portugal's
+    \texttt{Add} costs an order of magnitude more with \NAME compared
+    to \NAMEC.  \NAME's messages propagate through all Europe, for
+    \NAME regards Europe as 1 network of 1157 \processes while
+    \NAMEC's messages propagate through Portugal's network of 23
+    \processes only.
+
+    \noindent Figure~\ref{fig:europe-ases} shows that Spain's
+    \texttt{Add} costs slightly more with \NAMEC compared to \NAME.  A
+    \process in Madrid links Portugal to Spain and the rest of
+    Europe. Since Lisbon is closer to Madrid than Palma de Majorque
+    is, only 11 \processes in Spain actually need to receive and
+    deliver the new notification, hence the small overhead of this
+    operation with \NAME. Using \NAMEC, the overhead is slightly
+    higher since
+    \begin{inparaenum}[(i)]
+    \item the 20 \processes of Spain's network need to receive and
+      deliver the new notification, \emph{and}
+    \item Madrid's \process echoes Lisbon's notification as soon as it
+      receives Palma's notification to 11 \processes.
+    \end{inparaenum}
+
+    \noindent Figure~\ref{fig:europe-ases} highlights the worst
+    case scenario of \NAME: the cost of France's \texttt{Add} is close
+    to that of Portugal's \texttt{Add} since it updates the whole
+    Europe excluding Portugal and Spain. On the opposite, \NAMEC only
+    updates France's 39 \processes.
+
+    \noindent Figure~\ref{fig:europe-ases} shows that Iceland's
+    \texttt{Add} has similar cost for \NAME and \NAMEC. Indeed, they
+    both update Iceland, and when the notifications reach Copenhagen
+    in Danemark, they stop either because France's notifications are
+    closer (\NAME) or the Danish network does not have any source
+    (\NAMEC).
+
+    \noindent Finally, Figure~\ref{fig:europe-ases} shows that
+    Spain's \texttt{Del} have similar cost for \NAME and
+    \NAMEC. Nevertheless, the trade-off is different: \NAME's overhead
+    comes from the 11 \nodes that need to acknowledge staleness and
+    deliver the echos from Portugal; \NAMEC's overhead comes from the
+    20 \nodes that need to acknowledge staleness. Using \NAMEC,
+    Spain's network does not propagate echos since it does not have
+    any source anymore.
+
 \end{asparadesc}
+
+%% \begin{asparadesc}
+%%   \item[\TODO{Overall:}] this experimentation empirically demonstrates the
+%%     benefits of \NAME in the context of geo-distributed
+%%     infrastructures, e.g., inter-connected autonomous systems where
+%%     \processes and communications links may be added and removed at
+%%     any time. \NAME coupled with replication strategies designed for
+%%     Edge infrastructures would allow locking down the traffic of
+%%     replica indexing, while providing every \process with quick access
+%%     to replicated content.
+%% \end{asparadesc}
+
+\TODO{Overall + transition.}
+
 
 %% Next Section reviews state-of-the-art approaches for content indexing
 %%  in geo-distributed infrastructures and explains their shortcomings.
