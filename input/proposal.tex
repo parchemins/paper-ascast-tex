@@ -278,9 +278,9 @@ forwarding of best (FB) as stated by Theorem~\ref{theo:fb}.
 \begin{definition}[\label{def:fs}\underline{F}orwarding of
   \underline{s}taleness (FS)]
   %
-  Any source can broadcast a staleness notification at any
-  time. Every \process $x$ delivers and forwards a received staleness
-  notification if it targets its best up-to-date delivered message:
+  Any source can broadcast a staleness notification at any time. Every
+  \process $x$ delivers and forwards a received staleness notification
+  $\delta_s$ if it targets its best up-to-date delivered message:
   %% \TODO{$(\delta_s \in R_x \wedge \alpha_s =
   %%     \textup{minUTD}~D_x) \iff \eventually (d_x(\delta_s) \rightarrow
   %% f_x(\delta_s))$.}
@@ -289,13 +289,13 @@ forwarding of best (FB) as stated by Theorem~\ref{theo:fb}.
   % \wedge \nexists d'_s: d_x(\delta_s) \TODO{\not\rightarrow} d_x(\delta_s'))$.
 \end{definition}
 
-\begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos] FB where
-  a \process $x$ that receives but does not deliver a staleness
-  notification sends back --~or echoes~-- its best up-to-date
-  delivered message: $(\last D_x = \alpha_s^d \wedge \delta_s
-  \not\in D_x \wedge d_x(\alpha_s^d)\rightarrow r_{xy}(\delta_{s'}))
-  \implies r_{xy}(\delta_{s'}) \rightarrow
-  s_{xy}(\alpha_s^d\oplus^{w_{xy}})$.
+\begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos]
+  In addition to FB, a \process $x$ that receives but does not deliver
+  a staleness notification $\delta_{s}$ sends back --~or echoes~-- its
+  best up-to-date delivered message: $(\last D_x = \alpha_{s'}^d
+  \wedge \delta_{s'} \not\in D_x \wedge d_x(\alpha_{s'}^d)\rightarrow
+  r_{xy}(\delta_{s})) \implies r_{xy}(\delta_{s}) \rightarrow
+  s_{xy}(\alpha_{s'}^d\oplus^{w_{xy}})$.
 
   
   % $r_{xy}(\alpha_s)
@@ -363,12 +363,12 @@ but up-to-date messages from live sources.
 A first step to avoid staying in inconsistent state is to extend the
 behavior of each \process so \processes such as $c$, that would remain
 in a wrong partition, use their history of receipt and delivery to
-detect the blocking of staleness notifications that can hinder
-reaching consistent partitioning.  In Figure~\ref{fig:problem}, $b$
-blocked the staleness notification $\delta_a$ that $c$ needs since it
-belongs to a ephemeral partition $P_c$ that $c$ acknowledges to be
-stale before $b$ does. Therefore, $c$ can detect the blocking of
-$\delta_a$ since it acknowledges that its parent $b$ received,
+detect the possible blocking of staleness notifications that can
+hinder reaching consistent partitioning.  In Figure~\ref{fig:problem},
+$b$ blocked the staleness notification $\delta_a$ that $c$ needs since
+it belongs to a ephemeral partition $P_c$ that $c$ acknowledges to be
+stale before $b$ does. Therefore, $c$ can detect the possible blocking
+of $\delta_a$ since it acknowledges that its parent $b$ received,
 delivered, and forwarded the stale notification $\alpha_c^1$. In other
 terms, $c$ acknowledges that between the delivery of $\alpha_c^1$ and
 the delivery of $\delta_c$, $b$ blocked any other $\delta$ and
@@ -396,7 +396,7 @@ therefore, it could have blocked $\delta_a$.
   \begin{inparaenum}[(A)]
   \item\label{lem:detectorA}  $z$ eventually delivers it, or 
   \item\label{lem:detectorB} a \process $y$ in such a chain of
-    delivery $\pi_{xz}'$ eventually acknowledges its blocking.
+    delivery $\pi_{xz}'$ eventually detects the possible blocking of $\delta_x$.
   \end{inparaenum}
   % $b_p(\delta_x) \implies d_q(x) U Detect[X]$ ??? 
 \end{lemma}
