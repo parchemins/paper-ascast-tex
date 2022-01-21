@@ -2,7 +2,6 @@
 \section{Related Work}
 \label{sec:related_work}
 
-\TODO{Vector routing protocols.} 
 Content indexing services in geo-distributed infrastructures allow
 \processes to retrieve specific content while leveraging the
 advantages of replication. These systems mostly rely on dedicated
@@ -102,7 +101,8 @@ as their respective distance in order to rank them.
 locations along with distance information carried into messages, each
 \node easily determine where the closest copy of specific content
 resides, without contacting any remote
-service. \underline{C}onflict-\underline{f}ree \underline{r}eplicated
+service. In a routing context, distance-vector routing protocols such as BGP or OSPF~\cite{ospf} similarly broadcast information to all other nodes to infer a topology map of the network and derive routing tables.
+\underline{C}onflict-\underline{f}ree \underline{r}eplicated
 \underline{d}atatype (CRDT)~\cite{shapiro2011crdts} for set data
 structures could also implement such a location service. \Processes
 would eventually have a set of all replicas, assuming eventual
