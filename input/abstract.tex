@@ -14,7 +14,7 @@
   %% the volume of data passing through the network overall.  
   Unfortunately, locating the closest replica of a specific content
   requires indexing \emph{every live} replica along with its
-  \emph{location}.
+  \emph{location}. 
   %
   %Current proposals built on a centralized service face scalability
   %issues, single point of failure, as well as latency penalities where
@@ -26,7 +26,7 @@
   %scale dynamic systems where \processes create and destroy replicas
   %at any time.
   % 
-  Relying on remote services enters in contradiction with the
+  Relying on remote services for such a aim,  enters in contradiction with the
   properties of Edge infrastructures as locating replicas may
   effectively take more time than actually downloading content.  At
   the opposite, maintaining such an index at every \process would
@@ -34,7 +34,7 @@
   \processes can create and destroy replicas at any time.
   
   %%% Our proposal
-  \noindent In this paper, we abstract the content indexing challenge
+  \noindent In this paper, we abstract the content indexation challenge
   as a distributed partitioning problem: every \process only indexes
   its closest replica, and connected \processes with a similar index
   compose a partition. Our decentralized implementation \NAME is
@@ -51,8 +51,18 @@
   %% guarantees that eventually, every \process knows its best
   %% partition, hence its closest replica, despite concurrent
   %% operations and receipt orders.
-  Our complexity analysis supported by simulations shows that \NAME
-  scales well in terms of generated traffic and termination time.
+  Our prototype, implemented on top of PeerSim, shows that \NAME
+  scales well in terms of generated messages and termination
+  time. 
+
+  %% \NAME is a crazy contribution
+  \color{red}\NAME can constitute a new building block for
+  geo-distribuetd service. Among the concrete use-cases we envision is
+  the sharing of web objects regularly used in social networks (including viral pictures/video but also css,
+  javascript objects): instead of contacting CDN nodes, it
+  would be possible to retrieve objects closer and so mitigate the
+  traffic overall.
+  
   %% As
   %% such, \NAME can constitute a new building block for geo-distributed
   %% services.
