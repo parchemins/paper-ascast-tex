@@ -10,8 +10,8 @@ large scale networks?  Is \NAME relevant in Edge infrastructures where
 \processes are geo-distributed into clusters? We performed the
 experimentation using PeerSim, a simulator written in Java that allows
 researchers to evaluate and assess distributed algorithms in large
-scale networks~\cite{montresor2009peersim}. The code is available on
-the Github platform at
+scale networks~\cite{montresor2009peersim}. All the code is available
+on the Github platform at
 \TODO{\url{https://anonymous.4open.science/r/peersim-partition-5592}}.
 
 %% \subsection{Confirm the complexity analysis stating that
@@ -168,19 +168,23 @@ displays the results with one source per cluster.
 \noindent Figure~\ref{fig:geant} confirms that concurrent
 \texttt{Add}s may reach consistent partitioning faster. In particular,
 the top part of Figure~\ref{fig:geant} depicts a slow down in traffic
-around $500$ ms due to the high latency inter-continental link. The
+around $300$ ms due to the high latency inter-continental link. The
 first plateau shows the source's autonomous system acknowledging this
 source, while the second shows the other autonomous system catching
 up.  The inter-continental link is a bottleneck that does not exist
 when each cluster has its own source.
 
-\noindent Figure~\ref{fig:geant} highlights that removing the
-inter-continental link generates additional traffic. The cluster cut
-off from the source must purge all control information about this
-source.  Most importantly, Figure~\ref{fig:geant} shows that \NAME
-still operates well when \emph{physical} partitions appear. \Processes
-from the cluster without source do not belong to any partition while
-\processes from the other cluster belong to the same partition. 
+\noindent Figure~\ref{fig:geant} highlights that \NAME operates well
+even when \emph{physical} partitions appear. Indeed, the disconnection
+of the only inter-continental link existing between the two clusters
+either leads to 
+\begin{inparaenum}[(i)]
+\item additional traffic when the \processes do not have any source in
+  their cluster, for \processes need to purge all indexes about the
+  remote unreachable source until reaching consistent partitioning; or
+\item an already consistent partitioning, for \processes of each
+  cluster already target the source in their respective cluster.
+\end{inparaenum}
 
 \noindent Figure~\ref{fig:geant} shows that, when adding back the
 inter-continental link, the two clusters can communicate again. In the
@@ -197,8 +201,9 @@ cluster, the new link does not trigger noticeable traffic, for
 \begin{asparadesc}
   \item[Objective:] Highlight the shortcoming of \NAME in Edge
     infrastructures and propose an improvement called \NAMEC (stands
-    for \underline{cross} \underline{\NAME}) that fits this context by
-    enabling lazy dynamic partitioning.
+    for \underline{cross} \underline{\NAME}) that enables \emph{lazy}
+    dynamic partitioning by allowing gateways to stop notifications
+    when their respective network does not appear to have a source.
     
   \item[Description:] We build a network of networks by using another
     Edge infrastructure comprising 1157 \processes distributed in 40
@@ -218,14 +223,12 @@ cluster, the new link does not trigger noticeable traffic, for
     located in Hvanneyri, Iceland performs an \texttt{Add};
     finally at 5 seconds, the \node in Spain performs a \texttt{Del}.
     
-    \noindent We evaluate \NAME against an extension of \NAME called
-    \NAMEC that enables lazy dynamic partitioning by allowing gateways
-    to stop notifications when their respective network does not
-    appear to have a source. Using \NAMEC, each \process maintains a
-    \emph{local} index that corresponds to the best partition of its
-    autonomous systems, and a \emph{global} index that corresponds to
-    the best partition cross autonomous systems, \ie adjacent
-    autonomous systems that have at least one source.
+    \noindent We evaluate \NAME against \NAMEC. Using \NAMEC, each
+    \process maintains a \emph{local} index that corresponds to the
+    best partition of its autonomous systems, and a \emph{global}
+    index that corresponds to the best partition cross autonomous
+    systems, \ie adjacent autonomous systems that have at least one
+    source.
     
     \noindent We measure the number of messages transiting through the
     network for each operation, and we measure the number of
