@@ -115,7 +115,8 @@ depends on its usage.
 
 \begin{figure}
   \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
-  \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2 clusters connected by a long distance link.}
+  \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2
+    clusters connected by a long distance link.}
 \end{figure}
 
   
@@ -139,9 +140,8 @@ experiment, at $50$~ms, only one \process becomes source, hence there
 is only one partition for the whole distributed system. In the second
 experiment, at $50$~ms, two \processes become sources, one per
 cluster. Afterwards both scenarios are identical. At $850$~ms, we
-remove the link between the two clusters. At $1.7$~s, we insert back this
-link.
-
+remove the link between the two clusters. At $1.7$~s, we insert back
+this link.
 
 \begin{figure*}
   \subfloat {
@@ -201,9 +201,12 @@ cluster, the new link does not trigger noticeable traffic, for
 \begin{asparadesc}
   \item[Objective:] Highlight the shortcoming of \NAME in Edge
     infrastructures and propose an improvement called \NAMEC (stands
-    for \underline{cross} \underline{\NAME}) that enables \emph{lazy}
-    dynamic partitioning by allowing gateways to stop notifications
-    when their respective network does not appear to have a source.
+    for \underline{cross} \underline{\NAME}) that enables
+    \emph{lazy}\footnote{Laziness properties and \NAMEC would be
+    further detailed in the 2 additional pages available for the
+    camera-ready version of the paper} dynamic partitioning by
+    allowing gateways to stop notifications when their respective
+    network does not appear to have a source.
     
   \item[Description:] We build a network of networks by using another
     Edge infrastructure comprising 1157 \processes distributed in 40
