@@ -98,11 +98,9 @@ the system. This would create interconnected sets of \processes, or
 \emph{partitions}, gathered around a \emph{source} being their
 respective replica. A \process deleting its replica should notify all
 members of its partition so they can identify and rally their new
-closest partition. \TODO{Periodic advertisement protocols} already
-provide both
-operations~\cite{hemmati2015namebased,sohier2012physarum}. However,
+closest partition. Periodic advertisement protocols \note{Why a periodic protocol solves the ''correct cast/scope''? I miss the point here}
+already provide both operations~\cite{hemmati2015namebased,sohier2012physarum}. However,
 their functioning requires
-% TODO: A periodic protocol... why a periodic protocol solves the ''correct cast/scope''? I miss the point here 
 \begin{inparaenum}[(i)]
 \item to generate traffic even when the system is quiescent, and
 \item the use of synchronous communications~\cite{sohier2012physarum}
@@ -146,11 +144,12 @@ a distributed partitioning problem. Our contribution is threefold:
   to creations and deletions of partitions even in dynamic systems
   where \nodes can join, leave, or crash at any time. \NAME's
   efficiency relies on a communication primitive called
-  \underline{s}coped-broad\underline{cast} that enables epidemic
+  \underline{s}coped-broad\underline{cast}
+ \note{AS-Cast stands for Autonomous System-Cast since xAS means cross AS? what did I miss?}
+  that enables epidemic
   dissemination of messages as long as receiving \processes verify an
   application-dependant predicate.
-  \textcolor{red}{AS-Cast stands for Autonomous System-Cast since xAS means cross AS? what did I miss?}
-
+ 
 \item [$\bullet$] We evaluate \NAME through simulations using
   PeerSim~\cite{montresor2009peersim}. Results empirically show that
   \begin{inparaenum}[(i)]
@@ -168,8 +167,8 @@ As such, \NAME can constitute a novel building block for
 geo-distributed services, \eg by efficiently sharing the locations of
 replicated web objects in the vicinity of downloading nodes, or by
 enabling efficient resource discovery in the vicinity of a region.
-\TODO{More detail, name drop that we can support CDN.}
-
+\note{More detail, name drop that we can support CDN.}
+\note{Why C/P abstract sentence here? I would rather skip here and C/P and complete in the conclusion?}
 %% Then, we propose \emph{\NAME}, a logical partitioning protocol that
 %% uses \underline{s}coped broad\underline{cast} to \underline{a}dapt its
 %% partitions, \ie scopes, to creations and deletions of partitions in
