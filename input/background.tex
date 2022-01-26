@@ -36,12 +36,10 @@ needs it. In that regard, \Process~$R$ only needs to disseminate a
 message notifying all other \processes of its new
 content. \Process~$R$ can use uniform reliable
 broadcast~\cite{hadzilacos1994modular} and epidemic
-propagation~\cite{epidemic-protocol} to guarantee that
-\begin{inparaenum}[(i)]
-\item every \process eventually knows the content location
-\item by efficiently using neighbor-to-neighbor communication.
-\end{inparaenum}
-\note{Je ne vois pas l'interet des enums ici? ca casse la lecture}
+propagation~\cite{epidemic-protocol} to guarantee that every \process
+eventually knows the content location by efficiently using
+neighbor-to-neighbor communication.
+
 \item [Location:]
 
 Then, in Figure~\ref{fig:partition_intuitionB}, another \Process~$G$
@@ -68,9 +66,7 @@ communication primitive that propagates notifications within a scope
 by evaluating a predicate, starting at its broadcaster (the
 \emph{source}).  In other terms, \processes propagate notifications as
 long as they consider them useful based on location information they
-carry. We call such a primitive \emph{scoped broadcast}
-\note{connerie: ca marche pas comme ca la propagation des routes dans les routeurs?On est pas entrain de reinventer une algo qui existe depuis bien longtemps dans la communauté reseau? Si ce n'est pas le cas alors nous avons une autre application pour as-cast}
-(see
+carry. We call such a primitive \emph{scoped broadcast} (see
 Section~\ref{subsec:scoped}), for messages transitively reach a subset
 of interconnected \processes (the \emph{scope}). Using this primitive,
 \processes can lock down the traffic of content indexing to relevant
@@ -102,7 +98,7 @@ consist in triggering scoped broadcast at bordering \processes of red
 and blue partitions once again. In other words, the scope of scoped broadcast changes
 over receipts by \processes. This dynamic partitioning raises additional
 challenges related to concurrent operations where removed partitions
-would\note{can?} block the propagation of other partitions (see
+could block the propagation of other partitions (see
 Section~\ref{subsec:dynamic}).
 
 %% \item [Lazy partitioning:]
