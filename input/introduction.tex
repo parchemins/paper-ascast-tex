@@ -98,8 +98,10 @@ the system. This would create interconnected sets of \processes, or
 \emph{partitions}, gathered around a \emph{source} being their
 respective replica. A \process deleting its replica should notify all
 members of its partition so they can identify and rally their new
-closest partition. Periodic advertisement protocols \note{Why a periodic protocol solves the ''correct cast/scope''? I miss the point here}
-already provide both operations~\cite{hemmati2015namebased,sohier2012physarum}. However,
+closest partition.
+%
+Some periodic advertisement protocols~\cite{hemmati2015namebased,sohier2012physarum}
+already provide both creation and deletion operations. However,
 their functioning requires
 \begin{inparaenum}[(i)]
 \item to generate traffic even when the system is quiescent, and
@@ -145,8 +147,7 @@ a distributed partitioning problem. Our contribution is threefold:
   where \nodes can join, leave, or crash at any time. \NAME's
   efficiency relies on a communication primitive called
   \underline{s}coped-broad\underline{cast}
- \note{AS-Cast stands for Autonomous System-Cast since xAS means cross AS? what did I miss?}
-  that enables epidemic
+   that enables epidemic
   dissemination of messages as long as receiving \processes verify an
   application-dependant predicate.
  
@@ -163,12 +164,6 @@ a distributed partitioning problem. Our contribution is threefold:
   \end{inparaenum}
 \end{asparadesc}
 
-As such, \NAME can constitute a novel building block for
-geo-distributed services, \eg by efficiently sharing the locations of
-replicated web objects in the vicinity of downloading nodes, or by
-enabling efficient resource discovery in the vicinity of a region.
-\note{More detail, name drop that we can support CDN.}
-\note{Why C/P abstract sentence here? I would rather skip here and C/P and complete in the conclusion?}
 %% Then, we propose \emph{\NAME}, a logical partitioning protocol that
 %% uses \underline{s}coped broad\underline{cast} to \underline{a}dapt its
 %% partitions, \ie scopes, to creations and deletions of partitions in
