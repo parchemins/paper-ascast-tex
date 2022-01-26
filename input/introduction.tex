@@ -1,4 +1,3 @@
-
 \section{Introduction}
 
 The data storage paradigm shifted from centralized in
@@ -93,15 +92,17 @@ traffic generated to maintain its indexes. A \process may acknowledge
 the existence of replicas at the other side of the network while there
 already exists a replica next to it.
 
-Instead, a \process creating a replica should notify all and only
-\processes that have no closer replica in the system. This would
-create interconnected sets of \processes, or \emph{partitions},
-gathered around a \emph{source} being their respective replica. A
-\process deleting its replica should notify all members of its
-partition so they can identify and rally their new closest
-partition. Periodic advertisement protocols already provide both
-operations~\cite{hemmati2015namebased, sohier2012physarum}. However,
+To mitigate the broadcasting overhead, a \process creating a replica
+should notify all and only \processes that have no closer replica in
+the system. This would create interconnected sets of \processes, or
+\emph{partitions}, gathered around a \emph{source} being their
+respective replica. A \process deleting its replica should notify all
+members of its partition so they can identify and rally their new
+closest partition. \TODO{Periodic advertisement protocols} already
+provide both
+operations~\cite{hemmati2015namebased,sohier2012physarum}. However,
 their functioning requires
+% TODO: A periodic protocol... why a periodic protocol solves the ''correct cast/scope''? I miss the point here 
 \begin{inparaenum}[(i)]
 \item to generate traffic even when the system is quiescent, and
 \item the use of synchronous communications~\cite{sohier2012physarum}
@@ -148,6 +149,7 @@ a distributed partitioning problem. Our contribution is threefold:
   \underline{s}coped-broad\underline{cast} that enables epidemic
   dissemination of messages as long as receiving \processes verify an
   application-dependant predicate.
+  \textcolor{red}{AS-Cast stands for Autonomous System-Cast since xAS means cross AS? what did I miss?}
 
 \item [$\bullet$] We evaluate \NAME through simulations using
   PeerSim~\cite{montresor2009peersim}. Results empirically show that

@@ -1,6 +1,3 @@
-
-
-
 \section{Motivation and problem}
 \label{sec:background}
 
@@ -11,7 +8,7 @@ infrastructures ranging from centralized services to fully
 decentralized approaches~\cite{squirrel}. We advocate for the latter
 where \processes host the service themselves so they do not need to
 request remote -- possibly far away third-party -- entities to
-retrieve their content location.  In this paper, we tackle the content
+retrieve content locations.  More precisely, we propose to consider the content
 indexing issue as a dynamic logical partitioning problem. This section
 motivates our positioning and explains the shortcomings of existing
 implementations.
@@ -44,7 +41,7 @@ propagation~\cite{epidemic-protocol} to guarantee that
 \item every \process eventually knows the content location
 \item by efficiently using neighbor-to-neighbor communication.
 \end{inparaenum}
-
+\textcolor{red}{Je ne vois pas l'interet des enums ici? ca casse la lecture}
 \item [Location:]
 
 Then, in Figure~\ref{fig:partition_intuitionB}, another \Process~$G$
