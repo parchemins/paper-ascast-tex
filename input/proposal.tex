@@ -1,19 +1,19 @@
-
 \section{Adaptive scoped broadcast}
 \label{sec:adaptive}
 
-To provide lazy and dynamic logical partitioning in dynamic networks \note{skip: in dynamic networks}
-using scoped broadcast, all live \processes must collaborate to
-disseminate messages that notify new or removed sources to all and
-only interested \processes. This section reviews step-by-step the
-properties that allow \processes to converge to the desired state
-together. It first defines scoped broadcast, then uses it to guarantee
-consistent partitioning when a \process can only become a new source
-in the system. It highlights the issue when a \process can also remove
-its status of source. It shows that using local knowledge and scoped
-broadcast, \processes can still reach dynamic consistent partitioning
-when they are able to detect possible blocking conditions in the
-dissemination of required notifications. \note{add node apparitions/removals to clearly state what is a dynamic network and because such a removal can also impact the convergence of the system}
+To provide dynamic logical partitioning using scoped broadcast, all
+live \processes must collaborate to disseminate messages that notify
+new or removed sources to all and only interested \processes. This
+section reviews step-by-step the properties that allow \processes to
+converge to the desired state together. It first defines scoped
+broadcast, then uses it to guarantee consistent partitioning when a
+\process can only become a new source in the system. It highlights the
+issue when a \process can also remove its status of source. It shows
+that using local knowledge and scoped broadcast, \processes can still
+reach dynamic consistent partitioning when they are able to detect
+possible blocking conditions in the dissemination of required
+notifications.  This also applies to dynamic networks where nodes
+join, leave, or crash at any time.
 
 \subsection{Scoped broadcast}
 \label{subsec:scoped}
