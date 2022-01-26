@@ -41,7 +41,7 @@ propagation~\cite{epidemic-protocol} to guarantee that
 \item every \process eventually knows the content location
 \item by efficiently using neighbor-to-neighbor communication.
 \end{inparaenum}
-\textcolor{red}{Je ne vois pas l'interet des enums ici? ca casse la lecture}
+\note{Je ne vois pas l'interet des enums ici? ca casse la lecture}
 \item [Location:]
 
 Then, in Figure~\ref{fig:partition_intuitionB}, another \Process~$G$
@@ -68,7 +68,9 @@ communication primitive that propagates notifications within a scope
 by evaluating a predicate, starting at its broadcaster (the
 \emph{source}).  In other terms, \processes propagate notifications as
 long as they consider them useful based on location information they
-carry. We call such a primitive \emph{scoped broadcast} (see
+carry. We call such a primitive \emph{scoped broadcast}
+\note{connerie: ca marche pas comme ca la propagation des routes dans les routeurs?On est pas entrain de reinventer une algo qui existe depuis bien longtemps dans la communauté reseau? Si ce n'est pas le cas alors nous avons une autre application pour as-cast}
+(see
 Section~\ref{subsec:scoped}), for messages transitively reach a subset
 of interconnected \processes (the \emph{scope}). Using this primitive,
 \processes can lock down the traffic of content indexing to relevant
@@ -80,6 +82,7 @@ Every \process ends up with at least one known replica that is its
 closest. The set of interconnected \processes with the same closest
 replica is a \emph{partition}. Every \process belongs to one, and only
 one, partition (see Section~\ref{subsec:consistent}).
+In Figure~\ref{fig:partition_intuitionC}, there are three logical partitions.
 
 %% Contrarily to membership
 %% protocols that choose neighboring \processes to communicate with based
@@ -94,12 +97,13 @@ replica. Every \process that belonged to its green partition must
 choose another partition to be in. While it makes sense for
 \Process~$G$ to scoped broadcast its removal, \Process~$B$ and
 \Process~$R$ cannot afford to continuously advertise their replica to
-fill the gap left open by \Process~$G$. Instead, we want to trigger
-once again scoped broadcast at bordering \processes of red and blue
-partitions. The scope of scoped broadcast changes over receipts by
-\processes. Dynamic partitioning raises additional challenges related
-to concurrent operations where removed partitions would block the
-propagation of other partitions (see Section~\ref{subsec:dynamic}).
+fill the gap left open by \Process~$G$. A better approach would
+consist in triggering scoped broadcast at bordering \processes of red
+and blue partitions once again. In other words, the scope of scoped broadcast changes
+over receipts by \processes. This dynamic partitioning raises additional
+challenges related to concurrent operations where removed partitions
+would\note{can?} block the propagation of other partitions (see
+Section~\ref{subsec:dynamic}).
 
 %% \item [Lazy partitioning:]
   
@@ -116,8 +120,8 @@ propagation of other partitions (see Section~\ref{subsec:dynamic}).
 \end{asparadesc}
 
 Next Section details the properties of scoped broadcast and dynamic
-partitioning in dynamic networks, and provides an implementation
-called \NAME along with its complexity.
+partitioning, % in dynamic networks,
+and provides an implementation called \NAME.% along with its complexity.
 
 
 %% \subsection*{Disseminate localization information}
