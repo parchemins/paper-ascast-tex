@@ -100,9 +100,10 @@ respective replica. A \process deleting its replica should notify all
 members of its partition so they can identify and rally their new
 closest partition.
 %
-Some periodic advertisement protocols~\cite{hemmati2015namebased,sohier2012physarum}
-already provide both creation and deletion operations. However,
-their functioning requires
+Some periodic advertisement
+protocols~\cite{hemmati2015namebased,sohier2012physarum} already
+provide both creation and deletion. However, their functioning
+requires
 \begin{inparaenum}[(i)]
 \item to generate traffic even when the system is quiescent, and
 \item the use of synchronous communications~\cite{sohier2012physarum}
