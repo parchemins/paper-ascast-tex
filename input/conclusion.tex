@@ -2,17 +2,17 @@
 \label{sec:conclusion}
 
 With the advent of the Edge and IoT era, major distributed services
-proposed by our community should be revised in order to mitigate as
-much as possible traffic between \processes.  In this paper, we
-tackled the problem of content indexing, a key service for storage
-systems.
-%
-We proposed to address this problem as a dynamic logical partitioning
-where partitions grow and shrink to reflect content and replicas
-locations, as well as infrastructure changes. Using an efficient
+proposed by our community should be revised to mitigate as much as
+possible traffic between \processes.  In this paper, we addressed the
+challenge of content indexing, a key service for storage systems, as a
+dynamic logical partitioning problem where partitions grow and shrink
+to reflect content and replicas locations, as well as infrastructure
+changes.
+
+Using an efficient
 communication primitive called scoped broadcast, each \process
 composing the infrastructure eventually knows the \process hosting the
-best replica of specific content.  The challenge resides in handling
+best replica of a specific content.  The challenge resides in handling
 concurrent operations that may impair the propagation of messages, and
 in turn, lead to inconsistent partitioning.
 %% The major difficulty lies in concurrent operations, each having a
@@ -23,7 +23,9 @@ in turn, lead to inconsistent partitioning.
 We highlighted the properties that solve this problem and proposed an
 implementation called \NAME.  Our simulations confirmed that
 \processes quickly reach consistent partitioning together, and that
-the generated traffic remains locked down to partitions.
+the generated traffic remains locked down to partitions.  We also
+briefly discussed an improvement to contain the traffic in relevant
+autonomous systems.
 %% correctness of our protocol as well as the confinement of
 %% the traffic only where it is needed.
 

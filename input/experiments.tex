@@ -31,12 +31,15 @@ We build a network comprising 10k \processes. First, we chain
 \process to another random \process. Since links are bidirectional,
 each \process has 4 communication links on average. We set the latency
 of links between 20 and 40 ms at random following a uniform
-distribution. We set the weight of links between 5 and 15 at random
-following a uniform distribution also. Weights and latency are different,
-hence the first $\alpha$ received by a \process may not be that of its
-shortest path. It implies more concurrent operations, hence more
-traffic to reach consistent partitioning.\note{Pour moi ce n'est pas assez claire pourquoi more traffic to reach CP +proposition de reformulation voir tex}
-% Weight and latency are different in order to imply more concurrent operations (hence more traffic to reach consistent partitioning): the first $\alpha$ received by a node may not be that of its shortest path. 
+distribution.
+%
+To favor more concurrent operations, we voluntary set
+weights and latency to different values: each link has a weight
+between 5 and 15 set randomly using a uniform distribution. This
+allows nodes to receive messages in a different order than their
+respective shortest path generating more messages to reach consistent
+partionning.
+
 
 \noindent To evaluate dynamic consistent partitioning we, first, 
 create 100 partitions one at a time: \processes reach consistent
@@ -75,19 +78,21 @@ partitions. In other terms, the $p^{th}$ partition contains $1/p$
 \processes and reduces the size of closest partitions so every
 partition has $1/p$ \processes on average.
   
-\noindent Therefore, the first partition is the most expensive, for $\alpha$'s\note{'s pas compris? all $alpha$ sounds better?}
-must reach every \process which takes time and generate more traffic.
-\NAME quickly converges towards consistent partitioning in only\note{in only... why only? compare to what ? Is it good bad? why?}
-% we should give additional elements to explain why it is rather ok to converge in 350ms: maybe by underlining the nb of nodes and the average latency between nodes.
-350 milliseconds. The last and $100^{th}$ partition added around 21
-seconds is the least expensive. By using scoped broadcast, control
-information only reaches a small subset of the whole network.
+\noindent Therefore, the first partition is the most expensive, for
+$\alpha$ messages must reach every \process which takes time and
+generate more traffic.  \NAME quickly converges towards consistent
+partitioning in 350 milliseconds.
+% TODO: Is 350ms is the optimal? if so it would be great to explain it.
+The last and $100^{th}$ partition
+added around 21 seconds is the least expensive. By using scoped
+broadcast, control information only reaches a small subset of the
+whole network.
 
 \noindent Figure~\ref{fig:complexity} also confirms that \NAME's
 delete operations are roughly twice as expensive as creation
 ones. Indeed, the top part of the figure shows that after 21 seconds,
 when the experiment involves removals, traffic includes both
-$\alpha$'s and $\delta$'s. The latter aims at removing stale
+$\alpha$ and $\delta$ messagess. The latter aims at removing stale
 information and triggering competition while the former aims at
 updating shortest paths. As corollary, the convergence time increases,
 for $\delta$ messages must reach the partition borders before sound
@@ -105,8 +110,9 @@ current partitioning as opposed to past partitionings.
 
 \noindent Finally, Figure~\ref{fig:complexity} highlights that after
 49 seconds, i.e., after the 100 creations and the 100 deletes, \processes
-do not generate traffic anymore. Being reactive, \NAME has no overhead \note{can we precise: no overhead related to the indexation updates but heartbeat behind the scene which is crucial?}
-when there is no operation in the system. \NAME's overhead actually
+do not generate traffic anymore. Being reactive, \NAME has no overhead
+%\note{can we precise: no overhead related to the indexation updates but heartbeat behind the scene which is crucial?}
+ when there is no operation in the system. \NAME's overhead actually
 depends on its usage.
 
 \end{asparadesc}
@@ -203,8 +209,8 @@ cluster, the new link does not trigger noticeable traffic, for
 
 \subsection{Cross autonomous systems}
 \begin{asparadesc}
-  \item[Objective:] Highlight the shortcoming of \NAME in Edge
-    infrastructures composed of multilple autonomous systems and
+\item[Objective:] Highlight the shortcoming of \NAME in
+  infrastructures composed of multilple autonomous systems and
     discuss an improvement called \underline{cross} \underline{\NAME}
     (\NAMEC). At coarse-grained, \NAMEC enables
     \emph{lazy}\footnote{Laziness properties and \NAMEC would be
@@ -213,14 +219,15 @@ cluster, the new link does not trigger noticeable traffic, for
     allowing AS' gateways to stop notifications when their respective
     network does not appear to have a source.
     
-  \item[Description:] We build a network of networks by using another
-    Edge infrastructure comprising 1157 \processes distributed in 40
+  \item[Description:] We build a network of networks, following the
+    GEANT network and the underlying European NRENs.
+    Figure~\ref{fig:europe-ases} (a) depicts the resulting
+    infrastructure composed of 1157 \processes distributed in 40
     interconnected autonomous systems spanning across
-    Europe~\cite{knight2011internet} \note{Ici c'est Géant aussi. pourquoi nous n'avions pas 40 ASes dans l'experience précedente + Mentionné que c'est une vision de Geant?}
-     as depicted in Figure~\ref{fig:europe-ases} (a). \emph{Gateway} \processes (dark in
-    the figure) link autonomous systems together, \eg a Lisbon \node
-    links Portugal to Spain and United Kingdoms through a Madrid \node
-    and a London \node respectively.
+    Europe~\cite{knight2011internet}. \emph{Gateway} \processes (dark
+    in the figure) link autonomous systems together, \eg a Lisbon
+    \node links Portugal to Spain and United Kingdoms through a Madrid
+    \node and a London \node respectively.
 
     \noindent Figure~\ref{fig:europe-ases} (a) also depicts the
     operations executed during the 7 seconds simulation: at 1 second,
