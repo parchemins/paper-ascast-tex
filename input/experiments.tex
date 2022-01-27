@@ -147,17 +147,16 @@ remove the link between the two clusters. At $1.7$~s, we insert back
 this link.
 
 \begin{figure*}
-  \subfloat {
-    \includegraphics[width=\FIGSCALE\columnwidth]{img/europe-ases.pdf}
+  \subfloat[An infrastructure composed of 40 interconnected autonomous systems and
+    1157 \processes spanning across Europe~\cite{knight2011internet}]{
+    \includegraphics[width=\FIGSCALE\columnwidth]{img/europe-ases.pdf} 
   }
   \hspace{5pt}
-  \subfloat {
+  \subfloat[Traffic overhead and indexes
+    maintained by \NAME and its extension \NAMEC]{
     \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/europe_as_vs_xas.pdf}
   }
-  \caption{\label{fig:europe-ases}Traffic overhead and indexes
-    maintained by \NAME and its extension \NAMEC in an Edge
-    infrastructure comprising 40 interconnected autonomous systems of
-    1157 \processes spanning across Europe~\cite{knight2011internet}}
+  \caption{\label{fig:europe-ases} Comparison between \NAME and \NAMEC}
 \end{figure*}
 
 
@@ -205,45 +204,50 @@ cluster, the new link does not trigger noticeable traffic, for
 \subsection{Cross autonomous systems}
 \begin{asparadesc}
   \item[Objective:] Highlight the shortcoming of \NAME in Edge
-    infrastructures and propose an improvement called \NAMEC (stands
-    for \underline{cross} \underline{\NAME}) that enables
+    infrastructures composed of multilple autonomous systems and
+    discuss an improvement called \underline{cross} \underline{\NAME}
+    (\NAMEC). At coarse-grained, \NAMEC enables
     \emph{lazy}\footnote{Laziness properties and \NAMEC would be
-    further detailed in the 2 additional pages available for the
-    camera-ready version of the paper.} dynamic partitioning by
-    allowing gateways to stop notifications when their respective
+    further detailed in the  additional two pages available in the
+    camera-ready version of the article.} dynamic partitioning by
+    allowing AS' gateways to stop notifications when their respective
     network does not appear to have a source.
     
   \item[Description:] We build a network of networks by using another
     Edge infrastructure comprising 1157 \processes distributed in 40
     interconnected autonomous systems spanning across
-    Europe~\cite{knight2011internet} as depicted in the left
-    Figure~\ref{fig:europe-ases}. \emph{Gateway} \processes (dark in
+    Europe~\cite{knight2011internet} \note{Ici c'est Géant aussi. pourquoi nous n'avions pas 40 ASes dans l'experience précedente + Mentionné que c'est une vision de Geant?}
+     as depicted in Figure~\ref{fig:europe-ases} (a). \emph{Gateway} \processes (dark in
     the figure) link autonomous systems together, \eg a Lisbon \node
     links Portugal to Spain and United Kingdoms through a Madrid \node
     and a London \node respectively.
 
-    \noindent The left Figure~\ref{fig:europe-ases} depicts the
-    operations executed during the simulation that lasts 7 seconds: at
-    1 second, a \node located in Lisbon, Portugal performs an
-    \texttt{Add}; at 2 seconds, a \node located in Palma de Majorque,
-    Spain performs an \texttt{Add}; at 3 seconds, a \node located in
-    Paris, France performs an \texttt{Add}; at 4 seconds, a \node
-    located in Hvanneyri, Iceland performs an \texttt{Add};
-    finally at 5 seconds, the \node in Spain performs a \texttt{Del}.
+    \noindent Figure~\ref{fig:europe-ases} (a) also depicts the
+    operations executed during the 7 seconds simulation: at 1 second,
+    a \node located in Lisbon, Portugal performs an \texttt{Add} (\ie
+    Lisbon becomes a new source); at 2 seconds, a \node located in
+    Palma de Majorque, Spain performs an \texttt{Add}; at 3 seconds, a
+    \node located in Paris, France performs an \texttt{Add}; at 4
+    seconds, a \node located in Hvanneyri, Iceland performs an
+    \texttt{Add}; finally at 5 seconds, the \node in Spain performs a
+    \texttt{Del} (the Spanish source is removed). Each \node has been
+    chosen in order to illustrate the limitation of \NAME and so the
+    interest of containning the propagation within an AS as proposed by
+    \NAMEC.
     
-    \noindent We evaluate \NAME against \NAMEC. Using \NAMEC, each
+    \noindent In \NAMEC, each
     \process maintains a \emph{local} index that corresponds to the
     best partition of its autonomous systems, and a \emph{global}
     index that corresponds to the best partition cross autonomous
     systems, \ie adjacent autonomous systems that have at least one
     source.
     
-    \noindent We measure the number of messages transiting through the
-    network for each operation, and we measure the number of
+    \noindent To compare \NAME against \NAMEC, we measure the number of messages transiting through the
+    network for each operation, as well as the number of
     \processes that maintain an index (\ie that belong to a partition)
     over time.
     
-  \item[Results:] The right of Figure~\ref{fig:europe-ases} shows the
+  \item[Results:] Figure~\ref{fig:europe-ases} (b) shows the
     results of this experiment. The top part highlights the cost of
     each partitioning protocol after each operation, while the bottom
     part provides the insight that explains these costs by displaying
@@ -252,16 +256,16 @@ cluster, the new link does not trigger noticeable traffic, for
     \noindent Figure~\ref{fig:europe-ases} shows that Portugal's
     \texttt{Add} costs an order of magnitude more with \NAME compared
     to \NAMEC.  \NAME's messages propagate through all Europe, for
-    \NAME regards Europe as 1 network of 1157 \processes while
+    \NAME regards Europe as a single network of 1157 \processes while
     \NAMEC's messages propagate through Portugal's network of 23
     \processes only.
-
-    \noindent Figure~\ref{fig:europe-ases} shows that Spain's
+    % 
+    \noindent  Spain's
     \texttt{Add} costs slightly more with \NAMEC compared to \NAME.  A
     gateway in Madrid links Portugal to Spain and the rest of
     Europe. Since Lisbon is closer to Madrid than Palma de Majorque
     is, only 11 \processes in Spain actually need to receive and
-    deliver the new notification, hence the small overhead of this
+    deliver the new notification, which explains the small overhead of this
     operation with \NAME. Using \NAMEC, the overhead is slightly
     higher since
     \begin{inparaenum}[(i)]
@@ -271,18 +275,17 @@ cluster, the new link does not trigger noticeable traffic, for
       receives Palma's notification to 11 \processes.
     \end{inparaenum}
 
-    \noindent Figure~\ref{fig:europe-ases} highlights the worst
+    \noindent Figure~\ref{fig:europe-ases} also highlights the worst
     case scenario of \NAME: the cost of France's \texttt{Add} is close
     to that of Portugal's \texttt{Add} since it updates the whole
     Europe excluding Portugal and Spain. On the opposite, \NAMEC only
     updates France's 39 \processes.
 
-    \noindent Figure~\ref{fig:europe-ases} shows that Iceland's
-    \texttt{Add} has similar cost for \NAME and \NAMEC. Indeed, they
-    both update Iceland, and when the notifications reach Copenhagen
-    in Danemark, they stop either because France's notifications are
-    closer (\NAME) or the Danish network does not have any source
-    (\NAMEC).
+    \noindent The last \texttt{Add} operation in Iceland has similar
+    cost for \NAME and \NAMEC. Indeed, they both update Iceland, and
+    when the notifications reach Copenhagen in Danemark, they stop
+    either because France's notifications are closer (\NAME) or the
+    Danish network does not have any source (\NAMEC).
 
     \noindent Finally, Figure~\ref{fig:europe-ases} shows that
     Spain's \texttt{Del} have similar cost for \NAME and
