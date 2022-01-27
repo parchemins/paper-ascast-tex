@@ -7,11 +7,11 @@
 %consistent partitioning using \NAME in large scale networks and is
 %\NAME relevant in Edge infrastructures where \processes are
 %geo-distributed into clusters?
-In this section, we discuss the evaluations conducted on PeerSim, a
-simulator that allows researchers to evaluate and assess distributed
-algorithms in large scale networks~\cite{montresor2009peersim}. All
-the code is available on the Github platform at
-\mbox{\url{https://github.com/ane-wane/as-cast}}.
+In this section, we discuss the evaluations of \NAME we conducted on top of
+PeerSim, a simulator to
+evaluate and assess distributed algorithms in large scale
+networks~\cite{montresor2009peersim}. All the code is available on the
+Github platform at \mbox{\url{https://github.com/ane-wane/as-cast}}.
 
 %% \subsection{Confirm the complexity analysis stating that
 %%   communication and time overheads depend on the current partitioning
@@ -32,12 +32,13 @@ We build a network comprising 10k \processes. First, we chain
 each \process has 4 communication links on average. We set the latency
 of links between 20 and 40 ms at random following a uniform
 distribution. We set the weight of links between 5 and 15 at random
-following a uniform distribution. Weights and latency are different,
+following a uniform distribution also. Weights and latency are different,
 hence the first $\alpha$ received by a \process may not be that of its
 shortest path. It implies more concurrent operations, hence more
-traffic to reach consistent partitioning.
+traffic to reach consistent partitioning.\note{Pour moi ce n'est pas assez claire pourquoi more traffic to reach CP +proposition de reformulation voir tex}
+% Weight and latency are different in order to imply more concurrent operations (hence more traffic to reach consistent partitioning): the first $\alpha$ received by a node may not be that of its shortest path. 
 
-\noindent We evaluate dynamic consistent partitioning. First, we
+\noindent To evaluate dynamic consistent partitioning we, first, 
 create 100 partitions one at a time: \processes reach consistent
 partitioning before we create each new partition. Second, we remove
 every partition one at a time, in the order of their creation, hence
@@ -74,25 +75,26 @@ partitions. In other terms, the $p^{th}$ partition contains $1/p$
 \processes and reduces the size of closest partitions so every
 partition has $1/p$ \processes on average.
   
-\noindent Therefore, the first partition is the most expensive, for $\alpha$'s
+\noindent Therefore, the first partition is the most expensive, for $\alpha$'s\note{'s pas compris? all $alpha$ sounds better?}
 must reach every \process which takes time and generate more traffic.
-\NAME quickly converges towards consistent partitioning in only 350
-milliseconds. The last and $100^{th}$ partition added around 21
+\NAME quickly converges towards consistent partitioning in only\note{in only... why only? compare to what ? Is it good bad? why?}
+% we should give additional elements to explain why it is rather ok to converge in 350ms: maybe by underlining the nb of nodes and the average latency between nodes.
+350 milliseconds. The last and $100^{th}$ partition added around 21
 seconds is the least expensive. By using scoped broadcast, control
 information only reaches a small subset of the whole network.
 
 \noindent Figure~\ref{fig:complexity} also confirms that \NAME's
-delete operations are roughly twice as expensive as \texttt{Add}
-operations. Indeed, the top part of the figure shows that after 21
-seconds, when the experiment involves removals, traffic includes both
+delete operations are roughly twice as expensive as creation
+ones. Indeed, the top part of the figure shows that after 21 seconds,
+when the experiment involves removals, traffic includes both
 $\alpha$'s and $\delta$'s. The latter aims at removing stale
 information and triggering competition while the former aims at
 updating shortest paths. As corollary, the convergence time increases,
 for $\delta$ messages must reach the partition borders before sound
 competitors propagate their partition. It is worth noting that this
 delete operation involves concurrency: removals still propagate while
-the competition has started. %%is already partially triggered and
-propagating.
+the competition has started.
+%%is already partially triggered and propagating.
 
 \noindent Figure~\ref{fig:complexity} shows that the overhead of
 adding the $1^{st}$ partition does not correspond to the overhead of
@@ -102,8 +104,8 @@ subset of this membership.  \NAME's overhead actually depends on
 current partitioning as opposed to past partitionings.
 
 \noindent Finally, Figure~\ref{fig:complexity} highlights that after
-49 seconds, i.e., after the 100 adds and the 100 deletes, \processes
-do not generate traffic anymore. Being reactive, \NAME has no overhead
+49 seconds, i.e., after the 100 creations and the 100 deletes, \processes
+do not generate traffic anymore. Being reactive, \NAME has no overhead \note{can we precise: no overhead related to the indexation updates but heartbeat behind the scene which is crucial?}
 when there is no operation in the system. \NAME's overhead actually
 depends on its usage.
 
@@ -177,20 +179,21 @@ when each cluster has its own source.
 
 \noindent Figure~\ref{fig:geant} highlights that \NAME operates well
 even when \emph{physical} partitions appear. Indeed, the disconnection
-of the only inter-continental link existing between the two clusters
+of the inter-continental link existing between the two clusters
 either leads to 
 \begin{inparaenum}[(i)]
 \item additional traffic when the \processes do not have any source in
-  their cluster, for \processes need to purge all indexes about the
+  their cluster because \processes need to purge all indexes about the
   remote unreachable source until reaching consistent partitioning; or
-\item an already consistent partitioning, for \processes of each
+  %\item an already consistent partitioning as \processes of each
+  \item a status quo as \processes of each 
   cluster already target the source in their respective cluster.
 \end{inparaenum}
 
-\noindent Figure~\ref{fig:geant} shows that, when adding back the
+\noindent Finally, Figure~\ref{fig:geant} shows that, when adding back the
 inter-continental link, the two clusters can communicate again. In the
 experiment involving one source for two clusters, it generates
-traffic. After a $200$ milliseconds delay corresponding to the link
+traffic. After a $200$ milliseconds delay corresponding to the inter-continental link
 latency, the cut off cluster starts to communicate $\alpha$ messages
 again. Eventually, all \processes belong to the same
 partition. However, in the experiment involving one source \emph{per}
