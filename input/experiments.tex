@@ -19,7 +19,7 @@ Github platform at \mbox{\url{https://github.com/ane-wane/as-cast}}.
 
 \subsection{Scalability and trade-off}
 \begin{asparadesc}
-\item [Objective:] Confirm the scalability of \NAME by higlighting the
+\item [Objective:] Confirm the scalability of \NAME by highlighting the
   trade-off between the current partitioning of the system and the
   protocol's overhead in terms of generated traffic and termination
   time.
@@ -38,10 +38,10 @@ weights and latency to different values: each link has a weight
 between 5 and 15 set randomly using a uniform distribution. This
 allows nodes to receive messages in a different order than their
 respective shortest path generating more messages to reach consistent
-partionning.
+partitioning.
 
 
-\noindent To evaluate dynamic consistent partitioning we, first, 
+\noindent To evaluate dynamic consistent partitioning, we first
 create 100 partitions one at a time: \processes reach consistent
 partitioning before we create each new partition. Second, we remove
 every partition one at a time, in the order of their creation, hence
@@ -92,7 +92,7 @@ whole network.
 delete operations are roughly twice as expensive as creation
 ones. Indeed, the top part of the figure shows that after 21 seconds,
 when the experiment involves removals, traffic includes both
-$\alpha$ and $\delta$ messagess. The latter aims at removing stale
+$\alpha$ and $\delta$ messages. The latter aims at removing stale
 information and triggering competition while the former aims at
 updating shortest paths. As corollary, the convergence time increases,
 for $\delta$ messages must reach the partition borders before sound
@@ -106,7 +106,7 @@ adding the $1^{st}$ partition does not correspond to the overhead of
 deleting this $1^{st}$ partition. When adding it, messages must reach
 all \processes while when removing it, messages must reach a small
 subset of this membership.  \NAME's overhead actually depends on
-current partitioning as opposed to past partitionings.
+current partitions as opposed to past partitions.
 
 \noindent Finally, Figure~\ref{fig:complexity} highlights that after
 49 seconds, i.e., after the 100 creations and the 100 deletes, \processes
@@ -153,16 +153,15 @@ remove the link between the two clusters. At $1.7$~s, we insert back
 this link.
 
 \begin{figure*}
-  \subfloat[An infrastructure composed of 40 interconnected autonomous systems and
-    1157 \processes spanning across Europe~\cite{knight2011internet}]{
+  \subfloat[\label{fig:nrens}Workload in 40 interconnected autonomous systems with
+    1157 \processes~\cite{knight2011internet}.]{
     \includegraphics[width=\FIGSCALE\columnwidth]{img/europe-ases.pdf} 
   }
   \hspace{5pt}
-  \subfloat[Traffic overhead and indexes
-    maintained by \NAME and its extension \NAMEC]{
+  \subfloat[\label{fig:europe-ases}Traffic overhead and maintained indexes.]{
     \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/europe_as_vs_xas.pdf}
   }
-  \caption{\label{fig:europe-ases} Comparison between \NAME and \NAMEC}
+  \caption{Limitations of \NAME and evaluation of \NAMEC for lazy dynamic partitioning.}
 \end{figure*}
 
 
@@ -210,7 +209,7 @@ cluster, the new link does not trigger noticeable traffic, for
 \subsection{Cross autonomous systems}
 \begin{asparadesc}
 \item[Objective:] Highlight the shortcoming of \NAME in
-  infrastructures composed of multilple autonomous systems and
+  infrastructures composed of multiple autonomous systems and
     discuss an improvement called \underline{cross} \underline{\NAME}
     (\NAMEC). At coarse-grained, \NAMEC enables
     \emph{lazy}\footnote{Laziness properties and \NAMEC would be
@@ -219,42 +218,42 @@ cluster, the new link does not trigger noticeable traffic, for
     allowing AS' gateways to stop notifications when their respective
     network does not appear to have a source.
     
-  \item[Description:] We build a network of networks, following the
-    GEANT network and the underlying European NRENs.
-    Figure~\ref{fig:europe-ases} (a) depicts the resulting
-    infrastructure composed of 1157 \processes distributed in 40
-    interconnected autonomous systems spanning across
+  \item[Description:] We build a network of networks comprising
+    G{\'E}ANT along with the underlying European NRENs.
+    Figure~\ref{fig:nrens} depicts the resulting infrastructure
+    composed of 1157 \processes distributed in 40 interconnected
+    autonomous systems spanning across
     Europe~\cite{knight2011internet}. \emph{Gateway} \processes (dark
     in the figure) link autonomous systems together, \eg a Lisbon
     \node links Portugal to Spain and United Kingdoms through a Madrid
     \node and a London \node respectively.
 
-    \noindent Figure~\ref{fig:europe-ases} (a) also depicts the
+    \noindent Figure~\ref{fig:nrens} also depicts the
     operations executed during the 7 seconds simulation: at 1 second,
-    a \node located in Lisbon, Portugal performs an \texttt{Add} (\ie
-    Lisbon becomes a new source); at 2 seconds, a \node located in
+    a \node located in Lisbon, Portugal performs an \texttt{Add}, \ie
+    Lisbon becomes a new source; at 2 seconds, a \node located in
     Palma de Majorque, Spain performs an \texttt{Add}; at 3 seconds, a
     \node located in Paris, France performs an \texttt{Add}; at 4
     seconds, a \node located in Hvanneyri, Iceland performs an
     \texttt{Add}; finally at 5 seconds, the \node in Spain performs a
-    \texttt{Del} (the Spanish source is removed). Each \node has been
-    chosen in order to illustrate the limitation of \NAME and so the
-    interest of containning the propagation within an AS as proposed by
-    \NAMEC.
+    \texttt{Del}, \ie the Spanish source is removed. We chose each source
+    with the aim to illustrate the limitations of \NAME further highlighting
+    the interest in containing the propagation within relevant autonomous systems
+    as proposed by \NAMEC.
     
     \noindent In \NAMEC, each
     \process maintains a \emph{local} index that corresponds to the
-    best partition of its autonomous systems, and a \emph{global}
+    best partition of its autonomous system, and a \emph{global}
     index that corresponds to the best partition cross autonomous
     systems, \ie adjacent autonomous systems that have at least one
     source.
     
-    \noindent To compare \NAME against \NAMEC, we measure the number of messages transiting through the
-    network for each operation, as well as the number of
-    \processes that maintain an index (\ie that belong to a partition)
-    over time.
+    \noindent To compare \NAME against \NAMEC, we measure the number
+    of messages transiting through the network for each operation, as
+    well as the number of \processes that maintain an index (\ie that
+    belong to a partition) over time.
     
-  \item[Results:] Figure~\ref{fig:europe-ases} (b) shows the
+  \item[Results:] Figure~\ref{fig:europe-ases} shows the
     results of this experiment. The top part highlights the cost of
     each partitioning protocol after each operation, while the bottom
     part provides the insight that explains these costs by displaying

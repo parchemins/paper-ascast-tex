@@ -60,8 +60,8 @@ neighbor-to-neighbor.
 
 \begin{definition}[\label{def:forwarding}Forwarding]
   When Node $x$ \underline{f}orwards $f_x(m)$ a message $m$, it
-  \underline{s}ends the latter ($s_{xy}(m)$) to all its neighbors $y$
-  accumulating or aggregating ($\oplus$) metadata that depends on its
+  \underline{s}ends it ($s_{xy}(m)$) to all its neighbors $y$
+  accumulating and aggregating ($\oplus$) metadata that depends on its
   local knowledge $\sigma_x$: $f_x(m) \implies \forall \langle x,
   y\rangle \in E: s_{xy}(m \oplus \sigma_x)$.
 \end{definition}
