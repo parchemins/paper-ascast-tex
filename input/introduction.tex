@@ -85,8 +85,7 @@ content.  A naive approach would be that every \process indexes and
 ranks \emph{every live} replica along with its \emph{location}
 information. When creating or destroying a replica, a \process would
 notify all other \processes by broadcasting its
-operation~\cite{birman1999bimodal, hadzilacos1994modular,
-  raynal2013distributed}. Unfortunately, this also contradicts Edge
+operation~\cite{birman1999bimodal, hadzilacos1994modular}. Unfortunately, this also contradicts Edge
 infrastructure objectives, for such a protocol does not confine the
 traffic generated to maintain its indexes. A \process may acknowledge
 the existence of replicas at the other side of the network while there
@@ -97,12 +96,12 @@ should notify all and only \processes that have no closer replica in
 the system. This would create interconnected sets of \processes, or
 \emph{partitions}, gathered around a \emph{source} being their
 respective replica. A \process deleting its replica should notify all
-members of its partition so they can identify and rally their new
+members of its partition so they can rally their new
 closest partition.
 %
 Some periodic advertisement
 protocols~\cite{hemmati2015namebased,sohier2012physarum} already
-provide both creation and deletion. However, their functioning
+provide both creation and deletion. Yet, their functioning
 requires
 \begin{inparaenum}[(i)]
 \item to generate traffic even when the system is quiescent, and
