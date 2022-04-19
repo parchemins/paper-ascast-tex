@@ -1,5 +1,7 @@
 
-\appendix[Table of notations]
+\appendices
+
+\section{Table of notations}
 
 
 Table~\ref{table:notations} summarizes the notations used throughout
@@ -34,19 +36,58 @@ categories: network, \process, and message.
     $\phi(\mu, \sigma)$ & predicate \underline{f}unction & Checks the metadata $\mu$ using the state $\sigma$.\\
     $\eventually P$     & eventually    & Eventually predicate $P$ is true.\\
     $e_1 \rightarrow e_2$ & happens before  & The event $e_1$ happened before the event $e_2$. Delivery, sending, or receipt are events.\\
-
-
+    $D_x$ & \underline{d}elivered & Set of delivered messages by \Process $x$.\\
     
-    $D_x$ & \underline{d}elivered & Set of delivered messages by \Process $x$.\\ 
     \midrule
 
     $\alpha_x^d$ or $\alpha_{\pi_{xz}}^d$      & \underline{a}dd source & Message that notifies the adding of Source $x$ in the network.\\
     $\delta_x$   & source \underline{d}eletion & Message that notifies the deletion of Source $x$, or the detection by \Process $x$ of a possible source deletion.\\
-    
-    
-    $\mathcal{S}(m)$ & \underline{s}tale message & Message $m$ conveys stale control information since its broadcaster broadcast a newer message.\\
-    
+    $\mathcal{S}(m)$ & \underline{S}tale message & Message $m$ conveys stale control information since its broadcaster broadcast a newer message.\\
     
     \bottomrule
   \end{tabularx}
 \end{table*}
+
+
+
+\section{Related work summary}
+
+Table~\ref{table:relatedwork} provides a summary of state-of-the-art
+approaches along with the reason they fail to enable quick content
+indexing in large scale dynamic systems.
+
+\newcommand{\rxmark}{\textcolor{\WRONG}{\xmark}}
+\newcommand{\rcmark}{\textcolor{\WRONG}{\cmark}}
+\newcommand{\NO}[1]{\textcolor{\WRONG}{#1}}
+
+\begin{table}[h!]
+  \scriptsize
+  \centering
+  \caption{\label{table:relatedwork}Related work summary.}
+  \begin{tabularx}{\columnwidth}{@{}lcccc@{}}
+  \toprule
+  
+  Approaches & \multirow{2}{5em}{\centering Third-party service} & Update & \multirow{2}{3.5em}{Eventually Consistent} & \multirow{2}{5em}{\centering\underline{R}eactive or \underline{C}yclic} \\
+  \\
+  \midrule
+
+  \NO{Centralized}~\cite{snamp, p2p-oracle, fogstore, p2p-alto} & \rcmark & one & \cmark & R\\
+  DHT~\cite{ipfs, mdht, squirrel}                               & \rcmark & few & \cmark & R\\
+
+  \midrule
+  
+  Vector-based routing~\cite{nlsr, ospf}   & \xmark & \NO{all} & \cmark & R\\
+  Replicated store~\cite{shapiro2011crdts} & \xmark & \NO{all} & \cmark & R\\
+  
+  \midrule
+  
+  Timeout-based ads~\cite{garcia-lopez, hemmati2015namebased}   & \xmark & scope & \rxmark & \NO{C}\\
+  Random walks~\cite{barjon2014maintaining, sohier2012physarum} & \xmark & scope & \cmark  & \NO{C}\\
+  
+  \addlinespace
+  
+  \textbf{This paper} & \textbf{\xmark} & \textbf{scope} & \textbf{\cmark} & \textbf{R}\\
+  
+  \bottomrule
+  \end{tabularx}  
+\end{table}
