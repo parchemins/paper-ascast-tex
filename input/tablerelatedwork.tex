@@ -1,0 +1,36 @@
+
+\newcommand{\rxmark}{\textcolor{\WRONG}{\xmark}}
+\newcommand{\rcmark}{\textcolor{\WRONG}{\cmark}}
+\newcommand{\NO}[1]{\textcolor{\WRONG}{#1}}
+
+\begin{table}[t]
+  \scriptsize
+  \centering
+  \caption{\label{table:relatedwork}Related work summary.}
+  \begin{tabularx}{\columnwidth}{@{}lcccc@{}}
+  \toprule
+  
+  Approaches & \multirow{2}{5em}{\centering Third-party service} & Update & \multirow{2}{3.5em}{Eventually Consistent} & \multirow{2}{5em}{\centering\underline{R}eactive or \underline{C}yclic} \\
+  \\
+  \midrule
+
+  \NO{Centralized}~\cite{snamp, p2p-oracle, fogstore, p2p-alto} & \rcmark & one & \cmark & R\\
+  DHT~\cite{ipfs, mdht, squirrel}                               & \rcmark & few & \cmark & R\\
+
+  \midrule
+  
+  Vector-based routing~\cite{nlsr, ospf}   & \xmark & \NO{all} & \cmark & R\\
+  Replicated store~\cite{shapiro2011crdts} & \xmark & \NO{all} & \cmark & R\\
+  
+  \midrule
+  
+  Timeout-based ads~\cite{garcia-lopez, hemmati2015namebased}   & \xmark & scope & \rxmark & \NO{C}\\
+  Random walks~\cite{barjon2014maintaining, sohier2012physarum} & \xmark & scope & \cmark  & \NO{C}\\
+  
+  \addlinespace
+  
+  \textbf{This paper} & \textbf{\xmark} & \textbf{scope} & \textbf{\cmark} & \textbf{R}\\
+  
+  \bottomrule
+  \end{tabularx}  
+\end{table}

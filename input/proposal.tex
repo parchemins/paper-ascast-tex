@@ -143,32 +143,33 @@ forwarding along this path.
 \end{theorem}
 
 \begin{proof}
-  Whenever a \process~$s$ becomes a source, it broadcasts hence
-  delivers its own message $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever
-  its set of received messages, it acknowledges that it belongs to its
-  own partition $P_s$ since $\alpha_{s}^{|\pi_{ss}|} = \min D_s$ and
-  it remains forever since $|\pi_{ss}|$ is its greatest lower bound.
-  \noindent Such a source forwards its notification to its neighbors.
-  Every neighbor eventually receives its notification since
-  communication links are reliable. Whatever the order of received
-  messages $R_x$ at neighboring \process~$x$, total order ensures that
-  it delivers notifications $\alpha_s^{d}$ when
-  $d= |\pi_{ss}| + w_{sx} = \min |\pi_{s'x}|$ where $\min |\pi_{s'x}|$
-  is the lightest weight of $x$ to any source $s'$, $s'$ being $s$ in
-  this case.
-  \noindent Among these neighbors, at least those that fulfill the
-  latest condition forward their respective notification.  By
-  transitivity, the message originating from $s$ reaches all
-  \processes that belong to $P_s$ at least through their respective
-  lightest path: $\small\smash{\forall y \in V, s, s' \in S: \min
-    |\pi_{s y}| < \min |\pi_{s' y}| \implies \eventually
-    d_{y}(\alpha_{s}^{\min |\pi_{sy}|})}$. When the system becomes
-  quiescent, \ie no \process becomes source anymore, every \process
-  eventually acknowledges the partition it belongs to, \ie \processes
-  eventually reach consistent partitioning together. In addition, the
-  protocol terminates: a \process never delivers hence forwards a
-  message after it received, delivered, and forwarded the message of
-  its closest source from its lightest path.
+  Proof in Appendix~\ref{appendix:fb}.
+%%   Whenever a \process~$s$ becomes a source, it broadcasts hence
+%%   delivers its own message $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever
+%%   its set of received messages, it acknowledges that it belongs to its
+%%   own partition $P_s$ since $\alpha_{s}^{|\pi_{ss}|} = \min D_s$ and
+%%   it remains forever since $|\pi_{ss}|$ is its greatest lower bound.
+%%   \noindent Such a source forwards its notification to its neighbors.
+%%   Every neighbor eventually receives its notification since
+%%   communication links are reliable. Whatever the order of received
+%%   messages $R_x$ at neighboring \process~$x$, total order ensures that
+%%   it delivers notifications $\alpha_s^{d}$ when
+%%   $d= |\pi_{ss}| + w_{sx} = \min |\pi_{s'x}|$ where $\min |\pi_{s'x}|$
+%%   is the lightest weight of $x$ to any source $s'$, $s'$ being $s$ in
+%%   this case.
+%%   \noindent Among these neighbors, at least those that fulfill the
+%%   latest condition forward their respective notification.  By
+%%   transitivity, the message originating from $s$ reaches all
+%%   \processes that belong to $P_s$ at least through their respective
+%%   lightest path: $\small\smash{\forall y \in V, s, s' \in S: \min
+%%     |\pi_{s y}| < \min |\pi_{s' y}| \implies \eventually
+%%     d_{y}(\alpha_{s}^{\min |\pi_{sy}|})}$. When the system becomes
+%%   quiescent, \ie no \process becomes source anymore, every \process
+%%   eventually acknowledges the partition it belongs to, \ie \processes
+%%   eventually reach consistent partitioning together. In addition, the
+%%   protocol terminates: a \process never delivers hence forwards a
+%%   message after it received, delivered, and forwarded the message of
+%%   its closest source from its lightest path.
 \end{proof}
 
 \begin{algorithm}
@@ -528,7 +529,7 @@ staleness notification downstream. The notification must reach all
 upstream, and belongs to the delivery path of all \processes that
 delivered this message.
 
-\begin{theorem}[$\textup{FB}^+ \wedge \textup{FS}^+ \implies \textup{DCP}$]
+\begin{theorem}[\label{theo:fbfsdcp}$\textup{FB}^+ \wedge \textup{FS}^+ \implies \textup{DCP}$]
   A protocol guarantees dynamic consistent partitioning if it
   implements forwarding of best up-to-date messages with echos,
   forwarding of staleness messages downstream, and the detection of
@@ -537,15 +538,16 @@ delivered this message.
 \end{theorem}
 
 \begin{proof}
-  Detection triggers forwarding of staleness downstream which
-  completes the case study of Lemma~\ref{lem:detector} by ensuring
-  that, when a source broadcasts its staleness notification, all
-  \processes that belong to its partition eventually deliver such a
-  staleness notification. All downstream bordering \processes also
-  eventually receive such a staleness notification and echo back their
-  best delivered message. This triggers another competition as in
-  Theorem~\ref{theo:fb} for the \processes that delivered the
-  staleness notification.
+  Proof in Appendix~\ref{appendix:fbfsdcp}.
+%%   Detection triggers forwarding of staleness downstream which
+%%   completes the case study of Lemma~\ref{lem:detector} by ensuring
+%%   that, when a source broadcasts its staleness notification, all
+%%   \processes that belong to its partition eventually deliver such a
+%%   staleness notification. All downstream bordering \processes also
+%%   eventually receive such a staleness notification and echo back their
+%%   best delivered message. This triggers another competition as in
+%%   Theorem~\ref{theo:fb} for the \processes that delivered the
+%%   staleness notification.
 \end{proof}
 
 \begin{algorithm}

@@ -50,44 +50,62 @@ categories: network, \process, and message.
 
 
 
-\section{Related work summary}
+\section{Proof of Theorem~\ref{theo:fb}}
+\label{appendix:fb}
 
-Table~\ref{table:relatedwork} provides a summary of state-of-the-art
-approaches along with the reason they fail to enable quick content
-indexing in large scale dynamic systems.
+\begin{proof}
+  Whenever a \process~$s$ becomes a source, it broadcasts hence
+  delivers its own message $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever
+  its set of received messages, it acknowledges that it belongs to its
+  own partition $P_s$ since $\alpha_{s}^{|\pi_{ss}|} = \min D_s$ and
+  it remains forever since $|\pi_{ss}|$ is its greatest lower bound.
+  \noindent Such a source forwards its notification to its neighbors.
+  Every neighbor eventually receives its notification since
+  communication links are reliable. Whatever the order of received
+  messages $R_x$ at neighboring \process~$x$, total order ensures that
+  it delivers notifications $\alpha_s^{d}$ when
+  $d= |\pi_{ss}| + w_{sx} = \min |\pi_{s'x}|$ where $\min |\pi_{s'x}|$
+  is the lightest weight of $x$ to any source $s'$, $s'$ being $s$ in
+  this case.
+  \noindent Among these neighbors, at least those that fulfill the
+  latest condition forward their respective notification.  By
+  transitivity, the message originating from $s$ reaches all
+  \processes that belong to $P_s$ at least through their respective
+  lightest path: $\small\smash{\forall y \in V, s, s' \in S: \min
+    |\pi_{s y}| < \min |\pi_{s' y}| \implies \eventually
+    d_{y}(\alpha_{s}^{\min |\pi_{sy}|})}$. When the system becomes
+  quiescent, \ie no \process becomes source anymore, every \process
+  eventually acknowledges the partition it belongs to, \ie \processes
+  eventually reach consistent partitioning together. In addition, the
+  protocol terminates: a \process never delivers hence forwards a
+  message after it received, delivered, and forwarded the message of
+  its closest source from its lightest path.
+\end{proof}
 
-\newcommand{\rxmark}{\textcolor{\WRONG}{\xmark}}
-\newcommand{\rcmark}{\textcolor{\WRONG}{\cmark}}
-\newcommand{\NO}[1]{\textcolor{\WRONG}{#1}}
+
 
-\begin{table}[h!]
-  \scriptsize
-  \centering
-  \caption{\label{table:relatedwork}Related work summary.}
-  \begin{tabularx}{\columnwidth}{@{}lcccc@{}}
-  \toprule
-  
-  Approaches & \multirow{2}{5em}{\centering Third-party service} & Update & \multirow{2}{3.5em}{Eventually Consistent} & \multirow{2}{5em}{\centering\underline{R}eactive or \underline{C}yclic} \\
-  \\
-  \midrule
+\section{Proof of Theorem~\ref{theo:fbfsdcp}}
+\label{appendix:fbfsdcp}
 
-  \NO{Centralized}~\cite{snamp, p2p-oracle, fogstore, p2p-alto} & \rcmark & one & \cmark & R\\
-  DHT~\cite{ipfs, mdht, squirrel}                               & \rcmark & few & \cmark & R\\
+\begin{proof}
+  Detection triggers forwarding of staleness downstream which
+  completes the case study of Lemma~\ref{lem:detector} by ensuring
+  that, when a source broadcasts its staleness notification, all
+  \processes that belong to its partition eventually deliver such a
+  staleness notification. All downstream bordering \processes also
+  eventually receive such a staleness notification and echo back their
+  best delivered message. This triggers another competition as in
+  Theorem~\ref{theo:fb} for the \processes that delivered the
+  staleness notification.
+\end{proof}
 
-  \midrule
-  
-  Vector-based routing~\cite{nlsr, ospf}   & \xmark & \NO{all} & \cmark & R\\
-  Replicated store~\cite{shapiro2011crdts} & \xmark & \NO{all} & \cmark & R\\
-  
-  \midrule
-  
-  Timeout-based ads~\cite{garcia-lopez, hemmati2015namebased}   & \xmark & scope & \rxmark & \NO{C}\\
-  Random walks~\cite{barjon2014maintaining, sohier2012physarum} & \xmark & scope & \cmark  & \NO{C}\\
-  
-  \addlinespace
-  
-  \textbf{This paper} & \textbf{\xmark} & \textbf{scope} & \textbf{\cmark} & \textbf{R}\\
-  
-  \bottomrule
-  \end{tabularx}  
-\end{table}
+
+
+%% \section{Related work summary}
+
+%% Table~\ref{table:relatedwork} provides a summary of state-of-the-art
+%% approaches along with the reason they fail to enable quick content
+%% indexing in large scale dynamic systems.
+
+
+%% \input{input/tablerelatedwork.tex}
