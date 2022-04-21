@@ -10,26 +10,27 @@
   \begin{tabularx}{\columnwidth}{@{}lcccc@{}}
   \toprule
   
-  Approaches & \multirow{2}{5em}{\centering Third-party service} & Update & \multirow{2}{3.5em}{Eventually Consistent} & \multirow{2}{5em}{\centering\underline{R}eactive or \underline{C}yclic} \\
+  Approaches & \multirow{2}{5em}{\centering Without Third-party} & Update & \multirow{2}{3.5em}{Eventually Consistent} & \multirow{2}{5em}{\centering\underline{R}eactive or \underline{C}yclic} \\
   \\
   \midrule
 
-  \NO{Centralized}~\cite{snamp, p2p-oracle, fogstore, p2p-alto} & \rcmark & one & \cmark & R\\
-  DHT~\cite{ipfs, mdht, squirrel}                               & \rcmark & few & \cmark & R\\
+  \NO{Centralized}~\cite{snamp, p2p-oracle, fogstore, p2p-alto} & \rxmark & one & \cmark & R\\
+  DHT~\cite{ipfs, mdht, squirrel}                               & \rxmark & few & \cmark & R\\
 
   \midrule
   
-  Vector-based routing~\cite{nlsr, ospf}   & \xmark & \NO{all} & \cmark & R\\
-  Replicated store~\cite{shapiro2011crdts} & \xmark & \NO{all} & \cmark & R\\
+  Vector-based routing~\cite{nlsr, ospf}   & \cmark & \NO{all} & \cmark & R/C\\
+  Replicated store~\cite{shapiro2011crdts} & \cmark & \NO{all} & \cmark & R/C\\
   
   \midrule
   
-  Timeout-based ads~\cite{garcia-lopez, hemmati2015namebased}   & \xmark & scope & \rxmark & \NO{C}\\
-  Random walks~\cite{barjon2014maintaining, sohier2012physarum} & \xmark & scope & \cmark  & \NO{C}\\
+  Timeout-based~\cite{garcia-lopez, hemmati2015namebased}   & \cmark & scope & \rxmark & \NO{C}\\
+  Random walks~\cite{sohier2012physarum} & \cmark & scope & \cmark  & \NO{C}\\
+  Spanning Forest~\cite{barjon2014maintaining} & \cmark & scope & \cmark & \NO{C}\\
   
   \addlinespace
   
-  \textbf{This paper} & \textbf{\xmark} & \textbf{scope} & \textbf{\cmark} & \textbf{R}\\
+  \textbf{This paper} & \textbf{\cmark} & \textbf{scope} & \textbf{\cmark} & \textbf{R}\\
   
   \bottomrule
   \end{tabularx}  
