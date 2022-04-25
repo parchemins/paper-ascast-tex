@@ -70,7 +70,7 @@ Second, the client gets a list of content locations at the discretion
 of content indexing services. Without information about these
 locations, it often ends up downloading from multiple replica hosts,
 yet only keeping the fastest answer. In turn, clients either waste
-network resources, or face lower response time.
+network resources, or face slower response time.
 %% there is no information to select the ``best'' node among the
 %% possible candidates from which the content could be retrieved. In
 %% most cases, this results in parallel requests performed by the
@@ -163,6 +163,16 @@ a distributed partitioning problem. Our contribution is threefold:
     to physical partitioning.
   \end{inparaenum}
 \end{asparadesc}
+
+%% Ultimately, \NAME can constitute a novel building block for
+%% geo-distributed services in need of efficient resource sharing in the
+%% vicinity of regions. For instance, AS-cast could complement content
+%% delivery infrastructures~\cite{triukose2011measuring} by efficiently
+%% sharing between nodes attached to the same CDN server the locations of
+%% web objects that have already been downloaded.  \NAME could even
+%% constitute a decentralized implementation solving the multiple
+%% destinations shortest path problem. 
+
 
 %% Then, we propose \emph{\NAME}, a logical partitioning protocol that
 %% uses \underline{s}coped broad\underline{cast} to \underline{a}dapt its
