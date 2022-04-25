@@ -5,23 +5,23 @@ With the advent of the Edge and IoT era, major distributed services
 proposed by our community should be revised to mitigate as much as
 possible traffic between \processes.  In this paper, we addressed the
 challenge of content indexing as a dynamic logical partitioning
-problem where partitions grow and shrink to reflect content and
-replicas locations, as well as infrastructure changes.  Using an
-efficient communication primitive called scoped broadcast, each
-\process composing the infrastructure eventually knows the \process
-hosting the best replica of a specific content.  The challenge resides
-in handling concurrent operations that may impair the propagation of
-messages, and in turn, lead to inconsistent partitioning.
+problem where partitions grow and shrink to reflect content locations,
+and infrastructure changes.  Using an efficient communication
+primitive called scoped broadcast, each \process composing the
+infrastructure eventually knows the \process hosting the closest replica
+of a specific content.  The challenge resides in handling concurrent
+operations that may impair the propagation of messages, and in turn,
+lead to inconsistent partitioning.
 %% The major difficulty lies in concurrent operations, each having a
 %% different scope, and ensure the correct convergence of the system.  We
 %% defined, in particular, multiple properties that highlight this
 %% complexity.
 %
 We highlighted the properties that solve this problem and proposed an
-implementation called \NAME.  Our simulations confirmed that
-\processes quickly reach consistent partitioning together, and that
-the generated traffic remains locked down to partitions.  We also
-briefly discussed \NAMEC, an improvement to contain the traffic in relevant
+implementation called \NAME.  Simulations confirmed that
+\processes quickly reach consistent partitioning together while the
+generated traffic remains locked down to partitions.  We also 
+discussed an improvement further containing the traffic inside relevant
 autonomous systems.
 %% correctness of our protocol as well as the confinement of
 %% the traffic only where it is needed.
@@ -60,16 +60,15 @@ autonomous systems.
 %\TODO{should we highlight this at the end of the experiment}
 %
 
-At mid-term, we plan to evaluate our proposal within a concrete
+As future work, we plan to evaluate our proposal within a concrete
 storage system such as \underline{I}nter\underline{P}lanetary
-\underline{F}ile \underline{S}ystem
-(IPFS)~\cite{ipfs}. This would allow us to assess the
-relevance of the \NAME approach in a real system subject to high
+\underline{F}ile \underline{S}ystem (IPFS)~\cite{ipfs}. This would
+assess the relevance of \NAME in real systems subject to high
 dynamicity, and compare it against its current DHT-based indexing
 system that does not include distance in its operation. More
-generally, we claim that \NAME (or \NAMEC) can constitute a novel
-building block for geo-distributed services.  For instance, \NAME
-could complement content delivery infrastructures by efficiently
+generally, we claim that \NAME and its extension can constitute
+novel building blocks for geo-distributed services.  For instance,
+\NAME could complement content delivery infrastructures by efficiently
 sharing between \processes attached to the same CDN server the
 locations of web objects that have already been downloaded. This would
 further improve the containment of web traffic in our networks, and in

@@ -53,8 +53,7 @@ partitioning after adding or removing a partition.
 
 \begin{figure}
   \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.pdf}
-  \caption{\label{fig:complexity}Overhead of dynamic consistent partitioning
-    using \NAME.}
+  \caption{\label{fig:complexity}Dynamic consistent partitioning overhead of \NAME.}
   
   %% \caption{\label{fig:complexity}Cumulative average number of messages
   %%   per process in a network comprising 10k processes; along with the
@@ -229,18 +228,18 @@ cluster, the new link does not trigger noticeable traffic, for
     \node links Portugal to Spain and United Kingdoms through a Madrid
     \node and a London \node respectively.
 
-    \noindent Figure~\ref{fig:nrens} also depicts the
-    operations executed during the 7 seconds simulation: at 1 second,
-    a \node located in Lisbon, Portugal performs an \texttt{Add}, \ie
-    Lisbon becomes a new source; at 2 seconds, a \node located in
-    Palma de Majorque, Spain performs an \texttt{Add}; at 3 seconds, a
-    \node located in Paris, France performs an \texttt{Add}; at 4
-    seconds, a \node located in Hvanneyri, Iceland performs an
-    \texttt{Add}; finally at 5 seconds, the \node in Spain performs a
-    \texttt{Del}, \ie the Spanish source is removed. We chose each source
-    with the aim to illustrate the limitations of \NAME further highlighting
-    the interest in containing the propagation within relevant autonomous systems
-    as proposed by \NAMEC.
+    \noindent Figure~\ref{fig:nrens} also depicts the operations
+    executed during the 7 seconds simulation: at 1 second, a \node
+    located in Lisbon, Portugal performs an \texttt{Add}, \ie Lisbon
+    becomes a new source; at 2 seconds, a \node located in Palma de
+    Majorque, Spain performs an \texttt{Add}; at 3 seconds, a \node
+    located in Paris, France performs an \texttt{Add}; at 4 seconds, a
+    \node located in Hvanneyri, Iceland performs an \texttt{Add};
+    finally at 5 seconds, the \node in Spain performs a \texttt{Del},
+    \ie the Spanish source is removed. We chose these sources to
+    illustrate the limitations of \NAME while further motivating the
+    importance of containing the traffic within relevant
+    autonomous systems as proposed by \NAMEC.
     
     \noindent In \NAMEC, each
     \process maintains a \emph{local} index that corresponds to the

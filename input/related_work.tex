@@ -5,9 +5,11 @@
 Content indexing services in geo-distributed infrastructures allow
 \processes to retrieve specific content while leveraging the
 advantages of replication. These systems mostly rely on dedicated
-location services hosted by possibly remote third-party \processes; but
-cutting out the middleman requires that each \process maintains its
-own index in a decentralized fashion.
+location services hosted by possibly remote third-party \processes;
+but cutting out the middleman requires that each \process maintains
+its own index in a decentralized
+fashion. Table~\ref{table:relatedwork} summarizes the pros and cons of
+state-of-the-art approaches.
 
 \begin{asparadesc}
 \item [Third-party:]
@@ -155,13 +157,13 @@ clustering~\cite{sohier2012physarum}. The sources advertise themselves
 periodically. Advertisements either stop as soon as they reach
 uninterested \processes~\cite{garcia-lopez, hemmati2015namebased}, or
 propagate through most likely interested
-\processes~\cite{sohier2012physarum}. However their operation requires
-that
+\processes~\cite{sohier2012physarum}. However their cyclic operation
+requires that
 \begin{inparaenum}[(i)]
 \item they constantly generate traffic even in quiescent systems where
   \processes do not add nor destroy replicas; and 
 \item they either operate in synchronous
-  systems~\cite{sohier2012physarum} or must define
+  systems~\cite{barjon2014maintaining, sohier2012physarum} or must define
   physical-clock-based timeouts the value of which depends on network
   topology properties such as network diameter~\cite{garcia-lopez,
     hemmati2015namebased}.
@@ -173,7 +175,7 @@ that
 \end{inparaenum}
 On the opposite, \NAME quickly informs each \process of its closest
 replica even in large and dynamic networks with asynchronous
-communications; and has no overhead when the system is quiescent.
+communications; and has no overhead in quiescent systems.
 
 \end{asparadesc}
 
