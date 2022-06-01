@@ -1,0 +1,67 @@
+We thank the three reviewers for their thorough reading and
+interesting comments.
+
+* About motivation and practical application: (TODO) Add reference to Bastien's paper
+A user from Europe wants to download a video indexed only in
+Australia despite a neighbor
+European having a replica (because he was interested in the video as
+well). Still, the former originates a round-trip to Australia only to
+discover that it wasted time looking for the location of the video
+that was next to him.  DHTs also have this pitfall where nodes knowing
+the video locations might be running in Australia. Our approach
+proposes a trade-off that allows close node to answer location
+requests, even in dynamic networks where nodes can quickly reconfigure
+to meet the changes in a peer-to-peer fashion.
+** Action: We use such an example throughout the paper, complementing
+the figure descriptions with real-world usage and location.
+** Side note: Out of the scope of networking, our approach also
+constitutes an efficient way to perform a multi-destinations shortest
+path in dynamic graphs.
+
+* About failure detection: We agree with Reviewer 2 that implementing
+link failure detection is often done using heartbeats. Our approach is
+built on top of such links and benefits, as many other running
+protocols, from such failure detection. Since this is a shared overhead,
+we do not account it as being part of our protocol.
+** Action: Clarify this prerequisite and its implication on the overhead.
+
+* About crash recovery: As of now, crashes may have immediate impact
+on neighboring nodes depending on their crash detection
+speed. Therefore, a node must always restart anew, thus retrieving and
+propagating relevant information again.
+** Side note: There exists a trade-off between convergence speed and
+and generated traffic when buffering incoming messages and only
+propagating most relevant ones. We kept this out of scope for the
+sake of simplicity.
+
+* About the experiments: PeerSim, despite being old, remains a
+flexible framework to run large scale simulations. It fits our goal of
+isolating the behavior of our protocol under desired circumstances.
+Nevertheless, we agree with Reviewer 1 that more realistic
+configurations are of interest. We left this as future work, where we
+would like to replace the DHT of IPFS by our protocol, and deploy it
+on a real distributed infrastructure.
+
+** About Figure 7 link: We agree with Reviewer 2 that a single
+intercontinental link is not realistic, however this allows us
+to confirm and highlight the very important property that our
+protocol works even in a network with physical partitions. // (TODO) more ?
+** About Figure 7 time: We use simulated time as x-axis to highlight that
+the convergence speed depends on the simulated latency between links.
+** Action: Use both cycle and simulated time as x-axis label.
+** About simulated time and real network conditions: we only simulated 
+the link latency using event-based PeerSim, i.e., the number of cycles
+(simulated milliseconds to help human understanding) between the
+sending of a message and its receipt by a neighbor. Other network conditions
+such as hardware limitations, packet loss, would indeed increase convergence
+time, but we expect it to remain in the same order of magnitude when not catastrophic.
+// (TODO) rewrite this…
+
+** Comparison with state-of-the-art: As stated in Related Work,
+state-of-the-art approaches have shortcomings that disqualify them as
+contender in our context: Centralized and DHT approaches have slow
+response time; vector-based routing and replicated stores flood the
+whole network; timeout-based, random walks, and spanning forests are
+cycle-based which never-endlessly floods the network.
+
+// 582 words [2022-06-01 Mer] 11:58
