@@ -1,33 +1,55 @@
 We thank the three reviewers for their thorough reading and
-interesting comments.
+interesting comments. We hope that our response will clarify all of
+their interrogations. 
 
 * About motivation and practical application: (TODO) Add reference to Bastien's paper
-A user from Europe wants to download a video indexed only in
-Australia despite a neighbor
-European having a replica (because he was interested in the video as
-well). Still, the former originates a round-trip to Australia only to
-discover that it wasted time looking for the location of the video
-that was next to him.  DHTs also have this pitfall where nodes knowing
-the video locations might be running in Australia. Our approach
-proposes a trade-off that allows close node to answer location
-requests, even in dynamic networks where nodes can quickly reconfigure
-to meet the changes in a peer-to-peer fashion.
-** Action: We use such an example throughout the paper, complementing
-the figure descriptions with real-world usage and location.
-** Side note: Out of the scope of networking, our approach also
-constitutes an efficient way to perform a multi-destinations shortest
-path in dynamic graphs.
+
+Our primer target, as the title states, is distributed content
+indexing, and more specifically, its content location
+service. "Retrieving a content location may actually take more time
+than retrieving the content itself."  As an example, consider Alice
+from Europe who wants to download a video. She first needs to know
+where to download it from. Therefore, she asks to a content location
+service that is unfortunately, centralized, and hosted in Australia.
+After a round-trip of messaging, she realizes that she wasted time
+since the video, or a replica of it, was next to her in Europe all
+along.
+
+One might think that distributing the indexing service in Europe using
+DHTs would be sufficient to avoid this pitfall. However, DHTs do not
+colocate content and location services. Therefore, despite having a
+DHT node in Europe, the one that actually knows where to find the
+video is still in Australia. Alice still wastes time.
+
+Content delivery networks (CDN) is most often the solution. However,
+it requires a priori configuration. Missconfigured CDN still makes
+Alice search for her content location in Australia.
+
+On the opposite, using our approach, the node in Europe automatically
+knows its closest content location. When Alice asks for the video, she
+asks to the European node that answer her immediately with the video
+hosted in Europe. 
+
+Our approach is not limited to content indexing, and generalizes to
+any replicated service. On a side note, it even constitutes an
+efficient way to perform multi-destinations shortest path in dynamic
+graphs.
+
+** Action: We agree with Reviewer 1. We add such running example
+throughout the paper, thus complementing the text description of
+figures, to further help the reader.
+
 
 * About failure detection: We agree with Reviewer 2 that implementing
 link failure detection is often done using heartbeats. Our approach is
 built on top of such links and benefits, as many other running
 protocols, from such failure detection. Since this is a shared overhead,
-we do not account it as being part of our protocol.
-** Action: Clarify this prerequisite and its implication on the overhead.
+we do not account it as being part of our protocol. // (TODO) better wording
+** Action: We clarify this requirement and its implication on the overhead.
 
-* About crash recovery: As of now, crashes may have immediate impact
-on neighboring nodes depending on their crash detection
-speed. Therefore, a node must always restart anew, thus retrieving and
+* About crash recovery: Crashes may have immediate impact
+on neighboring nodes depending on their crash detection speed.
+Therefore, a node must always restart anew, thus retrieving and
 propagating relevant information again.
 ** Side note: There exists a trade-off between convergence speed and
 and generated traffic when buffering incoming messages and only
