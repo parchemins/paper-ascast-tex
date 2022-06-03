@@ -37,22 +37,21 @@ complement figure descriptions.
 
 ## Simulations vs emulations vs in-vivo:
 
-PeerSim remains a flexible framework to run large scale
-simulations. It fits our goal of isolating our protocol's behavior
-under desired circumstances.
+PeerSim, despite old w.r.t. highlight solutions, remains a flexible
+framework to run large scale simulations. It fits our goal of
+isolating our protocol's behavior focusing on link latency.
 
-Experiments focus on link latency. Other network conditions (hardware
-limitations/heterogeneity, loss, congestion…) would indeed increase
-convergence time, but we expect an identical order of magnitude when
-not catastrophic.
+Other network conditions (hardware limitations/heterogeneity, loss,
+congestion…) would indeed increase convergence time, but we expect an
+identical order of magnitude when not catastrophic.
 
-Nevertheless, we agree that more realistic configurations are of
+Nevertheless, we agree more realistic configurations are of
 interest. We leave this as future work: replace IPFS's DHT by AS-cast,
-and deploy on real distributed infrastructures.
+and deploy on real infrastructures.
 
 ## State-of-the-art comparison:
-Previous works proposed such comparisons [1]. We discard them as they
-have well-identified shortcomings: Centralized and DHT approaches do
+Previous works proposed such comparisons [1]. We discard them due to
+their well-identified shortcomings: Centralized and DHT approaches do
 not collocate content and location services, leading to slow response
 time; vector-based routing and replicated stores flood the network at
 each event; timeout-based, random walks, and spanning forests are
@@ -120,13 +119,12 @@ partitioning problem and formalize it this way.
 Any predicate would work: the scope of an always true predicate would
 trivially be "all nodes".
 
-## Black-and-white
-**Action:** Make figures black-and-white friendly.
-
 ## Crash recovery
-Crashes may impact neighboring nodes immediately.  Therefore,
-nodes always restart anew, retrieving and propagating relevant
+Crashes may impact neighboring nodes immediately.  Therefore, nodes
+always restart in fresh state, retrieving and propagating relevant
 information again.
+
+
 
 [1] https://hal.archives-ouvertes.fr/hal-02190125/file/tnsm.pdf
 
