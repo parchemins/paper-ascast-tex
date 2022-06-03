@@ -36,6 +36,7 @@ perform multi-destinations shortest path in dynamic graphs.
 complement figure descriptions.
 
 ## Simulations vs emulations vs in-vivo:
+
 PeerSim remains a flexible framework to run large scale
 simulations. It fits our goal of isolating our protocol's behavior
 under desired circumstances.
