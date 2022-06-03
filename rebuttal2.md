@@ -18,15 +18,15 @@ the round-trip to the service is detrimental, especially when the
 video is actually stored close to Vienna.
 
 Distributing location services using DHTs is insufficient: DHTs do not
-collocate content and location services. Therefore, despite having a
-DHT node in Vienna, the one that knows where to find the video Alice
-is looking for may still be in Australia. Interacting with the service
-remains time-consuming.
+collocate content and location services. Despite having a DHT node in
+Vienna, the corresponding hash of the video may still be the charge of
+the node in Australia. Therefore, interacting with the service remains
+time-consuming.
 
-AS-cast improves QoS since every node maintaining content locations
-always knows its closest location for a particular content.  Alice
-contacts her Vienna location service then downloads the video from her
-closest host.
+AS-cast tackles this problem since every node maintaining content
+locations always knows its closest location for a particular content.
+Alice contacts her Vienna location service then downloads the video
+from her closest host.
 
 AS-cast is not limited to content indexing, and generalizes well to
 any replicated service. It even constitutes an efficient way to
