@@ -36,18 +36,16 @@ perform multi-destinations shortest path in dynamic graphs.
 Vienna example and complement figure descriptions.
 
 ## Simulations vs emulations vs in-vivo:
-PeerSim remains a simple and flexible framework to run large scale
-simulations in comparison to Splay, Mininet etc.  It fits our goal of
-isolating the behavior of our protocol under desired circumstances.
+PeerSim, despite being old,  remains a simple and flexible framework to 
+run large scale simulations in comparison to Splay, Mininet etc.  It 
+fits our goal of isolating the behavior of our protocol simulating link latencies.
 
-We focus our experiments on link latency. Other network conditions
-such as hardware limitations/heterogeneity, packet loss, link
-congestion, would indeed increase convergence time, but we expect an
+Other network conditions such as hardware diversity,  packet loss, congestion, would indeed increase convergence time, but we expect an
 identical order of magnitude when not catastrophic.
 
-Nevertheless, we agree that more realistic configurations are of
-interest. We leave this as future work: replace the DHT of IPFS by
-AS-cast, and deploy it on a real distributed infrastructure.
+Nevertheless, we agree more realistic configurations are of
+interest. We leave this as future work by revising IPFS by
+AS-cast, and deploy it on a real infrastructure.
 
 ## State-of-the-art comparison:
 Previous works proposed such comparisons [1]. We discard them as they
