@@ -1,4 +1,5 @@
-\documentclass[a4paper, anonymous, thm-restate]{lipics-v2021}
+\documentclass[runningheads]{llncs}
+%% \documentclass[a4paper, anonymous, thm-restate]{lipics-v2021}
 %%\documentclass[conference]{lipics}
 
 % \IEEEoverridecommandlockouts
@@ -10,7 +11,8 @@
 %% url
 \usepackage{url}
 %% maths
-\usepackage{amsmath,amssymb,amsthm,bm,centernot}
+\usepackage{amsmath,amssymb}
+\usepackage{bm,centernot}
 %% \usepackage{amsfonts}
 %% \usepackage{amsthm}
 
@@ -32,7 +34,7 @@
 \usepackage{booktabs, tabularx, multirow}
 %% figures
 %\usepackage{caption}
-% \usepackage{subfig}
+\usepackage{subfig}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing,plotmarks,shapes,matrix}
 %% transform eps in pdf crossplateform
@@ -56,7 +58,7 @@
 \newcommand{\PD}[0]{\PC}
 \newcommand{\WRONG}[0]{red!75}
 
-\newtheorem{problem}{Problem Statement}
+% \newtheorem{problem}{Problem Statement}
 % \newtheorem{definition}{Definition}
 %% \newtheorem{lemma}{Lemma}
 % \newtheorem{theorem}{Theorem}
@@ -119,9 +121,9 @@
 
 %% \clearpage
 
-% \input{input/appendices.tex}
+\input{input/appendices.tex}
 
-\bibliographystyle{plainurl}
+\bibliographystyle{splncs04}
 \bibliography{compact_bibliographie}
   
 \end{document}

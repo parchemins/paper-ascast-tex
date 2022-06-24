@@ -26,7 +26,7 @@ service. They must maintain
 
 \noindent A central server that registers both these information
 facilitates the computation, for it gathers all knowledge in one
-place~\cite{snamp, p2p-oracle, fogstore, p2p-alto}. However, it comes with
+place~\cite{snamp,p2p-oracle,fogstore,p2p-alto}. However, it comes with
 well-known issues such as load balancing, or single point of failure.
 %% Numerous solutions
 %% maintain an index of all replica locations on a centralized
@@ -35,15 +35,14 @@ well-known issues such as load balancing, or single point of failure.
 %% that are even magnified in an Edge context.
 
 \noindent Distributing this index among \processes circumvents these
-issues~\cite{voronet, ipfs, mdht, squirrel, triukose2011measuring,
-  coin_19}, but still raises locality issues where \processes
+issues~\cite{voronet,ipfs,mdht,squirrel,triukose2011measuring,coin_19}, but still raises locality issues where \processes
 \begin{inparaenum}[(i)]
 \item request to possibly far away location services the content
   location, and then
 \item request the actual content from possibly far away replicas.
 \end{inparaenum}
 For instance, using \underline{d}istributed \underline{h}ash
-\underline{t}ables (DHT)~\cite{ipfs, mdht, squirrel}, each \process
+\underline{t}ables (DHT)~\cite{ipfs,mdht,squirrel}, each \process
 stores a part of the index defined by an interval between hash values.
 Hash values are keys to retrieve the associated content location.
 Before downloading any content, a \node requests its location using
@@ -58,7 +57,7 @@ along with replica location. Determining where resides the closest
 replica for every requesting \process necessarily involves some
 knowledge about the \emph{current} topology.  Maintaining a consistent
 view of an ever changing topology across a network is inherently
-complicated~\cite{topology-discovery, ospf}.
+complicated~\cite{topology-discovery,ospf}.
 %%  As for the index, this knowledge about the topology can be either
 %% centralized~\cite{topology-discovery} or distributed like in
 %% routing protocols such as \underline{O}pen \underline{S}hortest
