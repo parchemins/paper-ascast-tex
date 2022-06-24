@@ -1,5 +1,5 @@
-% \documentclass[a4paper, anonymous, thm-restate]{lipics-v2021}
-\documentclass[conference]{IEEEtran}
+\documentclass[a4paper, anonymous, thm-restate]{lipics-v2021}
+%%\documentclass[conference]{lipics}
 
 % \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
@@ -25,14 +25,14 @@
 %% inparaenum
 \usepackage{paralist}
 %% TODO
-\usepackage{todonotes} %% after paralist to avoid clashes
-\newcommand{\note}[1]{\todo[size=\tiny]{#1}}
+% \usepackage{todonotes} %% after paralist to avoid clashes
+% \newcommand{\note}[1]{\todo[size=\tiny]{#1}}
 % \setlength{\marginparwidth}{2cm}
 %% tables
 \usepackage{booktabs, tabularx, multirow}
 %% figures
 %\usepackage{caption}
-\usepackage{subfig}
+% \usepackage{subfig}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing,plotmarks,shapes,matrix}
 %% transform eps in pdf crossplateform
@@ -57,10 +57,10 @@
 \newcommand{\WRONG}[0]{red!75}
 
 \newtheorem{problem}{Problem Statement}
-\newtheorem{definition}{Definition}
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}{Corollary}
+% \newtheorem{definition}{Definition}
+%% \newtheorem{lemma}{Lemma}
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{corollary}{Corollary}
 \newcommand{\eventually}{\Diamond\,}
 \newcommand{\ie}{{i.e.,}\xspace}
 \newcommand{\eg}{{e.g.,}\xspace}
@@ -88,7 +88,7 @@
 %%   \IEEEauthorblockA{\textit{Inria / LS2N}, Nantes, France\\first.last@inria.fr}
 %% }
 
-\author{Anonymous}
+% \author{Anonymous}
 %% \author{\IEEEauthorblockN{Adrien L{\`e}bre}
 %%   \IEEEauthorblockA{\textit{Inria / LS2N}, Nantes, France\\adrien.lebre@inria.fr}
 %%   \and
@@ -119,7 +119,7 @@
 
 %% \clearpage
 
-\input{input/appendices.tex}
+% \input{input/appendices.tex}
 
 \bibliographystyle{plainurl}
 \bibliography{compact_bibliographie}
