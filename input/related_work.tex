@@ -151,10 +151,10 @@ neighbors of \processes.
 
 \noindent The most closely related approaches to \NAME come from
 \underline{i}nformation-\underline{c}entric \underline{n}etworking
-(ICN)~\cite{garcia-lopez, hemmati2015namebased} and distributed
+(ICN)~\cite{garcia-lopez,hemmati2015namebased} and distributed
 clustering~\cite{sohier2012physarum}. The sources advertise themselves
 periodically. Advertisements either stop as soon as they reach
-uninterested \processes~\cite{garcia-lopez, hemmati2015namebased}, or
+uninterested \processes~\cite{garcia-lopez,hemmati2015namebased}, or
 propagate through most likely interested
 \processes~\cite{sohier2012physarum}. However their cyclic operation
 requires that
@@ -162,10 +162,9 @@ requires that
 \item they constantly generate traffic even in quiescent systems where
   \processes do not add nor destroy replicas; and 
 \item they either operate in synchronous
-  systems~\cite{barjon2014maintaining, sohier2012physarum} or must define
+  systems~\cite{barjon2014maintaining,sohier2012physarum} or must define
   physical-clock-based timeouts the value of which depends on network
-  topology properties such as network diameter~\cite{garcia-lopez,
-    hemmati2015namebased}.
+  topology properties such as network diameter~\cite{garcia-lopez,hemmati2015namebased}.
   %also incur an overhead even in quiet contexts without any update.
   % Moreover, they necessarily rely on physical timeouts
   Unfitting timeouts lead to premature removals of live replicas; or

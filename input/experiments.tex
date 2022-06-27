@@ -1,4 +1,4 @@
-\newcommand{\FIGSCALE}{0.99}
+\newcommand{\FIGSCALE}{0.48}
 
 \section{Experimentation}
 \label{sec:experimentation}
@@ -51,15 +51,28 @@ starting from the first and oldest partition that had been added.
 \process per second; and the time before reaching consistent
 partitioning after adding or removing a partition.
 
-\begin{figure}
-  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.pdf}
-  \caption{\label{fig:complexity}Dynamic consistent partitioning overhead of \NAME.}
+
+\begin{figure*}[t]
+  \subfloat[\label{fig:complexity}Dynamic consistent partitioning overhead of \NAME.]{
+    \includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.pdf} 
+  }
+  \hspace{5pt}
+  \subfloat[\label{fig:geant}Partitioning overhead of 2
+    clusters connected by a long distance link.]{
+    \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
+  }
+  \caption{\TODO{\NAME overhead}.}
+\end{figure*}
+
+%% \begin{figure}[t]
+%%   \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.pdf}
+%%   \caption{\label{fig:complexity}Dynamic consistent partitioning overhead of \NAME.}
   
-  %% \caption{\label{fig:complexity}Cumulative average number of messages
-  %%   per process in a network comprising 10k processes; along with the
-  %%   duration before reaching consistent partitioning after adding or
-  %%   removing a partition, totaling 100 new partition then removed.}
-\end{figure}
+%%   %% \caption{\label{fig:complexity}Cumulative average number of messages
+%%   %%   per process in a network comprising 10k processes; along with the
+%%   %%   duration before reaching consistent partitioning after adding or
+%%   %%   removing a partition, totaling 100 new partition then removed.}
+%% \end{figure}
 
 \item [Results:]
 
@@ -120,11 +133,11 @@ depends on its usage.
 
 \begin{asparadesc}
 
-\begin{figure}
-  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
-  \caption{\label{fig:geant}Overhead of \NAME in the partitioning of 2
-    clusters connected by a long distance link.}
-\end{figure}
+%% \begin{figure}[t]
+%%   \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
+%%   \caption{\label{fig:geant}Partitioning overhead of 2
+%%     clusters connected by a long distance link.}
+%% \end{figure}
 
 
 \subsection{Traffic containment}
@@ -151,7 +164,7 @@ cluster. Afterwards both scenarios are identical. At $850$~ms, we
 remove the link between the two clusters. At $1.7$~s, we insert back
 this link.
 
-\begin{figure*}
+\begin{figure*}[t]
   \subfloat[\label{fig:nrens}Workload in 40 interconnected autonomous systems with
     1157 \processes~\cite{knight2011internet}.]{
     \includegraphics[width=\FIGSCALE\columnwidth]{img/europe-ases.pdf} 
@@ -160,7 +173,7 @@ this link.
   \subfloat[\label{fig:europe-ases}Traffic overhead and maintained indexes.]{
     \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/europe_as_vs_xas.pdf}
   }
-  \caption{Limitations of \NAME and evaluation of \NAMEC for lazy dynamic partitioning.}
+  \caption{Evaluation of \NAMEC for \emph{lazy} dynamic partitioning.}
 \end{figure*}
 
 

@@ -173,7 +173,7 @@ forwarding along this path.
 %%   its closest source from its lightest path.
 \end{proof}
 
-\begin{algorithm}
+\begin{algorithm}[t]
   \input{input/algoadd.tex}
   \caption{\label{algo:add}Add-only CP protocol at \Process~$p$.}
 \end{algorithm}
@@ -450,7 +450,7 @@ therefore, it could have blocked $\delta_a$.
     thus it cannot further delegate the detection to another \process.
   \end{asparadesc}
   \end{asparadesc}
-  \vspace{-1.5em} %% ugly vspace but necessary for enumerate+qed
+  % \vspace{-1.5em} %% ugly vspace but necessary for enumerate+qed
   %
   %% (i) If every \process (such as $a$) starting from the source
   %% delivers and forwards a removal notification $\delta_X$ when their
@@ -551,7 +551,7 @@ delivered this message.
 %%   staleness notification.
 \end{proof}
 
-\begin{algorithm}
+\begin{algorithm}[t]
   \input{input/algoascast.tex}
   \caption{\label{algo:ascast}\NAME: DCP protocol at \Process~$p$.}
 \end{algorithm}
@@ -585,7 +585,7 @@ message. Receiving a message known to be stale from this parent
 triggers the generation of staleness notifications that can only be
 delivered by downstream \processes (see Line~\ref{line:detect}).
 
-\begin{algorithm}[h]
+\begin{algorithm}[t]
   \input{input/algoedges.tex}
   \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
 \end{algorithm}

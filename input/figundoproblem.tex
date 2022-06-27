@@ -1,13 +1,13 @@
 
-\begin{figure*}
-  \newcommand{\SCALE}{0.9}
+\begin{figure*}[t]
+  \newcommand{\SCALE}{0.8}
 
   \thickmuskip=0mu
   \medmuskip=0mu
   \thinmuskip=0mu
 
-  \newcommand\X{60pt}
-  \newcommand\Y{-50pt}
+  \newcommand\X{42pt}
+  \newcommand\Y{-40pt}
 
   \newcommand{\OACK}{0.5}
   \newcommand{\SMSG}{\tiny}
@@ -23,23 +23,23 @@
       $b$ delivers and forwards $\alpha_a$.]
              {\input{input/figundoproblemB.tex}}
     \hspace{5pt}
-    \subfloat[Part C][\label{fig:undoproblemC}$b$ delivers and forwards $\alpha_c$.]
+    \subfloat[Part C][\label{fig:undoproblemC}$b$ delivers + forwards $\alpha_c$.]
              {\input{input/figundoproblemC.tex}}
     \hspace{5pt}
-    \subfloat[Part D][\label{fig:undoproblemD}$b$ delivers and forwards $\delta_c$.]
+    \subfloat[Part D][\label{fig:undoproblemD}$b$ delivers + forwards $\delta_c$.]
              {\input{input/figundoproblemD.tex}}
     \hspace{5pt}
-    \subfloat[Part E][\label{fig:undoproblemE}$a$ echoes back $\alpha_a^2$ that $b$ needs.]
+    \subfloat[Part E][\label{fig:undoproblemE}$a$ echoes back $\alpha_a^2$ to $b$.]
              {\input{input/figundoproblemE.tex}}
     \hspace{5pt}
-    \subfloat[Part F][\label{fig:undoproblemF}$a$, $b$, and $c$ belong to $P_a$.]
+    \subfloat[Part F][\label{fig:undoproblemF}$a$, $b$, $c$ belong to $P_a$.]
              {\input{input/figundoproblemF.tex}}
   \end{center}
   \caption{\label{fig:undoproblem}From $c$'s perspective,
     Figure~\ref{fig:problemE} and Figure~\ref{fig:undoproblemE} are
     similar in terms of received messages, but the outcomes eventually
     differ. Yet, $c$ must act on Figure~\ref{fig:undoproblemE}, and
-    acknowledge then propagate the \emph{possible} staleness of its
-    partition $P_a$.}
+    acknowledge then propagate the \emph{possible} staleness of
+    Partition $P_a$.}
 \end{figure*}
 

@@ -2,14 +2,13 @@
 \begin{tikzpicture}[scale=\SCALE]
 
   \draw (-\X + 5pt, 0) --
-  node[above=-0.3em, left=-0.3em, above left, font=\SMSG]{$\textcolor{\PA}{\alpha_a^2} \RIGHT$}
+  node[above=-0.3em, left=-0.5em, above left, font=\SMSG]{$\textcolor{\PA}{\alpha_a^2} \RIGHT$}
   (0 - 5pt, 0); %% b - a 
 
   \draw (0 +5pt, 0) --
   (\X -5pt, 0); %% c - b
 
   \draw[opacity=0] (0, 0 - 5pt) --
-  % node[opacity=1, above=-0.3em, font=\tiny, sloped]{$\textcolor{\PA}{\ADD_a^{3}} \RIGHT$}
   (0, \Y + 5pt); %% b - d
   \draw (0, \Y + 5pt) --
   node[above=-0.3em, font=\SMSG, sloped]{$\textcolor{\PD}{\alpha_d^1} \RIGHT$}

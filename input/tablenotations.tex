@@ -1,0 +1,40 @@
+
+\begin{table*}
+  \scriptsize
+  \centering
+  \caption{\label{table:notations}Notation table.}
+  \begin{tabularx}{\textwidth}{@{}lll@{}}
+    \toprule
+    Notation & Short & Description \\
+    \midrule
+
+    $G$ & \underline{G}raph    & Represents a network.\\
+    $V$ & \underline{V}ertices & Represents the set of nodes, or processes.\\
+    $E$ & \underline{E}dges    & Represents the set of asynchronous communication links.\\
+    $w_{xy}$     & \underline{w}eight & Positive weight of the edge $\langle x, y \rangle$.\\
+    $\pi_{xz}$ and $\Pi_{xz}$  & \underline{p}ath and best \underline{P}ath & List of contiguous edges from \Process $x$ to \Process $z$.\\
+    $|\pi_{xz}|$ and $|\Pi_{xz}|$ & sum of path weights & Positive sum of weights of the path.\\
+    
+    \midrule
+
+    $\sigma_x$  & \underline{s}tate     & The local state of \Process $x$.\\
+    $b_x(m)$    & \underline{b}roadcast & \Process $x$ creates a new message $m$ that must be delivered by all \processes.\\
+    $d_{x}(m)$  & \underline{d}eliver   & \Process $x$ delivers the message $m$.\\
+    $r_y(m)$ or $r_{yx}(m)$  & \underline{r}eceive   & \Process $y$ receives the message $m$ from any neighboring node or \Process $x$ if specified.\\
+    $s_{xy}(m)$ & \underline{s}end      & \Process $x$ sends the message $m$ to \Process $y$.\\
+    $f_x(m)$    & \underline{f}orward   & \Process $x$ forwards the message $m$ to its neighbors.\\
+    $m \oplus \sigma$   & aggregator    & Aggregates $\sigma$ into the metadata of message $m$.\\
+    $\phi(\mu, \sigma)$ & predicate \underline{f}unction & Checks the metadata $\mu$ using the state $\sigma$.\\
+    $\eventually P$     & eventually    & Eventually predicate $P$ is true.\\
+    $e_1 \rightarrow e_2$ & happens before  & The event $e_1$ happened before the event $e_2$. Delivery, sending, or receipt are events.\\
+    $D_x$ & \underline{D}elivered & Set of delivered messages by \Process $x$.\\
+    
+    \midrule
+
+    $\alpha_x^d$ or $\alpha_{\pi_{xz}}^d$      & \underline{a}dd source & Message that notifies the adding of Source $x$ in the network.\\
+    $\delta_x$   & source \underline{d}eletion & Message that notifies the deletion of Source $x$, or the detection by \Process $x$ of a possible source deletion.\\
+    $\mathcal{S}(m)$ & \underline{S}tale message & Message $m$ conveys stale control information since its broadcaster broadcast a newer message.\\
+    
+    \bottomrule
+  \end{tabularx}
+\end{table*}
