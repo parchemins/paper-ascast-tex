@@ -13,8 +13,8 @@ that using local knowledge and scoped broadcast, \processes can still
 reach dynamic consistent partitioning when they are able to detect
 possible blocking conditions in the dissemination of required
 notifications, even in dynamic networks where nodes join, leave, or
-crash at any time. For convenience, Appendix~\ref{appendix:notations}
-summarizes the notations used throughout the paper.
+crash. % at any time. % For convenience, Appendix~\ref{appendix:notations}
+% summarizes the notations used throughout the paper.
 
 \subsection{Scoped broadcast}
 \label{subsec:scoped}
@@ -60,7 +60,7 @@ implementations relying on the forwarding of messages from
 neighbor-to-neighbor.
 
 \begin{definition}[\label{def:forwarding}Forwarding]
-  When Node $x$ \underline{f}orwards $f_x(m)$ a message $m$, it
+  When $x$ \underline{f}orwards $f_x(m)$ a message $m$, it
   \underline{s}ends it ($s_{xy}(m)$) to all its neighbors $y$
   accumulating and aggregating ($\oplus$) metadata that depends on its
   local knowledge $\sigma_x$: $f_x(m) \implies \forall \langle x,
