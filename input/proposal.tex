@@ -228,7 +228,8 @@ choose another partition to belong to.
 Delete operations bring a new notion of order between events, and most
 importantly between message deliveries. A \process $s$ that performs a
 \texttt{Del} operation implicitly states that its preceding
-\texttt{Add} operation becomes obsolete. As consequence, their results
+\texttt{Add} operation becomes obsolete. % As consequence,
+Their results
 -- scoped broadcast in the form of \texttt{\underline{A}dd}
 notifications $\alpha_s$ -- should be canceled by the corresponding
 \texttt{\underline{D}el} notifications of staleness $\delta_s$. We
