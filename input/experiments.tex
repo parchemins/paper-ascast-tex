@@ -1,4 +1,4 @@
-\newcommand{\FIGSCALE}{0.48}
+\newcommand{\FIGSCALE}{0.68}
 
 \section{Experimentation}
 \label{sec:experimentation}
@@ -10,8 +10,9 @@
 In this section, we discuss the evaluations of \NAME we conducted on top of
 PeerSim, a simulator to
 evaluate and assess distributed algorithms in large scale
-networks~\cite{montresor2009peersim}. All the code is available on the
-Github platform at \mbox{\url{https://github.com/ane-wane/as-cast}}.
+networks~\cite{montresor2009peersim}. All the code is available % on % the
+%Github platform
+at \mbox{\url{https://github.com/ane-wane/as-cast}}.
 
 %% \subsection{Confirm the complexity analysis stating that
 %%   communication and time overheads depend on the current partitioning
@@ -33,11 +34,13 @@ each \process has 4 communication links on average. We set the latency
 of links between 20 and 40 ms at random following a uniform
 distribution.
 %
-To favor more concurrent operations, we voluntary set
+To favor more concurrent operations, we % voluntary
+set
 weights and latency to different values: each link has a weight
 between 5 and 15 set randomly using a uniform distribution. This
-allows nodes to receive messages in a different order than their
-respective shortest path generating more messages to reach consistent
+allows nodes to receive messages in different orders, % than their
+% respective shortest path
+therefore generating more messages to reach consistent
 partitioning.
 
 
@@ -47,32 +50,33 @@ partitioning before we create each new partition. Second, we remove
 every partition one at a time, in the order of their creation, hence
 starting from the first and oldest partition that had been added.
 
-\noindent We measure the average number of messages generated per
+\noindent We measure the average number of messages % generated
+per
 \process per second; and the time before reaching consistent
 partitioning after adding or removing a partition.
 
 
-\begin{figure*}[t]
-  \subfloat[\label{fig:complexity}Dynamic consistent partitioning overhead of \NAME.]{
-    \includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.pdf} 
-  }
-  \hspace{5pt}
-  \subfloat[\label{fig:geant}Partitioning overhead of 2
-    clusters connected by a long distance link.]{
-    \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
-  }
-  \caption{\TODO{\NAME overhead}.}
-\end{figure*}
+%% \begin{figure*}[t]
+%%   \subfloat[\label{fig:complexity}Dynamic consistent partitioning overhead of \NAME.]{
+%%     \includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.pdf} 
+%%   }
+%%   \hspace{5pt}
+%%   \subfloat[\label{fig:geant}Partitioning overhead of 2
+%%     clusters connected by a long distance link.]{
+%%     \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
+%%   }
+%%   \caption{\TODO{\NAME overhead}.}
+%% \end{figure*}
 
-%% \begin{figure}[t]
-%%   \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.pdf}
-%%   \caption{\label{fig:complexity}Dynamic consistent partitioning overhead of \NAME.}
+\begin{figure}[t]
+  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_complexity.pdf}
+  \caption{\label{fig:complexity}Dynamic consistent partitioning overhead of \NAME.}
   
 %%   %% \caption{\label{fig:complexity}Cumulative average number of messages
 %%   %%   per process in a network comprising 10k processes; along with the
 %%   %%   duration before reaching consistent partitioning after adding or
 %%   %%   removing a partition, totaling 100 new partition then removed.}
-%% \end{figure}
+\end{figure}
 
 \item [Results:]
 
@@ -82,7 +86,8 @@ between $\alpha$ and $\delta$ messages. The bottom part shows the time
 before reaching consistent partitioning.
 
 \noindent Figure~\ref{fig:complexity} confirms that \NAME's overhead
-depends on the size of partitions. In this scenario, it empirically
+depends on the size of partitions. % In this scenario,
+This % empirically
 corresponds to a complexity in terms of number of messages of
 $\mathcal{O}(\frac{|E|}{|V|\cdot|P|})$ where $E$ is the number of
 links, $V$ is the number of \processes, and $P$ is the number of
@@ -108,7 +113,8 @@ $\alpha$ and $\delta$ messages. The latter aims at removing stale
 information and triggering competition while the former aims at
 updating shortest paths. As corollary, the convergence time increases,
 for $\delta$ messages must reach the partition borders before sound
-competitors propagate their partition. It is worth noting that this
+competitors propagate their partition. % It is worth noting that
+This
 delete operation involves concurrency: removals still propagate while
 the competition has started.
 %%is already partially triggered and propagating.
@@ -133,11 +139,11 @@ depends on its usage.
 
 \begin{asparadesc}
 
-%% \begin{figure}[t]
-%%   \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
-%%   \caption{\label{fig:geant}Partitioning overhead of 2
-%%     clusters connected by a long distance link.}
-%% \end{figure}
+\begin{figure}[t]
+  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
+  \caption{\label{fig:geant}Partitioning overhead of 2
+    clusters connected by a long distance link.}
+\end{figure}
 
 
 \subsection{Traffic containment}
