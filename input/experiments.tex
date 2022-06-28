@@ -18,12 +18,12 @@ at \mbox{\url{https://github.com/ane-wane/as-cast}}.
 %%   communication and time overheads depend on the current partitioning
 %%   of the system.}
 
-\subsection{Scalability and trade-off}
+\subsection{Scalability and trade-off of \NAME}
 \begin{asparadesc}
-\item [Objective:] Confirm the scalability of \NAME by highlighting the
-  trade-off between the current partitioning of the system and the
-  protocol's overhead in terms of generated traffic and termination
-  time.
+%% \item [Objective:] Confirm the scalability of \NAME by highlighting the
+%%   trade-off between the current partitioning of the system and the
+%%   protocol's overhead in terms of generated traffic and termination
+%%   time.
   
 \item [Description:]
   
@@ -139,17 +139,10 @@ depends on its usage.
 
 \begin{asparadesc}
 
-\begin{figure}[t]
-  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
-  \caption{\label{fig:geant}Partitioning overhead of 2
-    clusters connected by a long distance link.}
-\end{figure}
-
-
-\subsection{Traffic containment}
-\item [Objective:] Confirm that \NAME locks down the traffic of
-  decentralized content indexing in dynamic
-  inter-autonomous systems.
+\subsection{Traffic containment in dynamic inter-autonomous systems}
+%% \item [Objective:] Confirm that \NAME locks down the traffic of
+%%   decentralized content indexing in dynamic
+%%   inter-autonomous systems.
   
 \item [Description:]
 
@@ -181,6 +174,13 @@ this link.
 %%   }
 %%   \caption{Evaluation of \NAMEC for \emph{lazy} dynamic partitioning.}
 %% \end{figure*}
+
+\begin{figure}[t]
+  \centering\includegraphics[width=\FIGSCALE\columnwidth]{img/as_cast_geant.pdf}
+  \caption{\label{fig:geant}Partitioning overhead of 2
+    clusters connected by a long distance link.}
+\end{figure}
+
 
 
 
@@ -335,11 +335,11 @@ cluster, the new link does not trigger noticeable traffic, for
 %% \end{asparadesc}
 
 \begin{asparadesc}
-  \item[Overall,] these experiments highlight the scalability of \NAME
-    %and \NAMEC
-    in dynamic networks such as Edge infrastructures. Next
-    Section reviews state-of-the-art approaches that can index content
-    in geo-distributed infrastructures.
+\item[Overall,] these experiments highlight the scalability of \NAME
+  %and \NAMEC
+  in dynamic networks such as Edge infrastructures. Next
+  Section reviews state-of-the-art approaches that can index content
+  in geo-distributed infrastructures.
 \end{asparadesc}
 
 

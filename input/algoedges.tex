@@ -8,7 +8,7 @@
 \LinesNumbered
 
 % \begin{multicols}{2}  
-\Function(\tcp*[f]{new link to $q$}){\textup{edgeUp($q$)}}  {
+\Function(\tcp*[f]{new link to $q$}){\textup{onEdgeUp($q$)}}  {
     \lIf {$A_{\pi}^{d} \neq \alpha_\varnothing^\infty$} {
          send$_q$($A_{\pi}^{d} \oplus ^{w_{pq}}$)
     }
@@ -16,7 +16,7 @@
 
 % \BlankLine
 
-\Function(\tcp*[f]{link to $q$ removed}){\textup{edgeDown($q$)}} {
+\Function(\tcp*[f]{link to $q$ removed}){\textup{onEdgeDown($q$)}} {
   \lIf {\textup{isParent($q$)}} {
        receiveDel($q$, $\delta_{p, V[p]+1}$)
   }

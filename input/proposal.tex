@@ -1,3 +1,9 @@
+
+\begin{table}
+  \caption{\label{table:notations}Notation table.}
+  \input{input/tablenotations.tex}
+\end{table}
+
 \section{Adaptive scoped broadcast}
 \label{sec:adaptive}
 
@@ -13,8 +19,9 @@ that using local knowledge and scoped broadcast, \processes can still
 reach dynamic consistent partitioning when they are able to detect
 possible blocking conditions in the dissemination of required
 notifications, even in dynamic networks where nodes join, leave, or
-crash. % at any time. % For convenience, Appendix~\ref{appendix:notations}
-% summarizes the notations used throughout the paper.
+crash. % at any time.
+For convenience, Table~\ref{table:notations}
+summarizes the notations used throughout the paper.
 
 \subsection{Scoped broadcast}
 \label{subsec:scoped}
@@ -68,7 +75,7 @@ neighbor-to-neighbor.
 \end{definition}
 
 We use scoped broadcast to efficiently modify the state of each
-\process depending on the partitions that exist in the system.
+\process depending on the partitions that exist in the system to reach consistent partitioning.
 
 
 
@@ -84,7 +91,6 @@ the context of maintaining distributed indexes, this would be about
 link latency that \nodes could monitor by aggregating \texttt{ping}s;
 or operational costs when dealing with multiple tenants.
 
-\input{input/figadd.tex}
 
 %% \begin{definition}[\label{def:partitioning}Partitioning]
 %%   Let $S \subseteq V$ be the set of \underline{s}ources, and $P_{s\in
@@ -144,39 +150,12 @@ forwarding along this path.
 \end{theorem}
 
 \begin{proof}
-  Proof in Appendix~\ref{appendix:fb}.
-%%   Whenever a \process~$s$ becomes a source, it broadcasts hence
-%%   delivers its own message $d_s(\alpha_{s}^{|\pi_{ss}|})$. Whatever
-%%   its set of received messages, it acknowledges that it belongs to its
-%%   own partition $P_s$ since $\alpha_{s}^{|\pi_{ss}|} = \min D_s$ and
-%%   it remains forever since $|\pi_{ss}|$ is its greatest lower bound.
-%%   \noindent Such a source forwards its notification to its neighbors.
-%%   Every neighbor eventually receives its notification since
-%%   communication links are reliable. Whatever the order of received
-%%   messages $R_x$ at neighboring \process~$x$, total order ensures that
-%%   it delivers notifications $\alpha_s^{d}$ when
-%%   $d= |\pi_{ss}| + w_{sx} = \min |\pi_{s'x}|$ where $\min |\pi_{s'x}|$
-%%   is the lightest weight of $x$ to any source $s'$, $s'$ being $s$ in
-%%   this case.
-%%   \noindent Among these neighbors, at least those that fulfill the
-%%   latest condition forward their respective notification.  By
-%%   transitivity, the message originating from $s$ reaches all
-%%   \processes that belong to $P_s$ at least through their respective
-%%   lightest path: $\small\smash{\forall y \in V, s, s' \in S: \min
-%%     |\pi_{s y}| < \min |\pi_{s' y}| \implies \eventually
-%%     d_{y}(\alpha_{s}^{\min |\pi_{sy}|})}$. When the system becomes
-%%   quiescent, \ie no \process becomes source anymore, every \process
-%%   eventually acknowledges the partition it belongs to, \ie \processes
-%%   eventually reach consistent partitioning together. In addition, the
-%%   protocol terminates: a \process never delivers hence forwards a
-%%   message after it received, delivered, and forwarded the message of
-%%   its closest source from its lightest path.
+  \input{input/prooftheoremfb}
+  % Proof in Appendix~\ref{appendix:fb}.
 \end{proof}
 
-\begin{algorithm}[t]
-  \input{input/algoadd.tex}
-  \caption{\label{algo:add}Add-only CP protocol at \Process~$p$.}
-\end{algorithm}
+\input{input/figadd.tex}
+
 
 Algorithm~\ref{algo:add} shows the instructions that implement a
 \emph{reactive} forwarding of best to reach consistent partitioning in
@@ -213,9 +192,6 @@ At any time, a source can revoke its status of source by executing a
 system. All \processes that belong to this partition must eventually
 choose another partition to belong to.
 
-\input{input/figsimplerproblem.tex} %% positioning
-
-\input{input/figdel.tex}
 
 \begin{definition}[\label{def:dcp}\underline{D}ynamic
     \underline{c}onsistent \underline{p}artitioning (DCP)] A DCP
@@ -261,7 +237,18 @@ the last, as highlighted by Algorithm~\ref{algo:add}.
 %    def now.}
 \end{definition}
 
+
+\begin{algorithm}[t]
+  \input{input/algoadd.tex}
+  \caption{\label{algo:add}Add-only CP protocol at \Process~$p$.}
+\end{algorithm}
+
+
+
 \newcommand{\last}{\textup{last}~}
+
+\input{input/figdel.tex}
+
 
 A naive attempt at implementing DCP resembles echoes in acoustics: a
 sound propagates in the air before crashing into surrounding walls to
@@ -275,7 +262,6 @@ deleted partition, it creates an echo of bordering partitions that
 will go backward to fill the gap left open by removals using
 forwarding of best (FB) as stated by Theorem~\ref{theo:fb}.
 
-\input{input/figundoproblem.tex}
 
 \begin{definition}[\label{def:fs}\underline{F}orwarding of
   \underline{s}taleness (FS)]
@@ -306,6 +292,7 @@ forwarding of best (FB) as stated by Theorem~\ref{theo:fb}.
   % D_x$. \TODO{Rework min}
 \end{definition}
 
+
 Figure~\ref{fig:del} illustrates the behavior of this implementation
 ($\textup{FB}^+ \wedge \textup{FS}$).  Two partitions initially exist:
 $P_a$ and $P_d$ that respectively include $\{a\}$, and $\{b, c,
@@ -325,9 +312,9 @@ partitioning in every scenario.
 %  \wedge FS$. And it does  not work.}
 
 \begin{lemma}[\label{lem:fbfse}$\textup{FB}^+ \wedge \textup{FS}
-    \centernot\implies \textup{DCP}$] Forwarding best up-to-date
-  and staleness, and echoing is not sufficient to guarantee
-  dynamic consistent partitioning.
+    \centernot\implies \textup{DCP}$] Forwarding best up-to-date,
+  staleness, and echoes is not sufficient to guarantee dynamic
+  consistent partitioning.
 \end{lemma}
 
 \begin{proof}
@@ -338,9 +325,10 @@ the propagation of both
 \item notifications about deleted partitions.
 \end{inparaenum}
 Figure~\ref{fig:problem} depicts a scenario comprising only three
-\processes $a$, $b$, $c$ chained with FIFO links, \ie where \processes
-receive the messages in the order of their sending ($s_{pq}(m)
-\rightarrow s_{pq}(m') \implies r_q(m) \rightarrow r_q(m')$). In
+\processes $a$, $b$, $c$ chained with FIFO links where \processes
+receive the messages in the order of their sending. % ($s_{pq}(m)
+%\rightarrow s_{pq}(m') \implies r_q(m) \rightarrow r_q(m')$).
+In
 Figure~\ref{fig:problemA}, both $a$ and $c$ become sources, sending
 their respective notification message to $b$. In
 Figure~\ref{fig:problemB}, both $a$ and $c$ delete their partition
@@ -354,6 +342,8 @@ notifications. Finally, Figure~\ref{fig:problemF} shows that
 eventually, $c$ stays in the deleted partition $P_a$ for not having
 received $\delta_a$ that $b$ blocked earlier. The system does not
 reach consistent partitioning. \end{proof}
+
+\input{input/figsimplerproblem.tex}
 
 The issue is that each \process trusts its parent to forward all
 staleness notifications relevant to it. When this fails, as in
@@ -402,7 +392,6 @@ therefore, it could have blocked $\delta_a$.
   \end{inparaenum}
   % $b_p(\delta_x) \implies d_q(x) U Detect[X]$ ??? 
 \end{lemma}
-
 
 \begin{proof}
   %% knowing that b_p delta is sufficient to say that processes will
@@ -491,6 +480,10 @@ therefore, it could have blocked $\delta_a$.
   %% delivers either a better $\alpha_Z$, or $\delta_X$, or $\Delta_X$.
 \end{proof}
 
+\input{input/figundoproblem.tex}
+
+
+
 As a second step, detecting \processes must proactively purge the
 system from their forwarded notifications. For instance in
 Figure~\ref{fig:problemF}, $c$ detects the blocking of the staleness
@@ -540,16 +533,7 @@ delivered this message.
 \end{theorem}
 
 \begin{proof}
-  Proof in Appendix~\ref{appendix:fbfsdcp}.
-%%   Detection triggers forwarding of staleness downstream which
-%%   completes the case study of Lemma~\ref{lem:detector} by ensuring
-%%   that, when a source broadcasts its staleness notification, all
-%%   \processes that belong to its partition eventually deliver such a
-%%   staleness notification. All downstream bordering \processes also
-%%   eventually receive such a staleness notification and echo back their
-%%   best delivered message. This triggers another competition as in
-%%   Theorem~\ref{theo:fb} for the \processes that delivered the
-%%   staleness notification.
+  \input{input/prooftheoremfbfsdcp}
 \end{proof}
 
 \begin{algorithm}[t]
@@ -586,13 +570,13 @@ message. Receiving a message known to be stale from this parent
 triggers the generation of staleness notifications that can only be
 delivered by downstream \processes (see Line~\ref{line:detect}).
 
-\begin{algorithm}[t]
-  \input{input/algoedges.tex}
-  \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
-\end{algorithm}
+%% \begin{algorithm}[t]
+%%   \input{input/algoedges.tex}
+%%   \caption{\label{algo:edges}\NAME at \Process~$p$ in dynamic networks.}
+%% \end{algorithm}
 
 By reusing \NAME's default behavior of echos and downstream staleness,
-Algorithm~\ref{algo:edges} enables dynamic consistent partitioning
+Algorithm~\ref{algo:ascast} also enables dynamic consistent partitioning
 even in dynamic networks subject to physical partitioning where
 \processes can join, leave, or crash at any time. Adding a \process is
 equivalent to add as many edges as necessary. Since adding an edge may

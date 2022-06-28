@@ -6,7 +6,7 @@
 
 \SetKwProg{Function}{func}{}{}
 
-\small
+\footnotesize
 
 \DontPrintSemicolon
 \LinesNumbered
@@ -36,7 +36,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 
 % \begin{multicols}{2}
-\Function{\textup{receiveAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
+\Function(\tcp*[f]{notification of source creation}){\textup{receiveAdd($q$, $\alpha_{\pi'}^{d'}$)}} {
   \uIf {\smash{$\alpha_{\pi'}^{d'} < A_{\pi}^{d} \algoAnd \neg\textup{isStale}(\alpha_{\pi'}^{d'}) \algoAnd \neg\textup{isLoop}(\alpha_{\pi'}^{d'})$\label{line:ascast_improve}}} {
     $\smash{A_{\pi}^{d} \leftarrow \alpha_{\pi'}^{d'} \cup _{\langle p, V[p] \rangle}}$ \;
     \lForEach{$n \in O_p$} {
@@ -44,7 +44,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
     }
   }
   \uElseIf{$\textup{isParent}(q) \algoAnd \textup{isStale}(\alpha_{\pi'}^{d'})$\label{line:detect}} {
-    \textup{receiveDel($q$, $\delta_{p, V[p] + 1}$)}
+    \textup{receiveDel($q$, $\delta_{p, V[p] + 1}$)} \tcp*[f]{detection of \emph{possible} inconsistency}
   }
 
   updateVersions($\pi'$) \;
@@ -54,7 +54,7 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 
 \BlankLine
 
-\Function{\textup{receiveDel($q$, $\delta_{s, c}$)}} {
+\Function(\tcp*[f]{notification of a \emph{possible} source removal}){\textup{receiveDel($q$, $\delta_{s, c}$)}} {
   \uIf {$\exists \langle s, c' \rangle \in \pi: c' < c$\label{line:ascast_delete}} {
     $\smash{A^d_\pi \leftarrow \alpha^\infty_\varnothing}$ \;
     \lForEach {$n \in O_p \setminus q$}{send$_n$($\delta_{s, c}$)}
@@ -67,6 +67,23 @@ $V \leftarrow \varnothing$;~ $V[p] \leftarrow 0$ \tcp*[r]{vector of versions}
 }
 
 % \end{multicols}
+
+\BlankLine
+
+% \begin{multicols}{2}  
+\Function(\tcp*[f]{new communication link to $q$}){\textup{onEdgeUp($q$)}}  {
+    \lIf {$A_{\pi}^{d} \neq \alpha_\varnothing^\infty$} {
+         send$_q$($A_{\pi}^{d} \oplus ^{w_{pq}}$)
+    }
+}
+
+% \BlankLine
+
+\Function(\tcp*[f]{link to $q$ removed (crash or leave)}){\textup{onEdgeDown($q$)}} {
+  \lIf {\textup{isParent($q$)}} {
+       receiveDel($q$, $\delta_{p, V[p]+1}$)
+  }
+}
 
 \BlankLine
 

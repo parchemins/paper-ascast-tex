@@ -20,25 +20,26 @@
     \subfloat[Part A][\label{fig:problemA}Both $a$ and $c$ become sources.
       $w_{ab} = 2$; $w_{bc} = 1$.]{\input{input/figsimplerproblemA.tex}}
     \hspace{5pt}
-    \subfloat[Part B][\label{fig:problemB}Both $a$ and $c$ delete their partition 
-     while $b$ delivers and forwards $\alpha_a$.]
+    \subfloat[Part B][\label{fig:problemB}$a$ and $c$ delete their partition while $b$ delivers and forwards $\alpha_a$.]
              {\input{input/figsimplerproblemB.tex}}
     \hspace{5pt}
     \subfloat[Part C][\label{fig:problemC}$b$ blocks the only transiting
       $\delta_a$ while $b$ delivers and forwards $\alpha_c$.]
              {\input{input/figsimplerproblemC.tex}}
     \hspace{5pt}
-    \subfloat[Part D][\label{fig:problemD}$\alpha_c^3$ reaches $a$ that delivers it.]
+    \subfloat[Part D][\label{fig:problemD}$a$ receives + delivers $\alpha_c^3$.]
+    %$\alpha_c^3$ reaches $a$ that delivers it.]
              {\input{input/figsimplerproblemD.tex}}
     \hspace{5pt}
-    \subfloat[Part E][\label{fig:problemE}$\delta_c$ reaches $a$ that delivers it.]
+    \subfloat[Part E][\label{fig:problemE}$a$ receives + delivers $\delta_c$.]
+    %$\delta_c$ reaches $a$ that delivers it.]
              {\input{input/figsimplerproblemE.tex}}
     \hspace{5pt}
-    \subfloat[Part F][\label{fig:problemF}$c$ stays forever in a stale partition: $P_a$.]
+    \subfloat[Part F][\label{fig:problemF}$c$ is stuck in a stale $P_a$.]%$c$ stays forever in a stale partition: $P_a$.]
              {\input{input/figsimplerproblemF.tex}}
   \end{center}
-  \caption{\label{fig:problem}Even in the simplest scenarios, the
-    naive propagation of $\alpha$ and $\delta$ messages may be
+  \caption{\label{fig:problem}% Even in the simplest scenarios,
+    The naive propagation of messages is
     insufficient to guarantee consistent partitioning. If $c$ had
     children, they would stay in the wrong partition too.}
 \end{figure*}

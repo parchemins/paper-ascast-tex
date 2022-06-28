@@ -1,6 +1,6 @@
 \SetKwProg{Function}{func}{}{}
 
-\small
+\footnotesize
 
 \DontPrintSemicolon
 \LinesNumbered
@@ -15,13 +15,13 @@ $A^d_s \rightarrow \alpha^\infty_\varnothing$ \tcp*[r]{smallest distance $d$ to 
   \textup{receiveAdd($\varnothing$, $\alpha_p^0$)} \label{line:lowestbound}
 }
 
-\BlankLine
+%\BlankLine
 
 \Function{\textup{receiveAdd($q$, $\alpha_{s'}^{d'}$)} \tcp*[f]{notification from $q$}} {
   \If (\tcp*[f]{check predicate ($\phi$)}){\smash{$\alpha^{d'}_{s'} < A^d_s$}} {
       $\smash{A_s^d \leftarrow \alpha_{s'}^{d'}}$ \tcp*[r]{deliver and update ($\sigma$)}
 
-      \lForEach(\tcp*[f]{fwd}) {$n \in O_p$} {
+      \lForEach(\tcp*[f]{forward to neighbors}) {$n \in O_p$} {
           \textup{send$_n$(\smash{$\alpha^{d'}_{s'} \oplus ^{w_{pn}}$})} \label{line:accumulator}
        }      
   }
