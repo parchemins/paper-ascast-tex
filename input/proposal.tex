@@ -1,6 +1,6 @@
 
 \begin{table}
-  \caption{\label{table:notations}Notation table.}
+  \caption{\label{table:notations}Summary of notations.}
   \input{input/tablenotations.tex}
 \end{table}
 
@@ -324,24 +324,22 @@ the propagation of both
 \item notifications about actual sources, and
 \item notifications about deleted partitions.
 \end{inparaenum}
-Figure~\ref{fig:problem} depicts a scenario comprising only three
-\processes $a$, $b$, $c$ chained with FIFO links where \processes
+In Figure~\ref{fig:problem}, $a$, $b$, $c$ are chained with FIFO links, \ie \processes
 receive the messages in the order of their sending. % ($s_{pq}(m)
 %\rightarrow s_{pq}(m') \implies r_q(m) \rightarrow r_q(m')$).
-In
-Figure~\ref{fig:problemA}, both $a$ and $c$ become sources, sending
+In Figure~\ref{fig:problemA}, $a$ and $c$ become sources, sending
 their respective notification message to $b$. In
-Figure~\ref{fig:problemB}, both $a$ and $c$ delete their partition
-while $b$ receives, delivers, and forwards $\alpha_a^2$. In
+Figure~\ref{fig:problemB}, $a$ and $c$ delete their partition while
+$b$ receives, delivers, and forwards $\alpha_a^2$. In
 Figure~\ref{fig:problemC}, $b$ receives, delivers, and forwards
 $\alpha_c^1$, for it improves its best partition. Then it receives and
 discards $\delta_a$, for its best partition does not match the deleted
 one. It echoes back $\alpha_c^3$ to $a$. In Figures~\ref{fig:problemD}
 and \ref{fig:problemE}, $a$ and $b$ handle transiting
-notifications. Finally, Figure~\ref{fig:problemF} shows that
-eventually, $c$ stays in the deleted partition $P_a$ for not having
-received $\delta_a$ that $b$ blocked earlier. The system does not
-reach consistent partitioning. \end{proof}
+notifications. Finally, Figure~\ref{fig:problemF} shows that $c$ is stuck
+in the deleted $P_a$ for not having received $\delta_a$ that
+$b$ blocked earlier. The system does not reach consistent
+partitioning. \end{proof}
 
 \input{input/figsimplerproblem.tex}
 

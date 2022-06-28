@@ -16,29 +16,8 @@
   \draw[fill=white] (0, 0) node{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[color=\WRONG, fill=white] (\X, 0) node{\textcolor{\PA}{$\bm{c}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-  \draw (-\X, 5pt) node[above, font=\scriptsize]{$\ldots \rightarrow \delta_c$};
-  \draw (  0, 5pt) node[above, font=\scriptsize]{$\ldots \rightarrow \delta_c$};
-  \draw ( \X, 5pt) node[above, font=\scriptsize]{$\ldots \rightarrow \textcolor{\PA}{\alpha_a^3}$};
+  \draw (-\X, -5pt) node[below, font=\SNODE]{$\ldots \rightarrow \delta_c\vphantom{\alpha_a^3}$};
+  \draw (  0,  5pt) node[above, font=\SNODE]{$\ldots \rightarrow \delta_c$};
+  \draw ( \X, -5pt) node[below, font=\SNODE]{$\ldots \rightarrow \textcolor{\PA}{\alpha_a^3}$};
 
-
-  
-  %% \begin{scope}[shift={(0, -1*\Y)}]
-
-  %%   \draw (-\X + 5pt, 0) --
-  %%   (0 - 5pt, 0);
-    
-  %%   \draw (0 +5pt, 0) --
-  %%   node[below=-0.3em, font=\tiny]{$\vphantom{\alpha^1_c }$}
-  %%   (\X -5pt, 0); %% b - c
-
-    
-  %%   \draw[fill=white] (-\X, 0) node{\textcolor{\PA}{$\bm{a}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
-  %%   \draw[fill=white] (0, 0) node{\textcolor{\PA}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  %%   \draw[fill=white] (\X, 0) node{\textcolor{\PA}{$\bm{c}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-    
-  %%   \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a^0}$};
-  %%   \draw (  0, 5pt) node[above, font=\scriptsize]{$\ldots \rightarrow \delta_c \rightarrow \textcolor{\PA}{\alpha_a^2}$};
-  %%   \draw ( \X, 5pt) node[above, font=\scriptsize]{$\ldots \rightarrow \textcolor{\PA}{\alpha_a^3}$};
-  %% \end{scope}
-  
 \end{tikzpicture}

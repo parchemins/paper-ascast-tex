@@ -10,8 +10,8 @@
 
   \draw (0 +5pt, 0) --
   node [above=-0.3em,font=\SMSG]{$\textcolor{\PA}{\alpha_{a}^{3}} \RIGHT$}
-  node [below=-0.3em,font=\SMSG]{$\LEFT \textcolor{\PC}{\alpha_{c}^{1}}$ ~ ~ ~ ~ ~}
-  node [below=-0.3em,font=\SMSG]{~ ~ ~ ~ ~ $\LEFT \delta_c \vphantom{\alpha^3}$}
+  node [below=-0.3em,font=\SMSG]{$\LEFT \textcolor{\PC}{\alpha_{c}^{1}}$ ~ ~ ~}
+  node [below=-0.3em,font=\SMSG]{~ ~ ~ $\LEFT \delta_c \vphantom{\alpha^3}$}
   (\X -5pt, 0); %% b - c
 
 
@@ -20,27 +20,8 @@
   \draw[fill=white] (0, 0) node{\textcolor{\PA}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
-  \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a} \bm{\rightarrow \delta_a}$};
-  \draw (  0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a^2}$};
-  \draw ( \X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PC}{\alpha_c}\vphantom{\alpha_a^3} \rightarrow \delta_c$};
-
-  %% \begin{scope}[shift={(0, -1*\Y)}]
-  %%     \draw (-\X + 5pt, 0) --
-  %%     (0 - 5pt, 0); %% b - a 
-      
-  %%     \draw (0 +5pt, 0) --
-  %%     node[above=-0.3em,font=\tiny]{$\textcolor{\PA}{\alpha_{a}^{3}} \RIGHT$}
-  %%     node[below=-0.3em,font=\tiny]{$\LEFT \textcolor{\PC}{\alpha_{c}^{1}} \cdot \delta_c$}
-  %%     (\X -5pt, 0); %% b - c
-      
-  %%     \draw[fill=white] (-\X, 0) node{\textcolor{\PA}{$\bm{a}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
-  %%     \draw[fill=white] (0, 0) node{\textcolor{\PA}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  %%     \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-      
-  %%     \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a^0}$};
-  %%     \draw (  0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\alpha_a^2}$};
-  %%     \draw ( \X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PC}{\alpha_c}\vphantom{\alpha_a^3} \rightarrow \delta_c$};
-
-  %% \end{scope}
+  \draw (-\X, -6pt) node[below, font=\SNODE]{$\textcolor{\PA}{\alpha_a} \bm{\rightarrow \delta_a}$};
+  \draw (  0,  6pt) node[above, font=\SNODE]{$\textcolor{\PA}{\alpha_a^2}$};
+  \draw ( \X, -6pt) node[below, font=\SNODE]{$\textcolor{\PC}{\alpha_c}\vphantom{\alpha_a^3} \rightarrow \delta_c$};
 
 \end{tikzpicture}
