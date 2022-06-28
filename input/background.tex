@@ -100,9 +100,7 @@ over receipts by \processes. This dynamic partitioning raises additional
 challenges related to concurrent operations where removed partitions
 could block the propagation of other partitions (see
 Section~\ref{subsec:dynamic}).
-
 %% \item [Lazy partitioning:]
-  
 %% \TODO{Finally, in Figure~\ref{fig:partition_intuition}, every nodes of
 %%   the system maintains an index to every content. In systems
 %%   comprising billions of content, this could constitute a scalability
@@ -112,13 +110,10 @@ Section~\ref{subsec:dynamic}).
 %%   starts to host a replica. In addition, when the system removes its
 %%   last source, it should stop receiving messages from other ASes
 %%   designed to maintain the closest partition.}
-
-\end{asparadesc}
-
 Next Section details the properties of scoped broadcast and dynamic
 partitioning, % in dynamic networks,
 and provides an implementation called \NAME.% along with its complexity.
-
+\end{asparadesc}
 
 %% \subsection*{Disseminate localization information}
 %% Enabling the accessibility of content without prior requests implies

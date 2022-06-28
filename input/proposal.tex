@@ -324,8 +324,8 @@ partitioning in every scenario.
 %  \wedge FS$. And it does  not work.}
 
 \begin{lemma}[\label{lem:fbfse}$\textup{FB}^+ \wedge \textup{FS}
-    \centernot\implies \textup{DCP}$] Forwarding best up-to-date,
-  forwarding staleness, and echoing is not sufficient to guarantee
+    \centernot\implies \textup{DCP}$] Forwarding best up-to-date
+  and staleness, and echoing is not sufficient to guarantee
   dynamic consistent partitioning.
 \end{lemma}
 
@@ -416,9 +416,9 @@ therefore, it could have blocked $\delta_a$.
     \last D_y$, with forwarding of staleness
     (Definition~\ref{def:fs}), $f_{\pi_{xz}[k]}(\delta_x) \implies
     \eventually d_{\pi_{xz}[k+1]}(\delta_x)$ except if $\delta_x \in
-    D_{\pi_{xz}[k+1]}$ which means that $\pi_{xz}[k+1]$ already
-    delivered and forwarded $\delta_x$ following another such a chain
-    of delivery. Therefore, $z$ eventually receives, hence delivers
+    D_{\pi_{xz}[k+1]}$ meaning that $\pi_{xz}[k+1]$ already
+    delivered and forwarded $\delta_x$ following another 
+    delivery chain. Therefore, $z$ eventually receives, hence delivers
     $\delta_x$ (outcome \ref{lem:detectorA}).
     
   \item[(II) Different last partitions:] $\exists y \in \pi_{xz}
