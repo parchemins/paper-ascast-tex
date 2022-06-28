@@ -9,9 +9,13 @@
   \medmuskip=0mu
   \thinmuskip=0mu
 
+  \newcommand\INVISIBLESPACING{1.6}
   \newcommand\ADD{\alpha}
   \newcommand\DEL{\delta}
-    
+
+  \newcommand{\OACK}{0.5} %% opacity of acknowledgement alpha messages
+
+  
   \newcommand{\LEFT}{\triangleleft}
   \newcommand{\RIGHT}{\triangleright}
   
@@ -22,9 +26,12 @@
     \hspace{3pt}
     \subfloat[Part B][\label{fig:delB}$\delta$ stops when it encounters
       another partition. $b$ answers with its partition.]{\input{input/figdelB.tex}}
+    \hspace{3pt}
+    \subfloat[Part C][\label{fig:delC}$a$ receives, delivers, and forwards the message $\alpha_d^3$.
+      Every node belongs to $P_d$.]{\input{input/figdelC.tex}}
   \end{center}
   \caption{\label{fig:del}Efficient removal of a partition using
-    scoped broadast. $a$ eventually acknowledges that it belongs to $P_d$ with $\alpha_d^3$ echoing.}
+    scoped broadast.} % $a$ eventually acknowledges that it belongs to $P_d$ with $\alpha_d^3$ echoing.}
 \end{figure}
 
 %%% Local Variables: 

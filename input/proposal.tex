@@ -279,17 +279,11 @@ forwarding of best (FB) as stated by Theorem~\ref{theo:fb}.
 
 \begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos]
   In addition to FB, a \process $x$ that receives but does not deliver
-  a staleness notification $\delta_{s}$ sends back --~or echoes~-- its
+  a staleness notification $\delta_{s}$ replies by --~or echoes~-- its
   best up-to-date delivered message: $(\last D_x = \alpha_{s'}^d
   \wedge \delta_{s'} \not\in D_x \wedge d_x(\alpha_{s'}^d)\rightarrow
   r_{xy}(\delta_{s})) \implies r_{xy}(\delta_{s}) \rightarrow
   s_{xy}(\alpha_{s'}^d\oplus^{w_{xy}})$.
-
-  
-  % $r_{xy}(\alpha_s)
-  % \wedge \delta_s \in D_x \implies s_{xy}(\alpha_{s'}^d\oplus
-  % ^{w_{xy}})$ with $\alpha_{s'^d} = \min D_x \wedge \delta_{s'} \not\in
-  % D_x$. \TODO{Rework min}
 \end{definition}
 
 
@@ -303,8 +297,8 @@ Figure~\ref{fig:delB}, $b$ receives but does not deliver $\delta_a$
 since $\delta_a$ does not target its current partition $P_d$.
 $\textup{FB}^+$ in Definition~\ref{def:fbplus} states that $b$ must
 echo back its own best up-to-date message $\alpha_d^3$, for it may be
-the best for $a$. Eventually, every \process belongs to Partition
-$P_d$. In this scenario, they reach consistent
+the best for $a$. Figure~\ref{fig:delC} shows that every \process eventually belongs to 
+$P_d$, therefore reaching consistent
 partitioning. Unfortunately, this protocol does not ensure consistent
 partitioning in every scenario.
 
