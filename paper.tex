@@ -1,10 +1,6 @@
 \documentclass[runningheads]{llncs}
-%% \documentclass[a4paper, anonymous, thm-restate]{lipics-v2021}
-%%\documentclass[conference]{lipics}
 
-% \IEEEoverridecommandlockouts
-% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
-
+\usepackage[T1]{fontenc}
 %\usepackage{lmodern}
 %\usepackage[nocompress]{cite}
 \usepackage{hyperref}
@@ -26,10 +22,6 @@
 \usepackage[dvipsnames]{xcolor}
 %% inparaenum
 \usepackage{paralist}
-%% TODO
-% \usepackage{todonotes} %% after paralist to avoid clashes
-% \newcommand{\note}[1]{\todo[size=\tiny]{#1}}
-% \setlength{\marginparwidth}{2cm}
 %% tables
 \usepackage{booktabs, tabularx, multirow}
 %% figures
@@ -46,9 +38,10 @@
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
 
+%% To easily change name if it does not fit
 \newcommand{\NAME}[0]{\mbox{AS-cast}\xspace}
 \newcommand{\NAMEB}[0]{\mbox{S-cast}\xspace}
-\newcommand{\NAMEC}[0]{\mbox{xAS-cast}\xspace}
+
 \newcommand{\TODO}[1]{\textcolor{red}{#1}}
 \newcommand{\REF}[0]{\textcolor{purple}{REF}\xspace}
 
@@ -67,6 +60,7 @@
 \newcommand{\ie}{{i.e.,}\xspace}
 \newcommand{\eg}{{e.g.,}\xspace}
 
+%% to easily adapt depending on community
 \newcommand{\process}{node\xspace}
 \newcommand{\processes}{nodes\xspace}
 \newcommand{\Process}{Node\xspace}
@@ -76,34 +70,22 @@
 \newcommand{\Node}{\Process}
 \newcommand{\Nodes}{\Processes}
 
-\title{\NAME: Lock Down the Traffic\\of Decentralized Content Indexing at the Edge}
-% \titlerunning{\NAME: Lock Down the Traffic of Decentralized Content Indexing at the Edge}
+\newcommand{\SCALE}{1} %% used in figures, forces renewcommand for consistent behavior
 
-%% \keywords{
-%%   Edge, decentralized content indexing, scoped
-%%   broadcast, logical partitioning
-%% }
+\title{\NAME: Lock Down the Traffic\\of Decentralized Content Indexing at the Edge\thanks{\TODO{``Supported by organization x'' here.\\ Placeholder \\ 3 lines probably.}}}
+\titlerunning{Lock Down the Traffic of Decentralized Content Indexing at the Edge}
 
-%% \ccsdesc[500]{Networks~Network protocols}
 
-\author{Adrien Lebre\inst{1} \and Brice Nédelec\inst{1} \and Alexandre Van Kempen\inst{1}}
+\author{Adrien Lebre\inst{1} \and Brice Nédelec\inst{1} \and Alexandre Van Kempen\inst{2}}
+\authorrunning{A. Lebre et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
 
-\institute{LS2N, Inria-Rennes \email{first.last@ls2n.fr}}
+\institute{Nantes Université, École Centrale Nantes, IMT Atlantique, CNRS, INRIA, LS2N, UMR 6004, F-44000
+  Nantes, France \email{\{adrien.lebre, brice.nedelec\}@ls2n.fr}\\
+  \and Quarnot computing, 40/42 rue Barbès 92120 Montrouge, France \email{alexandre.vankempen@qarnot-computing.com}}
 
-%% \author{\IEEEauthorblockN{Adrien L{\`e}bre, Brice N{\'e}delec, Alexandre Van Kempen}
-%%   \IEEEauthorblockA{\textit{Inria / LS2N}, Nantes, France\\first.last@inria.fr}
-%% }
-
-% \author{Anonymous}
-%% \author{\IEEEauthorblockN{Adrien L{\`e}bre}
-%%   \IEEEauthorblockA{\textit{Inria / LS2N}, Nantes, France\\adrien.lebre@inria.fr}
-%%   \and
-%%   \IEEEauthorblockN{Brice N{\'e}delec}
-%%   \IEEEauthorblockA{\textit{LS2N}, Nantes, France\\brice.nedelec@ls2n.fr}
-%%   \and
-%%   \IEEEauthorblockN{Alexandre Van Kempen}
-%%   \IEEEauthorblockA{\textit{Qarnot computing}, Montrouge, France\\alexandre.vankempen@qarnot-computing.com}
-%% }
+
 
 \begin{document}
 
@@ -117,19 +99,12 @@
 \input{input/introduction.tex}
 \input{input/background.tex}
 \input{input/proposal.tex}
-% \input{input/implementation.tex}
 \input{input/experiments.tex}
 \input{input/related_work.tex}
 \input{input/conclusion.tex}
-%% \input{input/acknowledgment.tex}
-
-%% \clearpage
-
 
 \bibliographystyle{splncs04}
 \bibliography{compact_bibliographie}
-
-%\input{input/appendices.tex}
 
 \end{document}
 

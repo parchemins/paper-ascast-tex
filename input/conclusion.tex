@@ -12,83 +12,36 @@ infrastructure eventually knows the \process hosting the closest replica
 of a specific content.  The challenge resides in handling concurrent
 operations that may impair the propagation of messages, and in turn,
 lead to inconsistent partitioning.
-%% The major difficulty lies in concurrent operations, each having a
-%% different scope, and ensure the correct convergence of the system.  We
-%% defined, in particular, multiple properties that highlight this
-%% complexity.
 %
 We highlighted the properties that solve this problem and proposed an
-implementation called \NAME.  Simulations confirmed that
+implementation called \NAME for \underline{A}daptive
+\underline{S}coped broad\underline{cast}.  Simulations confirmed that
 \processes quickly reach consistent partitioning together while the
-generated traffic remains locked down to partitions.  %% We also 
-%% discussed an improvement further containing the traffic inside relevant
-%% autonomous systems.
+generated traffic remains locked down to partitions.
 
-%% correctness of our protocol as well as the confinement of
-%% the traffic only where it is needed.
+As future work, we plan to leverage the hierarchical properties of
+interconnected autonomous systems~\cite{nur2018geography} to further
+limit the propagation of indexes within interested systems only.  We
+expect that such an improvement would greatly benefit the autonomous
+systems, and particularly those hosting a large number of contents.
+Indeed, \NAME ensures that every \process eventually acknowledges its
+closest content replica. This feature unfortunately becomes an issue
+when each \process is only interested by a small portion of
+content.
 
-%% As future work, we plan to leverage the hierarchical properties of
-%% interconnected autonomous systems to further limit the propagation of
-%% indexes within interested systems only. We expect that such an
-%% improvement would greatly benefit the autonomous systems, and
-%% particularly those hosting a large number of contents.
-
-%% Systems hosting a large number of contents would greatly benefit from
-%% this improvement.
-
-%% As future work, we plan to enable lazy retrieval of partitions when a
-%% large number of contents is involved. Indeed, using \NAME, every
-%% \process partakes in the propagation of all indexes which raises
-%% scalability issues. We would like to leverage the hierarchical
-%% properties of
-%% % interconnected
-%% autonomous systems to limit the
-%% propagation of such indexes only to interested systems.
-
-%
-%% As ongoing and future work, we are currently studying how it might be
-%% possible to limit the scope of a partition to one autonomous system at
-%% most. Indeed, the gain of propagating changes to \processes belonging to
-%% another autonomous system might be negligible as the latency penalty
-%% is mainly due to inter autonomous systems' links (\eg trans-continental
-%% links).  Exactly, we are investigating how such a change can be
-%% formalized and its impact on the current protocol.
-%
-%autonomous systems. Indeed, \processes could leverage the hierarchical
-%properties of the Internet topology~\cite{nur2018geography} to avoid
-%flooding the whole systems with control information about all
-%partitions.
-%\TODO{should we highlight this at the end of the experiment}
-%
-
-As future work, we plan to evaluate our proposal within a concrete
-storage system such as \underline{I}nter\underline{P}lanetary
-\underline{F}ile \underline{S}ystem (IPFS)~\cite{ipfs}. This would
-assess the relevance of \NAME in real systems subject to high
-dynamicity, and compare it against its current DHT-based indexing
-system that does not include distance in its operation. More
-generally, we claim that \NAME and its extension can constitute novel
-building blocks for geo-distributed services.  For instance, \NAME
-could complement content delivery
+We also plan to evaluate our proposal within a concrete storage system
+such as \underline{I}nter\underline{P}lanetary \underline{F}ile
+\underline{S}ystem (IPFS)~\cite{ipfs}. This would assess the relevance
+of \NAME in real systems subject to high dynamics, and compare it
+against its current DHT-based indexing system that does not include
+distance in its operation. More generally, we claim that \NAME and its
+extension can constitute novel building blocks for geo-distributed
+services.  For instance, \NAME could complement content delivery
 infrastructures~\cite{triukose2011measuring} by efficiently sharing
 between \processes attached to the same CDN server the locations of
 web objects that have already been downloaded. This would further
 improve the containment of web traffic in our networks, and in turns,
 reduce the overall traffic footprint.
-
-
-%% Such an integration would enable us to to perform additional
-%% experiments and observe the gain with respect to the DHT-based
-%% approach that is currently used.
-
-%% In addition to this action, it would make sense to evaluate
-%% the use of \NAME within a concrete storage systems, such as
-%% \underline{I}nter\underline{P}lanetary \underline{F}ile
-%% \underline{S}ystem (IPFS)~\cite{henningsen2020mapping}.  Such an
-%% integration would enable us to to perform additional experiments and
-%% observe the gain with respect to the DHT-based approach that is
-%% currently used.
-
 %
 %% More generally, it can be used in other services in order to share information while mitigating the traffic.
 %% MWhile we use the distance to the closest copy in this paper, It is
@@ -104,9 +57,6 @@ reduce the overall traffic footprint.
 %% reached two distinct cities before delivery.  The predicate can even
 %% be piggypack within the message and so be different for each
 %% message.\TODO{Complete the use-cases}
-
-
-
 
 
 %%% Local Variables: 

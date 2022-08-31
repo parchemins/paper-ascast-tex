@@ -19,7 +19,7 @@ that using local knowledge and scoped broadcast, \processes can still
 reach dynamic consistent partitioning when they are able to detect
 possible blocking conditions in the dissemination of required
 notifications, even in dynamic networks where nodes join, leave, or
-crash. % at any time.
+crash at any time.
 For convenience, Table~\ref{table:notations}
 summarizes the notations used throughout the paper.
 
@@ -184,6 +184,11 @@ lightweight. Unfortunately, removing partitions or introducing dynamic
 network membership increases complexity and costs caused by concurrent
 operations.
 
+\begin{algorithm}[t]
+  \input{input/algoadd.tex}
+  \caption{\label{algo:add}Add-only CP protocol at \Process~$p$.}
+\end{algorithm}
+
 \subsection{Dynamic consistent partitioning}
 \label{subsec:dynamic}
 
@@ -238,12 +243,6 @@ the last, as highlighted by Algorithm~\ref{algo:add}.
 \end{definition}
 
 
-\begin{algorithm}[t]
-  \input{input/algoadd.tex}
-  \caption{\label{algo:add}Add-only CP protocol at \Process~$p$.}
-\end{algorithm}
-
-
 
 \newcommand{\last}{\textup{last}~}
 
@@ -255,12 +254,12 @@ sound propagates in the air before crashing into surrounding walls to
 finally come back altered. Following the principles of scoped
 broadcast as stated in Definition~\ref{def:scoped}, a \process $x$
 that receives a staleness notification $\delta_s$ forwards it only if
-the latter targets its current partition $\alpha_s$. The staleness
-notifications propagate through the network as long as they remain in
-the deleted partition. When they reach the bordering \processes of the
-deleted partition, it creates an echo of bordering partitions that
-will go backward to fill the gap left open by removals using
-forwarding of best (FB) as stated by Theorem~\ref{theo:fb}.
+the latter targets its current partition $\alpha_s$. These messages
+propagate as long as they remain in the deleted partition. When they
+reach the bordering \processes of the deleted partition, it creates an
+echo of bordering partitions that will go backward to fill the gap
+left open by removals using forwarding of best (FB) as stated by
+Theorem~\ref{theo:fb}.
 
 
 \begin{definition}[\label{def:fs}\underline{F}orwarding of
@@ -280,7 +279,7 @@ forwarding of best (FB) as stated by Theorem~\ref{theo:fb}.
 \begin{definition}[\label{def:fbplus}$\textup{FB}^+$: echos]
   In addition to FB, a \process $x$ that receives but does not deliver
   a staleness notification $\delta_{s}$ replies by --~or echoes~-- its
-  best up-to-date delivered message: $(\last D_x = \alpha_{s'}^d
+  best up-to-date delivered message:\\$(\last D_x = \alpha_{s'}^d
   \wedge \delta_{s'} \not\in D_x \wedge d_x(\alpha_{s'}^d)\rightarrow
   r_{xy}(\delta_{s})) \implies r_{xy}(\delta_{s}) \rightarrow
   s_{xy}(\alpha_{s'}^d\oplus^{w_{xy}})$.
