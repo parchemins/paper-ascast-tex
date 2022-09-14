@@ -33,7 +33,7 @@ management of content may crash but are not byzantine.  \Processes can
 reliably communicate through asynchronous message passing to other
 known \processes called neighbors.  We define scoped broadcast as a
 communication primitive that propagates a message around its
-broadcaster within an application-dependant scope.
+broadcaster within an application-dependent scope.
 
 \begin{definition}[Autonomous system]
   An autonomous system is a network comprising nodes and communication
@@ -86,7 +86,7 @@ At any time, a \process can decide to become a \emph{source}, hence
 creating a new partition in the system by executing an \texttt{Add}
 operation. This partition includes at least its source plus
 neighboring \processes that are closer to this source than any other
-one. Such a distance (or \emph{weight}) is application-dependant: in
+one. Such a distance (or \emph{weight}) is application-dependent: in
 the context of maintaining distributed indexes, this would be about
 link latency that \nodes could monitor by aggregating \texttt{ping}s;
 or operational costs when dealing with multiple tenants.
