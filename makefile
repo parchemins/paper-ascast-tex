@@ -19,6 +19,8 @@ camera-ready:
 	mv main.pdf ICA3PP22_paper_2538/
 	rm main.*
 
+	cp SNCS_ProceedingsPaper_LTP_ST_SN_ICA3PP2022.pdf ICA3PP22_paper_2538/
+
 zip:
 	echo DO NOT FORGET TO INCLUDE COPYRIGHT AGREEMENTS IN ICA3PP22 DIRECTORY !!!! 
 	zip -r ICA3PP22_paper_2538.zip ICA3PP22_paper_2538

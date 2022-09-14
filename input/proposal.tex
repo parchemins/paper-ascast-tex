@@ -353,9 +353,10 @@ it belongs to a ephemeral partition $P_c$ that $c$ acknowledges to be
 stale before $b$ does. Therefore, $c$ can detect the possible blocking
 of $\delta_a$ since it acknowledges that its parent $b$ received,
 delivered, and forwarded the stale notification $\alpha_c^1$. In other
-terms, $c$ acknowledges that between the delivery of $\alpha_c^1$ and
-the delivery of $\delta_c$, $b$ blocked any other $\delta$ and
-therefore, it could have blocked $\delta_a$.
+terms, \Node $c$ acknowledges that between the delivery of
+$\alpha_c^1$ and the delivery of $\delta_c$, \Process $b$ blocked all other
+$\delta$ messages and therefore, it could have blocked the most
+important staleness notification: $\delta_a$.
 
 %% \Begincomme{inparaenum}[(i)] \item to detect possibly blocking
 %% conditions that can hinder \item to purge all stale messages from
