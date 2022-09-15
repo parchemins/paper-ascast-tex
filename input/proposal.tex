@@ -420,7 +420,7 @@ important staleness notification: $\delta_a$.
     \wedge \alpha_x = \last D_{y'} \wedge \alpha_x < \alpha_s$ which
     means that a shorter path of delivery $\pi_{xz}'$ exists that
     either forwards appropriate staleness notifications (covered by
-    (I)) or detects its possible blocking as follows:
+    (I)) or detects a possible blocking of the latter as follows:
   \item [(iii) $y'$ in $P_x$ with $y$ as parent] but does not deliver
     the $y$'s last partition for it already delivered the
     corresponding staleness notification: $r_{y'}(\alpha_s) \wedge
@@ -498,7 +498,8 @@ To avoid flooding the system with false positive staleness
 notifications, we reduce the scope of staleness notifications by
 including only downstream \processes. In
 Figure~\ref{fig:undoproblemF}, false positives would generate traffic
-at $c$ and its children if it had any, without impacting $a$ and $b$.
+at $c$ and in turns, to its children if it had any. Nevertheless, this
+would not affect $a$ nor $b$.
 
 \begin{definition}[\label{def:fsplus}$\textup{FS}^+$: forwarding
     staleness downstream] Any \emph{\process} can broadcast a
