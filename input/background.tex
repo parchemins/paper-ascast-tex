@@ -1,14 +1,14 @@
 \section{Motivation and problem}
 \label{sec:background}
 
-
+\input{input/figpartitionintuition.tex} %% positioning
 
 Numerous studies addressed content indexing in geo-distributed
 infrastructures ranging from centralized services to fully
 decentralized approaches~\cite{squirrel}. We advocate for the latter
 where \processes host the service themselves so they do not need to
 request remote -- possibly far away third-party -- entities to
-retrieve their content location.  In this paper, we tackle the content
+retrieve content locations.  More precisely, we propose to consider the content
 indexing issue as a dynamic logical partitioning problem. This section
 motivates our positioning and explains the shortcomings of existing
 implementations.
@@ -38,11 +38,9 @@ needs it. In that regard, \Process~$R$ only needs to disseminate a
 message notifying all other \processes of its new
 content. \Process~$R$ can use uniform reliable
 broadcast~\cite{hadzilacos1994modular} and epidemic
-propagation~\cite{epidemic-protocol} to guarantee that
-\begin{inparaenum}[(i)]
-\item every \process eventually knows the content location
-\item by efficiently using neighbor-to-neighbor communication.
-\end{inparaenum}
+propagation~\cite{epidemic-protocol} to guarantee that every \process
+eventually knows the content location by efficiently using
+neighbor-to-neighbor communication.
 
 \item [Location:]
 
@@ -51,7 +49,7 @@ creates a replica of this content. Similarly to \Process~$R$, it
 notifies other \processes of this new replica. However, to avoid that
 north \processes request its replica, and south \processes request the
 northern one, \processes hosting a replica must add \emph{location
-information} along with their notifications. As consequence, every
+information} along with their notifications. As a consequence, every
 \process eventually knows every replica location and can download from
 its closest host. \underline{R}ed \processes would request
 \Process~$R$ while \underline{g}reen \processes would request
@@ -70,7 +68,7 @@ communication primitive that propagates notifications within a scope
 by evaluating a predicate, starting at its broadcaster (the
 \emph{source}).  In other terms, \processes propagate notifications as
 long as they consider them useful based on location information they
-carry. We call such primitive \emph{scoped broadcast} (see
+carry. We call such a primitive \emph{scoped broadcast} (see
 Section~\ref{subsec:scoped}), for messages transitively reach a subset
 of interconnected \processes (the \emph{scope}). Using this primitive,
 \processes can lock down the traffic of content indexing to relevant
@@ -82,6 +80,7 @@ Every \process ends up with at least one known replica that is its
 closest. The set of interconnected \processes with the same closest
 replica is a \emph{partition}. Every \process belongs to one, and only
 one, partition (see Section~\ref{subsec:consistent}).
+In Figure~\ref{fig:partition_intuitionC}, there are three logical partitions.
 
 %% Contrarily to membership
 %% protocols that choose neighboring \processes to communicate with based
@@ -89,25 +88,34 @@ one, partition (see Section~\ref{subsec:consistent}).
 %% over their neighboring \processes: they cannot add nor remove
 %% communication links.
 
-\item [Dynamic partitioning and adaptive scoped broadcast:]
+\item [Dynamic partitioning:]
 
-Finally, in Figure~\ref{fig:partition_intuitionD}, \Process~$G$
-destroys its replica. Every \processes that belonged to its green
-partition must choose another partition to be in. While it makes sense
-for \Process~$G$ to scoped broadcast its removal, \Process~$B$ and
+In Figure~\ref{fig:partition_intuitionD}, \Process $G$ destroys its
+replica. Every \process that belonged to its green partition must
+choose another partition to be in. While it makes sense for
+\Process~$G$ to scoped broadcast its removal, \Process~$B$ and
 \Process~$R$ cannot afford to continuously advertise their replica to
-fill the gap left open by \Process~$G$. Instead, we want to trigger
-once again scoped broadcast at bordering \processes of red and blue
-partitions. The scope of scoped broadcast changes over receipts by
-\processes. Dynamic partitioning raises additional challenges related
-to concurrent operations where removed partitions would block the
-propagation of other partitions (see Section~\ref{subsec:dynamic}).
-\end{asparadesc}
-
+fill the gap left open by \Process~$G$. A better approach would
+consist in triggering scoped broadcast at bordering \processes of red
+and blue partitions once again. In other words, the scope of scoped broadcast changes
+over receipts by \processes. This dynamic partitioning raises additional
+challenges related to concurrent operations where removed partitions
+could block the propagation of other partitions (see
+Section~\ref{subsec:dynamic}).
+%% \item [Lazy partitioning:]
+%% \TODO{Finally, in Figure~\ref{fig:partition_intuition}, every nodes of
+%%   the system maintains an index to every content. In systems
+%%   comprising billions of content, this could constitute a scalability
+%%   issue. The partitioning protocol should take advantage of boundary
+%%   between autonomous systems in the Internet. For instance, the AS
+%%   from France should not flood the AS from Spain unless the latter
+%%   starts to host a replica. In addition, when the system removes its
+%%   last source, it should stop receiving messages from other ASes
+%%   designed to maintain the closest partition.}
 Next Section details the properties of scoped broadcast and dynamic
-partitioning in dynamic networks, and provides an implementation
-called \NAME along with its complexity.
-
+partitioning, % in dynamic networks,
+and provides an implementation called \NAME.% along with its complexity.
+\end{asparadesc}
 
 %% \subsection*{Disseminate localization information}
 %% Enabling the accessibility of content without prior requests implies

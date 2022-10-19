@@ -1,28 +1,29 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[runningheads]{llncs}
 
+\usepackage[T1]{fontenc}
 %\usepackage{lmodern}
 %\usepackage[nocompress]{cite}
 \usepackage{hyperref}
 %% url
 \usepackage{url}
 %% maths
-\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{amsmath,amssymb}
+\usepackage{bm,centernot}
 %% \usepackage{amsfonts}
 %% \usepackage{amsthm}
 
 %% algorithms
 \usepackage{algorithmicx}
 \usepackage[ruled, linesnumbered, noend]{algorithm2e}
+\usepackage{multicol}
 
 %% images
 \usepackage{graphicx}
 \usepackage[dvipsnames]{xcolor}
 %% inparaenum
 \usepackage{paralist}
-
 %% tables
-\usepackage{booktabs}
-\usepackage{multirow}
+\usepackage{booktabs, tabularx, multirow}
 %% figures
 %\usepackage{caption}
 \usepackage{subfig}
@@ -33,27 +34,33 @@
 \usepackage{epsfig}
 
 \usepackage{xspace}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
 
+%% To easily change name if it does not fit
 \newcommand{\NAME}[0]{\mbox{AS-cast}\xspace}
 \newcommand{\NAMEB}[0]{\mbox{S-cast}\xspace}
+
 \newcommand{\TODO}[1]{\textcolor{red}{#1}}
 \newcommand{\REF}[0]{\textcolor{purple}{REF}\xspace}
 
-\newcommand{\PA}[0]{SkyBlue}
+\newcommand{\PA}[0]{RoyalBlue} %% used to be skyblue
 \newcommand{\PB}[0]{BurntOrange}
-\newcommand{\PC}[0]{YellowGreen}
-\newcommand{\PD}[0]{YellowGreen}
-\newcommand{\PH}[0]{Orchid}
+\newcommand{\PC}[0]{Green}
+\newcommand{\PD}[0]{\PC}
 \newcommand{\WRONG}[0]{red!75}
 
-\newtheorem{problem}{Problem Statement}
-\newtheorem{definition}{Definition}
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}{Corollary}
-\newcommand{\eventually}{\square\,}
+% \newtheorem{problem}{Problem Statement}
+% \newtheorem{definition}{Definition}
+%% \newtheorem{lemma}{Lemma}
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{corollary}{Corollary}
+\newcommand{\eventually}{\Diamond\,}
 \newcommand{\ie}{{i.e.,}\xspace}
 \newcommand{\eg}{{e.g.,}\xspace}
 
+%% to easily adapt depending on community
 \newcommand{\process}{node\xspace}
 \newcommand{\processes}{nodes\xspace}
 \newcommand{\Process}{Node\xspace}
@@ -63,17 +70,25 @@
 \newcommand{\Node}{\Process}
 \newcommand{\Nodes}{\Processes}
 
+\newcommand{\SCALE}{1} %% used in figures, forces renewcommand for consistent behavior
+
 \title{\NAME: Lock Down the Traffic\\of Decentralized Content Indexing at the Edge}
-%% \NAME: Adaptive scoped broadcast for the edge
+\titlerunning{Lock Down the Traffic of Decentralized Content Indexing at the Edge}
 
-%\author{Adrien L{\`e}bre, Brice N{\'e}delec, Alexandre Van Kempen
-%% \author{\IEEEauthorblockN{Anonymous}
-%%  \IEEEauthorblockA{\textit{Affiliation}, City, Country\\email address or ORCID}
-%% }
 
-\author{Anonymous}
+\author{Adrien Lebre\inst{1} \and Brice Nédelec\inst{1} \and Alexandre Van Kempen\inst{2}}
+\authorrunning{A. Lebre et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+
+\institute{Nantes Université, École Centrale Nantes, IMT Atlantique, CNRS, INRIA, LS2N, UMR 6004, F-44000
+  Nantes, France \email{\{adrien.lebre, brice.nedelec\}@ls2n.fr}\\
+  \and Qarnot computing, 40/42 rue Barbès 92120 Montrouge, France \email{alexandre.vankempen@qarnot-computing.com}}
+
+
 
 \begin{document}
+
 % \proceedings{}
 %\copyright{Adrien l{\'ebre}, Brice N{\'e}delec, Alexandre Van Kempen}
 
@@ -87,11 +102,12 @@
 \input{input/experiments.tex}
 \input{input/related_work.tex}
 \input{input/conclusion.tex}
-%% \input{input/acknowledgment.tex}
 
-\bibliographystyle{plainurl}
-\bibliography{bibliographie}
-  
+\input{input/acknowledgements.tex}
+
+\bibliographystyle{splncs04}
+\bibliography{compact_bibliographie}
+
 \end{document}
 
 %%% Local Variables:

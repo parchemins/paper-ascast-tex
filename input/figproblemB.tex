@@ -1,5 +1,5 @@
 
-\begin{tikzpicture}[scale=0.7]
+\begin{tikzpicture}[scale=0.65]
 
   \thickmuskip=0mu
   \medmuskip=0mu
@@ -43,10 +43,17 @@
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
+<<<<<<< HEAD
   \draw (-\X+5pt, 5pt) node[above, font=\small]{$\textcolor{\PA}{\ADD_a} \rightarrow \DEL_a$};
   \draw (\X, 5pt) node[above, font=\small]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d$};
   \draw (0, 5pt) node[above, font=\small]{$\textcolor{\PA}{\ADD_a^{2}}$};
   \draw (0pt, \Y -5pt) node[below, font=\small]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d \vphantom{\ADD_a^3}$};
+=======
+  \draw (-\X+5pt, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a} \rightarrow \DEL_a$};
+  \draw (\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d$};
+  \draw (0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a^{2}}$};
+  \draw (0pt, \Y -5pt) node[below, font=\scriptsize]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d \vphantom{\ADD_a^3}$};
+>>>>>>> master
 
 
 \end{tikzpicture}

@@ -1,0 +1,12 @@
+
+
+Detection triggers forwarding of staleness downstream which
+completes the case study of Lemma~\ref{lem:detector} by ensuring
+that, when a source broadcasts its staleness notification, all
+\processes that belong to its partition eventually deliver such a
+staleness notification. All downstream bordering \processes also
+eventually receive such a staleness notification and echo back their
+best delivered message. This triggers another competition as in
+Theorem~\ref{theo:fb} for the \processes that delivered the
+staleness notification.
+

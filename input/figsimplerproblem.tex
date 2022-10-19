@@ -1,0 +1,47 @@
+
+\begin{figure*}[t]
+  \renewcommand{\SCALE}{0.8}
+
+  \newcommand{\SNODE}{\scriptsize}
+  \newcommand{\SMSG}{\tiny}
+  \newcommand{\OACK}{0.5}
+  
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+
+  
+  \newcommand\X{41pt}
+  \newcommand\Y{-40pt}
+ 
+  \newcommand{\LEFT}{\triangleleft}
+  \newcommand{\RIGHT}{\triangleright}
+  
+  \begin{center}
+    \subfloat[Part A][\label{fig:problemA}Both $a$ and $c$ become sources.
+      $w_{ab} = 2$; $w_{bc} = 1$.]{\input{input/figsimplerproblemA.tex}}
+    \hspace{2pt}
+    \subfloat[Part B][\label{fig:problemB}$a$ and $c$ delete their partition while $b$ delivers and forwards $\alpha_a$.]
+             {\input{input/figsimplerproblemB.tex}}
+    \hspace{2pt}
+    \subfloat[Part C][\label{fig:problemC}$b$ blocks the only transiting
+      $\delta_a$ while $b$ delivers and forwards $\alpha_c$.]
+             {\input{input/figsimplerproblemC.tex}}
+    \hspace{2pt}
+    \subfloat[Part D][\label{fig:problemD}$a$ receives, delivers, and forwards $\alpha_c^3$.]
+    %$\alpha_c^3$ reaches $a$ that delivers it.]
+             {\input{input/figsimplerproblemD.tex}}
+    \hspace{2pt}
+    \subfloat[Part E][\label{fig:problemE}$a$ receives, delivers, and forwards $\delta_c$.]
+    %$\delta_c$ reaches $a$ that delivers it.]
+             {\input{input/figsimplerproblemE.tex}}
+    \hspace{2pt}
+    \subfloat[Part F][\label{fig:problemF}$c$ is stuck in a stale partition $P_a$.]%$c$ stays forever in a stale partition: $P_a$.]
+             {\input{input/figsimplerproblemF.tex}}
+  \end{center}
+  \caption{\label{fig:problem}% Even in the simplest scenarios,
+    The naive propagation of messages is
+    insufficient to guarantee consistent partitioning. If $c$ had
+    children, they would stay in the wrong partition too.}
+\end{figure*}
+

@@ -5,17 +5,17 @@
 Content indexing services in geo-distributed infrastructures allow
 \processes to retrieve specific content while leveraging the
 advantages of replication. These systems mostly rely on dedicated
-location services host by possibly remote third-party \processes; but
-cutting out the middleman requires that each \process maintains its
-own index in a decentralized fashion.
-% This section reviews these
-% approaches.
+location services hosted by possibly remote third-party \processes;
+but cutting out the middleman requires that each \process maintains
+its own index in a decentralized
+fashion. Table~\ref{table:relatedwork} summarizes the pros and cons of
+state-of-the-art approaches.
 
 \begin{asparadesc}
 \item [Third-party:]
 
-Dedicated services possibly hosted by remote third-party \processes
-are popular, for they propose the simplest mean to deploy such
+Dedicated services % possibly  hosted by remote third-party \processes
+are popular, for they propose the simplest mean to deploy such a
 service. They must maintain
 \begin{inparaenum}[(i)]
 \item the list of current replicas along with their respective
@@ -24,9 +24,10 @@ service. They must maintain
   requesting \process.
 \end{inparaenum}
 
+
 \noindent A central server that registers both these information
 facilitates the computation, for it gathers all knowledge in one
-place~\cite{snamp, p2p-oracle, fogstore, p2p-alto}. However, it comes with
+place~\cite{snamp,p2p-oracle,fogstore,p2p-alto}. However, it comes with
 well-known issues such as load balancing, or single point of failure.
 %% Numerous solutions
 %% maintain an index of all replica locations on a centralized
@@ -35,34 +36,35 @@ well-known issues such as load balancing, or single point of failure.
 %% that are even magnified in an Edge context.
 
 \noindent Distributing this index among \processes circumvents these
-issues~\cite{voronet, ipfs, mdht, squirrel, coin_19}, but still raises
-locality issues where \processes
+issues~\cite{voronet,ipfs,mdht,squirrel,triukose2011measuring,coin_19}, but still raises locality issues where \processes
 \begin{inparaenum}[(i)]
-\item request to a possibly far away location service the content
+\item request to possibly far away location services the content
   location, and then
-\item request the actual content from far away replicas.
+\item request the actual content from possibly far away replicas.
 \end{inparaenum}
 For instance, using \underline{d}istributed \underline{h}ash
-\underline{t}ables (DHT)~\cite{ipfs, mdht, squirrel}, each \process
+\underline{t}ables (DHT)~\cite{ipfs,mdht,squirrel}, each \process
 stores a part of the index defined by an interval between hash values.
-The hash values are the keys to retrieve the associated content
-location.  Before downloading any content, a \node asks for its
-location using its key. After a series of round-trips between DHT
-servers possibly distant from each others, the \node gets a list of
-available replicas. Contrarily to \NAME, such services do not ensure
-to include the closest replica.
+Hash values are keys to retrieve the associated content location.
+Before downloading any content, a \node requests its location using
+its key. After round-trips between possibly distant DHT servers, the
+\node gets available replicas. Contrarily to \NAME, such services do
+not ensure to include the closest replica.
+
+\input{input/tablerelatedwork.tex}
+
 
 \noindent In addition, they often do not include distance information
 along with replica location. Determining where resides the closest
 replica for every requesting \process necessarily involves some
 knowledge about the \emph{current} topology.  Maintaining a consistent
 view of an ever changing topology across a network is inherently
-complicated~\cite{topology-discovery, ospf}.
+complicated~\cite{topology-discovery,ospf}.
 %%  As for the index, this knowledge about the topology can be either
 %% centralized~\cite{topology-discovery} or distributed like in
 %% routing protocols such as \underline{O}pen \underline{S}hortest
 %% \underline{P}ath \underline{F}irst (OSPF)~\cite{ospf}.
-As consequence, the requesting \node ends up downloading from multiple
+As a consequence, the requesting \node ends up downloading from multiple
 replica hosts, yet only keeping the fastest answer. \Processes either
 waste network resources, or face lower response time.
 
@@ -104,36 +106,32 @@ as their respective distance in order to rank them.
 locations along with distance information carried into messages, each
 \node easily determine where the closest copy of specific content
 resides, without contacting any remote
-service. \underline{C}onflict-\underline{f}ree \underline{r}eplicated
+service. In a routing context, distance-vector routing protocols such as BGP or OSPF~\cite{ospf} similarly broadcast information to all other nodes to infer a topology map of the network and derive routing tables.
+\underline{C}onflict-\underline{f}ree \underline{r}eplicated
 \underline{d}atatype (CRDT)~\cite{shapiro2011crdts} for set data
 structures could also implement such a location service. \Processes
 would eventually have a set of all replicas, assuming eventual
 delivery of messages.
 \noindent Such solutions imply that every \process receives every
-message, which contradicts with the principles of Edge infrastructures
-that aim at reducing the volume of data passing through the
-network. On the opposite, each \process running \NAME only registers
-its closest replica. This allows \NAME to use scoped broadcast as a
-communication primitive to lock down the traffic generated by content
-indexing based on distances.
+message, which contradicts the principles of Edge infrastructures that
+aim at reducing the volume of data passing through the network. On the
+opposite, each \process running \NAME only registers its closest
+replica. This allows \NAME to use scoped broadcast as a communication
+primitive to lock down the traffic generated by content indexing based
+on distances.
 % Such solutions inherently imply that every node will
 % eventually receive all messages, contrary to \NAME.
 
 \item [Scoped flooding:]
-
-Some state-of-the-art approaches confine the dissemination of messages
-to interested \processes too.
-% \item [Membership protocols:]
-
+  Some approaches also confine the dissemination of messages.
 \noindent Distance-based membership protocols such as
 T-Man~\cite{t-man} make \processes converge to a specific network
-topology depending on targeted properties. They periodically
-communicate with their neighbors to compare their state. Following
-this exchange, they add and remove communication links to other
-\processes. Over exchanges, they converge towards a topology ensuring
-the targeted properties.  While at first glance membership protocols
-and \NAME could share common preoccupations, \NAME does not aim at
-building any topology and never modifies neighbors of \processes.
+topology depending on targeted properties. Following periodic
+exchanges, they add and remove communication links to other \processes
+to converge towards a topology ensuring the targeted properties.
+While membership protocols and \NAME share common preoccupations,
+\NAME does not aim at building any topology and never modifies
+neighbors of \processes.
 
 %% In
 %% addition, distance-based membership protocols often rely on random
@@ -155,14 +153,20 @@ building any topology and never modifies neighbors of \processes.
 
 \noindent The most closely related approaches to \NAME come from
 \underline{i}nformation-\underline{c}entric \underline{n}etworking
-(ICN)~\cite{garcia-lopez, hemmati2015namebased}. They periodically
-advertise their cache content, and advertisements stop as soon as they
-reach uninterested \processes. However their operation requires that
+(ICN)~\cite{garcia-lopez,hemmati2015namebased} and distributed
+clustering~\cite{sohier2012physarum}. The sources advertise themselves
+periodically. Advertisements either stop as soon as they reach
+uninterested \processes~\cite{garcia-lopez,hemmati2015namebased}, or
+propagate through most likely interested
+\processes~\cite{sohier2012physarum}. However their cyclic operation
+requires that
 \begin{inparaenum}[(i)]
 \item they constantly generate traffic even in quiescent systems where
   \processes do not add nor destroy replicas; and 
-\item they define physical-clock-based timeouts the value of which
-  depends on network topology properties such as network diameter.
+\item they either operate in synchronous
+  systems~\cite{barjon2014maintaining,sohier2012physarum} or must define
+  physical-clock-based timeouts the value of which depends on network
+  topology properties such as network diameter~\cite{garcia-lopez,hemmati2015namebased}.
   %also incur an overhead even in quiet contexts without any update.
   % Moreover, they necessarily rely on physical timeouts
   Unfitting timeouts lead to premature removals of live replicas; or
@@ -170,8 +174,8 @@ reach uninterested \processes. However their operation requires that
   replica is live while it was destroyed.
 \end{inparaenum}
 On the opposite, \NAME quickly informs each \process of its closest
-replica even in large networks; and when the system becomes quiescent,
-\NAME has no overhead.
+replica even in large and dynamic networks with asynchronous
+communications; and has no overhead in quiescent systems.
 
 \end{asparadesc}
 

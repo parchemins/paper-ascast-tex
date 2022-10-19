@@ -1,0 +1,25 @@
+
+\begin{tikzpicture}[scale=\SCALE]
+
+    \draw [opacity=0] (-1.5*\X, 0) -- (1.5*\X, 0); %% spacing
+    
+    \draw (-\X + 5pt, 0) --
+    node[below=-0.3em, font=\SMSG]{$\LEFT \textcolor{\PC}{\alpha_c^3}$} %% b - a
+    (0 - 5pt, 0);
+    
+    \draw [<->] (0 +5pt, 0) --
+    node[opacity=\OACK, above=-0.3em, font=\SMSG]{$\alpha_c^2 \RIGHT$~ ~ ~}
+    node[below=-0.3em, font=\SMSG]{$\LEFT \delta_c \vphantom{\alpha^1}$~ ~ ~ }
+    node[opacity=\OACK, below=-0.3em, font=\SMSG]{~ ~ ~ $\LEFT \alpha_a^4$}
+    (\X -5pt, 0); %% b - c
+    
+    \draw[fill=white] (-\X, 0) node{\textcolor{\PA}{$\bm{a}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+    \draw[fill=white] (0, 0) node{\textcolor{\PC}{$\bm{b}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+    \draw[fill=white] (\X, 0) node{\textcolor{\PA}{$\bm{c}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+    
+    \draw (-\X, -6pt) node[below, font=\SNODE]{$\textcolor{\PA}{\alpha_a^0}$};
+    \draw (  0,  6pt) node[above, font=\SNODE]{$\textcolor{\PA}{\alpha_a^2} \rightarrow \textcolor{\PC}{\alpha_c^1}$};
+    \draw ( \X, -6pt) node[below, font=\SNODE]{$\textcolor{\PC}{\alpha_c}\vphantom{\alpha_a^3} \rightarrow \delta_c \rightarrow \textcolor{\PA}{\alpha_a^3}$};
+    
+
+\end{tikzpicture}

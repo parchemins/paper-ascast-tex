@@ -1,19 +1,32 @@
 
-\begin{figure*}
+\begin{figure*}[t]
+  \renewcommand{\SCALE}{0.8} %% scale of sub figures
+  \newcommand\X{38pt}
+  \newcommand\Y{-40pt}
+  
+  \newcommand{\SMSG}{\tiny} %% font size of messages
+  \newcommand{\OACK}{0.5} %% opacity of acknowledgement alpha messages
+
+  \newcommand{\LEFT}{\triangleleft}
+  \newcommand{\RIGHT}{\triangleright}
+  
+  \thickmuskip=0mu %% to remove annoying math spacing from caption
+  \medmuskip=0mu
+  \thinmuskip=0mu
   \begin{center}
-    \subfloat[Part A][\label{fig:addA}Both \Process~$a$ and \Process~$d$
+    \subfloat[Part A][\label{fig:addA}Both $a$ and $d$
       become sources.  $w_{ab} = 2$; $w_{bc} = w_{bd} = 1$; $w_{cd} =
       3$.]  {\input{input/figaddA.tex}}
-    \hspace{3pt}
-    \subfloat[Part B][\label{fig:addB}Messages transit through communication
+    \hspace{1pt}
+    \subfloat[Part B][\label{fig:addB}Messages transit through %communication
       links and carry increasing weights.]{\input{input/figaddB.tex}}
-    \hspace{3pt}
-    \subfloat[Part C][\label{fig:addC}\Process~$b$ and
-      \Process~$c$ receive, deliver, and forward $\alpha_{d}^{1}$ and
+    \hspace{1pt}
+    \subfloat[Part C][\label{fig:addC}$b$ and
+      $c$ receive, deliver, and forward $\alpha_{d}^{1}$ and
       $\alpha_d^3$ respectively.]{\input{input/figaddC.tex}}
-    \hspace{3pt}
+    \hspace{1pt}
     \subfloat[Part D][\label{fig:addD}$a$ and
-      $b$ discarded their received messages. $c$ still improved with $\alpha_d^2$.]
+      $b$ discarded their received messages. $c$ improved with $\alpha_d^2$.]
     {\input{input/figaddD.tex}}
     \caption{\label{fig:add}Efficient consistent partitioning using
       \NAMEB. Partition~$P_a$ includes $a$ while Partition~$P_d$

@@ -1,20 +1,27 @@
 \SetKwProg{Function}{func}{}{}
 
+\SetInd{0.2em}{1em}
+
 \small
 
 \DontPrintSemicolon
 \LinesNumbered
 
-\Function{\textup{edgeUp($q$)} \tcp*[f]{new link to $q$}}  {
-    \If {$A_{s, c}^{d, \pi} \neq \alpha_{\infty, 0}^{\infty, \varnothing}$} {
-         \textup{send$_q$($\alpha_{s, c}^{d + W_{pq}, \pi \cup p}$)}
-         \tcp*[r]{\label{line:compete}\footnotesize{compete with $q$}}}
+% \begin{multicols}{2}  
+\Function(\tcp*[f]{new link to $q$}){\textup{onEdgeUp($q$)}}  {
+    \lIf {$A_{\pi}^{d} \neq \alpha_\varnothing^\infty$} {
+         send$_q$($A_{\pi}^{d} \oplus ^{w_{pq}}$)
+    }
 }
 
-\BlankLine
+% \BlankLine
 
-\Function{\textup{edgeDown($q$)} \tcp*[f]{link to $q$ removed}} {
-  \If {$q = \pi[|\pi| - 1]$} {
-    \textup{receiveDel($q$, $\delta_{s, c}^{\pi}$)} \tcp*[r]{\footnotesize IV: $\delta?$ propagation}
+\Function(\tcp*[f]{link to $q$ removed}){\textup{onEdgeDown($q$)}} {
+  \lIf {\textup{isParent($q$)}} {
+       receiveDel($q$, $\delta_{p, V[p]+1}$)
   }
 }
+
+% \end{multicols}
+
+% \BlankLine

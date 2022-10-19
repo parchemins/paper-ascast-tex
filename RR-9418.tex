@@ -10,12 +10,13 @@
 %% url
 \usepackage{url}
 %% maths
-\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{amsmath,amssymb,amsthm,bm,centernot}
 %% \usepackage{amsfonts}
 
 %% algorithms
 \usepackage{algorithmicx}
 \usepackage[ruled, linesnumbered, noend]{algorithm2e}
+\usepackage{multicol}
 
 %% images
 \usepackage{graphicx}
@@ -24,8 +25,7 @@
 \usepackage{paralist}
 
 %% tables
-\usepackage{booktabs}
-\usepackage{multirow}
+\usepackage{booktabs, tabularx, multirow}
 %% figures
 %\usepackage{caption}
 \usepackage{subfig}
@@ -36,6 +36,9 @@
 \usepackage{epsfig}
 
 \usepackage{xspace}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
 
 \newcommand{\NAME}[0]{\mbox{AS-cast}\xspace}
 \newcommand{\NAMEB}[0]{\mbox{S-cast}\xspace}
@@ -51,6 +54,7 @@
 
 \newtheorem{problem}{Problem Statement}
 \newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
 \newcommand{\eventually}{\square\,}
@@ -65,6 +69,8 @@
 \newcommand{\nodes}{\processes}
 \newcommand{\Node}{\Process}
 \newcommand{\Nodes}{\Processes}
+
+\newcommand{\SCALE}{1} %% used in figures, forces renewcommand for consistent behavior
 
 %% RR %%
 
@@ -172,6 +178,19 @@
 
 \RRequipe{STACK}
 
+\RRnote{\TODO{This preprint has not undergone peer review (when
+    applicable) or any post-submission improvements or
+    corrections. The Version of Record of this contribution is
+    published in [insert volume title], and is available online at
+    https://doi.org/[insert DOI]}}
+
+%% \RRnote{This version of the contribution has been accepted for
+%%   publication, after peer review (when applicable) but is not the
+%%   Version of Record and does not reflect post-acceptance improvements,
+%%   or any corrections. The Version of Record is available online at:
+%%   http://dx.doi.org/[insert DOI]. Use of this Accepted Version is
+%%   subject to the publisher’s Accepted Manuscript terms of use
+%%   \url{https://www.springernature.com/gp/open-research/policies/accepted-manuscript-terms}}
 
 % \title{\NAME: Lock Down the Traffic\\of Decentralized Content Indexing at the Edge}
 %% \NAME: Adaptive scoped broadcast for the edge
@@ -186,6 +205,7 @@
 %\copyright{Adrien l{\'ebre}, Brice N{\'e}delec, Alexandre Van Kempen}
 
 \RRNo{9418}
+
 \makeRR
 
 %% \input{input/abstract.tex}

@@ -1,5 +1,5 @@
 
-\begin{tikzpicture}[scale=0.7]
+\begin{tikzpicture}[scale=0.65]
 
   \newcommand\X{50pt}
   \newcommand\Y{-50pt}
@@ -47,10 +47,17 @@
   node[color=\PA]{$\bm{d}$} +(-5pt, -5pt)
   rectangle +(5pt, 5pt);
   
+<<<<<<< HEAD
   \draw (-\X+5pt, 5pt) node[above, font=\small]{$\textcolor{\PA}{\ADD_a} \rightarrow \DEL_a$};
   \draw (\X+5pt, 5pt) node[above, font=\small]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d \rightarrow \textcolor{\PA}{\ADD_a^3}$}; %% c
   \draw (0, 5pt) node[above, font=\small]{$\textcolor{\PA}{\ADD_a} \rightarrow \textcolor{\PD}{\ADD_d^1}$}; %% b
   \draw (0pt, \Y -5pt) node[below, font=\small]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d \rightarrow \textcolor{\PA}{\ADD_a^3}$}; %% d
+=======
+  \draw (-\X+5pt, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a} \rightarrow \DEL_a$};
+  \draw (\X+5pt, 5pt) node[above, font=\scriptsize]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d \rightarrow \textcolor{\PA}{\ADD_a^3}$}; %% c
+  \draw (0, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a} \rightarrow \textcolor{\PD}{\ADD_d^1}$}; %% b
+  \draw (0pt, \Y -5pt) node[below, font=\scriptsize]{$\textcolor{\PD}{\ADD_d} \rightarrow \DEL_d \rightarrow \textcolor{\PA}{\ADD_a^3}$}; %% d
+>>>>>>> master
 
 
 \end{tikzpicture}

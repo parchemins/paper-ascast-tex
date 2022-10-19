@@ -1,18 +1,37 @@
 
-\begin{figure}
+\begin{figure}[t]
+  \renewcommand{\SCALE}{0.8}
+
+  \newcommand\X{42pt}
+  \newcommand\Y{-40pt}
+
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+
+  \newcommand\INVISIBLESPACING{1.55}
+  \newcommand\ADD{\alpha}
+  \newcommand\DEL{\delta}
+
+  \newcommand{\OACK}{0.5} %% opacity of acknowledgement alpha messages
+
+  
+  \newcommand{\LEFT}{\triangleleft}
+  \newcommand{\RIGHT}{\triangleright}
+  
   \begin{center}
-    \subfloat[Part A][\label{fig:delA}\Process~$a$ deletes its
-      partition.  It notifies all \processes that belong to its
-      partition using \NAMEB.]{\input{input/figdelA.tex}}
-    \hspace{10pt}
-    %
-    \subfloat[Part B][\label{fig:delB}$\delta$s stop as soon as they
-      encounter another partition. \Process~$b$ answers with its
-      partition.]{\input{input/figdelB.tex}}
+    \subfloat[Part A][\label{fig:delA}$a$ deletes its partition. It
+      notifies all \processes that belong to its
+      partition.]{\input{input/figdelA.tex}}
+    \hspace{3pt}
+    \subfloat[Part B][\label{fig:delB}$\delta$ stops when it encounters
+      another partition. $b$ answers with its partition.]{\input{input/figdelB.tex}}
+    \hspace{3pt}
+    \subfloat[Part C][\label{fig:delC}$a$ receives, delivers, and forwards the message $\alpha_d^3$.
+      Every node belongs to $P_d$.]{\input{input/figdelC.tex}}
   \end{center}
   \caption{\label{fig:del}Efficient removal of a partition using
-    \NAMEB. \Process~$a$ eventually knows that it belong to Partition
-    $P_d$.}
+    scoped broadcast.} % $a$ eventually acknowledges that it belongs to $P_d$ with $\alpha_d^3$ echoing.}
 \end{figure}
 
 %%% Local Variables: 

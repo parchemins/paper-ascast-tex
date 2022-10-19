@@ -1,5 +1,5 @@
 
-\begin{tikzpicture}[scale=0.7]
+\begin{tikzpicture}[scale=0.65]
 
   \thickmuskip=0mu
   \medmuskip=0mu
@@ -14,7 +14,7 @@
 
   
   \draw (-\X + 5pt, 0) --
-  node[above=-0.3em,font=\tiny]{$\DEL_a \cdot \textcolor{\PA}{\ADD_{a}^{2}} \rightarrow$}
+  node[above=-0.3em,font=\tiny]{$\textcolor{\PA}{\ADD_{a}^{2}} \rightarrow$}
   (0 - 5pt, 0); %% b - a 
 
   \draw (0 +5pt, 0) --
@@ -24,21 +24,26 @@
   %  node[opacity=1, above=-0.3em, font=\tiny, sloped]{$\ADD_a^{2.5} \rightarrow$}
   (0, \Y + 5pt); %% b - d
   \draw (0, \Y + 5pt) --
-  node[above=-0.3em, font=\tiny, sloped]{$\DEL_d\cdot\textcolor{\PD}{\ADD_d^1} \rightarrow$}
+  node[above=-0.3em, font=\tiny, sloped]{$\textcolor{\PD}{\ADD_d^1} \rightarrow$}
   (0, 0 - 5pt);  %% d - b
   
   \draw (\X + 3pt, 0 - 5pt) --
-  node[above=-0.3em, font=\tiny, sloped]{$\DEL_d\cdot\textcolor{\PD}{\ADD_{d}^{3}} \rightarrow$}
+  node[above=-0.3em, font=\tiny, sloped]{$\textcolor{\PD}{\ADD_{d}^{3}} \rightarrow$}
   (0 + 5pt, \Y - 3pt); %% c - d
 
 
   
-  \draw[fill=white] (-\X, 0) node{$\bm{a}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
+  \draw[fill=white] (-\X, 0) node{\textcolor{\PA}{$\bm{a}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);  
   \draw[fill=white] (0, 0) node{$\bm{b}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   \draw[fill=white] (\X, 0) node{$\bm{c}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
-  \draw[fill=white] (0, \Y) node{$\bm{d}$} +(-5pt, -5pt) rectangle +(5pt, 5pt);
+  \draw[fill=white] (0, \Y) node{\textcolor{\PC}{$\bm{d}$}} +(-5pt, -5pt) rectangle +(5pt, 5pt);
   
+<<<<<<< HEAD
   \draw (-\X, 5pt) node[above, font=\small]{$\textcolor{\PA}{\ADD_a} \rightarrow \DEL_a$};
   \draw ( 0pt, \Y -5pt) node[below, font=\small]{$\textcolor{\PC}{\ADD_d} \rightarrow \DEL_d \vphantom{\ADD_a^3}$};
+=======
+  \draw (-\X, 5pt) node[above, font=\scriptsize]{$\textcolor{\PA}{\ADD_a}$};
+  \draw ( 0pt, \Y -5pt) node[below, font=\scriptsize]{$\textcolor{\PC}{\ADD_d}\vphantom{\ADD_a^3}$};
+>>>>>>> master
 
 \end{tikzpicture}

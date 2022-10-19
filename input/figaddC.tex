@@ -1,36 +1,24 @@
 
-\begin{tikzpicture}[scale=0.8]
+\begin{tikzpicture}[scale=\SCALE]
 
-  \thickmuskip=0mu
-  \medmuskip=0mu
-  \thinmuskip=0mu
-  
-  \newcommand\X{50pt}
-  \newcommand\Y{-50pt}
-
-  \newcommand\ADD{\alpha}
-
-
-  
   \draw (-\X + 5pt, 0) --
-  node[above=-0.3em, right=-0.3em, above right, font=\tiny]{$\textcolor{\PA}{\ADD_a^2} \rightarrow$}
-  node[below=-0.3em, font=\tiny]{$\leftarrow \textcolor{\PD}{\ADD_d^3}$}
+  node[above=-0.3em, right=-0.5em, above right, font=\SMSG]{$\textcolor{\PA}{\alpha_a^2} \RIGHT$}
+  node[below=-0.3em, font=\SMSG]{$\LEFT \textcolor{\PD}{\alpha_d^3}$}
   (0 - 5pt, 0); %% b - a 
 
   \draw (0 +5pt, 0) --
-  node[above=-0.3em, font=\tiny]{$\leftarrow \textcolor{\PD}{\ADD_d^4}$}  
-  node[below=-0.3em, font=\tiny]{$\textcolor{\PD}{\ADD_d^2} \rightarrow$}  
+  node[above=-0.3em, font=\SMSG]{$\LEFT \textcolor{\PD}{\alpha_d^4}$}  
+  node[below=-0.3em, font=\SMSG]{$\textcolor{\PD}{\alpha_d^2} \RIGHT$}  
   (\X -5pt, 0); %% b - c
 
   \draw[opacity=0] (0, 0 - 5pt) --
-  % node[opacity=1, above=-0.3em, font=\tiny, sloped]{$\ADD_{c}^{2} \rightarrow$}
+  node[opacity=\OACK, above=-0.3em, sloped, font=\SMSG]{$\alpha_d^2 \RIGHT$}
   (0, \Y + 5pt); %% b - d
-  \draw (0, \Y + 5pt) --
-  % node[above=-0.3em, font=\tiny, sloped]{$\ADD_{c}^{2} \rightarrow$}
+  \draw[->] (0, \Y + 5pt) --
   (0, 0 - 5pt);  %% d - b
   
-  \draw (\X + 3pt, 0 - 5pt) --
-  % node[above=-0.3em, sloped, font=\tiny]{$\ADD_{c}^{2} \rightarrow$}
+  \draw[<-] (\X + 3pt, 0 - 5pt) --
+  node[opacity=\OACK, below=-0.3em, sloped, font=\SMSG]{$\LEFT \alpha_d^6$}
   (0 + 5pt, \Y - 3pt); %% c - d
 
 
@@ -48,9 +36,9 @@
   node[color=\PC]{$\bm{d}$}
   +(-5pt, -5pt) rectangle +(5pt, 5pt);
 
-  \draw ( 0, 5pt) node[above, font=\small, color=\PD]{$\ADD_d^1$}; % b
-  \draw ( \X, 5pt) node[above, font=\small, color=\PD]{$\ADD_d^3$}; % c
-  \draw (-\X, 5pt) node[above, font=\small, color=\PA]{$\ADD_a^0$}; % a
-  \draw (-5pt, \Y) node[left, font=\small, color=\PD]{$\ADD_d^0$}; % d
+  \draw ( 0, 5pt) node[above, font=\small, color=\PD]{$\alpha_d^1$}; % b
+  \draw ( \X, 5pt) node[above, font=\small, color=\PD]{$\alpha_d^3$}; % c
+  \draw (-\X, 5pt) node[above, font=\small, color=\PA]{$\alpha_a^0$}; % a
+  \draw (-5pt, \Y) node[left, font=\small, color=\PD]{$\alpha_d^0$}; % d
   
 \end{tikzpicture}

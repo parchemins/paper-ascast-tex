@@ -1,0 +1,46 @@
+
+\begin{figure*}[t]
+  \renewcommand{\SCALE}{0.8}
+
+  \thickmuskip=0mu
+  \medmuskip=0mu
+  \thinmuskip=0mu
+
+  \newcommand\X{42pt}
+  \newcommand\Y{-40pt}
+
+  \newcommand{\OACK}{0.5}
+  \newcommand{\SNODE}{\scriptsize}
+  \newcommand{\SMSG}{\tiny}
+  
+  \newcommand{\LEFT}{\triangleleft}
+  \newcommand{\RIGHT}{\triangleright}
+  
+  \begin{center}
+    \subfloat[Part A][\label{fig:undoproblemA}$a$ and $c$ become sources.
+      $w_{ab} = 2$; $w_{bc} = 1$.]{\input{input/figundoproblemA.tex}}
+    \hspace{2pt}
+    \subfloat[Part B][\label{fig:undoproblemB}$c$ deletes its partition but $a$ does not.
+      $b$ delivers and forwards $\alpha_a$.]
+             {\input{input/figundoproblemB.tex}}
+    \hspace{2pt}
+    \subfloat[Part C][\label{fig:undoproblemC}$b$ delivers + forwards $\alpha_c$.]
+             {\input{input/figundoproblemC.tex}}
+    \hspace{2pt}
+    \subfloat[Part D][\label{fig:undoproblemD}$b$ delivers + forwards $\delta_c$.]
+             {\input{input/figundoproblemD.tex}}
+    \hspace{2pt}
+    \subfloat[Part E][\label{fig:undoproblemE}$a$ echoes back $\alpha_a^2$ to $b$.]
+             {\input{input/figundoproblemE.tex}}
+    \hspace{2pt}
+    \subfloat[Part F][\label{fig:undoproblemF}$a$, $b$, $c$ belong to $P_a$.]
+             {\input{input/figundoproblemF.tex}}
+  \end{center}
+  \caption{\label{fig:undoproblem}From $c$'s perspective,
+    Figure~\ref{fig:problemE} and Figure~\ref{fig:undoproblemE} are
+    similar in terms of received messages, but the outcomes eventually
+    differ. Yet, $c$ must act on Figure~\ref{fig:undoproblemE}, and
+    acknowledge then propagate the \emph{possible} staleness of
+    Partition $P_a$.}
+\end{figure*}
+

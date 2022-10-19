@@ -1,26 +1,25 @@
 
 \begin{figure*}
   \begin{center}
-    \subfloat[Part A][\label{fig:problemA}Both \Process~$a$ and
-      \Process~$d$ add then delete their partition. For the recall,
-      $w_{ab} = 2$; $w_{bc} = w_{bd} = 1$; $w_{cd} =
+    \subfloat[Part A][\label{fig:problemA}Both nodes $a$ and $d$ create a
+      new partition.  $w_{ab} = 2$; $w_{bc} = w_{bd} = 1$; $w_{cd} =
       3$.]{\input{input/figproblemA.tex}}
-    \hspace{1pt}
-    \subfloat[Part B][\label{fig:problemB}\Process~$b$
-      delivers and forwards the $\alpha$ message about $P_a$ while
-      \Process~$c$ delivers and forwards both $\alpha$ and $\delta$
-      messages about $P_d$.]  {\input{input/figproblemB.tex}}
-    \hspace{1pt}
-    \subfloat[Part C][\label{fig:problemC}\Process~$b$
+    \hspace{0pt}
+    \subfloat[Part B][\label{fig:problemB}Both $a$ and $d$ delete
+      their partition. $b$ delivers and forwards $\alpha_a$ while
+      $c$ delivers and forwards both $\alpha_d$ and $\delta_d$.]
+             {\input{input/figproblemB.tex}}
+    \hspace{0pt}
+    \subfloat[Part C][\label{fig:problemC}$b$
       already blocks the propagation of $\delta_a$ despite it
-      propagated $\alpha_a$ before. \Process~$c$ does not deliver
+      propagated $\alpha_a$ before; and $c$ does not deliver
       $\alpha_d$, for it already deleted it
       before.]{\input{input/figproblemC.tex}}
-    \hspace{1pt}
+    \hspace{0pt}
     \subfloat[Part D][\label{fig:problemD}\Processes
-      discard remaining messages. Since \Process~$b$ cannot deliver
-      $\delta_a$, $c$ and $d$ remain in the deleted partition
-      $P_a$.]{\input{input/figproblemD.tex}}
+      discard remaining messages. Since $b$ cannot deliver
+      $\delta_a$, $c$ and $d$ remain in the deleted $P_a$.]
+             {\input{input/figproblemD.tex}}
   \end{center}
   \caption{\label{fig:problem}Naive propagation of $\alpha$ and
     $\delta$ messages is insufficient to guarantee consistent partitioning.}
